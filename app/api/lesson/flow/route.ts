@@ -110,6 +110,9 @@ Return ONLY JSON: {"pass": true|false, "reply": "one warm sentence — if pass: 
             messages: [{ role: "user", content: text }],
             json: true,
             maxTokens: 400,
+            // A one-line pass/fail judgement doesn't need deep reasoning — cap
+            // hidden "thinking" tokens (billed as output, invisible in the reply).
+            reasoningEffort: "low",
           },
           { userId: me.id }
         );

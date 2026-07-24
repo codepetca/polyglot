@@ -13,6 +13,11 @@ export interface CompleteArgs {
   messages: ChatMessage[];
   json?: boolean; // ask the provider for strict JSON and parse defensively
   maxTokens?: number;
+  // Caps hidden "thinking" tokens on reasoning models (Gemini 2.5+/3.x, etc).
+  // These are billed as output tokens but invisible in the reply — on some
+  // models they're 70-85% of the bill for tasks that don't need deep
+  // reasoning. Set "low" for short, simple tasks (a hint, a one-line verdict).
+  reasoningEffort?: "low" | "medium" | "high";
 }
 
 export interface LLMResult<T = unknown> {

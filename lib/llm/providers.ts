@@ -98,6 +98,13 @@ async function callOpenAICompat(lane: Lane, args: CompleteArgs): Promise<RawResu
     ],
   };
   if (args.json) body.response_format = { type: "json_object" };
+  // Gemini-family only: caps hidden thinking tokens (billed as output, invisible
+  // in the reply). Google's compat layer maps this to thinking_level/thinking_
+  // budget automatically per model generation. Omitted for other providers —
+  // not a guaranteed-safe field on arbitrary OpenAI-compat backends (Groq etc).
+  if (args.reasoningEffort && (lane.provider === "gemini" || lane.provider === "vertex")) {
+    body.reasoning_effort = args.reasoningEffort;
+  }
 
   const res = await fetch(`${base}/chat/completions`, {
     method: "POST",

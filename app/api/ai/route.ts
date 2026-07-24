@@ -55,6 +55,10 @@ export async function POST(req: Request) {
         // Generous: thinking models (e.g. Gemini flash) spend hidden reasoning
         // tokens inside this budget — a tight cap strangles the visible reply.
         maxTokens: 3000,
+        // A one-hint tutor reply doesn't need deep reasoning — cap hidden
+        // "thinking" tokens (they're billed as output but invisible in the
+        // reply; uncapped they can be most of the real per-call cost).
+        reasoningEffort: "low",
       },
       { userId: me.id }
     );
