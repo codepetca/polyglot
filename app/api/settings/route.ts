@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireRoleApi } from "@/lib/auth";
-import { saveLLMConfig } from "@/lib/settings";
+import { saveLLMConfig, saveBudgetConfig } from "@/lib/settings";
 import { saveMasteryConfig } from "@/lib/mastery";
 import { saveSmtpConfig, sendMail } from "@/lib/email";
 
@@ -12,6 +12,11 @@ export async function POST(req: Request) {
 
   if (body.mastery) {
     await saveMasteryConfig(body.mastery);
+    if (!body.smtp && !body.keys && !body.budget) return NextResponse.json({ ok: true });
+  }
+
+  if (body.budget) {
+    await saveBudgetConfig(body.budget);
     if (!body.smtp && !body.keys) return NextResponse.json({ ok: true });
   }
 

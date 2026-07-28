@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
+import { getBudgetConfig } from "@/lib/settings";
 import Forbidden from "@/components/Forbidden";
+import BudgetCap from "@/components/admin/BudgetCap";
 
 // AI usage / budget dashboard (admin). All figures come from the AiCall log.
 export default async function UsagePage() {
@@ -10,13 +12,16 @@ export default async function UsagePage() {
   if (me.role !== "ADMIN") return <Forbidden need="Admin" />;
 
   const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-  const [total, recent, byFeature, byModel, byUser, users] = await Promise.all([
+  const todayStart = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00.000Z");
+  const [total, recent, byFeature, byModel, byUser, users, budget, today] = await Promise.all([
     prisma.aiCall.aggregate({ _sum: { cost: true, inTokens: true, outTokens: true }, _count: true }),
     prisma.aiCall.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true, cost: true } }),
     prisma.aiCall.groupBy({ by: ["feature"], _sum: { cost: true }, _count: true }),
     prisma.aiCall.groupBy({ by: ["provider", "model"], _sum: { cost: true }, _count: true }),
     prisma.aiCall.groupBy({ by: ["userId"], _sum: { cost: true }, _count: true, orderBy: { _sum: { cost: "desc" } }, take: 10 }),
     prisma.user.findMany({ select: { id: true, name: true } }),
+    getBudgetConfig(),
+    prisma.aiCall.aggregate({ _sum: { cost: true }, where: { createdAt: { gte: todayStart } } }),
   ]);
   const nameOf = new Map(users.map((u) => [u.id, u.name]));
 
@@ -84,6 +89,8 @@ export default async function UsagePage() {
       </tbody></table></div>
 
       <p className="dashnote">Free-tier models report $0 — the token counts show real consumption against your daily quotas. Add more keys in Settings to rotate when one runs out.</p>
+
+      <BudgetCap capUsd={budget.dailyCapUsd} spentToday={today._sum.cost || 0} />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { currentUser } from "@/lib/auth";
 import { studentMastery } from "@/lib/mastery";
 import { latestInsights } from "@/lib/oversee";
 import CoachCard from "@/components/student/CoachCard";
+import ForgetMe from "@/components/student/ForgetMe";
 
 // The student's own progress: an AI coach note (warm, honest, refreshable) and
 // their skill map by unit — including the honest "not seen enough yet" state.
@@ -91,6 +92,8 @@ export default async function MyProgressPage() {
           </div>
         </div>
       )}
+
+      {!me.email && <ForgetMe />}
     </div>
   );
 }

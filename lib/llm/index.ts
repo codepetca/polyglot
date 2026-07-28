@@ -2,7 +2,7 @@ import "server-only";
 import type { CompleteArgs, Feature, Lane, LLMResult, Provider } from "./types";
 import { callProvider } from "./providers";
 import { safeParseJson } from "./json";
-import { getProviderConfig } from "../settings";
+import { getProviderConfig, getBudgetConfig } from "../settings";
 import { prisma } from "../db";
 
 // USD per 1M tokens [input, output]. Prices churn — mature this into a
@@ -26,6 +26,23 @@ function costOf(model: string, input: number, output: number): number {
   return (input * pi + output * po) / 1e6;
 }
 
+// Global kill-switch: per-user/IP rate limits bound one actor, not total spend
+// across many (cheap-to-mint, anonymous) sessions. Checked once per call —
+// worst case that's fine, a few calls of slop around the cap is not a leak.
+let budgetCache: { day: string; capUsd: number; spent: number; checkedAt: number } | null = null;
+async function overDailyBudget(): Promise<boolean> {
+  const day = new Date().toISOString().slice(0, 10);
+  const fresh = budgetCache && budgetCache.day === day && Date.now() - budgetCache.checkedAt < 30_000;
+  if (!fresh) {
+    const [cfg, sum] = await Promise.all([
+      getBudgetConfig(),
+      prisma.aiCall.aggregate({ _sum: { cost: true }, where: { createdAt: { gte: new Date(day + "T00:00:00.000Z") } } }),
+    ]);
+    budgetCache = { day, capUsd: cfg.dailyCapUsd, spent: sum._sum.cost || 0, checkedAt: Date.now() };
+  }
+  return budgetCache!.spent >= budgetCache!.capUsd;
+}
+
 function isRetryable(err: unknown): boolean {
   const status = (err as any)?.status;
   return status === 429 || (status >= 500 && status < 600) || status === undefined;
@@ -40,7 +57,10 @@ export async function complete<T = unknown>(
   args: CompleteArgs,
   ctx?: { userId?: string }
 ): Promise<LLMResult<T>> {
-  const lanes = await resolveLanes(args.feature);
+  let lanes = await resolveLanes(args.feature);
+  if (lanes.some((l) => l.provider !== "stub") && (await overDailyBudget())) {
+    lanes = lanes.filter((l) => l.provider === "stub"); // degrade, never hard-fail
+  }
   let lastErr: unknown;
 
   for (const lane of lanes) {

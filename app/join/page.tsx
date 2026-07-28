@@ -33,6 +33,9 @@ export default async function JoinPage() {
         <div className="authalt">
           Already have an account? <Link href="/login">Sign in →</Link>
         </div>
+        <div className="authalt" style={{ marginTop: 4 }}>
+          <Link href="/privacy" style={{ fontSize: 12.5 }}>What data does this collect? →</Link>
+        </div>
       </div>
     </div>
   );

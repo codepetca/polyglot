@@ -34,6 +34,27 @@ export function decryptSecret(blob: string): string {
   }
 }
 
+// ─── Global AI spend cap ────────────────────────────────────────────────────
+// Per-user/IP rate limits (lib/ratelimit.ts) bound one actor's abuse, but an
+// anonymous entry (no signup) is cheap to mint many of — so nothing bounded
+// TOTAL platform spend if traffic spikes or gets abused across many sessions.
+// This is that ceiling: once today's real spend crosses it, complete() (llm/
+// index.ts) drops every paid lane and serves the offline stub for the rest of
+// the day — degrades gracefully, never hard-fails, resets at midnight.
+
+export interface BudgetConfig {
+  dailyCapUsd: number;
+}
+const DEFAULT_BUDGET: BudgetConfig = { dailyCapUsd: 5 };
+
+export async function getBudgetConfig(): Promise<BudgetConfig> {
+  return { ...DEFAULT_BUDGET, ...(await getSetting<Partial<BudgetConfig>>("budget", {})) };
+}
+export async function saveBudgetConfig(c: Partial<BudgetConfig>): Promise<void> {
+  const merged = { ...DEFAULT_BUDGET, ...(await getSetting<Partial<BudgetConfig>>("budget", {})), ...c };
+  await setSetting("budget", merged);
+}
+
 // ─── Generic settings store ───────────────────────────────────────────────
 
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {
