@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import Forbidden from "@/components/Forbidden";
+import { isInternalChapter } from "@/lib/curriculum/internal";
 import AuthoringKit from "@/components/admin/AuthoringKit";
 import FlowKit from "@/components/admin/FlowKit";
 
@@ -12,11 +13,12 @@ export default async function AuthoringPage() {
 
   const lessons = (
     await prisma.lesson.findMany({
-      where: { chapter: { NOT: { title: { startsWith: "__" } } } },
       orderBy: [{ chapter: { order: "asc" } }, { order: "asc" }],
-      select: { code: true, title: true, flow: true },
+      select: { code: true, title: true, flow: true, chapter: { select: { title: true } } },
     })
-  ).map((l) => ({ code: l.code, title: l.title, hasFlow: (((l.flow as any)?.steps as unknown[]) || []).length > 0 }));
+  )
+    .filter((l) => !isInternalChapter(l.chapter.title))
+    .map((l) => ({ code: l.code, title: l.title, hasFlow: (((l.flow as any)?.steps as unknown[]) || []).length > 0 }));
 
   return (
     <div className="main" style={{ maxWidth: 820 }}>

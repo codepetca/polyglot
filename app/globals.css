@@ -604,3 +604,17 @@ pre.flowcode.ro { margin: 0; }
 .flowstdin { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: -6px 0 14px; }
 .flowstdin .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .flowstdin .chip { font-family: var(--mono); font-size: 12.5px; padding: 3px 10px; border-radius: 99px; border: 1.5px solid var(--violet); color: var(--violet); }
+
+.playmark { color: var(--accent); font-size: 10px; margin-left: 6px; letter-spacing: -.05em; }
+
+/* Mobile-only lesson picker — the sidebar is display:none under 840px, which
+   otherwise strands a phone user on whichever lesson they landed on. */
+.lessonpicker { display: none; }
+@media (max-width: 840px) {
+  .shell { display: block; }
+  .lessonpicker { display: block; border-bottom: 1.5px solid var(--line); background: #f1eee6; }
+  :root[data-theme="dark"] .lessonpicker { background: #1b1e23; }
+  .lessonpicker > summary { cursor: pointer; padding: 12px 20px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); list-style: none; }
+  .lessonpicker > summary::-webkit-details-marker { display: none; }
+  .lessonpicker .pickerbody { padding: 0 12px 12px; max-height: 55vh; overflow-y: auto; }
+}

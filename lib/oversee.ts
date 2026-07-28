@@ -4,6 +4,7 @@ import { complete } from "@/lib/llm";
 import { DEFAULT_PROMPTS, renderPrompt } from "@/lib/llm/prompts";
 import { getProviderConfig } from "@/lib/settings";
 import { studentMastery, type SkillMastery } from "@/lib/mastery";
+import { excludeInternal } from "@/lib/curriculum/internal";
 
 // The AI overseer (STUDENT-MODEL.md §4.2): reads ONE student's whole record —
 // course plan, unit-by-unit mastery, activity, their literal tutor questions,
@@ -29,11 +30,12 @@ const DAY = 24 * 3600 * 1000;
 // Course plan: units → lessons → objectives. Demo/internal chapters (title
 // starting "__") are excluded so the AI reads only the real curriculum.
 async function curriculumOutline(): Promise<string> {
-  const chapters = await prisma.chapter.findMany({
-    where: { NOT: { title: { startsWith: "__" } } },
-    orderBy: { order: "asc" },
-    include: { lessons: { orderBy: { order: "asc" }, select: { code: true, title: true, goal: true, objectives: true } } },
-  });
+  const chapters = excludeInternal(
+    await prisma.chapter.findMany({
+      orderBy: { order: "asc" },
+      include: { lessons: { orderBy: { order: "asc" }, select: { code: true, title: true, goal: true, objectives: true } } },
+    })
+  );
   const lines: string[] = [];
   for (const c of chapters) {
     lines.push(`UNIT: ${c.title}`);
