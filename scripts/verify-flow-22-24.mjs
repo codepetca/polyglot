@@ -49,7 +49,7 @@ const CHECKS = [
   ["2.4 spot gotcha", "double avg = 9 / 2;\nSystem.out.println(avg);", "4.0"],
   ["2.4 fix BROKEN must fail", 'int n = 4;\nif (n % 2 = 0) {\n  System.out.println("even");\n}', { mustFail: true }],
   ["2.4 fix solution", 'int n = 4;\nif (n % 2 == 0) {\n  System.out.println("even");\n}', "even"],
-  ["2.4 write finale", 'if (15 % 3 == 0 && 15 % 5 == 0) {\n  System.out.println("FizzBuzz");\n}', "FizzBuzz"],
+  ["2.4 write finale", 'if (15 % 3 == 0) {\n  System.out.println("Fizz");\n}\nif (15 % 5 == 0) {\n  System.out.println("Buzz");\n}', "Fizz\nBuzz"],
 ];
 
 let fail = 0;

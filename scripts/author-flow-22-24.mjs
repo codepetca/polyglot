@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 const FLOWS = {
   "2.2": {
     steps: [
-      { id: "f22_1", kind: "run", instruction: "This holds a value under a name. Run it.", code: "int age = 16;\nSystem.out.println(age);", after: "A variable is a labeled box — print it any time." },
+      { id: "f22_1", kind: "run", instruction: "This is Java code. Run it.", code: "int age = 16;\nSystem.out.println(age);", after: "A variable is a labeled box — print it any time." },
       { id: "f22_2", kind: "tweak", instruction: "Change the number. Make it your age.", code: "int age = 16;\nSystem.out.println(age);", target: "16", hint: "Just change the number.", after: "Same box, your value." },
       { id: "f22_3", kind: "predict", instruction: "What does x end up as?", code: "int x = 5;\nx = 8;\nSystem.out.println(x);", opts: ["8", "5", "13", "(an error)"], correct: 0, why: "Reassigning REPLACES the value — the 5 is gone the instant x = 8 runs." },
       { id: "f22_4", kind: "trace", instruction: "Follow x.", code: "int x = 5;\nx = x + 2;\nx = x * 2;", questions: [
@@ -45,7 +45,7 @@ const FLOWS = {
         { prompt: "after line 3, x = ?", opts: ["3", "2", "4"], correct: 0, why: "2 + 1." },
       ] },
       { id: "f24_6", kind: "fix", instruction: "One character is wrong. Find it, fix it.", code: 'int n = 4;\nif (n % 2 = 0) {\n  System.out.println("even");\n}', target: "even", solution: 'int n = 4;\nif (n % 2 == 0) {\n  System.out.println("even");\n}', hint: "= assigns a value. == compares two. Which do you need in a condition?", after: "One extra = sign, and it means something completely different." },
-      { id: "f24_7", kind: "write", instruction: "Print FizzBuzz for 15 — divisible by 3 AND 5.", code: "// your code here\n", target: "FizzBuzz", solution: 'if (15 % 3 == 0 && 15 % 5 == 0) {\n  System.out.println("FizzBuzz");\n}', hint: "% tells you if something divides evenly — check both 3 and 5." },
+      { id: "f24_7", kind: "write", instruction: "15 is divisible by both. Print Fizz for one, Buzz for the other.", code: "// your code here\n", target: "Fizz\nBuzz", solution: 'if (15 % 3 == 0) {\n  System.out.println("Fizz");\n}\nif (15 % 5 == 0) {\n  System.out.println("Buzz");\n}', hint: "Two separate if-checks — one for 3, one for 5. Same pattern as the last step, twice." },
     ],
     tags: {
       "evaluate arithmetic expressions using order of operations": ["f24_1", "f24_2"],
