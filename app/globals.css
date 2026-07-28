@@ -600,3 +600,7 @@ pre.flowcode.ro { margin: 0; }
 .mchip:disabled { opacity: .5; cursor: default; }
 .flowtracer { margin-top: 10px; }
 .flowexplain { margin-top: 6px; }
+
+.flowstdin { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: -6px 0 14px; }
+.flowstdin .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.flowstdin .chip { font-family: var(--mono); font-size: 12.5px; padding: 3px 10px; border-radius: 99px; border: 1.5px solid var(--violet); color: var(--violet); }

@@ -19,6 +19,7 @@ type Step = {
   after?: string;
   code?: string;
   target?: string;
+  stdin?: string;
   opts?: string[];
   questions?: { prompt: string; opts: string[] }[];
   lines?: string[];
@@ -144,7 +145,7 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
     const r: RunOut = await fetch("/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: assembled, wrap: true, lessonCode }),
+      body: JSON.stringify({ code: assembled, wrap: true, lessonCode, stdin: step.stdin || "" }),
     }).then((x) => x.json());
     setBusy(false);
     setOut(r);
@@ -265,6 +266,16 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
       ) : step.code ? (
         <pre className="flowcode ro">{step.code}</pre>
       ) : null}
+
+      {/* no real keyboard in a run-and-watch step — show what's "typed" */}
+      {step.stdin && (
+        <div className="flowstdin">
+          <span className="lbl">simulated typing</span>
+          {step.stdin.split("\n").map((line, j) => (
+            <span key={j} className="chip">⌨ {line}</span>
+          ))}
+        </div>
+      )}
 
       {/* ── target ── */}
       {step.target && !["tweak", "run", "predict", "spot", "trace"].includes(step.kind) && (

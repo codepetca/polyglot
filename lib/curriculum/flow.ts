@@ -43,6 +43,12 @@ export type FlowStep = {
   // per-kind payload (see validate below for exact requirements)
   code?: string;
   target?: string;
+  // Simulated keyboard input for Scanner-based steps (run/tweak/fix/write/
+  // arrange). One line per input() call the code makes, newline-joined. NOT
+  // secret — ships to the client like `code`, since the student needs to know
+  // what "typing" is being simulated (there's no real keyboard in a run-and-
+  // watch step).
+  stdin?: string;
   opts?: string[];
   correct?: number;
   questions?: { prompt: string; opts: string[]; correct: number; why?: string }[];
@@ -129,7 +135,7 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
 // ─── Client stripping (the answer-key invariant) ─────────────────────────────
 
 export function stripStepForClient(s: FlowStep): Record<string, unknown> {
-  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target };
+  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin };
   switch (s.kind) {
     case "predict": return { ...base, opts: s.opts };
     case "spot": return base;
@@ -172,19 +178,19 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
     try {
       switch (s.kind) {
         case "run": {
-          const r = await runJava(s.code!, "", { wrapBeginner: true });
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true });
           if (!r.compiled || r.error) failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`);
           else results.push(`${name}: ✓ runs, prints ${JSON.stringify(norm(r.stdout)).slice(0, 60)}`);
           break;
         }
         case "tweak": {
-          const r = await runJava(s.code!, "", { wrapBeginner: true });
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: original output ${JSON.stringify(norm(r.stdout))} ≠ target ${JSON.stringify(norm(s.target!))}`);
           else results.push(`${name}: ✓ original verified`);
           break;
         }
         case "predict": {
-          const r = await runJava(s.code!, "", { wrapBeginner: true });
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true });
           const claimed = s.opts![s.correct!];
           if (looksLikeError(claimed)) {
             if (r.compiled && !r.error) failures.push(`${name}: claims error but it runs fine, prints ${JSON.stringify(norm(r.stdout))}`);
@@ -195,17 +201,17 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           break;
         }
         case "fix": case "write": {
-          const r = await runJava(s.solution!, "", { wrapBeginner: true });
+          const r = await runJava(s.solution!, s.stdin || "", { wrapBeginner: true });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: solution gives ${JSON.stringify(norm(r.stdout || r.error))} ≠ target ${JSON.stringify(norm(s.target!))}`);
           else results.push(`${name}: ✓ solution reaches target`);
           if (s.kind === "fix" && s.code) {
-            const broken = await runJava(s.code, "", { wrapBeginner: true });
+            const broken = await runJava(s.code, s.stdin || "", { wrapBeginner: true });
             if (broken.compiled && !broken.error && norm(broken.stdout) === norm(s.target!)) failures.push(`${name}: the "broken" code already matches the target`);
           }
           break;
         }
         case "arrange": {
-          const r = await runJava(s.lines!.join("\n"), "", { wrapBeginner: true });
+          const r = await runJava(s.lines!.join("\n"), s.stdin || "", { wrapBeginner: true });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: correct order gives ${JSON.stringify(norm(r.stdout || r.error))} ≠ target ${JSON.stringify(norm(s.target!))}`);
           else results.push(`${name}: ✓ correct order reaches target`);
           break;
@@ -213,7 +219,7 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
         case "fill": {
           let assembled = s.code!;
           s.blanks!.forEach((b, i) => { assembled = assembled.split(`⟦${i + 1}⟧`).join(b.chips[b.answer]); });
-          const r = await runJava(assembled, "", { wrapBeginner: true });
+          const r = await runJava(assembled, s.stdin || "", { wrapBeginner: true });
           if (!r.compiled || r.error) failures.push(`${name}: correct chips don't run: ${(r.error || "").slice(0, 100)}`);
           else if (s.target !== undefined && norm(r.stdout) !== norm(s.target)) failures.push(`${name}: correct chips print ${JSON.stringify(norm(r.stdout))} ≠ target`);
           else results.push(`${name}: ✓ correct chips verified`);
