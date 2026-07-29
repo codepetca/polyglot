@@ -4,6 +4,8 @@ import { currentUser } from "@/lib/auth";
 import { getBudgetConfig } from "@/lib/settings";
 import Forbidden from "@/components/Forbidden";
 import BudgetCap from "@/components/admin/BudgetCap";
+import RunnerHealth from "@/components/admin/RunnerHealth";
+import { runnerHealth } from "@/lib/java/piston";
 
 // AI usage / budget dashboard (admin). All figures come from the AiCall log.
 export default async function UsagePage() {
@@ -91,6 +93,7 @@ export default async function UsagePage() {
       <p className="dashnote">Free-tier models report $0 — the token counts show real consumption against your daily quotas. Add more keys in Settings to rotate when one runs out.</p>
 
       <BudgetCap capUsd={budget.dailyCapUsd} spentToday={today._sum.cost || 0} />
+      <RunnerHealth initial={runnerHealth()} />
     </div>
   );
 }

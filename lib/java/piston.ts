@@ -1,21 +1,41 @@
 import "server-only";
 
-// Java execution.
+// Java execution, with failover.
 //
-// The public Piston API went WHITELIST-ONLY on 2026-02-15 (verified: every call
-// returns 401), so the default runner is now Compiler Explorer (godbolt.org),
-// which executes Java for free without a key. If you self-host Piston (Docker),
-// set PISTON_URL and it takes priority — same interface either way.
+// WHY THIS IS A LIST AND NOT ONE URL: this project already lost its runner once
+// — the public Piston API went whitelist-only on 2026-02-15 (still returns 401,
+// re-verified) and every lesson broke. Compiler Explorer is the same class of
+// dependency: free, keyless, no SLA. Since every interactive lesson step calls
+// this, a single backend means one third party can take the whole product down.
+//
+// So: an ordered list of lanes, tried in sequence, with short-lived health
+// memory so a dead lane isn't re-dialed on every request.
+//
+// Lane inventory (probed live, not assumed):
+//   godbolt java2102   → works (JDK 21.0.2) — primary
+//   godbolt java2100   → works (JDK 21.0.0) — covers one compiler breaking
+//   public Piston      → 401 whitelist-only, deliberately NOT included
+//   self-hosted Piston → set PISTON_URL; the ONLY way to get true
+//                        different-host redundancy today. Recommended before
+//                        any real traffic.
+//
+// Honest limitation: without PISTON_URL both default lanes share one host, so
+// this survives compiler-level breakage but not godbolt itself going down.
 
+const GODBOLT_URL = process.env.GODBOLT_URL || "https://godbolt.org";
 const PISTON_URL = process.env.PISTON_URL || ""; // self-hosted only
 const PISTON_JAVA = process.env.PISTON_JAVA_VERSION || "15.0.2";
-const GODBOLT_URL = process.env.GODBOLT_URL || "https://godbolt.org";
-const GODBOLT_JAVA = process.env.GODBOLT_JAVA || "java2102"; // jdk 21.0.2
+// Comma-separated, tried in order.
+const GODBOLT_COMPILERS = (process.env.GODBOLT_JAVA || "java2102,java2100")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 export interface RunResult {
   compiled: boolean;
   stdout: string;
   error: string; // compile or runtime error, remapped to the student's line numbers
+  runner?: string; // which lane served it (diagnostics; never shown to students)
 }
 
 // Beginner template: students write `String n = input("Your name? ");` with no
@@ -47,21 +67,81 @@ function remapErrors(text: string, offset: number): string {
   });
 }
 
+// ─── Lanes ───────────────────────────────────────────────────────────────────
+
+type Lane = { name: string; run: (source: string, stdin: string, offset: number) => Promise<RunResult> };
+
+function lanes(): Lane[] {
+  const out: Lane[] = [];
+  // Self-hosted Piston first when configured: it's the only lane on a host the
+  // owner controls, so it should absorb traffic rather than a free service.
+  if (PISTON_URL) out.push({ name: "piston(self-hosted)", run: runViaPiston });
+  for (const c of GODBOLT_COMPILERS) {
+    out.push({ name: `godbolt/${c}`, run: (s, i, o) => runViaGodbolt(s, i, o, c) });
+  }
+  return out;
+}
+
+// Short-lived health memory: a lane that just failed hard is skipped for a
+// while so students don't eat its timeout on every single step.
+const COOLDOWN_MS = 60_000;
+const sick = new Map<string, number>();
+const isSick = (name: string) => (sick.get(name) ?? 0) > Date.now();
+
+/** Diagnostics for the admin runner panel. */
+export function runnerHealth(): { name: string; healthy: boolean; cooldownEndsInMs: number }[] {
+  return lanes().map((l) => ({
+    name: l.name,
+    healthy: !isSick(l.name),
+    cooldownEndsInMs: Math.max(0, (sick.get(l.name) ?? 0) - Date.now()),
+  }));
+}
+
+// A lane "failed" only if the SERVICE failed. A student's code failing to
+// compile is a SUCCESSFUL run — never fail over on that, it would burn every
+// lane on a typo.
+class LaneDown extends Error {}
+
 export async function runJava(
   code: string,
   stdin = "",
   opts: { wrapBeginner?: boolean } = {}
 ): Promise<RunResult> {
   const { source, offset } = opts.wrapBeginner ? wrap(code) : { source: code, offset: 0 };
-  return PISTON_URL ? runViaPiston(source, stdin, offset) : runViaGodbolt(source, stdin, offset);
+  const all = lanes();
+  // Healthy lanes first, but still fall back to cooling-down ones rather than
+  // give up — a 60s cooldown shouldn't hard-fail a student if it's recovered.
+  const order = [...all.filter((l) => !isSick(l.name)), ...all.filter((l) => isSick(l.name))];
+
+  let lastDown = "";
+  for (const lane of order) {
+    try {
+      const r = await lane.run(source, stdin, offset);
+      sick.delete(lane.name);
+      return { ...r, runner: lane.name };
+    } catch (e) {
+      if (e instanceof LaneDown) {
+        sick.set(lane.name, Date.now() + COOLDOWN_MS);
+        lastDown = e.message;
+        continue; // try the next lane
+      }
+      throw e;
+    }
+  }
+  return {
+    compiled: false,
+    stdout: "",
+    error: `The code runner is unavailable right now — this is on our side, not your code. Try again in a minute.${lastDown ? `\n(technical: ${lastDown})` : ""}`,
+    runner: "none",
+  };
 }
 
-// ─── Compiler Explorer (default, free, no key) ───────────────────────────────
+// ─── Compiler Explorer ───────────────────────────────────────────────────────
 
-async function runViaGodbolt(source: string, stdin: string, offset: number): Promise<RunResult> {
+async function runViaGodbolt(source: string, stdin: string, offset: number, compilerId: string): Promise<RunResult> {
   let res: Response;
   try {
-    res = await fetch(`${GODBOLT_URL}/api/compiler/${GODBOLT_JAVA}/compile`, {
+    res = await fetch(`${GODBOLT_URL}/api/compiler/${compilerId}/compile`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json", "User-Agent": "classOS-edu/1.0" },
       body: JSON.stringify({
@@ -75,20 +155,24 @@ async function runViaGodbolt(source: string, stdin: string, offset: number): Pro
           filters: { execute: true },
         },
       }),
+      signal: AbortSignal.timeout(20_000),
     });
-  } catch {
-    return { compiled: false, stdout: "", error: "Could not reach the Java runner. Check your connection and try again." };
+  } catch (e) {
+    throw new LaneDown(`${compilerId} unreachable: ${(e as Error).message.slice(0, 80)}`);
   }
-  if (!res.ok) {
-    const body = (await res.text()).slice(0, 200);
-    return { compiled: false, stdout: "", error: `Runner error (${res.status}): ${body}` };
-  }
+  if (!res.ok) throw new LaneDown(`${compilerId} HTTP ${res.status}`);
 
-  const data = await res.json();
+  let data: any;
+  try {
+    data = await res.json();
+  } catch {
+    throw new LaneDown(`${compilerId} returned non-JSON`);
+  }
   const lines = (arr: { text: string }[] | undefined) => (arr || []).map((l) => l.text).join("\n");
 
   const build = data.buildResult;
   if (build && build.code !== 0) {
+    // Student's code didn't compile — a real answer, not a lane failure.
     return { compiled: false, stdout: "", error: remapErrors(lines(build.stderr) || "Compilation failed.", offset) };
   }
   const stdout = lines(data.stdout);
@@ -99,7 +183,7 @@ async function runViaGodbolt(source: string, stdin: string, offset: number): Pro
   return { compiled: true, stdout, error: "" };
 }
 
-// ─── Self-hosted Piston (set PISTON_URL to enable) ───────────────────────────
+// ─── Self-hosted Piston (set PISTON_URL) ─────────────────────────────────────
 
 async function runViaPiston(source: string, stdin: string, offset: number): Promise<RunResult> {
   let res: Response;
@@ -115,15 +199,19 @@ async function runViaPiston(source: string, stdin: string, offset: number): Prom
         compile_timeout: 10000,
         run_timeout: 5000,
       }),
+      signal: AbortSignal.timeout(20_000),
     });
+  } catch (e) {
+    throw new LaneDown(`piston unreachable: ${(e as Error).message.slice(0, 80)}`);
+  }
+  if (!res.ok) throw new LaneDown(`piston HTTP ${res.status}`);
+
+  let data: any;
+  try {
+    data = await res.json();
   } catch {
-    return { compiled: false, stdout: "", error: "Could not reach your Piston server." };
+    throw new LaneDown("piston returned non-JSON");
   }
-  if (!res.ok) {
-    const body = (await res.text()).slice(0, 200);
-    return { compiled: false, stdout: "", error: `Runner error (${res.status}): ${body}` };
-  }
-  const data = await res.json();
   if (data.compile && data.compile.code !== 0) {
     return { compiled: false, stdout: "", error: remapErrors(data.compile.stderr || "Compilation failed.", offset) };
   }
