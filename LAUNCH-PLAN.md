@@ -25,11 +25,28 @@ when one does fail the student sees something honest instead of a broken step.
 - [x] Admin visibility: which runner served, what's failing
 - [x] Verified by actually breaking the primary and watching failover happen
 
-## P1 — Retention visibility (next)
+## P1 — Retention visibility ✅ done
 
-The owner must be able to answer, without asking anyone: did people come back?
-Did anyone finish a lesson? Where do they quit? All derivable from the existing
-`Event` log — nothing new to collect, just a read.
+`/admin/reach` ("Reach" in the admin nav) answers it from the existing `Event`
+log; collects nothing new.
+
+- [x] learners ever · activated (did ≥1 step) · returned another day · steps done
+- [x] learners-per-day chart
+- [x] per-lesson funnel: opened → started → finished, with a per-step bar chart
+      so the exact drop-off step is visible
+- [x] hardest steps (avg tries, first-try rate) — separates "hard idea" from
+      "badly worded step"
+- [x] honest empty state that says *nothing is broken, nobody has come yet*
+- [x] **excludes demo-seeded students** — they have no email but DO have a
+      class, and were inflating every number with fake people until caught
+
+Caveat worth knowing: the owner's own testing sessions do count as learners
+(they're genuinely anonymous), so early numbers include a handful of self-visits.
+
+## P1 — Landing page (next)
+
+`/join` is a sign-in card. A cold visitor from a link needs: what this is, one
+piece of proof it works, and the "no signup" promise, above the fold.
 
 ## P1 — Landing page
 
