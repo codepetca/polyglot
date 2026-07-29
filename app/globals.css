@@ -33,7 +33,10 @@
   --bad: #e0714f;
 }
 :root[data-theme="dark"] body { background: var(--paper); }
-:root[data-theme="dark"] .topbar { background: #0f1114; }
+/* The topbar is deliberately dark in BOTH themes, so its text must not be
+   var(--paper) — that flips to near-black in dark mode, which made the logo and
+   nav effectively invisible (measured contrast ~1:1). Pin a light foreground. */
+:root[data-theme="dark"] .topbar { background: #0f1114; color: #ece7db; }
 :root[data-theme="dark"] .side, :root[data-theme="dark"] .ednav, :root[data-theme="dark"] th,
 :root[data-theme="dark"] .inbox .convos, :root[data-theme="dark"] .terms .k, :root[data-theme="dark"] .gradeans { background: #23262c; }
 :root[data-theme="dark"] .opt, :root[data-theme="dark"] input.f, :root[data-theme="dark"] select.f, :root[data-theme="dark"] textarea.f,
