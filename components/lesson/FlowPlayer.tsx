@@ -111,6 +111,9 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
   const [code, setCode] = useState(step.code || "");
   const [out, setOut] = useState<RunOut | null>(null);
   const [busy, setBusy] = useState(false);
+  // Real Java compiles on a remote service: measured median ~2.5s, worst ~8s.
+  // A bare "running…" for 8s reads as broken, so count up and reassure.
+  const [elapsed, setElapsed] = useState(0);
   const [won, setWon] = useState(false);
   const [reveal, setReveal] = useState<{ correct: boolean; correctIndex?: number; why?: string; chosen?: number } | null>(null);
   const [picked, setPicked] = useState<string[]>([]); // arrange
@@ -142,12 +145,23 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
     onAttempt(step.id);
     setBusy(true);
     setOut(null);
-    const r: RunOut = await fetch("/api/run", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: assembled, wrap: true, lessonCode, stdin: step.stdin || "" }),
-    }).then((x) => x.json());
-    setBusy(false);
+    setElapsed(0);
+    const startedAt = Date.now();
+    const tick = setInterval(() => setElapsed(Math.floor((Date.now() - startedAt) / 1000)), 250);
+    let r: RunOut;
+    try {
+      r = await fetch("/api/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: assembled, wrap: true, lessonCode, stdin: step.stdin || "" }),
+      }).then((x) => x.json());
+    } catch {
+      // Network died mid-run — say so plainly instead of hanging on "running…".
+      r = { compiled: false, stdout: "", error: "Lost connection while running. Check your internet and try again." };
+    } finally {
+      clearInterval(tick);
+      setBusy(false);
+    }
     setOut(r);
     const ok =
       step.kind === "run" ? r.compiled && !r.error
@@ -412,8 +426,15 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
       {runnable && (
         <div className="flowrun">
           <button className="btn green" style={{ fontSize: 15, padding: "10px 26px" }} disabled={busy || (step.kind === "arrange" && picked.length !== (step.count ?? (step.lines || []).length))} onClick={run}>
-            {busy ? "running…" : "▶ Run"}
+            {busy ? `running… ${elapsed}s` : "▶ Run"}
           </button>
+          {/* Past a few seconds a silent spinner reads as broken — say what's
+              actually happening. */}
+          {busy && elapsed >= 3 && (
+            <span className="meta" style={{ margin: 0 }}>
+              {elapsed >= 8 ? "still compiling — slow connection to the compiler, hang on" : "compiling your code on a real Java compiler…"}
+            </span>
+          )}
           {step.kind === "arrange" && picked.length > 0 && !won && (
             <button className="btn ghost" onClick={() => { setPicked([]); setOut(null); }}>↺ reset</button>
           )}
