@@ -621,3 +621,32 @@ pre.flowcode.ro { margin: 0; }
   .lessonpicker > summary::-webkit-details-marker { display: none; }
   .lessonpicker .pickerbody { padding: 0 12px 12px; max-height: 55vh; overflow-y: auto; }
 }
+
+/* ─── Accessibility ─── */
+
+/* Keyboard focus. The app never suppressed focus rings, but it also never
+   defined one, so keyboard users got the browser default — which is low-contrast
+   against the dark code surfaces and the green buttons, and inconsistent across
+   the design. School context is Chromebook-heavy and some students navigate by
+   keyboard only, so make "where am I" unmistakable. Two-tone so it stays visible
+   on light paper, dark panels, and the near-black code blocks alike. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, .55);
+  border-radius: 4px;
+}
+:root[data-theme="dark"] :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, .6);
+}
+
+/* Respect reduced-motion: the wrong-answer shake and highlight pulse are
+   feedback, not decoration, so keep the state change but drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -43,10 +43,53 @@ log; collects nothing new.
 Caveat worth knowing: the owner's own testing sessions do count as learners
 (they're genuinely anonymous), so early numbers include a handful of self-visits.
 
-## P1 — Landing page (next)
+## P1 — Landing page ✅ done
 
-`/join` is a sign-in card. A cold visitor from a link needs: what this is, one
-piece of proof it works, and the "no signup" promise, above the fold.
+`/` is now a real landing page for signed-out visitors (signed-in users still
+redirect to their home).
+
+- [x] Concrete headline + what this actually is
+- [x] **A real lesson step, playable before signup** — client-side on purpose:
+      shop window, not assessment, so no auth and no abuse surface
+- [x] Honest scope: lesson/step counts read from the DB so the page can't drift
+      into overclaiming; states outright that 4 are interactive and 11 aren't yet
+- [x] Fixed an app-wide dark-mode contrast bug found here (topbar text used
+      var(--paper), which inverts in dark mode → logo/nav at ~1:1 contrast)
+
+## P2 — Accessibility audit ✅ mostly done
+
+Audited live in a browser.
+
+**Already fine (by construction):** every interactive element in the flow player
+— predict options, arrange lines, bucket/match chips, spot lines, Run, skip — is
+a real `<button>`, so all of it is natively keyboard-reachable and
+Enter/Space-operable. Verified: 63/63 interactive elements are `button`/`a`, zero
+click-handler-on-a-div. The app also never suppressed focus rings.
+
+**Fixed:**
+- [x] No focus indicator was ever *defined*, so keyboard users got the browser
+      default — low-contrast against the near-black code blocks and green
+      buttons. Added an explicit two-tone `:focus-visible` ring that stays
+      visible on paper, dark panels, and code surfaces. Verified the rules parse
+      and match all 63 elements (a silently-dropped rule was the real risk).
+- [x] `prefers-reduced-motion` was unhandled while the UI uses a wrong-answer
+      shake and a highlight pulse. Now honoured — the state change stays, the
+      movement goes.
+
+- [x] Run output and answer reveals were plain DOM insertions with no
+      `aria-live`, so a screen-reader user pressed Run and heard nothing. Now
+      wrapped in a polite live region (plus the trace and explain replies).
+
+**Caveat:** the live regions are implemented to spec but *not* verified with a
+real screen reader — I can't run one here. The markup is the standard pattern,
+but if a11y is ever a hard requirement, this needs one real VoiceOver/NVDA pass.
+
+## P2 — More interactive lessons
+
+## P2 — More interactive lessons
+
+11 of 15 are still text. The self-serve authoring pipeline (verified working,
+compiler-gated) is the intended scaling path rather than hand-authoring each one.
 
 ## P1 — Landing page
 

@@ -324,7 +324,7 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
             })}
           </div>
           {traceReveal && (
-            <div className={`flowwhy ${traceReveal.correct ? "yes" : "no"}`}>
+            <div className={`flowwhy ${traceReveal.correct ? "yes" : "no"}`} aria-live="polite">
               <b>{traceReveal.correct ? "✓" : "not quite —"}</b> {traceReveal.why || ""}
               <button className="btn ghost" style={{ marginLeft: 10, padding: "3px 12px" }} onClick={traceNext}>
                 {traceIdx + 1 >= (step.questions || []).length ? "finish" : "next checkpoint →"}
@@ -408,7 +408,7 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
               {fails >= 2 && <button className="skiplink" onClick={onSkip}>move on ›</button>}
             </div>
           )}
-          {explainReply && <div className={`flowwhy ${won ? "yes" : "no"}`}>{won ? "✓ " : ""}{explainReply}</div>}
+          {explainReply && <div className={`flowwhy ${won ? "yes" : "no"}`} aria-live="polite">{won ? "✓ " : ""}{explainReply}</div>}
         </div>
       )}
 
@@ -440,21 +440,26 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
           )}
         </div>
       )}
-      {out && (
-        <div className={`flowout ${out.compiled && !out.error ? "" : "err"}`}>
-          <div className="lbl">{out.compiled ? (out.error ? "RUNTIME ERROR" : "OUTPUT") : "COMPILE ERROR — read it, it tells you where"}</div>
-          <pre>{out.compiled ? (out.error || out.stdout || "(nothing printed)") : out.error}</pre>
-        </div>
-      )}
+      {/* Output and feedback appear as new DOM after a keypress, so they must be
+          announced — otherwise a screen-reader user presses Run and hears
+          nothing at all. */}
+      <div aria-live="polite" aria-atomic="false">
+        {out && (
+          <div className={`flowout ${out.compiled && !out.error ? "" : "err"}`}>
+            <div className="lbl">{out.compiled ? (out.error ? "RUNTIME ERROR" : "OUTPUT") : "COMPILE ERROR — read it, it tells you where"}</div>
+            <pre>{out.compiled ? (out.error || out.stdout || "(nothing printed)") : out.error}</pre>
+          </div>
+        )}
 
-      {/* ── reveal / success beats ── */}
-      {reveal && reveal.why !== undefined && reveal.why !== "" && (
-        <div className={`flowwhy ${reveal.correct ? "yes" : "no"}`}>
-          <b>{reveal.correct ? "✓ exactly." : "not quite —"}</b> {reveal.why}
-        </div>
-      )}
-      {won && step.after && <div className="flowwhy yes"><b>✓</b> {step.after}</div>}
-      {won && !step.after && !reveal?.why && step.kind !== "note" && <div className="flowwhy yes"><b>✓ nailed it.</b></div>}
+        {/* ── reveal / success beats ── */}
+        {reveal && reveal.why !== undefined && reveal.why !== "" && (
+          <div className={`flowwhy ${reveal.correct ? "yes" : "no"}`}>
+            <b>{reveal.correct ? "✓ exactly." : "not quite —"}</b> {reveal.why}
+          </div>
+        )}
+        {won && step.after && <div className="flowwhy yes"><b>✓</b> {step.after}</div>}
+        {won && !step.after && !reveal?.why && step.kind !== "note" && <div className="flowwhy yes"><b>✓ nailed it.</b></div>}
+      </div>
 
       {/* ── help ladder ── */}
       {!won && !reveal && (runnable || step.kind === "fill" || step.kind === "bucket") && fails >= 1 && (
