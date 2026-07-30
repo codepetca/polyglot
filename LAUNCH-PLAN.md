@@ -88,8 +88,14 @@ but if a11y is ever a hard requirement, this needs one real VoiceOver/NVDA pass.
 
 ## P2 — More interactive lessons (in progress)
 
-**5 of 15** now interactive: 2.1 Printing, 2.2 Variables/Types, 2.3 User Input,
-2.4 Arithmetic, 2.9 For Loops.
+**6 of 15** now interactive: 2.1 Printing, 2.2 Variables/Types, 2.3 User Input,
+2.4 Arithmetic, 2.9 For Loops, 2.10 While Loops. That's ~51 steps — enough that a
+learner has real work to do rather than a demo.
+
+**Content is now backed up in git** (`prisma/flows.json`, via
+`scripts/flows.mjs export|restore|diff`). This mattered: pipeline-authored
+lessons live only in the DB, so 2.10 briefly existed nowhere else. Re-export
+after authoring anything.
 
 The pipeline is the scaling path, and it's now self-correcting (a rejection
 returns a paste-back fix request for the AI, plus a "Check only" mode that
