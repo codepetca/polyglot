@@ -261,7 +261,7 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
         <div className="flowarrange">
           <div className="pool">
             {(step.lines || []).filter((l) => !picked.includes(l)).map((l) => (
-              <button key={l} className="linebtn" onClick={() => { setPicked([...picked, l]); setOut(null); }}>{l}</button>
+              <button key={l} className="linebtn" onClick={() => { setPicked((prev) => [...prev, l]); setOut(null); }}>{l}</button>
             ))}
           </div>
           <div className="built">
@@ -274,7 +274,13 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
           </div>
         </div>
       ) : step.kind === "fill" ? (
-        <FillSurface step={step} fillPick={fillPick} setFillPick={(p) => { setFillPick(p); setVerdicts(null); }} verdicts={verdicts} serverAnswers={serverAnswers} />
+        <FillSurface
+          step={step}
+          fillPick={fillPick}
+          onPick={(bi, ci) => { setFillPick((prev) => { const p = [...prev]; p[bi] = ci; return p; }); setVerdicts(null); }}
+          verdicts={verdicts}
+          serverAnswers={serverAnswers}
+        />
       ) : editable ? (
         <textarea className="flowcode" rows={Math.max(3, (code.match(/\n/g)?.length || 0) + 2)} value={code} spellCheck={false} onChange={(e) => { setCode(e.target.value); setWon(false); }} />
       ) : step.code ? (
@@ -350,7 +356,9 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
                   <button
                     key={bi}
                     className={`bchip ${assign[i2] === bi ? "on" : ""} ${verdicts && !verdicts[i2] && serverAnswers && serverAnswers[i2] === bi ? "hintright" : ""}`}
-                    onClick={() => { const a = [...assign]; a[i2] = bi; setAssign(a); setVerdicts(null); }}
+                    // Functional update — see the fill step: reading `assign`
+                    // directly loses a pick when two items are tapped fast.
+                    onClick={() => { setAssign((prev) => { const a = [...prev]; a[i2] = bi; return a; }); setVerdicts(null); }}
                   >
                     {b}
                   </button>
@@ -382,7 +390,7 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
             {(step.rights || []).filter((r) => !pairsMade.some((p) => p[1] === r)).map((r) => (
               <button key={r} className="mchip" disabled={leftSel === null} onClick={() => {
                 if (leftSel === null) return;
-                setPairsMade([...pairsMade.filter((p) => p[0] !== leftSel), [leftSel, r]]);
+                setPairsMade((prev) => [...prev.filter((p) => p[0] !== leftSel), [leftSel, r]]);
                 setLeftSel(null);
                 setVerdicts(null);
               }}>
@@ -492,10 +500,10 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
 }
 
 // fill: code with ⟦n⟧ markers rendered inline as the currently-picked chip
-function FillSurface({ step, fillPick, setFillPick, verdicts, serverAnswers }: {
+function FillSurface({ step, fillPick, onPick, verdicts, serverAnswers }: {
   step: Step;
   fillPick: number[];
-  setFillPick: (p: number[]) => void;
+  onPick: (blankIndex: number, chipIndex: number) => void;
   verdicts: boolean[] | null;
   serverAnswers: number[] | null;
 }) {
@@ -523,7 +531,9 @@ function FillSurface({ step, fillPick, setFillPick, verdicts, serverAnswers }: {
             <button
               key={ci}
               className={`bchip ${fillPick[bi] === ci ? "on" : ""} ${verdicts && !verdicts[bi] && serverAnswers && serverAnswers[bi] === ci ? "hintright" : ""}`}
-              onClick={() => { const p = [...fillPick]; p[bi] = ci; setFillPick(p); }}
+              // Functional update: reading fillPick directly meant two chip
+              // taps in the same render lost the first one.
+              onClick={() => onPick(bi, ci)}
             >
               {c}
             </button>
