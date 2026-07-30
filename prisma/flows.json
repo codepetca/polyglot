@@ -1,0 +1,822 @@
+{
+  "exportedAt": "2026-07-30T00:41:21.258Z",
+  "note": "Interactive lesson flows. Restore with: node --env-file=.env scripts/flows.mjs restore",
+  "lessons": [
+    {
+      "code": "2.1",
+      "title": "Printing in Java",
+      "objectives": [
+        "distinguish between System.out.print and System.out.println behavior",
+        "interpret escape sequences in printed text",
+        "predict the result of string concatenation mixed with numeric addition"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f21_1",
+            "code": "System.out.println(\"Hello, world!\");",
+            "kind": "run",
+            "after": "You just ran your first program. The computer did exactly what the line said.",
+            "instruction": "This is a Java program. Run it."
+          },
+          {
+            "id": "f21_2",
+            "code": "System.out.println(\"Hello, world!\");",
+            "hint": "Change only the words between the quotes.",
+            "kind": "tweak",
+            "after": "Your words, on the screen. That's programming.",
+            "target": "Hello, world!",
+            "instruction": "Change the message to anything you want. Run it."
+          },
+          {
+            "id": "f21_3",
+            "why": "println = print line: it ends the line after printing. Two printlns → two lines.",
+            "code": "System.out.println(\"Hi\");\nSystem.out.println(\"Bye\");",
+            "kind": "predict",
+            "opts": [
+              "Hi\nBye",
+              "HiBye",
+              "Hi Bye",
+              "(an error)"
+            ],
+            "correct": 0,
+            "instruction": "What comes out?"
+          },
+          {
+            "id": "f21_4",
+            "why": "print doesn't end the line — the next print continues right where it left off.",
+            "code": "System.out.print(\"Hi\");\nSystem.out.print(\"Bye\");",
+            "kind": "predict",
+            "opts": [
+              "HiBye",
+              "Hi\nBye",
+              "Hi Bye",
+              "(an error)"
+            ],
+            "correct": 0,
+            "instruction": "Same code — but print, no ln. Now what?"
+          },
+          {
+            "id": "f21_5",
+            "code": "System.out.print(\"Java\");\nSystem.out.print(\"rocks\");",
+            "hint": "Which one ends the line — print or println?",
+            "kind": "fix",
+            "after": "println ends the line; print doesn't. That's the whole difference.",
+            "target": "Java\nrocks",
+            "instruction": "Make it match the target."
+          },
+          {
+            "id": "f21_6",
+            "code": "System.out.println(\"one\\ntwo\\nthree\");",
+            "kind": "run",
+            "after": "\\n means new line — even in the middle of one message.",
+            "instruction": "One line of code. Run it and watch the \\n."
+          },
+          {
+            "id": "f21_7",
+            "why": "\\t prints a tab — a wide gap. Great for lining things up.",
+            "code": "System.out.println(\"name\\tscore\");",
+            "kind": "predict",
+            "opts": [
+              "name\tscore",
+              "name\\tscore",
+              "namescore",
+              "name\nscore"
+            ],
+            "correct": 0,
+            "instruction": "What does \\t do?"
+          },
+          {
+            "id": "f21_8",
+            "code": "System.out.println(\"She said \"hi\" to me\");",
+            "hint": "Quotes inside quotes confuse Java. \\\" means: print a real quote mark.",
+            "kind": "fix",
+            "after": "\\\" prints a quote without ending the text. Errors point at the problem — reading them is a skill.",
+            "target": "She said \"hi\" to me",
+            "instruction": "It's broken. Run it, read the error, fix it."
+          },
+          {
+            "id": "f21_9",
+            "code": "System.out.println(\"Ada\" + \"Lovelace\");",
+            "kind": "run",
+            "after": "+ glues text together — and adds no space. You control the spaces.",
+            "instruction": "Run it. What does + do to text?"
+          },
+          {
+            "id": "f21_10",
+            "why": "Left to right: \"1\"+2 makes the TEXT \"12\", then \"12\"+3 makes \"123\". Once text joins in, + glues.",
+            "code": "System.out.println(\"1\" + 2 + 3);",
+            "kind": "predict",
+            "opts": [
+              "123",
+              "6",
+              "15",
+              "(an error)"
+            ],
+            "correct": 0,
+            "instruction": "The classic. What prints?"
+          },
+          {
+            "id": "f21_11",
+            "why": "Still left to right: 1+2=3 (real math — no text yet), then 3+\"3\" glues into \"33\".",
+            "code": "System.out.println(1 + 2 + \"3\");",
+            "kind": "predict",
+            "opts": [
+              "33",
+              "123",
+              "6",
+              "(an error)"
+            ],
+            "correct": 0,
+            "instruction": "Flip it. Now what prints?"
+          },
+          {
+            "id": "f21_12",
+            "hint": "print keeps going on the same line. println ends it.",
+            "kind": "arrange",
+            "after": "print + println together control exactly how output flows.",
+            "lines": [
+              "System.out.print(\"Loading\");",
+              "System.out.println(\"...\");",
+              "System.out.println(\"Done!\");"
+            ],
+            "target": "Loading...\nDone!",
+            "instruction": "Tap the lines in order to match the target."
+          },
+          {
+            "id": "f21_13",
+            "code": "// your code here\n",
+            "hint": "One println per line, and \\t for the gap.",
+            "kind": "write",
+            "after": "You wrote a real program from scratch. Everything on this receipt, you now control.",
+            "target": "Coffee\t$3\nDonut\t$2",
+            "instruction": "Your turn. Print this receipt — match it exactly."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.2",
+      "title": "Variables and Types",
+      "objectives": [
+        "declare and initialize variables with the correct type",
+        "choose between int, double, boolean and String for a given value",
+        "trace how a variable's value changes through assignments"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f22_1",
+            "code": "int age = 16;\nSystem.out.println(age);",
+            "kind": "run",
+            "after": "A variable is a labeled box — print it any time.",
+            "instruction": "This is Java code. Run it."
+          },
+          {
+            "id": "f22_2",
+            "code": "int age = 16;\nSystem.out.println(age);",
+            "hint": "Just change the number.",
+            "kind": "tweak",
+            "after": "Same box, your value.",
+            "target": "16",
+            "instruction": "Change the number. Make it your age."
+          },
+          {
+            "id": "f22_3",
+            "why": "Reassigning REPLACES the value — the 5 is gone the instant x = 8 runs.",
+            "code": "int x = 5;\nx = 8;\nSystem.out.println(x);",
+            "kind": "predict",
+            "opts": [
+              "8",
+              "5",
+              "13",
+              "(an error)"
+            ],
+            "correct": 0,
+            "instruction": "What does x end up as?"
+          },
+          {
+            "id": "f22_4",
+            "code": "int x = 5;\nx = x + 2;\nx = x * 2;",
+            "kind": "trace",
+            "questions": [
+              {
+                "why": "5 + 2.",
+                "opts": [
+                  "7",
+                  "5",
+                  "2"
+                ],
+                "prompt": "after line 2, x = ?",
+                "correct": 0
+              },
+              {
+                "why": "7 * 2.",
+                "opts": [
+                  "14",
+                  "9",
+                  "7"
+                ],
+                "prompt": "after line 3, x = ?",
+                "correct": 0
+              }
+            ],
+            "instruction": "Follow x."
+          },
+          {
+            "id": "f22_5",
+            "why": "Whole numbers → int, decimals → double, quoted text → String, true/false → boolean.",
+            "kind": "bucket",
+            "items": [
+              {
+                "text": "42",
+                "bucket": 0
+              },
+              {
+                "text": "3.14",
+                "bucket": 1
+              },
+              {
+                "text": "\"hello\"",
+                "bucket": 2
+              },
+              {
+                "text": "true",
+                "bucket": 3
+              },
+              {
+                "text": "-7",
+                "bucket": 0
+              },
+              {
+                "text": "2.0",
+                "bucket": 1
+              }
+            ],
+            "buckets": [
+              "int",
+              "double",
+              "String",
+              "boolean"
+            ],
+            "instruction": "Which type holds it?"
+          },
+          {
+            "id": "f22_6",
+            "code": "int price = 9.99;\nSystem.out.println(price);",
+            "hint": "9.99 isn't whole — which type actually holds decimals?",
+            "kind": "fix",
+            "after": "int only holds whole numbers. double holds decimals.",
+            "target": "9.99",
+            "solution": "double price = 9.99;\nSystem.out.println(price);",
+            "instruction": "Make it compile and match the target."
+          },
+          {
+            "id": "f22_7",
+            "why": "Once it's stored as a double, Java shows the decimal — even a whole number becomes 7.0.",
+            "code": "int a = 7;\ndouble b = a;\nSystem.out.println(b);",
+            "kind": "predict",
+            "opts": [
+              "7.0",
+              "7",
+              "7.00",
+              "(an error)"
+            ],
+            "correct": 0,
+            "instruction": "b is declared as a double. What prints?"
+          },
+          {
+            "id": "f22_8",
+            "code": "// your code here\n",
+            "hint": "One String, one int, one double.",
+            "kind": "write",
+            "target": "Ada is 16, 5.4 ft tall",
+            "solution": "String name = \"Ada\";\nint age = 16;\ndouble height = 5.4;\nSystem.out.println(name + \" is \" + age + \", \" + height + \" ft tall\");",
+            "instruction": "Print this exactly — pick the right type for each."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.3",
+      "title": "User Input",
+      "objectives": [
+        "read user input using the Scanner class",
+        "choose the right Scanner method for each input type",
+        "prompt the user before reading input"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f23_1",
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "kind": "run",
+            "after": "The program paused, took what you typed, then kept going.",
+            "stdin": "Ada",
+            "instruction": "This one waits for you. Run it."
+          },
+          {
+            "id": "f23_2",
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "hint": "Change the text inside the first print — that's the prompt.",
+            "kind": "tweak",
+            "after": "You control exactly what it asks before it listens.",
+            "stdin": "Ada",
+            "target": "What is your name? Hi, Ada!",
+            "instruction": "Change the question it asks. Run it."
+          },
+          {
+            "id": "f23_3",
+            "why": "print doesn't break the line — the prompt and the reply share one line, same as always.",
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"Age? \");\nint age = input.nextInt();\nSystem.out.println(\"Next year: \" + (age + 1));",
+            "kind": "predict",
+            "opts": [
+              "Age? Next year: 17",
+              "Age? Next year: 16",
+              "Age?\nNext year: 17",
+              "(an error)"
+            ],
+            "stdin": "16",
+            "correct": 0,
+            "instruction": "Typed 16. What prints?"
+          },
+          {
+            "id": "f23_4",
+            "why": "The method name tells Scanner exactly what shape of answer to expect.",
+            "kind": "match",
+            "pairs": [
+              [
+                "nextInt()",
+                "a whole number"
+              ],
+              [
+                "nextDouble()",
+                "a decimal number"
+              ],
+              [
+                "nextLine()",
+                "a full line of text"
+              ]
+            ],
+            "instruction": "Match each method to what it reads."
+          },
+          {
+            "id": "f23_5",
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextInt();\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "hint": "You're reading a NAME — text, not a number. Which method reads a whole line of text?",
+            "kind": "fix",
+            "after": "nextInt() expects a number; a name isn't one. nextLine() takes anything.",
+            "stdin": "Ada",
+            "target": "What is your name? Hi, Ada!",
+            "solution": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "instruction": "One line reads the wrong type. Fix it."
+          },
+          {
+            "id": "f23_6",
+            "code": "// your code here\n",
+            "hint": "Same shape as the predict step — prompt, then nextInt(), then use it.",
+            "kind": "write",
+            "stdin": "16",
+            "target": "Age? In 10 years: 26",
+            "solution": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"Age? \");\nint age = input.nextInt();\nSystem.out.println(\"In 10 years: \" + (age + 10));",
+            "instruction": "Ask for their age. Print their age in 10 years."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.4",
+      "title": "Arithmetic Expressions",
+      "objectives": [
+        "evaluate arithmetic expressions using order of operations",
+        "predict the result of integer division",
+        "use the modulo operator to find remainders"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f24_1",
+            "code": "System.out.println(2 + 3 * 4);",
+            "kind": "run",
+            "after": "Multiplication happens before addition — same as math class.",
+            "instruction": "Run it — watch the order."
+          },
+          {
+            "id": "f24_2",
+            "why": "Parentheses always go first.",
+            "code": "System.out.println((2 + 3) * 4);",
+            "kind": "predict",
+            "opts": [
+              "20",
+              "14",
+              "24",
+              "11"
+            ],
+            "correct": 0,
+            "instruction": "Parentheses added. Now what?"
+          },
+          {
+            "id": "f24_3",
+            "why": "int / int truncates — it does NOT round. 7/2 = 3.5, truncated down to 3.",
+            "code": "System.out.println(7 / 2);",
+            "kind": "predict",
+            "opts": [
+              "3",
+              "3.5",
+              "4",
+              "(an error)"
+            ],
+            "correct": 0,
+            "instruction": "The big one. What prints?"
+          },
+          {
+            "id": "f24_4",
+            "why": "9 / 2 is decided as INT MATH first (= 4) — storing the result in a double afterward doesn't undo that. It prints 4.0, not 4.5.",
+            "code": "double avg = 9 / 2;\nSystem.out.println(avg);",
+            "kind": "spot",
+            "correct": 0,
+            "instruction": "Tap the line that doesn't do what you'd expect."
+          },
+          {
+            "id": "f24_5",
+            "code": "int x = 17;\nx = x % 5;\nx = x + 1;",
+            "kind": "trace",
+            "questions": [
+              {
+                "why": "% is the remainder: 17 = 3×5 + 2.",
+                "opts": [
+                  "2",
+                  "3",
+                  "5"
+                ],
+                "prompt": "after line 2, x = ?",
+                "correct": 0
+              },
+              {
+                "why": "2 + 1.",
+                "opts": [
+                  "3",
+                  "2",
+                  "4"
+                ],
+                "prompt": "after line 3, x = ?",
+                "correct": 0
+              }
+            ],
+            "instruction": "Follow x."
+          },
+          {
+            "id": "f24_6",
+            "code": "int n = 4;\nif (n % 2 = 0) {\n  System.out.println(\"even\");\n}",
+            "hint": "= assigns a value. == compares two. Which do you need in a condition?",
+            "kind": "fix",
+            "after": "One extra = sign, and it means something completely different.",
+            "target": "even",
+            "solution": "int n = 4;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n}",
+            "instruction": "One character is wrong. Find it, fix it."
+          },
+          {
+            "id": "f24_7",
+            "code": "// your code here\n",
+            "hint": "Two separate if-checks — one for 3, one for 5. Same pattern as the last step, twice.",
+            "kind": "write",
+            "target": "Fizz\nBuzz",
+            "solution": "if (15 % 3 == 0) {\n  System.out.println(\"Fizz\");\n}\nif (15 % 5 == 0) {\n  System.out.println(\"Buzz\");\n}",
+            "instruction": "15 is divisible by both. Print Fizz for one, Buzz for the other."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.9",
+      "title": "For Loops",
+      "objectives": [
+        "trace a for-loop's counter through each iteration",
+        "predict how many times a loop body runs",
+        "write a for-loop that counts to a target"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f29_1",
+            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}",
+            "kind": "run",
+            "after": "One line of code, five lines of output. That's a loop.",
+            "skills": [
+              "write a for-loop that counts to a target"
+            ],
+            "instruction": "This repeats itself. Run it."
+          },
+          {
+            "id": "f29_2",
+            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}",
+            "hint": "Only one number decides where it stops.",
+            "kind": "tweak",
+            "after": "The middle part is the stop condition — it decides when to quit.",
+            "skills": [
+              "write a for-loop that counts to a target"
+            ],
+            "target": "1\n2\n3\n4\n5",
+            "instruction": "Make it count to 10 instead."
+          },
+          {
+            "id": "f29_3",
+            "why": "i < 5 stops BEFORE 5, so it runs on 1,2,3,4 — four times, not five. This one character is the most common loop bug there is.",
+            "code": "for (int i = 1; i < 5; i++) {\n  System.out.print(i);\n}",
+            "kind": "predict",
+            "opts": [
+              "1234",
+              "12345",
+              "2345",
+              "(nothing)"
+            ],
+            "skills": [
+              "predict how many times a loop body runs"
+            ],
+            "correct": 0,
+            "instruction": "Note the < instead of <=. What prints?"
+          },
+          {
+            "id": "f29_4",
+            "why": "Starting at 0 and stopping before 3 gives 0,1,2 — three runs. Starting at 0 with < is the standard way to repeat something N times.",
+            "code": "for (int i = 0; i < 3; i++) {\n  System.out.print(\"x\");\n}",
+            "kind": "predict",
+            "opts": [
+              "xxx",
+              "xx",
+              "xxxx",
+              "(nothing)"
+            ],
+            "skills": [
+              "predict how many times a loop body runs"
+            ],
+            "correct": 0,
+            "instruction": "How many x's?"
+          },
+          {
+            "id": "f29_5",
+            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(i * 10);\n}",
+            "kind": "trace",
+            "skills": [
+              "trace a for-loop's counter through each iteration"
+            ],
+            "questions": [
+              {
+                "why": "i starts at 1, so i * 10 is 10.",
+                "opts": [
+                  "10",
+                  "1",
+                  "30"
+                ],
+                "prompt": "first time through, what prints?",
+                "correct": 0
+              },
+              {
+                "why": "i reaches 3 (since i <= 3), so 3 * 10 = 30.",
+                "opts": [
+                  "30",
+                  "40",
+                  "3"
+                ],
+                "prompt": "and the last thing it prints?",
+                "correct": 0
+              },
+              {
+                "why": "i takes the values 1, 2, 3 — three passes, three lines.",
+                "opts": [
+                  "3",
+                  "4",
+                  "2"
+                ],
+                "prompt": "so how many lines total?",
+                "correct": 0
+              }
+            ],
+            "instruction": "Follow i."
+          },
+          {
+            "id": "f29_6",
+            "why": "That line drags i back to 1 on every pass, so i++ can never get it past 3. The body can change the counter — and that's how loops get stuck.",
+            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"row \" + i);\n  i = 1;\n}",
+            "kind": "spot",
+            "skills": [
+              "trace a for-loop's counter through each iteration"
+            ],
+            "correct": 2,
+            "instruction": "Tap the line that makes this run forever."
+          },
+          {
+            "id": "f29_7",
+            "code": "for (int i = ⟦1⟧; i <= 10; i = i + ⟦2⟧) {\n  System.out.print(i + \" \");\n}",
+            "hint": "Start on the first even number, and step by how far apart evens are.",
+            "kind": "fill",
+            "after": "The third part doesn't have to be i++ — you can step by any amount.",
+            "blanks": [
+              {
+                "chips": [
+                  "2",
+                  "1",
+                  "0"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "2",
+                  "1",
+                  "10"
+                ],
+                "answer": 0
+              }
+            ],
+            "skills": [
+              "write a for-loop that counts to a target"
+            ],
+            "target": "2 4 6 8 10",
+            "instruction": "Fill the blanks to print the even numbers up to 10."
+          },
+          {
+            "id": "f29_8",
+            "code": "for (int i = 1; i < 3; i++) {\n  System.out.println(\"hi\");\n}",
+            "hint": "Count it out: with i < 3 starting at 1, which values does i actually take?",
+            "kind": "fix",
+            "after": "Off by one. Always count the actual values — 1, 2 is two passes, not three.",
+            "skills": [
+              "predict how many times a loop body runs"
+            ],
+            "target": "hi\nhi\nhi",
+            "solution": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"hi\");\n}",
+            "instruction": "It should print hi three times. Fix it."
+          },
+          {
+            "id": "f29_9",
+            "code": "// your code here\n",
+            "hint": "Loop i from 1 to 4, and build the line with + like you did in 2.1.",
+            "kind": "write",
+            "after": "You just generated four lines of formatted output from three lines of code. That's what loops are for.",
+            "skills": [
+              "write a for-loop that counts to a target"
+            ],
+            "target": "1 x 3 = 3\n2 x 3 = 6\n3 x 3 = 9\n4 x 3 = 12",
+            "solution": "for (int i = 1; i <= 4; i++) {\n  System.out.println(i + \" x 3 = \" + (i * 3));\n}",
+            "instruction": "Print the 3 times table up to 4 — match it exactly."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.10",
+      "title": "While Loops",
+      "objectives": [
+        "decide when a while loop fits better than a for loop",
+        "trace a while loop's variable until its condition fails",
+        "recognise why a while loop never stops"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f210_1",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "kind": "run",
+            "after": "It repeated until the condition stopped being true — no counting required up front.",
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "instruction": "This one keeps going until told to stop. Run it."
+          },
+          {
+            "id": "f210_2",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "hint": "Only the first line decides how much you start with.",
+            "kind": "tweak",
+            "after": "You never told it how many times to loop — it worked that out from the condition.",
+            "target": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
+            "instruction": "Start with more fuel. Run it."
+          },
+          {
+            "id": "f210_3",
+            "why": "The condition is checked BEFORE the first pass. 10 < 5 is already false, so the body never runs even once.",
+            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
+            "kind": "predict",
+            "opts": [
+              "done",
+              "inside\ndone",
+              "inside",
+              "(an error)"
+            ],
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "correct": 0,
+            "instruction": "What prints?"
+          },
+          {
+            "id": "f210_4",
+            "code": "int total = 0;\nint i = 1;\nwhile (i <= 3) {\n  total = total + i;\n  i++;\n}",
+            "kind": "trace",
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "questions": [
+              {
+                "why": "0 + 1.",
+                "opts": [
+                  "1",
+                  "0",
+                  "3"
+                ],
+                "prompt": "after the first pass, total = ?",
+                "correct": 0
+              },
+              {
+                "why": "1 + 2.",
+                "opts": [
+                  "3",
+                  "2",
+                  "4"
+                ],
+                "prompt": "after the second pass, total = ?",
+                "correct": 0
+              },
+              {
+                "why": "1 + 2 + 3. It stops once i reaches 4, because 4 <= 3 is false.",
+                "opts": [
+                  "6",
+                  "3",
+                  "10"
+                ],
+                "prompt": "when the loop finally stops, total = ?",
+                "correct": 0
+              }
+            ],
+            "instruction": "Follow total."
+          },
+          {
+            "id": "f210_5",
+            "why": "Nothing inside the loop ever changes count, so count <= 3 stays true forever. A while loop will not update your variable for you — you must do it in the body.",
+            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
+            "kind": "spot",
+            "skills": [
+              "recognise why a while loop never stops"
+            ],
+            "correct": 2,
+            "instruction": "This never stops. Tap the line that should be changing count."
+          },
+          {
+            "id": "f210_6",
+            "code": "int i = 1;\nwhile (i < 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
+            "hint": "With i < 3 starting at 1, which values does i actually take before it quits?",
+            "kind": "fix",
+            "after": "Same off-by-one trap as for-loops — the condition decides the last value that still counts.",
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "target": "pass 1\npass 2\npass 3",
+            "solution": "int i = 1;\nwhile (i <= 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
+            "instruction": "It stops one step too early. Fix it."
+          },
+          {
+            "id": "f210_7",
+            "hint": "Declare it, test it, print it, shrink it, close it.",
+            "kind": "arrange",
+            "after": "A for-loop would be awkward here — you don't know up front how many halvings it takes. That's when while wins.",
+            "lines": [
+              "int n = 20;",
+              "while (n > 1) {",
+              "  System.out.print(n + \" \");",
+              "  n = n / 2;",
+              "}"
+            ],
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "target": "20 10 5 2",
+            "distractors": [
+              "  n = n * 2;"
+            ],
+            "instruction": "Tap the lines in order to halve 20 down past 1."
+          },
+          {
+            "id": "f210_8",
+            "code": "// your code here\n",
+            "hint": "Same shape as the trace step — a running total, a counter, and remember to change the counter.",
+            "kind": "write",
+            "after": "You wrote a loop that decides its own length. That's the whole idea of while.",
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "target": "15",
+            "solution": "int total = 0;\nint i = 1;\nwhile (i <= 5) {\n  total = total + i;\n  i++;\n}\nSystem.out.println(total);",
+            "instruction": "Use a while loop to add 1 through 5 and print the total."
+          }
+        ]
+      }
+    }
+  ]
+}

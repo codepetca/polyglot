@@ -24,11 +24,14 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const me = await requireRoleApi("ADMIN");
   if (me instanceof NextResponse) return me;
-  const { lessonCode, flow, skipVerify, verifyOnly } = (await req.json()) as {
+  const { lessonCode, flow, skipVerify, verifyOnly, objectives } = (await req.json()) as {
     lessonCode: string;
     flow: Flow;
     skipVerify?: boolean;
     verifyOnly?: boolean; // check without writing — safe to run on a live lesson
+    // Optional: the lesson's student-facing objectives. Only fills them when
+    // empty — a teacher's existing wording is never overwritten by an import.
+    objectives?: string[];
   };
 
   const lesson = await prisma.lesson.findUnique({ where: { code: String(lessonCode || "") } });
@@ -53,9 +56,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, written: false, verifiedOnly: true, steps: flow.steps.length, results });
   }
 
-  // Strip server-side-only authoring fields we don't want stored twice? No —
-  // store the flow whole (solutions included); the GET/lesson route strips.
-  await prisma.lesson.update({ where: { id: lesson.id }, data: { flow: flow as any } });
+  // Store the flow whole (solutions included); the GET/lesson route strips what
+  // must not reach a student. Objectives only fill an empty field.
+  const cleanObjectives = (objectives || []).map((o) => String(o).trim()).filter(Boolean).slice(0, 12);
+  const hasObjectives = (((lesson.objectives as unknown as string[]) ?? []) || []).length > 0;
+  await prisma.lesson.update({
+    where: { id: lesson.id },
+    data: {
+      flow: flow as any,
+      ...(cleanObjectives.length && !hasObjectives ? { objectives: cleanObjectives } : {}),
+    },
+  });
 
   // Skill tagging: step.skills = ["statement", ...] → find-or-create on this
   // lesson (AI-origin until confirmed in /admin/skills) + tag the step id.
