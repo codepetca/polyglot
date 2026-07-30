@@ -71,10 +71,11 @@ export default function FlowKit({ lessons }: { lessons: { code: string; title: s
   const [lessonCode, setLessonCode] = useState(lessons[0]?.code || "");
   const [json, setJson] = useState("");
   const [busy, setBusy] = useState(false);
-  const [report, setReport] = useState<{ ok?: boolean; results?: string[]; failures?: string[]; steps?: number; tagged?: number } | null>(null);
+  const [report, setReport] = useState<{ ok?: boolean; results?: string[]; failures?: string[]; steps?: number; tagged?: number; fixPrompt?: string; verifiedOnly?: boolean } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedFix, setCopiedFix] = useState(false);
 
-  async function importFlow() {
+  async function send(verifyOnly: boolean) {
     setBusy(true);
     setReport(null);
     let flow: unknown;
@@ -88,7 +89,7 @@ export default function FlowKit({ lessons }: { lessons: { code: string; title: s
     const d = await fetch("/api/curriculum/flow", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lessonCode, flow }),
+      body: JSON.stringify({ lessonCode, flow, verifyOnly }),
     }).then((r) => r.json());
     setReport(d);
     setBusy(false);
@@ -130,21 +131,46 @@ export default function FlowKit({ lessons }: { lessons: { code: string; title: s
         placeholder='paste the AI’s JSON here: {"v":1,"steps":[...]}'
       />
       <div className="runrow" style={{ marginTop: 8 }}>
-        <button className="btn green" disabled={busy || !json.trim()} onClick={importFlow}>
-          {busy ? "verifying every snippet against the compiler…" : `Verify + import → ${lessonCode}`}
+        <button className="btn green" disabled={busy || !json.trim()} onClick={() => send(false)}>
+          {busy ? "compiling every snippet…" : `Verify + import → ${lessonCode}`}
+        </button>
+        <button className="btn ghost" disabled={busy || !json.trim()} onClick={() => send(true)} title="Compile-check everything without touching the live lesson">
+          Check only
         </button>
       </div>
 
       {report && (
         <div className="panel" style={{ marginTop: 10, borderColor: report.ok ? "var(--accent)" : "#b3352e" }}>
           {report.ok ? (
-            <b>✓ imported — {report.steps} steps{report.tagged ? `, ${report.tagged} skill tags` : ""}. The lesson now opens as an interactive flow.</b>
+            <b>
+              {report.verifiedOnly
+                ? `✓ all ${report.steps} steps check out — nothing written yet. Hit "Verify + import" to publish it.`
+                : `✓ imported — ${report.steps} steps${report.tagged ? `, ${report.tagged} skill tags` : ""}. The lesson now opens as an interactive flow.`}
+            </b>
           ) : (
-            <b style={{ color: "#b3352e" }}>✗ rejected — fix these and re-paste:</b>
+            <b style={{ color: "#b3352e" }}>✗ rejected — the live lesson was not touched.</b>
           )}
           {(report.failures || []).map((f, i) => (
             <div key={i} className="meta" style={{ margin: "4px 0", color: "#b3352e" }}>✗ {f}</div>
           ))}
+
+          {/* The fix loop, made one click: copy this straight back to the AI
+              that wrote the lesson and it returns corrected JSON. */}
+          {report.fixPrompt && (
+            <div style={{ marginTop: 10 }}>
+              <button
+                className="btn purple"
+                onClick={async () => { await navigator.clipboard.writeText(report.fixPrompt!); setCopiedFix(true); setTimeout(() => setCopiedFix(false), 1800); }}
+              >
+                {copiedFix ? "copied ✓ — paste it back to the AI" : "📋 Copy a fix request for the AI"}
+              </button>
+              <p className="meta" style={{ marginTop: 6 }}>
+                Paste that into the same chat that wrote this lesson. It lists exactly what the compiler disproved, so you
+                don't have to explain anything — you'll get corrected JSON back to paste here.
+              </p>
+            </div>
+          )}
+
           {(report.results || []).map((r, i) => (
             <div key={i} className="meta" style={{ margin: "3px 0" }}>{r}</div>
           ))}
