@@ -86,10 +86,37 @@ but if a11y is ever a hard requirement, this needs one real VoiceOver/NVDA pass.
 
 ## P2 — More interactive lessons
 
-## P2 — More interactive lessons
+## P2 — More interactive lessons (in progress)
 
-11 of 15 are still text. The self-serve authoring pipeline (verified working,
-compiler-gated) is the intended scaling path rather than hand-authoring each one.
+**5 of 15** now interactive: 2.1 Printing, 2.2 Variables/Types, 2.3 User Input,
+2.4 Arithmetic, 2.9 For Loops.
+
+The pipeline is the scaling path, and it's now self-correcting (a rejection
+returns a paste-back fix request for the AI, plus a "Check only" mode that
+compile-checks without publishing). Authoring 2.9 by hand was worth it once
+because it shook out the `fill` and `spot` kinds in a live lesson for the first
+time — which immediately exposed a real stale-state bug affecting four step
+kinds. Remaining lessons should go through the pipeline.
+
+Suggested next by teaching value, not sequence: **2.10 While Loops** (pairs with
+2.9), **2.11 If Statements**, then 2.6–2.8 booleans/logic/comparison.
+
+## Verified-by-hand log (what's actually been driven, not just built)
+
+- Core loop: Run → real Java compiles remotely → output → success → Next ✓
+- Anonymous entry → lesson → step completion ✓
+- Runner failover with a deliberately broken primary ✓
+- Student compile error does NOT trigger failover ✓
+- Total runner outage → honest student-facing message ✓
+- Import rejects a false claim; leaves the live lesson untouched ✓
+- verifyOnly writes nothing ✓
+- `spot` and `fill` step kinds in a real lesson ✓
+- Admin pages blocked from a student session ✓
+- Mobile (375px) and desktop (1280px) navigation ✓
+- Light + dark themes ✓
+
+**Not verified (stated honestly):** aria-live announcements with a real screen
+reader; behaviour under more than one concurrent user; any real student.
 
 ## P1 — Landing page
 
