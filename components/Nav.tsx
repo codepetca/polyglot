@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
+import LanguagePicker from "./LanguagePicker";
 
 type MiniUser = { id: string; name: string; role: string; className?: string | null; avatar?: string | null; anonymous?: boolean };
 
@@ -66,6 +67,7 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
               Account
             </Link>
           )}
+          <LanguagePicker />
           <ThemeToggle />
           <button className="tbtn" onClick={logout}>
             Sign out

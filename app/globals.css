@@ -693,3 +693,17 @@ pre.flowcode.ro { margin: 0; }
 .sp-code:hover { outline: 1.5px solid var(--accent); }
 .sp-note { font-size: 12px; color: var(--muted); margin-top: 4px; }
 @media (max-width: 560px) { .syntaxfab { right: 12px; bottom: 12px; padding: 9px 15px; } }
+
+/* "You'll need this" — lesson syntax, always visible, never hunted for */
+.needthis { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+.needthis .nt-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.nt-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 8px; }
+.nt-card { border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 11px; cursor: pointer; background: var(--paper); }
+.nt-card:hover { border-color: var(--accent); }
+.nt-name { font-size: 12.5px; font-weight: 600; margin-bottom: 5px; }
+.nt-code { margin: 0; background: var(--code-bg, #14171a); color: #e6e1d6; border-radius: 6px; padding: 7px 9px;
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.45; white-space: pre-wrap; overflow-x: auto; }
+.nt-note { font-size: 11.5px; color: var(--muted); margin-top: 5px; }
+.nt-subhead { font-size: 12px; font-weight: 600; color: var(--muted); margin: 10px 0 6px; }
+.nt-more { margin-top: 10px; }
+.nt-more > summary { cursor: pointer; font-size: 12.5px; color: var(--muted); }

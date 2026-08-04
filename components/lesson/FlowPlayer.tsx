@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import CodeBox from "./CodeBox";
+import NeedThis from "./NeedThis";
+import { readLang, LANG_EVENT } from "@/components/LanguagePicker";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
 // text. 14 step kinds (see lib/curriculum/flow.ts, the canonical spec):
@@ -83,11 +85,12 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
 
   // Remember the student's assist language across lessons — an ESL student
   // shouldn't have to re-pick it on every page.
+  // Language help is a profile setting now (top bar), not a per-lesson control.
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("classos_assist_lang");
-      if (saved) setLang(saved);
-    } catch { /* private mode */ }
+    setLang(readLang());
+    const onChange = (e: Event) => setLang((e as CustomEvent).detail || "");
+    window.addEventListener(LANG_EVENT, onChange);
+    return () => window.removeEventListener(LANG_EVENT, onChange);
   }, []);
 
   useEffect(() => {
@@ -126,22 +129,6 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
         </span>
         <span className="meta" style={{ margin: 0 }}>{done ? "done!" : `${i + 1} / ${steps.length}`}</span>
         <span style={{ flex: 1 }} />
-        {languages.length > 0 && (
-          <select
-            className="langpick"
-            value={lang}
-            title="Add help in another language. The lesson stays in English."
-            onChange={(e) => {
-              setLang(e.target.value);
-              try { localStorage.setItem("classos_assist_lang", e.target.value); } catch { /* private mode */ }
-            }}
-          >
-            <option value="">English only</option>
-            {languages.map((code) => (
-              <option key={code} value={code}>+ {LANG_LABELS[code] || code}</option>
-            ))}
-          </select>
-        )}
         <Link href={`/exam/${lessonCode}`} className="meta" style={{ margin: 0, textDecoration: "underline dotted" }} title="Skip the steps — pass the clean quiz and you're done.">
           ⚡ know this? prove it
         </Link>
@@ -550,6 +537,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       )}
 
       {step.kind === "note" && <div style={{ marginTop: 4 }} />}
+
+      {/* Only on steps where they have to write code. Everywhere else it's
+          noise competing with the single thing the screen is asking for. */}
+      {["write", "fix", "tweak", "arrange", "fill"].includes(step.kind) && <NeedThis lessonCode={lessonCode} />}
 
       {/* ── run + output ── */}
       {runnable && (
