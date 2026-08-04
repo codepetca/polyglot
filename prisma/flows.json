@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-04T13:00:53.290Z",
+  "exportedAt": "2026-08-04T14:25:33.041Z",
   "note": "Interactive lesson flows. Restore with: node --env-file=.env scripts/flows.mjs restore",
   "lessons": [
     {
@@ -485,15 +485,62 @@
         "v": 1,
         "steps": [
           {
-            "id": "f24_1",
-            "code": "System.out.println(2 + 3 * 4);",
-            "kind": "run",
-            "after": "Multiplication happens before addition — same as math class.",
-            "instruction": "Run it — watch the order."
+            "id": "f24_a1",
+            "kind": "teach",
+            "points": [
+              {
+                "text": "Add, subtract, multiply. * is a star, not an ×.",
+                "label": "+  -  *"
+              },
+              {
+                "text": "Divide. It behaves differently for whole numbers than you expect — that's coming up.",
+                "label": "/"
+              },
+              {
+                "text": "Remainder. 7 % 2 is 1, because 2 goes into 7 three times with 1 left over.",
+                "label": "%"
+              },
+              {
+                "text": "Brackets, to force what happens first.",
+                "label": "( )"
+              }
+            ],
+            "instruction": "Java does maths with these six symbols."
           },
           {
-            "id": "f24_2",
-            "why": "Parentheses always go first.",
+            "id": "f24_a2",
+            "code": "System.out.println(10 + 3);\nSystem.out.println(10 - 3);\nSystem.out.println(10 * 3);",
+            "kind": "run",
+            "after": "Exactly like a calculator. The interesting part is next.",
+            "skills": [
+              "evaluate arithmetic expressions using order of operations"
+            ],
+            "instruction": "Run it. Nothing surprising yet."
+          },
+          {
+            "id": "f24_a3",
+            "code": "System.out.println(2 + 3 * 4);",
+            "kind": "teach",
+            "output": "14",
+            "points": [
+              {
+                "text": "* and / and % happen BEFORE + and -. Same rule you already use in maths class.",
+                "label": "first"
+              },
+              {
+                "text": "2 + 3 * 4 is 2 + 12, which is 14. It is NOT 5 * 4.",
+                "label": "so"
+              },
+              {
+                "text": "Put brackets around what you want to happen first.",
+                "label": "override"
+              }
+            ],
+            "instruction": "When there's more than one operator, order matters."
+          },
+          {
+            "id": "f24_a4",
+            "why": "Brackets go first, so it's 5 * 4 = 20. Without them it would have been 14.",
             "code": "System.out.println((2 + 3) * 4);",
             "kind": "predict",
             "opts": [
@@ -502,77 +549,172 @@
               "24",
               "11"
             ],
-            "correct": 0,
-            "instruction": "Parentheses added. Now what?"
-          },
-          {
-            "id": "f24_3",
-            "why": "int / int truncates — it does NOT round. 7/2 = 3.5, truncated down to 3.",
-            "code": "System.out.println(7 / 2);",
-            "kind": "predict",
-            "opts": [
-              "3",
-              "3.5",
-              "4",
-              "(an error)"
+            "skills": [
+              "evaluate arithmetic expressions using order of operations"
             ],
             "correct": 0,
-            "instruction": "The big one. What prints?"
+            "instruction": "Brackets added. Now what?"
           },
           {
-            "id": "f24_4",
-            "why": "9 / 2 is decided as INT MATH first (= 4) — storing the result in a double afterward doesn't undo that. It prints 4.0, not 4.5.",
+            "id": "f24_a5",
+            "code": "System.out.println(7 / 2);",
+            "kind": "teach",
+            "output": "3",
+            "points": [
+              {
+                "text": "When BOTH numbers are whole numbers, Java throws away the fraction. It does not round.",
+                "label": "3, not 3.5"
+              },
+              {
+                "text": "A whole number divided by a whole number has to stay a whole number. 3.5 can't fit, so the .5 is dropped.",
+                "label": "why"
+              },
+              {
+                "text": "Gives 4, not 4.5 and not 5. Always chops downward.",
+                "label": "9 / 2"
+              },
+              {
+                "text": "Make one of them a decimal: 7.0 / 2 gives 3.5.",
+                "label": "want 3.5?"
+              }
+            ],
+            "instruction": "Now the one that catches everybody."
+          },
+          {
+            "id": "f24_a6",
+            "why": "Both are whole numbers, so the .5 is thrown away and you get 4.",
+            "code": "System.out.println(9 / 2);",
+            "kind": "predict",
+            "opts": [
+              "4",
+              "4.5",
+              "5",
+              "(an error)"
+            ],
+            "skills": [
+              "predict the result of integer division"
+            ],
+            "correct": 0,
+            "instruction": "So what does this print?"
+          },
+          {
+            "id": "f24_a7",
+            "why": "The division happens FIRST, as whole numbers, giving 4. Only then is 4 stored in a double. Storing it in a double afterwards can't bring the .5 back — it prints 4.0.",
             "code": "double avg = 9 / 2;\nSystem.out.println(avg);",
             "kind": "spot",
+            "skills": [
+              "predict the result of integer division"
+            ],
             "correct": 0,
-            "instruction": "Tap the line that doesn't do what you'd expect."
+            "instruction": "This one looks safe but isn't. Tap the line that goes wrong."
           },
           {
-            "id": "f24_5",
-            "code": "int x = 17;\nx = x % 5;\nx = x + 1;",
+            "id": "f24_a8",
+            "code": "double avg = 9 / 2;\nSystem.out.println(avg);",
+            "hint": "One of the two numbers has to be a decimal BEFORE the division happens.",
+            "kind": "fix",
+            "after": "Making one side a decimal changes the whole sum to decimal maths.",
+            "skills": [
+              "predict the result of integer division"
+            ],
+            "target": "4.5",
+            "solution": "double avg = 9.0 / 2;\nSystem.out.println(avg);",
+            "instruction": "Make it print the real average, 4.5."
+          },
+          {
+            "id": "f24_a9",
+            "code": "System.out.println(7 % 2);\nSystem.out.println(10 % 5);\nSystem.out.println(14 % 3);",
+            "kind": "teach",
+            "output": "1\n0\n2",
+            "points": [
+              {
+                "text": "2 fits into 7 three times (6), and 1 is left over. So 1.",
+                "label": "7 % 2"
+              },
+              {
+                "text": "5 fits exactly, nothing left over. So 0.",
+                "label": "10 % 5"
+              },
+              {
+                "text": "A remainder of 0 means it divides evenly — that's how you test if a number is even, or a multiple of anything.",
+                "label": "0 means"
+              }
+            ],
+            "instruction": "% gives you what's left over."
+          },
+          {
+            "id": "f24_a10",
+            "code": "System.out.println(20 % 6);\nSystem.out.println(20 % 4);",
             "kind": "trace",
+            "skills": [
+              "use the modulo operator to find remainders"
+            ],
             "questions": [
               {
-                "why": "% is the remainder: 17 = 3×5 + 2.",
+                "why": "6 fits 3 times (18), leaving 2.",
                 "opts": [
                   "2",
                   "3",
-                  "5"
+                  "4"
                 ],
-                "prompt": "after line 2, x = ?",
+                "prompt": "20 % 6 = ?",
                 "correct": 0
               },
               {
-                "why": "2 + 1.",
+                "why": "4 fits exactly 5 times, nothing left over.",
                 "opts": [
-                  "3",
-                  "2",
-                  "4"
+                  "0",
+                  "4",
+                  "5"
                 ],
-                "prompt": "after line 3, x = ?",
+                "prompt": "20 % 4 = ?",
                 "correct": 0
               }
             ],
-            "instruction": "Follow x."
+            "instruction": "Work these out."
           },
           {
-            "id": "f24_6",
-            "code": "int n = 4;\nif (n % 2 = 0) {\n  System.out.println(\"even\");\n}",
-            "hint": "= assigns a value. == compares two. Which do you need in a condition?",
-            "kind": "fix",
-            "after": "One extra = sign, and it means something completely different.",
+            "id": "f24_a11",
+            "code": "int n = 8;\nif (n ⟦1⟧ 2 ⟦2⟧ 0) {\n  System.out.println(\"even\");\n}",
+            "hint": "Even means: divide by 2 and nothing is left over.",
+            "kind": "fill",
+            "after": "n % 2 == 0 is the standard way to test for even. You'll use it constantly.",
+            "blanks": [
+              {
+                "chips": [
+                  "%",
+                  "/",
+                  "*"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "==",
+                  "=",
+                  "!="
+                ],
+                "answer": 0
+              }
+            ],
+            "skills": [
+              "use the modulo operator to find remainders"
+            ],
             "target": "even",
-            "solution": "int n = 4;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n}",
-            "instruction": "One character is wrong. Find it, fix it."
+            "instruction": "Fill it in so it only prints when n is even."
           },
           {
-            "id": "f24_7",
-            "code": "// your code here\n",
-            "hint": "Two separate if-checks — one for 3, one for 5. Same pattern as the last step, twice.",
+            "id": "f24_a12",
+            "code": "int n = 17;\n// print \"odd\" or \"even\"\n",
+            "hint": "Use the same n % 2 == 0 test, with an else for the other case.",
             "kind": "write",
-            "target": "Fizz\nBuzz",
-            "solution": "if (15 % 3 == 0) {\n  System.out.println(\"Fizz\");\n}\nif (15 % 5 == 0) {\n  System.out.println(\"Buzz\");\n}",
-            "instruction": "15 is divisible by both. Print Fizz for one, Buzz for the other."
+            "after": "You just used remainder to make a decision — that's most of what % is for.",
+            "skills": [
+              "use the modulo operator to find remainders"
+            ],
+            "target": "odd",
+            "solution": "int n = 17;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "instruction": "Your turn: print whether 17 is even or odd."
           }
         ]
       }

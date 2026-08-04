@@ -20,6 +20,9 @@ const MEGA_PROMPT = `You are designing an INTERACTIVE lesson "flow" for a learn-
 
 Return ONLY JSON: {"v":1,"steps":[...]}. The 14 step kinds, each with a worked example:
 
+0. teach — EXPLAIN THE CONCEPT. No grading, no pressure, just: here is the thing, here is what it prints, here is what each piece means. Fields: code (optional), output (what that code prints — machine-verified, so it must be exact), points[] of {label, text}. The label is a short code token or cue ("7 / 2", "why", "watch out"); the text is one plain sentence.
+{"id":"f_0","kind":"teach","instruction":"Now the one that catches everybody.","code":"System.out.println(7 / 2);","output":"3","points":[{"label":"3, not 3.5","text":"When both numbers are whole numbers, Java throws away the fraction. It does not round."},{"label":"want 3.5?","text":"Make one a decimal: 7.0 / 2 gives 3.5."}]}
+
 1. run — press ▶, watch it happen. Fields: code.
 {"id":"f_1","kind":"run","instruction":"This is a Java program. Run it.","code":"System.out.println(\\"Hello!\\");","after":"You told the computer what to do. It did it."}
 
@@ -62,7 +65,24 @@ Return ONLY JSON: {"v":1,"steps":[...]}. The 14 step kinds, each with a worked e
 14. branch — offer a jump ("seen this before?"). goto = a step id in this flow.
 {"id":"f_14","kind":"branch","instruction":"Used println before?","options":[{"label":"Nope — show me","goto":"f_1"},{"label":"Yes — skip to the challenge","goto":"f_8"}]}
 
-Now design the flow for the lesson material I paste below. Target audience: absolute beginners AND impatient students who half-know it. Arc: hook (run/tweak) → think-first (predict/spot/trace) → build (fix/fill/arrange) → sort/connect if it fits → one explain at the peak concept → write finale. Output the JSON only.
+THE MOST IMPORTANT RULE: TEACH BEFORE YOU TEST.
+
+A lesson that is mostly questions is a quiz, not a lesson, and it fails the students this platform exists for — the ones who are behind, distracted, or convinced they are bad at this. Being asked something you were never shown feels like a trap, and they quit.
+
+So:
+- EVERY new idea gets a "teach" step BEFORE anything grades the student on it. No exceptions.
+- Aim for roughly ONE teach step for every TWO doing steps. A 12-step lesson should have about 4 teach steps.
+- Alternate: teach → do → teach → do. Never stack three graded steps in a row.
+- A "teach" step should make the student feel like they now understand something, on its own, even if they skipped everything else.
+- Name the trap explicitly in the teach step. If integer division surprises people, SAY "this catches everybody" and show it, before asking anything about it.
+
+SHAPE: teach the first idea → let them run/tweak it → teach the next idea → check it (predict/spot/trace) → teach the hard one → practise it (fix/fill/arrange) → write finale where they build something themselves. 10–14 steps.
+
+AUDIENCE: absolute beginners AND impatient students who half-know it. Assume they cannot remember syntax from a previous lesson and will not go looking for it.
+
+CURRICULUM: this course targets AP Computer Science A. Unit 1 is Using Objects and Methods (primitive types, variables, expressions, Strings, Scanner input). Unit 2 is Selection and Iteration (boolean expressions, if/else, for and while loops). Unit 3 is Class Creation. Unit 4 is Data Collections (arrays, ArrayList, 2D arrays, and reading data from files with File and Scanner). Tag steps with "skills" phrased as concrete abilities ("predict the result of integer division"), and keep them consistent across steps that test the same thing.
+
+Output the JSON only.
 
 LESSON MATERIAL:
 `;
