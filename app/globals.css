@@ -661,3 +661,14 @@ pre.flowcode.ro { margin: 0; }
 .assisttext[dir="rtl"] { border-left: none; border-right: 3px solid var(--violet); border-radius: 8px 0 0 8px; }
 .assisttext .assistbtn { margin-inline-start: auto; flex-shrink: 0; }
 .langpick { font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border-radius: 99px; border: 1.5px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+
+/* Selected-but-not-yet-checked answer. Picking is not answering — the commit is
+   a separate deliberate act, so a stray tap can't score you wrong. */
+.optbtn.sel, .spotline.sel { border-color: var(--violet); background: rgba(90,74,158,.12); }
+
+/* teach step — explain the concept BEFORE any question about it */
+.teachcard { margin-top: 12px; }
+.teachpoint { display: grid; grid-template-columns: minmax(70px, auto) 1fr; gap: 12px; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--line); }
+.teachpoint:first-child { border-top: none; }
+.teachpoint .tp-label { font-family: var(--mono); font-size: 12.5px; color: var(--violet); background: rgba(90,74,158,.10); padding: 2px 8px; border-radius: 5px; white-space: nowrap; }
+.teachpoint .tp-text { font-size: 14.5px; line-height: 1.5; }

@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-04T08:09:24.756Z",
+  "exportedAt": "2026-08-04T13:00:53.290Z",
   "note": "Interactive lesson flows. Restore with: node --env-file=.env scripts/flows.mjs restore",
   "lessons": [
     {
@@ -313,41 +313,85 @@
           {
             "id": "f23_1",
             "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
-            "kind": "run",
-            "after": "The program paused, took what you typed, then kept going.",
+            "kind": "teach",
             "stdin": "Ada",
-            "instruction": "This one waits for you. Run it."
+            "output": "What is your name? Hi, Ada!",
+            "points": [
+              {
+                "text": "The tool that listens to the keyboard. You make one before you can read anything.",
+                "label": "Scanner"
+              },
+              {
+                "text": "Ask the question FIRST — otherwise the program just sits there and the user has no idea what to type.",
+                "label": "print"
+              },
+              {
+                "text": "Waits for the user to type a line and press Enter, then hands that text back to you.",
+                "label": "nextLine()"
+              },
+              {
+                "text": "A box to keep what they typed, so you can use it later.",
+                "label": "String name"
+              }
+            ],
+            "instruction": "Programs can ask you a question. Here's the whole recipe."
           },
           {
             "id": "f23_2",
             "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
-            "hint": "Change the text inside the first print — that's the prompt.",
-            "kind": "tweak",
-            "after": "You control exactly what it asks before it listens.",
+            "kind": "run",
+            "after": "The question and the answer end up on one line because print doesn't break the line — println would.",
             "stdin": "Ada",
-            "target": "What is your name? Hi, Ada!",
-            "instruction": "Change the question it asks. Run it."
+            "skills": [
+              "read what a user types using Scanner"
+            ],
+            "instruction": "Same code, for real. We'll type \"Ada\" for you. Run it."
           },
           {
             "id": "f23_3",
-            "why": "print doesn't break the line — the prompt and the reply share one line, same as always.",
-            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"Age? \");\nint age = input.nextInt();\nSystem.out.println(\"Next year: \" + (age + 1));",
-            "kind": "predict",
-            "opts": [
-              "Age? Next year: 17",
-              "Age? Next year: 16",
-              "Age?\nNext year: 17",
-              "(an error)"
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "hint": "Only change the words inside the quotes on the print line.",
+            "kind": "tweak",
+            "after": "You decide exactly what the program asks.",
+            "stdin": "Ada",
+            "skills": [
+              "prompt the user before reading their input"
             ],
-            "stdin": "16",
-            "correct": 0,
-            "instruction": "Typed 16. What prints?"
+            "target": "What is your name? Hi, Ada!",
+            "instruction": "Change the question it asks, then run it."
           },
           {
             "id": "f23_4",
-            "why": "The method name tells Scanner exactly what shape of answer to expect.",
+            "kind": "teach",
+            "points": [
+              {
+                "text": "Any text — a name, a sentence, anything with spaces. This is the safe default.",
+                "label": "nextLine()"
+              },
+              {
+                "text": "A whole number, like 16. Use it when you want to do maths with the answer.",
+                "label": "nextInt()"
+              },
+              {
+                "text": "A decimal number, like 1.75.",
+                "label": "nextDouble()"
+              },
+              {
+                "text": "Ask for the wrong kind and the program breaks — nextInt() on the word \"Ada\" is an error, not a name.",
+                "label": "careful"
+              }
+            ],
+            "instruction": "Three ways to read, depending on what you're expecting."
+          },
+          {
+            "id": "f23_5",
+            "why": "The method name tells Scanner what shape of answer to expect.",
             "kind": "match",
             "pairs": [
+              [
+                "nextLine()",
+                "any text"
+              ],
               [
                 "nextInt()",
                 "a whole number"
@@ -355,34 +399,76 @@
               [
                 "nextDouble()",
                 "a decimal number"
-              ],
-              [
-                "nextLine()",
-                "a full line of text"
               ]
             ],
-            "instruction": "Match each method to what it reads."
-          },
-          {
-            "id": "f23_5",
-            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextInt();\nSystem.out.println(\"Hi, \" + name + \"!\");",
-            "hint": "You're reading a NAME — text, not a number. Which method reads a whole line of text?",
-            "kind": "fix",
-            "after": "nextInt() expects a number; a name isn't one. nextLine() takes anything.",
-            "stdin": "Ada",
-            "target": "What is your name? Hi, Ada!",
-            "solution": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
-            "instruction": "One line reads the wrong type. Fix it."
+            "skills": [
+              "choose the right Scanner method for the kind of answer you want"
+            ],
+            "instruction": "Match each one to what it reads."
           },
           {
             "id": "f23_6",
-            "code": "// your code here\n",
-            "hint": "Same shape as the predict step — prompt, then nextInt(), then use it.",
-            "kind": "write",
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"Age? \");\nint age = input.nextInt();\nSystem.out.println(\"Next year: \" + (age + 1));",
+            "kind": "teach",
             "stdin": "16",
+            "output": "Age? Next year: 17",
+            "points": [
+              {
+                "text": "Gives back a real number, not text — so age + 1 does maths instead of gluing.",
+                "label": "nextInt()"
+              },
+              {
+                "text": "The box has to match: a whole number goes in an int.",
+                "label": "int age"
+              }
+            ],
+            "instruction": "Reading a number so you can calculate with it."
+          },
+          {
+            "id": "f23_7",
+            "why": "print keeps the cursor on the same line, so the question and answer share one line. And age + 1 is maths (17), not gluing (161), because nextInt gave us a number.",
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"Age? \");\nint age = input.nextInt();\nSystem.out.println(\"Next year: \" + (age + 1));",
+            "kind": "predict",
+            "opts": [
+              "Age? Next year: 17",
+              "Age?\nNext year: 17",
+              "Age? Next year: 161",
+              "Age? Next year: 16"
+            ],
+            "stdin": "16",
+            "skills": [
+              "choose the right Scanner method for the kind of answer you want"
+            ],
+            "correct": 0,
+            "instruction": "The user typed 16. What appears?"
+          },
+          {
+            "id": "f23_8",
+            "code": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextInt();\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "hint": "A name is text, not a number. Which of the three reads text?",
+            "kind": "fix",
+            "after": "The method has to match the kind of answer you're expecting.",
+            "stdin": "Ada",
+            "skills": [
+              "choose the right Scanner method for the kind of answer you want"
+            ],
+            "target": "What is your name? Hi, Ada!",
+            "solution": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"What is your name? \");\nString name = input.nextLine();\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "instruction": "This asks for a name but reads it the wrong way. Fix it."
+          },
+          {
+            "id": "f23_9",
+            "code": "Scanner input = new Scanner(System.in);\n// ask, read, then print\n",
+            "hint": "Copy the shape from two steps ago: print the question, nextInt() into an int, then println the result.",
+            "kind": "write",
+            "after": "Ask, read, use. That's every input program you'll ever write.",
+            "stdin": "16",
+            "skills": [
+              "prompt the user before reading their input"
+            ],
             "target": "Age? In 10 years: 26",
             "solution": "Scanner input = new Scanner(System.in);\nSystem.out.print(\"Age? \");\nint age = input.nextInt();\nSystem.out.println(\"In 10 years: \" + (age + 10));",
-            "instruction": "Ask for their age. Print their age in 10 years."
+            "instruction": "Your turn: ask for their age, then say what it'll be in 10 years."
           }
         ]
       }

@@ -34,7 +34,7 @@ import { runJava } from "@/lib/java/piston";
 
 export type FlowStep = {
   id: string;
-  kind: "run" | "tweak" | "note" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "explain" | "branch";
+  kind: "teach" | "run" | "tweak" | "note" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "explain" | "branch";
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -49,6 +49,8 @@ export type FlowStep = {
   // what "typing" is being simulated (there's no real keyboard in a run-and-
   // watch step).
   stdin?: string;
+  // teach: the output to display without making the student run it.
+  output?: string;
   opts?: string[];
   correct?: number;
   questions?: { prompt: string; opts: string[]; correct: number; why?: string }[];
@@ -59,6 +61,8 @@ export type FlowStep = {
   buckets?: string[];
   items?: { text: string; bucket: number }[];
   pairs?: [string, string][];
+  // teach: short labelled explanation lines shown beside/below the code.
+  points?: { label: string; text: string }[];
   prompt?: string;
   rubric?: string;
   persona?: string;
@@ -83,6 +87,9 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
     switch (s.kind) {
       case "run": if (!s.code) errors.push(`${at}: needs code`); break;
       case "tweak": if (!s.code || s.target === undefined) errors.push(`${at}: needs code + target (the ORIGINAL output)`); break;
+      case "teach":
+        if (!s.code && !(s.points || []).length) errors.push(`${at}: needs code and/or points[]`);
+        break;
       case "note": break;
       case "predict":
         if (!s.code || !s.opts || s.opts.length < 2 || typeof s.correct !== "number" || !s.why) errors.push(`${at}: needs code, 2+ opts, correct, why`);
@@ -155,6 +162,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       for (let i = rights.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rights[i], rights[j]] = [rights[j], rights[i]]; }
       return { ...base, lefts, rights };
     }
+    case "teach": return { ...base, points: s.points, output: s.output };
     case "explain": return { ...base, prompt: s.prompt, persona: s.persona };
     case "branch": return { ...base, options: s.options };
     default: return base; // run / tweak / note
@@ -188,6 +196,16 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
     const name = `${s.id} (${s.kind})`;
     try {
       switch (s.kind) {
+        case "teach": {
+          // A teach step may claim "this is what it prints". That claim must be
+          // machine-checked like any other, or the no-lying guarantee has a hole.
+          if (!s.code || s.output === undefined) { results.push(`${name}: – no output claimed`); break; }
+          const r = await runJava(s.code, s.stdin || "", { wrapBeginner: true });
+          if (!r.compiled || r.error) failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`);
+          else if (norm(r.stdout) !== norm(s.output)) failures.push(`${name}: prints ${JSON.stringify(norm(r.stdout))}, but the step claims ${JSON.stringify(norm(s.output))}`);
+          else results.push(`${name}: ✓ shown output verified`);
+          break;
+        }
         case "run": {
           const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true });
           if (!r.compiled || r.error) failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`);

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import CodeBox from "./CodeBox";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
 // text. 14 step kinds (see lib/curriculum/flow.ts, the canonical spec):
@@ -30,6 +31,8 @@ type Step = {
   lefts?: string[];
   rights?: string[];
   prompt?: string;
+  points?: { label: string; text: string }[];
+  output?: string;
   options?: { label: string; goto: string }[];
 };
 
@@ -187,6 +190,8 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   const [won, setWon] = useState(false);
   const [reveal, setReveal] = useState<{ correct: boolean; correctIndex?: number; why?: string; chosen?: number } | null>(null);
   const [picked, setPicked] = useState<string[]>([]); // arrange
+  // predict/spot: which option is SELECTED but not yet committed (see below).
+  const [choice, setChoice] = useState<number | null>(null);
   const [traceIdx, setTraceIdx] = useState(0); // trace progress
   const [traceReveal, setTraceReveal] = useState<{ correct: boolean; correctIndex: number; why?: string; chosen: number } | null>(null);
   const [fillPick, setFillPick] = useState<number[]>([]); // fill: chip index per blank
@@ -319,14 +324,23 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       {step.kind === "spot" ? (
         <div className="flowspot">
           {codeLines.map((l, j) => {
-            const cls = !reveal ? "" : j === reveal.correctIndex ? "right" : j === reveal.chosen ? "wrong" : "dim";
+            const cls = reveal
+              ? j === reveal.correctIndex ? "right" : j === reveal.chosen ? "wrong" : "dim"
+              : choice === j ? "sel" : "";
             return (
-              <button key={j} className={`spotline ${cls}`} disabled={!!reveal} onClick={() => answer(j)}>
+              <button key={j} className={`spotline ${cls}`} disabled={!!reveal} onClick={() => setChoice(j)}>
                 <span className="ln">{j + 1}</span>
                 <pre>{l || " "}</pre>
               </button>
             );
           })}
+          {!reveal && (
+            <div className="flowrun">
+              <button className="btn green" style={{ fontSize: 15, padding: "9px 24px" }} disabled={choice === null} onClick={() => answer(choice!)}>
+                {choice === null ? "Tap a line first" : "Check my answer"}
+              </button>
+            </div>
+          )}
         </div>
       ) : step.kind === "arrange" ? (
         <div className="flowarrange">
@@ -353,7 +367,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           serverAnswers={serverAnswers}
         />
       ) : editable ? (
-        <textarea className="flowcode" rows={Math.max(3, (code.match(/\n/g)?.length || 0) + 2)} value={code} spellCheck={false} onChange={(e) => { setCode(e.target.value); setWon(false); }} />
+        <CodeBox value={code} onChange={(v) => { setCode(v); setWon(false); }} />
       ) : step.code ? (
         <pre className="flowcode ro">{step.code}</pre>
       ) : null}
@@ -378,16 +392,32 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
 
       {/* ── kind-specific interaction ── */}
       {step.kind === "predict" && (
-        <div className="flowopts">
-          {(step.opts || []).map((o, j) => {
-            const cls = !reveal ? "" : j === reveal.correctIndex ? "right" : j === reveal.chosen ? "wrong" : "dim";
-            return (
-              <button key={j} className={`optbtn ${cls}`} disabled={!!reveal} onClick={() => answer(j)}>
-                <pre style={{ margin: 0, fontFamily: "inherit", whiteSpace: "pre-wrap" }}>{o}</pre>
+        <>
+          <div className="flowopts">
+            {(step.opts || []).map((o, j) => {
+              // Selecting is NOT answering. Tapping used to grade instantly, so
+              // a stray tap or a change of mind became an immediate red cross —
+              // exactly the "I'm bad at this" feeling this platform exists to
+              // avoid. Now you pick, you can re-pick, and you commit when ready.
+              const cls = reveal
+                ? j === reveal.correctIndex ? "right" : j === reveal.chosen ? "wrong" : "dim"
+                : choice === j ? "sel" : "";
+              return (
+                <button key={j} className={`optbtn ${cls}`} disabled={!!reveal} onClick={() => setChoice(j)}>
+                  <pre style={{ margin: 0, fontFamily: "inherit", whiteSpace: "pre-wrap" }}>{o}</pre>
+                </button>
+              );
+            })}
+          </div>
+          {!reveal && (
+            <div className="flowrun">
+              <button className="btn green" style={{ fontSize: 15, padding: "9px 24px" }} disabled={choice === null} onClick={() => answer(choice!)}>
+                {choice === null ? "Pick one first" : "Check my answer"}
               </button>
-            );
-          })}
-        </div>
+              <span className="meta" style={{ margin: 0 }}>you can change your mind before checking</span>
+            </div>
+          )}
+        </>
       )}
 
       {step.kind === "trace" && !won && (
@@ -499,6 +529,23 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         </div>
       )}
 
+      {step.kind === "teach" && (
+        <div className="teachcard">
+          {step.output !== undefined && (
+            <div className="flowout" style={{ marginTop: 10 }}>
+              <div className="lbl">WHAT IT PRINTS</div>
+              <pre>{step.output || "(nothing)"}</pre>
+            </div>
+          )}
+          {(step.points || []).map((p, j) => (
+            <div className="teachpoint" key={j}>
+              <code className="tp-label">{p.label}</code>
+              <span className="tp-text">{p.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {step.kind === "note" && <div style={{ marginTop: 4 }} />}
 
       {/* ── run + output ── */}
@@ -533,7 +580,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         {/* ── reveal / success beats ── */}
         {reveal && reveal.why !== undefined && reveal.why !== "" && (
           <div className={`flowwhy ${reveal.correct ? "yes" : "no"}`}>
-            <b>{reveal.correct ? "✓ exactly." : "not quite —"}</b> {reveal.why}
+            <b>{reveal.correct ? "✓ exactly." : "Good guess — here's the catch:"}</b> {reveal.why}
           </div>
         )}
         {won && step.after && <div className="flowwhy yes"><b>✓</b> {step.after}</div>}
@@ -554,7 +601,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
 
       {/* ── advance ── */}
       <div className="flownext">
-        {step.kind === "note" ? (
+        {step.kind === "note" || step.kind === "teach" ? (
           <button className="btn green" style={{ fontSize: 15, padding: "10px 30px" }} onClick={() => onDone(true)} autoFocus>Next →</button>
         ) : step.kind === "branch" ? (
           <span />
