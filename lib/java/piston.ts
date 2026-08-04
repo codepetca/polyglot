@@ -25,6 +25,10 @@ import "server-only";
 const GODBOLT_URL = process.env.GODBOLT_URL || "https://godbolt.org";
 const PISTON_URL = process.env.PISTON_URL || ""; // self-hosted only
 const PISTON_JAVA = process.env.PISTON_JAVA_VERSION || "15.0.2";
+// Shared secret for the self-hosted runner. Piston itself is bound to localhost
+// on that box; a TLS reverse proxy in front rejects anything without this
+// header, so the endpoint can't be used as free public compute if it's found.
+const PISTON_TOKEN = process.env.PISTON_TOKEN || "";
 // Comma-separated, tried in order.
 const GODBOLT_COMPILERS = (process.env.GODBOLT_JAVA || "java2102,java2100")
   .split(",")
@@ -60,9 +64,12 @@ function wrap(code: string): { source: string; offset: number } {
 }
 
 // Remap compiler/stack-trace line numbers back to the student's editor lines.
-// Godbolt reports "<source>:N:" and "example.java:N"; Piston "Main.java:N".
+// Godbolt reports "<source>:N" and "example.java:N". Piston reports
+// "Main.java.java:N" — note the DOUBLED extension, which the old
+// exact-match pattern missed, leaving students with line numbers offset by the
+// hidden wrapper. Match any .java-ish filename, however many extensions.
 function remapErrors(text: string, offset: number): string {
-  return text.replace(/(?:<source>|example\.java|Main\.java):(\d+)/g, (_m, n) => {
+  return text.replace(/(?:<source>|[A-Za-z0-9_$]+(?:\.java)+):(\d+)/g, (_m, n) => {
     return `line ${Math.max(1, parseInt(n, 10) - offset)}`;
   });
 }
@@ -190,7 +197,10 @@ async function runViaPiston(source: string, stdin: string, offset: number): Prom
   try {
     res = await fetch(`${PISTON_URL}/execute`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(PISTON_TOKEN ? { "X-Runner-Token": PISTON_TOKEN } : {}),
+      },
       body: JSON.stringify({
         language: "java",
         version: PISTON_JAVA,
@@ -216,8 +226,23 @@ async function runViaPiston(source: string, stdin: string, offset: number): Prom
     return { compiled: false, stdout: "", error: remapErrors(data.compile.stderr || "Compilation failed.", offset) };
   }
   const run = data.run || {};
-  if (run.code !== 0 && run.stderr) {
-    return { compiled: true, stdout: run.stdout ?? "", error: remapErrors(run.stderr, offset) };
+  const stderr = run.stderr || "";
+  // Piston's Java runtime compiles AND runs in one step, so javac errors arrive
+  // in run.stderr with NO `compile` object at all. Without this check a syntax
+  // error was reported to the student as "compiled fine, printed nothing" —
+  // the single most misleading thing this could tell a beginner.
+  if (run.code !== 0 && isJavaCompileError(stderr)) {
+    return { compiled: false, stdout: "", error: remapErrors(stderr, offset) };
+  }
+  if (run.code !== 0 && stderr) {
+    return { compiled: true, stdout: run.stdout ?? "", error: remapErrors(stderr, offset) };
   }
   return { compiled: true, stdout: run.stdout ?? "", error: "" };
+}
+
+// javac failure vs a runtime exception. A runtime crash means the code DID
+// compile, so the two must not be conflated.
+function isJavaCompileError(stderr: string): boolean {
+  if (/Exception in thread|\bat [\w.$]+\(/.test(stderr)) return false; // stack trace → it ran
+  return /error: compilation failed/i.test(stderr) || /^\s*\S+\.java\S*:\d+: error:/m.test(stderr);
 }
