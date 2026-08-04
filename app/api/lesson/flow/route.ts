@@ -5,6 +5,7 @@ import { logEvent, EVENT } from "@/lib/events";
 import { complete } from "@/lib/llm";
 import { rateLimit } from "@/lib/ratelimit";
 import { stripStepForClient, type FlowStep } from "@/lib/curriculum/flow";
+import { assistForClient } from "@/lib/curriculum/translate";
 
 // The interactive lesson flow. GET serves steps with every answer key STRIPPED
 // (lib/curriculum/flow.ts is the single source of truth for what's secret);
@@ -20,10 +21,22 @@ async function loadFlow(lessonCode: string): Promise<{ lessonId: string; steps: 
 export async function GET(req: Request) {
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
-  const lessonCode = new URL(req.url).searchParams.get("lessonCode") || "";
+  const url = new URL(req.url);
+  const lessonCode = url.searchParams.get("lessonCode") || "";
+  const locale = url.searchParams.get("lang") || "";
   const flow = await loadFlow(lessonCode);
   if (!flow) return NextResponse.json({ steps: [] });
-  return NextResponse.json({ steps: flow.steps.map(stripStepForClient) });
+
+  // Answer keys are stripped here, as always. The language assist is sent as a
+  // SEPARATE map rather than merged into the steps — the English must remain
+  // the primary text on screen (see lib/curriculum/translate.ts), so the client
+  // renders the assist underneath on demand instead of replacing anything.
+  const steps: any[] = flow.steps.map(stripStepForClient);
+  const row = await prisma.lesson.findUnique({ where: { code: lessonCode }, select: { flowI18n: true } });
+  const all = ((row?.flowI18n as any) || {}) as Record<string, unknown>;
+  const assist = locale && all[locale] ? assistForClient(flow.steps, all[locale] as any) : null;
+
+  return NextResponse.json({ steps, assist, languages: Object.keys(all) });
 }
 
 export async function POST(req: Request) {

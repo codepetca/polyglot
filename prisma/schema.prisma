@@ -58,6 +58,14 @@ model Lesson {
   // (/api/lesson/flow) — same invariant as every other quiz.
   flow Json?
 
+  // Translations of the flow's PROSE only, keyed by locale:
+  //   { "es": { "<stepId>": { instruction, why, after, hint, prompt,
+  //                            opts?: string[], questions?: [{prompt, why}] } } }
+  // Code, targets, solutions and stdin are never translated — translating
+  // `System.out.println` would break the lesson, which is exactly what a
+  // browser's whole-page auto-translate does to a programming tutorial.
+  flowI18n Json?
+
   // Unpublished working copy: { title, goal, objectives, blocks, exercise, quizBank }.
   // Students always read the live fields above; the editor edits this until
   // the owner hits Publish.

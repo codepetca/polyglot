@@ -36,17 +36,67 @@ type Step = {
 type RunOut = { compiled: boolean; stdout: string; error: string };
 const norm = (s: string) => (s || "").replace(/\r\n/g, "\n").trimEnd();
 
+const RTL = new Set(["ur", "fa", "ar"]);
+
+// Each language names itself, so a student can find theirs without first
+// reading English. Mirrors LANGUAGES in lib/curriculum/translate.ts.
+const LANG_LABELS: Record<string, string> = {
+  "zh-Hans": "简体中文", "zh-Hant": "繁體中文", ta: "தமிழ்", ur: "اردو",
+  pa: "ਪੰਜਾਬੀ", hi: "हिन्दी", fa: "فارسی", tl: "Tagalog",
+  ko: "한국어", vi: "Tiếng Việt", fr: "Français", es: "Español",
+};
+
+// ESL scaffolding. The English above it is the lesson; this is a help line the
+// student opens when a sentence blocks them, then goes back to the English.
+// Collapsed by default ON PURPOSE — the goal is learning the course in English,
+// so the assist must never be the thing you read first.
+function Assist({ text, lang }: { text?: string; lang: string }) {
+  const [open, setOpen] = useState(false);
+  if (!text || !lang) return null;
+  return (
+    <div className="assist">
+      {open ? (
+        <p className="assisttext" dir={RTL.has(lang) ? "rtl" : "ltr"} lang={lang}>
+          {text}
+          <button className="assistbtn" onClick={() => setOpen(false)} aria-label="Hide translation">✕</button>
+        </p>
+      ) : (
+        <button className="assistbtn" onClick={() => setOpen(true)}>文 what does this mean?</button>
+      )}
+    </div>
+  );
+}
+
 export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { lessonCode: string; lessonTitle: string; nextHref?: string | null }) {
   const [steps, setSteps] = useState<Step[] | null>(null);
+  // Language assist (ESL): English stays primary; this is shown UNDER it on
+  // request. Never replaces the English — see lib/curriculum/translate.ts.
+  const [lang, setLang] = useState<string>("");
+  const [assist, setAssist] = useState<Record<string, Record<string, any>> | null>(null);
+  const [languages, setLanguages] = useState<string[]>([]);
   const [i, setI] = useState(0);
   const [firstTry, setFirstTry] = useState(0);
   const attemptsRef = useRef<Record<string, number>>({});
 
+  // Remember the student's assist language across lessons — an ESL student
+  // shouldn't have to re-pick it on every page.
   useEffect(() => {
-    fetch(`/api/lesson/flow?lessonCode=${encodeURIComponent(lessonCode)}`)
+    try {
+      const saved = localStorage.getItem("classos_assist_lang");
+      if (saved) setLang(saved);
+    } catch { /* private mode */ }
+  }, []);
+
+  useEffect(() => {
+    const q = lang ? `&lang=${encodeURIComponent(lang)}` : "";
+    fetch(`/api/lesson/flow?lessonCode=${encodeURIComponent(lessonCode)}${q}`)
       .then((r) => r.json())
-      .then((d) => setSteps(d.steps || []));
-  }, [lessonCode]);
+      .then((d) => {
+        setSteps(d.steps || []);
+        setAssist(d.assist || null);
+        setLanguages(d.languages || []);
+      });
+  }, [lessonCode, lang]);
 
   if (!steps) return <div className="panel" style={{ color: "var(--muted)" }}>Loading…</div>;
   if (!steps.length) return null;
@@ -73,6 +123,22 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
         </span>
         <span className="meta" style={{ margin: 0 }}>{done ? "done!" : `${i + 1} / ${steps.length}`}</span>
         <span style={{ flex: 1 }} />
+        {languages.length > 0 && (
+          <select
+            className="langpick"
+            value={lang}
+            title="Add help in another language. The lesson stays in English."
+            onChange={(e) => {
+              setLang(e.target.value);
+              try { localStorage.setItem("classos_assist_lang", e.target.value); } catch { /* private mode */ }
+            }}
+          >
+            <option value="">English only</option>
+            {languages.map((code) => (
+              <option key={code} value={code}>+ {LANG_LABELS[code] || code}</option>
+            ))}
+          </select>
+        )}
         <Link href={`/exam/${lessonCode}`} className="meta" style={{ margin: 0, textDecoration: "underline dotted" }} title="Skip the steps — pass the clean quiz and you're done.">
           ⚡ know this? prove it
         </Link>
@@ -85,6 +151,8 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
           key={step!.id}
           step={step!}
           lessonCode={lessonCode}
+          assist={assist?.[step!.id]}
+          lang={lang}
           onAttempt={(id) => (attemptsRef.current[id] = (attemptsRef.current[id] || 0) + 1)}
           attemptsOf={(id) => attemptsRef.current[id] || 0}
           onDone={(wasFirstTry) => { completed(step!.id, wasFirstTry); setI(i + 1); }}
@@ -99,8 +167,10 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   );
 }
 
-function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attemptsOf }: {
+function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAttempt, attemptsOf }: {
   step: Step;
+  assist?: Record<string, any>;
+  lang: string;
   lessonCode: string;
   onDone: (firstTry: boolean) => void;
   onSkip: () => void;
@@ -243,6 +313,7 @@ function StepView({ step, lessonCode, onDone, onSkip, onGoto, onAttempt, attempt
   return (
     <div className={`panel flowstep ${won ? "won" : ""}`}>
       <div className="flowq">{step.instruction}</div>
+      <Assist text={assist?.instruction} lang={lang} />
 
       {/* ── code surface ── */}
       {step.kind === "spot" ? (
