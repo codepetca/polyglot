@@ -1,0 +1,145 @@
+"use client";
+
+import { useState } from "react";
+
+// The "how do I actually type this again?" panel.
+//
+// Interactive steps teach the IDEA, but a student two lessons later cannot
+// remember the exact shape of a for-loop header, and nothing on screen told
+// them. Without this they either guess, give up, or leave to search — and the
+// ones most likely to leave are exactly the students this platform is for.
+//
+// Deliberately a reference, not a tutorial: the smallest correct example of each
+// thing, copyable, always one tap away, never blocking the lesson.
+
+type Entry = { name: string; code: string; note: string };
+type Section = { title: string; entries: Entry[] };
+
+const REFERENCE: Section[] = [
+  {
+    title: "Showing things",
+    entries: [
+      { name: "Print a line", code: 'System.out.println("Hello");', note: "Prints, then moves to the next line." },
+      { name: "Print, stay on the line", code: 'System.out.print("Hello");', note: "No line break — the next print continues right after." },
+      { name: "New line inside text", code: 'System.out.println("a\\nb");', note: "\\n breaks the line where you put it." },
+      { name: "Tab / quote inside text", code: 'System.out.println("a\\tb \\"quoted\\"");', note: "\\t is a tab. \\\" prints a real quote mark." },
+      { name: "Join text and values", code: 'System.out.println("Age: " + age);', note: "+ glues text together. Number + text becomes text." },
+    ],
+  },
+  {
+    title: "Storing values",
+    entries: [
+      { name: "Whole number", code: "int age = 16;", note: "No decimal point. 7 / 2 gives 3, not 3.5." },
+      { name: "Decimal number", code: "double price = 9.99;", note: "Use when the value can have a fraction." },
+      { name: "Text", code: 'String name = "Ada";', note: "Capital S. Text always goes in double quotes." },
+      { name: "True or false", code: "boolean done = false;", note: "Only two possible values." },
+      { name: "Change a value later", code: "age = age + 1;", note: "Replaces what was in the box. No type needed the second time." },
+    ],
+  },
+  {
+    title: "Asking the user",
+    entries: [
+      { name: "Set up the reader", code: "Scanner input = new Scanner(System.in);", note: "Do this once, before reading anything." },
+      { name: "Read text", code: 'System.out.print("Name? ");\nString name = input.nextLine();', note: "Ask first, then read — otherwise the user sees nothing." },
+      { name: "Read a whole number", code: "int age = input.nextInt();", note: "Use when you want to do maths with the answer." },
+      { name: "Read a decimal", code: "double h = input.nextDouble();", note: "For values like 1.75." },
+    ],
+  },
+  {
+    title: "Maths",
+    entries: [
+      { name: "The operators", code: "+   -   *   /   %", note: "% is the remainder: 7 % 2 is 1." },
+      { name: "Order", code: "2 + 3 * 4   // 14\n(2 + 3) * 4 // 20", note: "× and ÷ happen before + and −. Brackets go first." },
+      { name: "Whole-number division", code: "7 / 2   // 3, not 3.5", note: "Two whole numbers divide into a whole number — the rest is dropped." },
+      { name: "Is it even?", code: "if (n % 2 == 0) { }", note: "Divides evenly means remainder 0." },
+    ],
+  },
+  {
+    title: "Making decisions",
+    entries: [
+      { name: "If", code: 'if (age >= 18) {\n  System.out.println("adult");\n}', note: "Runs the block only when the condition is true." },
+      { name: "If / else", code: 'if (n > 0) {\n  System.out.println("positive");\n} else {\n  System.out.println("not positive");\n}', note: "One or the other, never both." },
+      { name: "Comparing", code: "==   !=   <   >   <=   >=", note: "== compares. A single = assigns — a very common bug." },
+      { name: "And / or / not", code: "&&   ||   !", note: "&& needs both true. || needs at least one." },
+    ],
+  },
+  {
+    title: "Repeating",
+    entries: [
+      { name: "For loop", code: "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}", note: "Start; keep going while true; do this each time." },
+      { name: "Count from 0", code: "for (int i = 0; i < 3; i++) { }", note: "Runs 3 times: 0, 1, 2. The usual way to repeat N times." },
+      { name: "Step by 2", code: "for (int i = 2; i <= 10; i = i + 2) { }", note: "The last part doesn't have to be i++." },
+      { name: "While loop", code: "while (fuel > 0) {\n  fuel--;\n}", note: "Use when you don't know the count in advance." },
+      { name: "Careful", code: "// something inside MUST change\n// the variable the condition checks", note: "Otherwise it never stops." },
+    ],
+  },
+];
+
+export default function SyntaxHelp() {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const [copied, setCopied] = useState("");
+
+  const query = q.trim().toLowerCase();
+  const sections = query
+    ? REFERENCE.map((s) => ({
+        ...s,
+        entries: s.entries.filter(
+          (e) => e.name.toLowerCase().includes(query) || e.code.toLowerCase().includes(query) || e.note.toLowerCase().includes(query)
+        ),
+      })).filter((s) => s.entries.length)
+    : REFERENCE;
+
+  if (!open) {
+    return (
+      <button className="syntaxfab" onClick={() => setOpen(true)} title="How do I write this again?">
+        📖 Syntax help
+      </button>
+    );
+  }
+
+  return (
+    <div className="syntaxpanel">
+      <div className="sp-head">
+        <b>📖 Syntax help</b>
+        <span className="meta" style={{ margin: 0 }}>the smallest correct example of each thing</span>
+        <span style={{ flex: 1 }} />
+        <button className="tbtn2" onClick={() => setOpen(false)} aria-label="Close syntax help">✕</button>
+      </div>
+      <input
+        className="f"
+        placeholder="search — e.g. loop, print, input"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        style={{ margin: "10px 0" }}
+      />
+      <div className="sp-body">
+        {sections.length === 0 && <p className="meta">Nothing matches “{q}”.</p>}
+        {sections.map((s) => (
+          <div key={s.title} className="sp-section">
+            <h4>{s.title}</h4>
+            {s.entries.map((e) => (
+              <div className="sp-entry" key={e.name}>
+                <div className="sp-name">{e.name}</div>
+                <pre
+                  className="sp-code"
+                  title="Click to copy"
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(e.code);
+                      setCopied(e.name);
+                      setTimeout(() => setCopied(""), 1200);
+                    } catch { /* clipboard blocked */ }
+                  }}
+                >
+                  {e.code}
+                </pre>
+                <div className="sp-note">{copied === e.name ? "copied ✓" : e.note}</div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

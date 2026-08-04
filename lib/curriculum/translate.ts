@@ -37,6 +37,9 @@ export type StepTranslation = {
   prompt?: string;
   opts?: string[]; // only when the options are prose, not program output
   questions?: { prompt?: string; why?: string }[];
+  // teach steps: the labelled explanation lines. The label is a code token
+  // (e.g. "nextLine()") and stays English; only `text` is assisted.
+  points?: { text?: string }[];
 };
 export type FlowTranslation = Record<string, StepTranslation>; // stepId → fields
 
@@ -70,6 +73,9 @@ export function extractTranslatable(steps: FlowStep[]): Record<string, StepTrans
     }
     if (Array.isArray(s.questions) && s.questions.length) {
       t.questions = s.questions.map((q) => ({ prompt: q.prompt, why: q.why }));
+    }
+    if (Array.isArray(s.points) && s.points.length) {
+      t.points = s.points.map((pt) => ({ text: pt.text }));
     }
     if (Object.keys(t).length) out[s.id] = t;
   }

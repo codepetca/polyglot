@@ -540,7 +540,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           {(step.points || []).map((p, j) => (
             <div className="teachpoint" key={j}>
               <code className="tp-label">{p.label}</code>
-              <span className="tp-text">{p.text}</span>
+              <span className="tp-text">
+                {p.text}
+                <Assist text={assist?.points?.[j]?.text} lang={lang} />
+              </span>
             </div>
           ))}
         </div>
@@ -581,9 +584,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         {reveal && reveal.why !== undefined && reveal.why !== "" && (
           <div className={`flowwhy ${reveal.correct ? "yes" : "no"}`}>
             <b>{reveal.correct ? "✓ exactly." : "Good guess — here's the catch:"}</b> {reveal.why}
+            <Assist text={assist?.why} lang={lang} />
           </div>
         )}
-        {won && step.after && <div className="flowwhy yes"><b>✓</b> {step.after}</div>}
+        {won && step.after && <div className="flowwhy yes"><b>✓</b> {step.after}<Assist text={assist?.after} lang={lang} /></div>}
         {won && !step.after && !reveal?.why && step.kind !== "note" && <div className="flowwhy yes"><b>✓ nailed it.</b></div>}
       </div>
 
@@ -591,7 +595,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       {!won && !reveal && (runnable || step.kind === "fill" || step.kind === "bucket") && fails >= 1 && (
         <div className="flowhelp">
           {step.hint && !hintOpen && <button className="btn ghost" onClick={() => setHintOpen(true)}>💡 hint</button>}
-          {hintOpen && <span className="hinttext">💡 {step.hint}</span>}
+          {hintOpen && <span className="hinttext">💡 {step.hint}<Assist text={assist?.hint} lang={lang} /></span>}
           {fails >= 2 && !aiHint && runnable && (
             <button className="btn purple" disabled={aiBusy} onClick={askTutor}>{aiBusy ? "…" : "🤖 I'm stuck"}</button>
           )}

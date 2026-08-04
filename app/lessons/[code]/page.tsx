@@ -6,6 +6,7 @@ import { logEvent, EVENT } from "@/lib/events";
 import LessonRenderer from "@/components/LessonRenderer";
 import LessonWorkspace from "@/components/LessonWorkspace";
 import FlowPlayer from "@/components/lesson/FlowPlayer";
+import SyntaxHelp from "@/components/lesson/SyntaxHelp";
 import StudentTools from "@/components/student/StudentTools";
 import HighlightOnLoad from "@/components/lesson/HighlightOnLoad";
 import type { Block, Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
@@ -138,6 +139,8 @@ export default async function LessonPage({
         classic
       )}
       <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />
+      {/* Always one tap away, on every lesson and every step. */}
+      <SyntaxHelp />
     </>
   );
 }
