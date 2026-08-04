@@ -1,54 +1,52 @@
 "use client";
 
-import { useState } from "react";
-import { sectionsForLesson, type Entry } from "@/lib/curriculum/reference";
+import { sectionsForLesson } from "@/lib/curriculum/reference";
 
-// "You'll need this" — the syntax for THIS lesson, sitting right on the step.
+// Documentation for the lesson you're on.
 //
-// The searchable panel was the wrong shape for our actual student: it assumed
-// they'd notice a button, decide they were stuck, open it, and search. Students
-// who can't help themselves do none of that — they just stall. So the two or
-// three lines they need are on screen, already open, no clicking required.
+// Two rules, both learned the hard way:
+//   1. Don't make them go looking. This is on screen during the steps where
+//      they're typing, already open. Students who can't help themselves won't
+//      open a menu or search for help — they just stall.
+//   2. Don't make it interactive. It was click-to-copy, which turned reference
+//      material into another thing to figure out. It's documentation: you read
+//      it. Nothing to press.
 export default function NeedThis({ lessonCode }: { lessonCode: string }) {
-  const [copied, setCopied] = useState("");
   const sections = sectionsForLesson(lessonCode);
   if (!sections.length) return null;
 
-  // The first section is the lesson's own topic — that's what they need in
-  // front of them. Anything after it is revision, one tap away.
+  // First section is this lesson's own topic — that's what goes on screen.
+  // Everything else is revision, folded away so it isn't competing for eyes.
   const [primary, ...revision] = sections;
+  const extra = [{ ...primary, entries: primary.entries.slice(3) }, ...revision].filter((s) => s.entries.length);
 
-  async function copy(e: Entry) {
-    try {
-      await navigator.clipboard.writeText(e.code);
-      setCopied(e.name);
-      setTimeout(() => setCopied(""), 1200);
-    } catch { /* clipboard blocked */ }
-  }
-
-  const card = (e: Entry) => (
-    <div className="nt-card" key={e.name} onClick={() => copy(e)} title="Click to copy">
-      <div className="nt-name">{e.name}</div>
-      <pre className="nt-code">{e.code}</pre>
-      <div className="nt-note">{copied === e.name ? "copied ✓" : e.note}</div>
+  const row = (s: { id: string; entries: { name: string; code: string; note: string }[] }, limit?: number) => (
+    <div className="nt-row">
+      {(limit ? s.entries.slice(0, limit) : s.entries).map((e) => (
+        <div className="nt-card" key={e.name}>
+          <div className="nt-name">{e.name}</div>
+          <pre className="nt-code">{e.code}</pre>
+          <div className="nt-note">{e.note}</div>
+        </div>
+      ))}
     </div>
   );
 
   return (
     <div className="needthis">
       <div className="nt-head">
-        <b>You&apos;ll need this</b>
-        <span className="meta" style={{ margin: 0 }}>tap any box to copy it</span>
+        <b>Documentation</b>
+        <span className="meta" style={{ margin: 0 }}>{primary.title.toLowerCase()}</span>
       </div>
-      <div className="nt-row">{primary.entries.slice(0, 3).map(card)}</div>
+      {row(primary, 3)}
 
-      {revision.length > 0 && (
+      {extra.length > 0 && (
         <details className="nt-more">
-          <summary>Need something else?</summary>
-          {[{ ...primary, entries: primary.entries.slice(3) }, ...revision].filter((s) => s.entries.length).map((s) => (
+          <summary>Everything else</summary>
+          {extra.map((s) => (
             <div key={s.id}>
               <div className="nt-subhead">{s.title}</div>
-              <div className="nt-row">{s.entries.map(card)}</div>
+              {row(s)}
             </div>
           ))}
         </details>

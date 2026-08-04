@@ -42,8 +42,14 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
               <>
                 <Link href="/lessons" className={on("/lessons")}>My lessons</Link>
                 <Link href="/progress" className={on("/progress")}>My progress</Link>
-                <Link href="/tests" className={on("/tests")}>My tests</Link>
-                <Link href="/gradebook" className={on("/gradebook")}>My grades</Link>
+                {/* A guest has no class, so tests and grades are always empty
+                    pages — offering them is just two more things to misread. */}
+                {!me.anonymous && (
+                  <>
+                    <Link href="/tests" className={on("/tests")}>My tests</Link>
+                    <Link href="/gradebook" className={on("/gradebook")}>My grades</Link>
+                  </>
+                )}
               </>
             ) : (
               <Link href="/class" className={on("/class") || on("/teacher") || on("/tests") || on("/gradebook")}>Classes</Link>
@@ -58,10 +64,12 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
               </>
             )}
           </nav>
-          <Link href="/inbox" className={`tbtn inbox-link ${on("/inbox")}`} style={{ textDecoration: "none", position: "relative" }}>
-            ✉ Messages
-            {unread > 0 && <span className="navbadge">{unread}</span>}
-          </Link>
+          {!me.anonymous && (
+            <Link href="/inbox" className={`tbtn inbox-link ${on("/inbox")}`} style={{ textDecoration: "none", position: "relative" }}>
+              ✉ Messages
+              {unread > 0 && <span className="navbadge">{unread}</span>}
+            </Link>
+          )}
           {me.role !== "STUDENT" && (
             <Link href="/account" className="tbtn" style={{ textDecoration: "none" }}>
               Account
@@ -69,9 +77,11 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
           )}
           <LanguagePicker />
           <ThemeToggle />
-          <button className="tbtn" onClick={logout}>
-            Sign out
-          </button>
+          {!me.anonymous && (
+            <button className="tbtn" onClick={logout}>
+              Sign out
+            </button>
+          )}
         </>
       ) : (
         <nav className="viewswitch">

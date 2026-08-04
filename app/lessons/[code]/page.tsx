@@ -137,7 +137,9 @@ export default async function LessonPage({
       ) : (
         classic
       )}
-      <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />
+      {/* Interactive lessons have their own help ladder (hint → tutor) built
+          into each step, so the floating rail is two redundant buttons there. */}
+      {!hasFlow && <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />}
     </>
   );
 }

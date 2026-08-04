@@ -149,13 +149,34 @@ Return ONLY JSON with the same shape you receive: {"<stepId>": {"instruction": "
     throw new Error(r.provider === "stub" ? "No AI key configured — add one in Settings." : "The model returned no usable translation.");
   }
 
-  // Merge into the existing map rather than replacing other languages.
-  const current = ((lesson.flowI18n as any) || {}) as Record<string, FlowTranslation>;
+  // Models don't reliably return the exact envelope they're asked for — some
+  // wrap the map under a key like "translations" or "steps". Unwrap one level
+  // if the top level clearly isn't keyed by step id, rather than silently
+  // producing nothing.
+  const ids = new Set(steps.map((s) => s.id));
+  let map: any = data;
+  if (!Object.keys(map).some((k) => ids.has(k))) {
+    const inner = Object.values(map).find(
+      (v) => v && typeof v === "object" && Object.keys(v as object).some((k) => ids.has(k))
+    );
+    if (inner) map = inner;
+  }
+
   const cleaned: FlowTranslation = {};
   for (const s of steps) {
-    const got = (data as any)[s.id];
+    const got = map?.[s.id];
     if (got && typeof got === "object") cleaned[s.id] = got;
   }
+
+  // NEVER cache an empty result. Storing {} used to mark the language as "done"
+  // so the on-demand path skipped it forever — one bad response permanently
+  // disabled that language.
+  if (Object.keys(cleaned).length === 0) {
+    throw new Error(`translator returned no matching steps (got keys: ${Object.keys(data as object).slice(0, 4).join(", ") || "none"})`);
+  }
+
+  // Merge into the existing map rather than replacing other languages.
+  const current = ((lesson.flowI18n as any) || {}) as Record<string, FlowTranslation>;
   current[locale] = cleaned;
   await prisma.lesson.update({ where: { id: lesson.id }, data: { flowI18n: current as any } });
 

@@ -698,8 +698,7 @@ pre.flowcode.ro { margin: 0; }
 .needthis { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
 .needthis .nt-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
 .nt-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 8px; }
-.nt-card { border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 11px; cursor: pointer; background: var(--paper); }
-.nt-card:hover { border-color: var(--accent); }
+.nt-card { border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 11px; background: var(--paper); }
 .nt-name { font-size: 12.5px; font-weight: 600; margin-bottom: 5px; }
 .nt-code { margin: 0; background: var(--code-bg, #14171a); color: #e6e1d6; border-radius: 6px; padding: 7px 9px;
   font-family: var(--mono); font-size: 11.5px; line-height: 1.45; white-space: pre-wrap; overflow-x: auto; }
