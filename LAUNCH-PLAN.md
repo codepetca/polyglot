@@ -107,6 +107,18 @@ kinds. Remaining lessons should go through the pipeline.
 Suggested next by teaching value, not sequence: **2.10 While Loops** (pairs with
 2.9), **2.11 If Statements**, then 2.6–2.8 booleans/logic/comparison.
 
+## Open risk — the app has no graceful "database is down" state
+
+Surfaced repeatedly while working: when the database is briefly unreachable
+(which happened many times on a flaky connection), pages return a raw **500**.
+A student sees a broken site with no explanation, and there's no way to tell
+"the database blinked" from "the app is broken".
+
+This is probably much rarer from Vercel (datacenter-to-datacenter) than from a
+laptop on bad wifi, so it may never bite. But the fix is cheap — catch the
+connection error and render a plain "we're having a moment, try again shortly"
+page — and worth doing before real students are on it.
+
 ## Verified-by-hand log (what's actually been driven, not just built)
 
 - Core loop: Run → real Java compiles remotely → output → success → Next ✓
