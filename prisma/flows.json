@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-07-30T00:41:21.258Z",
+  "exportedAt": "2026-08-04T08:09:24.756Z",
   "note": "Interactive lesson flows. Restore with: node --env-file=.env scripts/flows.mjs restore",
   "lessons": [
     {
@@ -654,17 +654,40 @@
             "instruction": "It should print hi three times. Fix it."
           },
           {
-            "id": "f29_9",
-            "code": "// your code here\n",
-            "hint": "Loop i from 1 to 4, and build the line with + like you did in 2.1.",
-            "kind": "write",
-            "after": "You just generated four lines of formatted output from three lines of code. That's what loops are for.",
+            "id": "f29_10",
+            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(\"[\" + \"#\".repeat(i) + \".\".repeat(5 - i) + \"] \" + (i * 20) + \"%\");\n}",
+            "kind": "run",
+            "after": "A loading bar — from three lines of code. Same loop you've been using all lesson.",
             "skills": [
               "write a for-loop that counts to a target"
             ],
-            "target": "1 x 3 = 3\n2 x 3 = 6\n3 x 3 = 9\n4 x 3 = 12",
-            "solution": "for (int i = 1; i <= 4; i++) {\n  System.out.println(i + \" x 3 = \" + (i * 3));\n}",
-            "instruction": "Print the 3 times table up to 4 — match it exactly."
+            "instruction": "Loops can draw. Run it."
+          },
+          {
+            "id": "f29_11",
+            "code": "String bar = \"\";\nfor (int i = 1; i <= 5; i++) {\n  System.out.println(bar);\n  bar = bar + \"*\";\n}",
+            "hint": "It prints BEFORE adding the star. What should happen first?",
+            "kind": "fix",
+            "after": "Order inside the loop body matters as much as the loop itself.",
+            "skills": [
+              "trace a for-loop's counter through each iteration"
+            ],
+            "target": "*\n**\n***\n****\n*****",
+            "solution": "String bar = \"\";\nfor (int i = 1; i <= 5; i++) {\n  bar = bar + \"*\";\n  System.out.println(bar);\n}",
+            "instruction": "The first row is blank and the last star is missing. Fix the order."
+          },
+          {
+            "id": "f29_12",
+            "code": "// your code here\n",
+            "hint": "Keep a String that grows by one star each pass, and print it after it grows.",
+            "kind": "write",
+            "after": "You just drew a shape with a loop. That's the same tool games use to draw everything on screen.",
+            "skills": [
+              "write a for-loop that counts to a target"
+            ],
+            "target": "*\n**\n***\n****",
+            "solution": "String bar = \"\";\nfor (int i = 1; i <= 4; i++) {\n  bar = bar + \"*\";\n  System.out.println(bar);\n}",
+            "instruction": "Your turn: draw a 4-row staircase of stars."
           }
         ]
       }

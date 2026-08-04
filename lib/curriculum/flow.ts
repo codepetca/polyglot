@@ -170,10 +170,21 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
 const norm = (x: string) => (x || "").replace(/\r\n/g, "\n").trimEnd();
 const looksLikeError = (o: string) => /\berror\b/i.test(o);
 
+// How many snippets to compile at once during verification.
+//
+// This used to fire EVERY step simultaneously, which stampeded the runner: a
+// 12-step lesson meant 12 concurrent JVMs. On a small self-hosted box that
+// queued past the request timeout, and on the public fallback it tripped
+// throttling — either way steps came back with empty output and the lesson was
+// rejected for "failures" that were really just load. Verification is an
+// authoring-time action, so being a few seconds slower is free; being flaky is
+// not.
+const VERIFY_BATCH = 3;
+
 export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: string[]; failures: string[] }> {
   const results: string[] = [];
   const failures: string[] = [];
-  const jobs = flow.steps.map(async (s) => {
+  const check = async (s: FlowStep) => {
     const name = `${s.id} (${s.kind})`;
     try {
       switch (s.kind) {
@@ -231,7 +242,10 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
     } catch (e) {
       failures.push(`${name}: verify crashed: ${(e as Error).message.slice(0, 80)}`);
     }
-  });
-  await Promise.all(jobs);
+  };
+
+  for (let i = 0; i < flow.steps.length; i += VERIFY_BATCH) {
+    await Promise.all(flow.steps.slice(i, i + VERIFY_BATCH).map(check));
+  }
   return { ok: failures.length === 0, results, failures };
 }

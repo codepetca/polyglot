@@ -53,6 +53,37 @@ It exists for two real reasons:
    of 30 students hitting Run repeatedly would hit that far harder. The
    self-hosted box has no rate limit and stayed consistent throughout.
 
+## The thing that would have broken a real class
+
+Load-testing found a genuine showstopper. With **6 students running code at the
+same moment, 5 of 6 got killed** — Java's default max heap is a quarter of the
+machine's RAM (~980 MB *each*), so six JVMs asked for ~5.9 GB on a 3.9 GB box and
+the kernel started killing them. At 15 and 30 concurrent, everything died.
+
+Nobody would have noticed until a teacher put 30 kids on it at once, and then it
+would have failed in front of the class.
+
+Two fixes, both applied to the VM:
+
+1. **Cap each JVM.** Piston's Java run script now uses
+   `-Xmx192m -Xss512k -XX:TieredStopAtLevel=1 -XX:+UseSerialGC`. Student programs
+   need nothing like 980 MB, and the startup flags also cut per-run time
+   (1171 ms → 795 ms).
+2. **Queue instead of dying.** `PISTON_MAX_CONCURRENT_JOBS=6`, so a 7th
+   simultaneous request waits its turn rather than getting OOM-killed.
+
+Result: **30/30 succeed** with a full class hitting Run simultaneously, taking
+~26 s for the whole burst to clear.
+
+Tuning note: raising the limit to 10 made it *slower* (32.7 s vs 25.8 s) — the
+box only has 2 vCPUs, so extra parallelism just causes thrashing. 6 is the
+measured sweet spot for this machine size.
+
+Related fix in the app itself: lesson verification used to compile every step
+simultaneously (a 12-step lesson = 12 concurrent JVMs), which tripped exactly
+this problem and produced bogus "failures" that were really just load. It now
+verifies in batches of 3.
+
 ## Lane order
 
 1. `piston(self-hosted)` — your box, used first so free services aren't leaned on
