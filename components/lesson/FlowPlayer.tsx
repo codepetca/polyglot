@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import CodeBox from "./CodeBox";
-import NeedThis from "./NeedThis";
+import Docs from "./Docs";
 import { readLang, LANG_EVENT } from "@/components/LanguagePicker";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
@@ -538,9 +538,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
 
       {step.kind === "note" && <div style={{ marginTop: 4 }} />}
 
-      {/* Only on steps where they have to write code. Everywhere else it's
-          noise competing with the single thing the screen is asking for. */}
-      {["write", "fix", "tweak", "arrange", "fill"].includes(step.kind) && <NeedThis lessonCode={lessonCode} />}
+
 
       {/* ── run + output ── */}
       {runnable && (

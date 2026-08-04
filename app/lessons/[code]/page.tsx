@@ -6,6 +6,7 @@ import { logEvent, EVENT } from "@/lib/events";
 import LessonRenderer from "@/components/LessonRenderer";
 import LessonWorkspace from "@/components/LessonWorkspace";
 import FlowPlayer from "@/components/lesson/FlowPlayer";
+import Docs from "@/components/lesson/Docs";
 import StudentTools from "@/components/student/StudentTools";
 import HighlightOnLoad from "@/components/lesson/HighlightOnLoad";
 import type { Block, Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
@@ -127,6 +128,8 @@ export default async function LessonPage({
       {hasFlow ? (
         <>
           <FlowPlayer lessonCode={lesson.code} lessonTitle={lesson.title} nextHref={nextHref} />
+          {/* Constant. Every step, every lesson — reference you can rely on. */}
+          <Docs lessonCode={lesson.code} />
           <details style={{ margin: "10px 0 20px" }}>
             <summary style={{ cursor: "pointer", color: "var(--muted)", fontSize: 13.5 }}>
               📖 Prefer reading? Open the textbook version (+ full code workspace)
