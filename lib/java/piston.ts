@@ -46,12 +46,27 @@ export interface RunResult {
 // Scanner boilerplate. NOTE: `class Main` is deliberately NOT public — runners
 // save the source under arbitrary filenames (example.java on godbolt), and
 // javac only allows that for non-public classes.
+// CODEHS PARITY.
+//
+// The course this platform mirrors is CodeHS AP CS in Java, and CodeHS does NOT
+// teach Scanner. Its programs extend ConsoleProgram and read input with
+// readLine / readInt / readDouble / readBoolean, each taking the PROMPT as an
+// argument rather than printing it separately:
+//
+//     String favColor = readLine("What is your favorite color? ");
+//     int age = readInt("How old are you? ");
+//
+// Teaching Scanner here would mean students write code on this platform that
+// does not match their coursework or their exam. So the wrapper provides the
+// CodeHS methods with the same signatures and behaviour. Scanner still works
+// for anyone who wants it, since java.util.Scanner is imported.
 const HEADER = `import java.util.Scanner;
 class Main {
     static Scanner __sc = new Scanner(System.in);
-    static String input(String p){ System.out.print(p); return __sc.nextLine(); }
-    static int inputInt(String p){ System.out.print(p); return Integer.parseInt(__sc.nextLine().trim()); }
-    static double inputDouble(String p){ System.out.print(p); return Double.parseDouble(__sc.nextLine().trim()); }
+    static String readLine(String p){ System.out.print(p); return __sc.nextLine(); }
+    static int readInt(String p){ System.out.print(p); return Integer.parseInt(__sc.nextLine().trim()); }
+    static double readDouble(String p){ System.out.print(p); return Double.parseDouble(__sc.nextLine().trim()); }
+    static boolean readBoolean(String p){ System.out.print(p); return Boolean.parseBoolean(__sc.nextLine().trim()); }
     public static void main(String[] args) {
 `;
 const FOOTER = `
