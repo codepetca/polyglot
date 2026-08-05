@@ -49,21 +49,6 @@ export default async function LessonsLayout({ children }: { children: React.Reac
             {c.lessons.map(lessonLink)}
           </div>
         ))}
-        <div className="legend">
-          TOPIC STATUS
-          <div>
-            <span className="dot m" /> Mastered — clean quiz passed
-          </div>
-          <div>
-            <span className="dot p" /> In progress
-          </div>
-          <div>
-            <span className="dot n" /> Not started
-          </div>
-          <div style={{ marginTop: 6 }}>
-            <span className="playmark">▶</span> Interactive — do it, don't read it
-          </div>
-        </div>
       </aside>
       <main className="main">{children}</main>
     </div>

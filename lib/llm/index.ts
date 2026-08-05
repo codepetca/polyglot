@@ -69,6 +69,10 @@ export async function complete<T = unknown>(
       const data = args.json ? safeParseJson<T>(raw.text) : undefined;
       const cost = costOf(lane.model, raw.input, raw.output);
 
+      if (lane.provider === "stub" && lanes.some((l) => l.provider !== "stub")) {
+        console.error(`[llm] "${args.feature}" served by the OFFLINE STUB — every configured provider failed. Students are getting canned responses.`);
+      }
+
       // fire-and-forget usage log
       logCall(args.feature, lane, raw.input, raw.output, cost, ctx?.userId).catch(() => {});
 
@@ -82,6 +86,11 @@ export async function complete<T = unknown>(
       };
     } catch (err) {
       lastErr = err;
+      // A configured paid lane failing used to be completely silent: the loop
+      // fell through to the offline stub, the caller got canned text, and
+      // nothing anywhere said the real provider was down. That turned a broken
+      // API key into "the feature mysteriously does nothing".
+      console.error(`[llm] lane ${lane.provider}/${lane.model} failed for "${args.feature}":`, (err as Error).message?.slice(0, 160));
       if (!isRetryable(err)) break; // auth/validation errors: don't waste other lanes
     }
   }

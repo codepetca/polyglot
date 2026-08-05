@@ -122,57 +122,83 @@ export async function translateLesson(lessonCode: string, locale: string, userId
 
   const source = extractTranslatable(steps);
 
-  const r = await complete<FlowTranslation>(
+  // FLAT LIST, NOT A NESTED ECHO.
+  //
+  // This used to hand the model a nested {stepId: {field: text}} object and ask
+  // it to return the same shape back. Models reliably mangle that — the real
+  // failure logged here was a reply keyed "questions" instead of by step id,
+  // which matched zero steps and produced an empty translation. A flat list of
+  // {id, text} with opaque ids is almost impossible to get wrong, and any item
+  // that does come back malformed is skipped individually instead of taking the
+  // whole language down.
+  const items: { id: string; text: string }[] = [];
+  for (const [stepId, fields] of Object.entries(source)) {
+    for (const [field, value] of Object.entries(fields as Record<string, unknown>)) {
+      if (typeof value === "string" && value.trim()) items.push({ id: `${stepId}::${field}`, text: value });
+      else if (Array.isArray(value)) {
+        value.forEach((entry, idx) => {
+          if (entry && typeof entry === "object") {
+            for (const [sub, subVal] of Object.entries(entry as Record<string, unknown>)) {
+              if (typeof subVal === "string" && subVal.trim()) items.push({ id: `${stepId}::${field}::${idx}::${sub}`, text: subVal });
+            }
+          }
+        });
+      }
+    }
+  }
+  if (!items.length) throw new Error("nothing to translate in this lesson");
+
+  const r = await complete<{ items: { id: string; text: string }[] }>(
     {
       feature: "generate",
       system: `You write short ${language} comprehension notes for an English-language beginner Java course. The student is learning IN ENGLISH and will keep reading English. Your note appears UNDERNEATH the English sentence as a help line — it never replaces it.
 
 Because of that:
-- The goal is to unblock understanding, not to substitute for the English. Keep each note SHORTER than the English line where you can. A student should be able to glance at it and get straight back to the English.
+- The goal is to unblock understanding, not to substitute for the English. Keep each note SHORTER than the English where you can, so a student can glance at it and get straight back to the English.
 - KEEP TECHNICAL VOCABULARY IN ENGLISH, even inside your ${language} note: System.out.println, print, println, int, double, String, boolean, loop, variable, compile, error, method, quotes. These are the words the student must actually learn. Explain around them; do not replace them.
 - NEVER translate or alter anything that is code — keywords, identifiers, method names, variable names like i, n, total. If a sentence quotes code, keep the code EXACTLY as-is.
 - Keep any \\n, \\t, quotes and punctuation exactly as they appear.
-- Plain, encouraging, and no longer than necessary. These are one-line captions, not paragraphs.
-- Keep every key and array position exactly as given.
+- Plain and encouraging. These are one-line captions, not paragraphs.
 
-Return ONLY JSON with the same shape you receive: {"<stepId>": {"instruction": "...", "why": "...", ...}}`,
-      messages: [{ role: "user", content: JSON.stringify(source, null, 1) }],
+You will receive: {"items":[{"id":"...","text":"..."}]}
+Return EXACTLY: {"items":[{"id":"...","text":"<your ${language} note>"}]}
+The "id" values are opaque — copy each one back CHARACTER FOR CHARACTER and never invent, merge, reorder or drop one. Return one item for every item you received.`,
+      messages: [{ role: "user", content: JSON.stringify({ items }) }],
       json: true,
-      maxTokens: 6000,
+      maxTokens: 8000,
       reasoningEffort: "low",
     },
     { userId }
   );
 
-  const data = r.data;
-  if (!data || typeof data !== "object") {
-    throw new Error(r.provider === "stub" ? "No AI key configured — add one in Settings." : "The model returned no usable translation.");
-  }
-
-  // Models don't reliably return the exact envelope they're asked for — some
-  // wrap the map under a key like "translations" or "steps". Unwrap one level
-  // if the top level clearly isn't keyed by step id, rather than silently
-  // producing nothing.
-  const ids = new Set(steps.map((s) => s.id));
-  let map: any = data;
-  if (!Object.keys(map).some((k) => ids.has(k))) {
-    const inner = Object.values(map).find(
-      (v) => v && typeof v === "object" && Object.keys(v as object).some((k) => ids.has(k))
+  const returned = Array.isArray(r.data?.items) ? r.data!.items : [];
+  if (!returned.length) {
+    throw new Error(
+      r.provider === "stub"
+        ? "No AI key configured — add one in Settings."
+        : `translator returned no items (got: ${Object.keys((r.data as object) || {}).slice(0, 4).join(", ") || "nothing"})`
     );
-    if (inner) map = inner;
   }
 
+  // Rebuild the nested shape from the flat ids.
   const cleaned: FlowTranslation = {};
-  for (const s of steps) {
-    const got = map?.[s.id];
-    if (got && typeof got === "object") cleaned[s.id] = got;
+  for (const it of returned) {
+    if (!it || typeof it.id !== "string" || typeof it.text !== "string" || !it.text.trim()) continue;
+    const [stepId, field, idxRaw, sub] = it.id.split("::");
+    if (!stepId || !field || !source[stepId]) continue;
+    const target = (cleaned[stepId] ||= {});
+    if (idxRaw === undefined) {
+      (target as any)[field] = it.text;
+    } else {
+      const arr = ((target as any)[field] ||= []);
+      const idx = Number(idxRaw);
+      if (!Number.isInteger(idx) || idx < 0) continue;
+      arr[idx] = { ...(arr[idx] || {}), [sub]: it.text };
+    }
   }
 
-  // NEVER cache an empty result. Storing {} used to mark the language as "done"
-  // so the on-demand path skipped it forever — one bad response permanently
-  // disabled that language.
   if (Object.keys(cleaned).length === 0) {
-    throw new Error(`translator returned no matching steps (got keys: ${Object.keys(data as object).slice(0, 4).join(", ") || "none"})`);
+    throw new Error("translator returned items but none matched this lesson's steps");
   }
 
   // Merge into the existing map rather than replacing other languages.

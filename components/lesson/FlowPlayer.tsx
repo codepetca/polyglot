@@ -44,12 +44,6 @@ const norm = (s: string) => (s || "").replace(/\r\n/g, "\n").trimEnd();
 const RTL = new Set(["ur", "fa", "ar"]);
 
 // Each language names itself, so a student can find theirs without first
-// reading English. Mirrors LANGUAGES in lib/curriculum/translate.ts.
-const LANG_LABELS: Record<string, string> = {
-  "zh-Hans": "简体中文", "zh-Hant": "繁體中文", ta: "தமிழ்", ur: "اردو",
-  pa: "ਪੰਜਾਬੀ", hi: "हिन्दी", fa: "فارسی", tl: "Tagalog",
-  ko: "한국어", vi: "Tiếng Việt", fr: "Français", es: "Español",
-};
 
 // ESL scaffolding. The English above it is the lesson; this is a help line the
 // student opens when a sentence blocks them, then goes back to the English.
@@ -78,7 +72,6 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   // request. Never replaces the English — see lib/curriculum/translate.ts.
   const [lang, setLang] = useState<string>("");
   const [assist, setAssist] = useState<Record<string, Record<string, any>> | null>(null);
-  const [languages, setLanguages] = useState<string[]>([]);
   const [i, setI] = useState(0);
   const [firstTry, setFirstTry] = useState(0);
   const attemptsRef = useRef<Record<string, number>>({});
@@ -94,14 +87,25 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   }, []);
 
   useEffect(() => {
+    let alive = true;
     const q = lang ? `&lang=${encodeURIComponent(lang)}` : "";
     fetch(`/api/lesson/flow?lessonCode=${encodeURIComponent(lessonCode)}${q}`)
       .then((r) => r.json())
       .then((d) => {
+        if (!alive) return;
         setSteps(d.steps || []);
         setAssist(d.assist || null);
-        setLanguages(d.languages || []);
+        // The translation for this language doesn't exist yet. Don't make the
+        // student wait for it — the lesson is already on screen; fetch the
+        // assist separately and slot it in whenever it lands.
+        if (d.assistPending) {
+          fetch(`/api/lesson/flow?lessonCode=${encodeURIComponent(lessonCode)}${q}&assistOnly=1`)
+            .then((r) => r.json())
+            .then((a) => { if (alive && a?.assist) setAssist(a.assist); })
+            .catch(() => {});
+        }
       });
+    return () => { alive = false; };
   }, [lessonCode, lang]);
 
   if (!steps) return <div className="panel" style={{ color: "var(--muted)" }}>Loading…</div>;
@@ -129,13 +133,10 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
         </span>
         <span className="meta" style={{ margin: 0 }}>{done ? "done!" : `${i + 1} / ${steps.length}`}</span>
         <span style={{ flex: 1 }} />
-        <Link href={`/exam/${lessonCode}`} className="meta" style={{ margin: 0, textDecoration: "underline dotted" }} title="Skip the steps — pass the clean quiz and you're done.">
-          ⚡ know this? prove it
-        </Link>
       </div>
 
       {done ? (
-        <FlowDone lessonCode={lessonCode} total={steps.length} firstTry={firstTry} nextHref={nextHref} />
+        <FlowDone total={steps.length} firstTry={firstTry} nextHref={nextHref} />
       ) : (
         <StepView
           key={step!.id}
@@ -655,23 +656,21 @@ function FillSurface({ step, fillPick, onPick, verdicts, serverAnswers }: {
   );
 }
 
-function FlowDone({ lessonCode, total, firstTry, nextHref }: { lessonCode: string; total: number; firstTry: number; nextHref?: string | null }) {
+// Finishing a lesson should feel like finishing, not like being handed a test.
+// This used to lead with a locked "Prove it — clean quiz" button and explain
+// that the steps you just did were only a warm-up and didn't count. For a
+// student who struggles, that turns a win into a hurdle. One button: keep going.
+function FlowDone({ total, firstTry, nextHref }: { total: number; firstTry: number; nextHref?: string | null }) {
   return (
     <div className="panel flowstep won" style={{ textAlign: "center" }}>
       <div style={{ fontSize: 40 }}>🎉</div>
       <h2 style={{ fontFamily: "var(--serif)", margin: "6px 0" }}>Lesson complete</h2>
-      <p className="meta">{total} steps · {firstTry} first-try</p>
-      <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 10 }}>
-        <Link href={`/exam/${lessonCode}`} className="btn green" style={{ textDecoration: "none", fontSize: 15, padding: "10px 22px" }}>
-          🔒 Prove it — clean quiz
+      <p className="meta">you got {firstTry} of {total} right first try</p>
+      {nextHref && (
+        <Link href={nextHref} className="btn green" style={{ textDecoration: "none", fontSize: 15, padding: "11px 26px", display: "inline-block", marginTop: 10 }}>
+          Next lesson →
         </Link>
-        {nextHref && (
-          <Link href={nextHref} className="btn ghost" style={{ textDecoration: "none", fontSize: 15, padding: "10px 22px" }}>
-            Next lesson →
-          </Link>
-        )}
-      </div>
-      <p className="meta" style={{ marginTop: 10 }}>The clean quiz is what makes it official — steps warm you up, the quiz proves it.</p>
+      )}
     </div>
   );
 }

@@ -33,32 +33,33 @@ export async function GET(req: Request) {
   // renders the assist underneath on demand instead of replacing anything.
   const steps: any[] = flow.steps.map(stripStepForClient);
   const row = await prisma.lesson.findUnique({ where: { code: lessonCode }, select: { flowI18n: true } });
-  let all = ((row?.flowI18n as any) || {}) as Record<string, unknown>;
+  const all = ((row?.flowI18n as any) || {}) as Record<string, unknown>;
 
-  // Translate on demand.
+  // NEVER block the lesson on translation.
   //
-  // Previously a translation only existed if someone had generated it by hand,
-  // so in practice ONE language worked and the other eleven silently showed
-  // nothing — the picker offered help that never arrived. Now the first student
-  // to choose a language pays a few seconds to create it, and it's cached for
-  // everyone after. Bounded by the global daily AI spend cap.
-  if (locale && LANGUAGES[locale] && !all[locale]) {
+  // Generating a missing translation takes seconds, and doing it inline meant a
+  // student who picked a language sat looking at "Loading…" before the lesson
+  // appeared at all — the exact stall this platform can least afford. The steps
+  // now return immediately; if the assist isn't ready the client asks for it
+  // separately (assistOnly=1) and drops it in when it arrives.
+  const cached = locale && all[locale] ? assistForClient(flow.steps, all[locale] as any) : null;
+  const assistPending = Boolean(locale && LANGUAGES[locale] && !all[locale]);
+
+  if (url.searchParams.get("assistOnly") === "1") {
+    if (!locale || !LANGUAGES[locale]) return NextResponse.json({ assist: null });
+    if (cached) return NextResponse.json({ assist: cached });
     try {
       await translateLesson(lessonCode, locale, me.id);
       const fresh = await prisma.lesson.findUnique({ where: { code: lessonCode }, select: { flowI18n: true } });
-      all = ((fresh?.flowI18n as any) || {}) as Record<string, unknown>;
+      const map = ((fresh?.flowI18n as any) || {})[locale];
+      return NextResponse.json({ assist: map ? assistForClient(flow.steps, map) : null });
     } catch (e) {
-      // Never block the lesson on a translation failure — English still works —
-      // but say why in the server log, or a silent failure looks like a missing
-      // button to the student and a mystery to us.
       console.error(`[assist] ${lessonCode}/${locale} failed:`, (e as Error).message);
+      return NextResponse.json({ assist: null });
     }
   }
 
-  const assist = locale && all[locale] ? assistForClient(flow.steps, all[locale] as any) : null;
-
-  // Offer every language we CAN produce, not just ones already cached.
-  return NextResponse.json({ steps, assist, languages: Object.keys(LANGUAGES) });
+  return NextResponse.json({ steps, assist: cached, assistPending, languages: Object.keys(LANGUAGES) });
 }
 
 export async function POST(req: Request) {

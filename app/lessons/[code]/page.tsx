@@ -109,39 +109,28 @@ export default async function LessonPage({
 
   return (
     <>
-      <div className="crumb">
-        {lesson.chapter.title.toUpperCase()} · LESSON {lesson.code}
-      </div>
-      <h1 className="title">{lesson.title}</h1>
-      <div>
-        <span className={`status-pill ${pill}`}>{pillText}</span>
-      </div>
-      <div className="ready">
-        <div className="barwrap">
-          <div className="bar" style={{ width: `${readiness}%` }} />
-        </div>
-        <div className="lbl">
-          readiness {readiness}% — the average of your last 5 attempts; only the 🔒 clean quiz sets MASTERED
-        </div>
-      </div>
+      {/* An interactive lesson shows the student ONE thing: the lesson.
+          Everything that used to sit above it — a MASTERED/NOT STARTED badge, a
+          "readiness 0%" meter explaining an averaging rule, a shortcut to skip
+          to a quiz, a link to a second textbook version — was status and
+          navigation aimed at someone confident enough to care. For a student
+          who is behind and easily discouraged, a 0% bar before they have done
+          anything is a reason to close the tab. So: the title, the step, and
+          the documentation. Nothing else. */}
+      <h1 className="title" style={{ marginBottom: 4 }}>{lesson.title}</h1>
 
       {hasFlow ? (
         <>
           <FlowPlayer lessonCode={lesson.code} lessonTitle={lesson.title} nextHref={nextHref} />
           {/* Constant. Every step, every lesson — reference you can rely on. */}
           <Docs lessonCode={lesson.code} />
-          <details style={{ margin: "10px 0 20px" }}>
-            <summary style={{ cursor: "pointer", color: "var(--muted)", fontSize: 13.5 }}>
-              📖 Prefer reading? Open the textbook version (+ full code workspace)
-            </summary>
-            <div style={{ marginTop: 12 }}>{classic}</div>
-          </details>
         </>
       ) : (
-        classic
+        <>
+          <div className="crumb">{lesson.chapter.title.toUpperCase()} · LESSON {lesson.code}</div>
+          {classic}
+        </>
       )}
-      {/* Interactive lessons have their own help ladder (hint → tutor) built
-          into each step, so the floating rail is two redundant buttons there. */}
       {!hasFlow && <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />}
     </>
   );
