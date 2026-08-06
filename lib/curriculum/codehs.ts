@@ -295,6 +295,28 @@ export function lessonSpec(code: string): CodeHSLesson | undefined {
 }
 
 /**
+ * The number the STUDENT sees. Always CodeHS's, never ours.
+ *
+ * The platform's own lesson codes are database keys, URL segments and progress
+ * rows, so renaming them is a migration. But a student who sees "2.3" here and
+ * "3.3" in CodeHS has to work out that they are the same lesson, and this
+ * platform exists for students who give up at exactly that kind of friction.
+ * So the internal code stays put and the display follows CodeHS.
+ */
+export function studentCode(code: string): string {
+  return lessonSpec(code)?.codehsCode ?? code;
+}
+
+/**
+ * Accept either numbering in a URL. A student who types or is given the CodeHS
+ * number should land on the lesson, not a 404.
+ */
+export function resolveLessonCode(input: string): string {
+  if (lessonSpec(input)) return input;
+  return CODEHS_BASIC_JAVA.find((l) => l.codehsCode === input)?.code ?? input;
+}
+
+/**
  * The curriculum boundary for one lesson, as prompt text. This is what stops a
  * generated lesson from quietly reaching forward into a later concept — the
  * single most common way "aligned" content stops being aligned.

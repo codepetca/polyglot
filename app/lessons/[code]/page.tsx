@@ -11,6 +11,7 @@ import StudentTools from "@/components/student/StudentTools";
 import HighlightOnLoad from "@/components/lesson/HighlightOnLoad";
 import type { Block, Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
 import { stripAnswers } from "@/lib/curriculum/questions";
+import { resolveLessonCode, studentCode } from "@/lib/curriculum/codehs";
 
 export default async function LessonPage({
   params,
@@ -19,10 +20,12 @@ export default async function LessonPage({
   params: Promise<{ code: string }>;
   searchParams: Promise<{ highlight?: string }>;
 }) {
-  const { code } = await params;
+  const { code: rawCode } = await params;
   const { highlight } = await searchParams;
   const me = await currentUser();
   if (!me) redirect("/join");
+  // Students may arrive with CodeHS's number (3.3) rather than ours (2.3).
+  const code = resolveLessonCode(rawCode);
   const lesson = await prisma.lesson.findUnique({ where: { code }, include: { chapter: true } });
   if (!lesson) notFound();
 
@@ -117,7 +120,10 @@ export default async function LessonPage({
           who is behind and easily discouraged, a 0% bar before they have done
           anything is a reason to close the tab. So: the title, the step, and
           the documentation. Nothing else. */}
-      <h1 className="title" style={{ marginBottom: 4 }}>{lesson.title}</h1>
+      {/* Titled exactly as CodeHS titles it, number included — a student
+          holding both open must never have to work out that "2.3" here and
+          "3.3" there are the same lesson. */}
+      <h1 className="title" style={{ marginBottom: 4 }}>{studentCode(lesson.code)} {lesson.title}</h1>
 
       {hasFlow ? (
         <>
@@ -127,7 +133,7 @@ export default async function LessonPage({
         </>
       ) : (
         <>
-          <div className="crumb">{lesson.chapter.title.toUpperCase()} · LESSON {lesson.code}</div>
+          <div className="crumb">{lesson.chapter.title.toUpperCase()} · LESSON {studentCode(lesson.code)}</div>
           {classic}
         </>
       )}

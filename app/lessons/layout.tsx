@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { excludeInternal } from "@/lib/curriculum/internal";
+import { studentCode } from "@/lib/curriculum/codehs";
 
 // Prototype-v4 sidebar: topic rows with status dots, lesson code minis, legend.
 export default async function LessonsLayout({ children }: { children: React.ReactNode }) {
@@ -29,7 +30,8 @@ export default async function LessonsLayout({ children }: { children: React.Reac
           rest are still reading. Say which is which up front rather than
           letting a student find out by landing in a wall of text. */}
       {isInteractive(l) && <span className="playmark" title="Interactive — do it, don't read it">▶</span>}
-      <span className="mini">{l.code}</span>
+      {/* CodeHS's number, not ours — see studentCode(). */}
+      <span className="mini">{studentCode(l.code)}</span>
     </Link>
   );
 
