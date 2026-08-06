@@ -21,9 +21,39 @@ const PRICES: Record<string, [number, number]> = {
   "claude-opus-4-8": [15, 75],
 };
 
+// An unknown model must NOT be free.
+//
+// costOf() is the only thing feeding the daily spend cap. A model missing from
+// PRICES used to fall back to [0, 0], which pinned recorded spend at exactly
+// $0.00 no matter how many calls ran — so overDailyBudget() never returned
+// true and the kill-switch did not exist. That is precisely what happened in
+// production: the configured model is gemini-3.1-pro-preview, which is not in
+// the table, and every logged call cost $0.
+//
+// So fail CLOSED: price an unfamiliar model at the most expensive tier here, and
+// say so loudly. Over-charging makes the cap trip early (degrading to the stub,
+// which is recoverable); under-charging removes the ceiling entirely.
+const FALLBACK_PRICE: [number, number] = [15, 75];
+const unpricedWarned = new Set<string>();
+
 function costOf(model: string, input: number, output: number): number {
-  const [pi, po] = PRICES[model] ?? [0, 0];
+  let price = PRICES[model];
+  if (!price) {
+    if (!unpricedWarned.has(model)) {
+      unpricedWarned.add(model);
+      console.error(
+        `[llm] no price listed for "${model}" — charging the fallback $${FALLBACK_PRICE[0]}/$${FALLBACK_PRICE[1]} per 1M tokens so the daily cap still bounds it. Add the real rate to PRICES in lib/llm/index.ts.`
+      );
+    }
+    price = FALLBACK_PRICE;
+  }
+  const [pi, po] = price;
   return (input * pi + output * po) / 1e6;
+}
+
+/** Models with no listed price, for the admin cost panel to flag. */
+export function unpricedModels(): string[] {
+  return [...unpricedWarned];
 }
 
 // Global kill-switch: per-user/IP rate limits bound one actor, not total spend
