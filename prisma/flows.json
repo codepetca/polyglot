@@ -19,16 +19,16 @@
             "instruction": "We're building a game's title screen.",
             "points": [
               {
-                "label": "the screen",
-                "text": "A title, a menu of choices, and a prompt asking the player to pick one."
+                "label": "title, menu, prompt",
+                "text": "A title at the top, two choices, and a line asking the player to pick one."
               },
               {
-                "label": "all of it is text",
-                "text": "Every line you have ever seen a program print is just text it was told to print."
+                "label": "\"*** DUNGEON QUEST ***\"",
+                "text": "Every line a program has ever printed is just text it was told to print, character for character."
               },
               {
-                "label": "one command",
-                "text": "You need exactly one new thing to build the whole screen. We start with it now."
+                "label": "System.out.println",
+                "text": "One command builds the entire screen. You meet its no-newline twin later in the lesson."
               }
             ]
           },
@@ -119,12 +119,12 @@
                 "text": "Nothing between the quotes, so it prints nothing — then moves to the next line anyway."
               },
               {
-                "label": "the result",
-                "text": "An empty line. That is all a blank line is: a line with nothing on it."
+                "label": "\"\"",
+                "text": "Empty quotes hold zero characters, so println prints nothing at all — and the ln still ends the line. That is exactly what a blank line is."
               },
               {
-                "label": "spacing is design",
-                "text": "Same words, easier to read. Where you put gaps is a real decision."
+                "label": "title, gap, menu",
+                "text": "Same words, easier to read. Where the gaps go is a decision you make, not something Java does for you."
               }
             ]
           },
@@ -140,16 +140,16 @@
                 "text": "Prints and STAYS on the line. The cursor waits right after the text."
               },
               {
-                "label": "why here",
-                "text": "A prompt should have the answer next to it, not on the line below. Choose 1-2: 2 reads properly."
+                "label": "Choose 1-2: 2",
+                "text": "With print, the player types on the same line as the question, so it reads as one sentence. With println their answer would drop to the line below."
               },
               {
                 "label": "the space",
                 "text": "The space after the colon is inside the quotes, so the answer will not touch the question mark."
               },
               {
-                "label": "the difference",
-                "text": "print and println are the same command. The only difference is whether the line ends."
+                "label": "print vs println",
+                "text": "Identical commands apart from one thing: println ends the line, print leaves it open."
               }
             ]
           },
@@ -183,13 +183,13 @@
           {
             "id": "p_sharp",
             "kind": "teach",
-            "instruction": "The exact rules, so they hold up in a test.",
+            "instruction": "println ends the line. print does not.",
             "code": "System.out.println(\"one\");\nSystem.out.print(\"two\");\nSystem.out.println(\"three\");",
             "output": "one\ntwothree",
             "points": [
               {
-                "label": "the spelling",
-                "text": "System.out.println. Not printLine, not System.println, not print alone. Java accepts nothing else."
+                "label": "System.out.println",
+                "text": "Capital S, then out, then println all in lowercase. printLine, System.println and bare print do not exist."
               },
               {
                 "label": "println",
@@ -200,8 +200,8 @@
                 "text": "Prints, and LEAVES the line open. The next thing continues right after it."
               },
               {
-                "label": "so",
-                "text": "Line 1 ended. Lines 2 and 3 share a line, because line 2 never ended."
+                "label": "one / twothree",
+                "text": "Line 1 used println, so it ended. Line 2 used print, so it stayed open — and line 3 landed on the same line as \"two\"."
               }
             ]
           },
@@ -317,16 +317,16 @@
                 "text": "Five facts about one player: their name, their level, their health, their rank, and whether they are online."
               },
               {
-                "label": "the problem",
-                "text": "Each fact is a different KIND of thing. A name is text. A level is a whole number. Health can be half a heart."
+                "label": "name, level, health",
+                "text": "Each is a different KIND of value. A name is text, a level is a whole number, health can be half a heart. Java has to be told which is which."
               },
               {
                 "label": "a variable",
                 "text": "A labelled box that holds one fact. You put a value in once, then use the label wherever you need it."
               },
               {
-                "label": "how we go",
-                "text": "One box at a time. The card grows on screen, and by the end you have built the whole thing."
+                "label": "one box at a time",
+                "text": "The card grows on screen as each new type arrives, and by the last step you have built all five."
               }
             ]
           },
@@ -398,8 +398,8 @@
                 "text": "7 is a number, so it needs no quotes. \"7\" with quotes would be text."
               },
               {
-                "label": "the card grows",
-                "text": "Two boxes now, two lines of card."
+                "label": "two boxes, two lines",
+                "text": "Each new variable adds one more line to the card."
               }
             ]
           },
@@ -453,20 +453,20 @@
             "output": "=== PLAYER CARD ===\nName:   Ada\nLevel:  7\nHealth: 2.5",
             "points": [
               {
-                "label": "the problem",
-                "text": "Health is 2.5 hearts. An int has nowhere to keep the .5, so it cannot hold it."
+                "label": "2.5",
+                "text": "Health is 2.5 hearts. An int has nowhere to keep the .5, so the value simply will not fit in one."
               },
               {
                 "label": "double",
                 "text": "Works exactly like int, but it keeps the decimal part."
               },
               {
-                "label": "which to pick",
-                "text": "int for what you COUNT: levels, lives, coins. double for what you MEASURE: health, height, money."
+                "label": "int or double",
+                "text": "int for things you COUNT — levels, lives, coins. double for things you MEASURE — health, height, money."
               },
               {
-                "label": "still fine",
-                "text": "A double can hold a whole number too. It just shows it as 3.0 instead of 3."
+                "label": "double h = 3;",
+                "text": "Allowed. A double can hold a whole number perfectly well; it just displays it as 3.0."
               }
             ]
           },
@@ -499,8 +499,8 @@
                 "text": "SINGLE quotes. 'A' is a char. \"A\" with double quotes would be a String."
               },
               {
-                "label": "why bother",
-                "text": "A rank is always one letter, so char says so exactly. A name could be any length, so it stays a String."
+                "label": "char vs String",
+                "text": "A rank is always exactly one letter, so char states that precisely. A name could be any length, so it stays a String."
               }
             ]
           },
@@ -520,8 +520,8 @@
                 "text": "true, not True, and not \"true\" — quotes would make it text."
               },
               {
-                "label": "card complete",
-                "text": "Five facts, five types. Every one chosen because of what it had to hold."
+                "label": "five facts, five types",
+                "text": "Every type was chosen because of what it had to hold, not because a list said so."
               }
             ]
           },
@@ -538,7 +538,7 @@
           {
             "id": "v_sharp",
             "kind": "teach",
-            "instruction": "Now the exact rules, so they hold up in a test.",
+            "instruction": "Four parts, one order: type, name, =, value.",
             "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nboolean online = true;\nSystem.out.println(name + \" \" + level + \" \" + health + \" \" + rank + \" \" + online);",
             "output": "Ada 7 2.5 A true",
             "points": [
@@ -776,12 +776,12 @@
                 "text": "Every value on the card was typed by YOU, into the code. To play as someone else you would have to edit the program and save it again."
               },
               {
-                "label": "What a game does instead",
-                "text": "It prints a question, then stops and waits. Nothing else happens until the player types something and presses enter."
+                "label": "print, then wait",
+                "text": "It shows the question, then stops. Nothing runs until the player types a line and presses enter."
               },
               {
-                "label": "Where the answer goes",
-                "text": "Whatever they typed has to be kept somewhere, or it is lost the moment the next line runs. It goes into a variable, exactly like any other value."
+                "label": "into a variable",
+                "text": "What they typed has to be stored, or it is gone the moment the next line runs."
               }
             ]
           },
@@ -845,8 +845,8 @@
                 "text": "readLine handed back exactly the characters you typed, and the = put them into the name box."
               },
               {
-                "label": "Run it again",
-                "text": "Go back a step and type something different. The code does not change; the output does."
+                "label": "a different name",
+                "text": "Go back a step and type something else. The code does not change; the output does."
               }
             ]
           },
@@ -936,7 +936,7 @@
           {
             "id": "k_sharp",
             "kind": "teach",
-            "instruction": "The exact rules, so they hold up in a test.",
+            "instruction": "Four readers, one per type of answer.",
             "points": [
               {
                 "label": "readLine",
@@ -1103,16 +1103,16 @@
             "instruction": "Your party just found a pile of loot. Time to split it.",
             "points": [
               {
-                "label": "the job",
-                "text": "17 coins, 5 players. How many does each one get, and what is left in the pot?"
+                "label": "17 coins, 5 players",
+                "text": "How many does each player get, and how many are left over that cannot be split evenly?"
               },
               {
-                "label": "why it is not obvious",
-                "text": "You cannot hand out a third of a coin. Java has a particular idea about this, and it surprises people."
+                "label": "0.4 of a coin",
+                "text": "You cannot hand out part of a coin, so the answer has to be a whole number — and Java has a firm opinion about how to get one."
               },
               {
-                "label": "on the way",
-                "text": "We do the ordinary maths first — buying, totals — then get to the splitting."
+                "label": "+ - * first",
+                "text": "The ordinary arithmetic comes first, then the splitting."
               }
             ]
           },
@@ -1132,12 +1132,12 @@
                 "text": "Multiply. A star, not an × — there is no × key on a keyboard."
               },
               {
-                "label": "boxes work too",
-                "text": "gold + found uses what is inside each box. The maths happens on the values."
+                "label": "gold + found",
+                "text": "Uses the values inside the two boxes: 50 + 12."
               },
               {
-                "label": "nothing changed",
-                "text": "Printing gold + found does not alter gold. It works out an answer and prints it."
+                "label": "gold is still 50",
+                "text": "Printing gold + found works out an answer and prints it. It does not put anything back into gold."
               }
             ]
           },
@@ -1164,12 +1164,12 @@
                 "text": "Multiply and divide happen before add and subtract — the same rule as maths class."
               },
               {
-                "label": "so",
-                "text": "2 * 3 is 6, then 6 + 10 is 16. It is NOT 2 * 13."
+                "label": "2 * 3 + 10",
+                "text": "Java multiplies first: 2 * 3 is 6. Then it adds: 6 + 10 is 16. It never works out 2 * 13."
               },
               {
-                "label": "brackets win",
-                "text": "Anything in brackets is worked out first, before everything else."
+                "label": "( )",
+                "text": "Anything inside brackets is worked out before everything else, so brackets are how you override the order."
               }
             ]
           },
@@ -1193,25 +1193,25 @@
           {
             "id": "m_div",
             "kind": "teach",
-            "instruction": "Now the split. This is the one that catches everybody.",
+            "instruction": "17 coins between 5 players. Java says 3, not 3.4.",
             "code": "int coins = 17;\nint players = 5;\nSystem.out.println(coins / players);",
             "output": "3",
             "points": [
               {
                 "label": "17 / 5",
-                "text": "In maths that is 3.4. Java says 3."
+                "text": "In ordinary maths this is 3.4. Java gives 3."
               },
               {
-                "label": "why",
-                "text": "Both numbers are whole numbers, so Java keeps the answer whole. It does not round — it throws the rest away."
+                "label": "int / int",
+                "text": "When both sides are whole numbers Java has to give a whole number back, so the .4 is discarded — discarded, not rounded. 19 / 5 also gives 3."
               },
               {
-                "label": "it fits the job",
-                "text": "You cannot hand out 0.4 of a coin, so 3 each is actually the right answer here."
+                "label": "3 coins each",
+                "text": "Which is genuinely the right answer here: you cannot hand out 0.4 of a coin."
               },
               {
-                "label": "but",
-                "text": "Something IS left over, and Java just dropped it. Getting it back is the next step."
+                "label": "2 coins unaccounted for",
+                "text": "Java dropped them and said nothing. The next step is how you get them back."
               }
             ]
           },
@@ -1248,8 +1248,8 @@
                 "text": "5 goes into 17 three times, using 15 coins. 2 are left. So 2."
               },
               {
-                "label": "the pair",
-                "text": "/ tells you how many each. % tells you what stays in the pot. Together they split anything."
+                "label": "/ and %",
+                "text": "/ gives 3 — how many each player gets. % gives 2 — how many stay in the pot. 3 x 5 + 2 = 17, so between them they account for every coin."
               },
               {
                 "label": "% 2",
@@ -1273,12 +1273,12 @@
                 "text": "Short for gold = gold + 1. Adds exactly one."
               },
               {
-                "label": "the others",
-                "text": "-= takes away, *= multiplies, /= divides. Same pattern every time."
+                "label": "-= *= /=",
+                "text": "The same pattern: gold -= 5 means gold = gold - 5, and *= and /= work the same way."
               },
               {
-                "label": "why you care",
-                "text": "You will see ++ constantly once loops start. This is where it comes from."
+                "label": "i++",
+                "text": "Every for loop you write from lesson 3.9 onwards ends in i++. This line is where that syntax comes from."
               }
             ]
           },
@@ -1295,7 +1295,7 @@
           {
             "id": "m_sharp",
             "kind": "teach",
-            "instruction": "The exact rules, so they hold up in a test.",
+            "instruction": "7 / 2 is 3. 7.0 / 2 is 3.5. 7 % 2 is 1.",
             "code": "System.out.println(7 / 2);\nSystem.out.println(7.0 / 2);\nSystem.out.println(7 % 2);",
             "output": "3\n3.5\n1",
             "points": [
@@ -1312,8 +1312,8 @@
                 "text": "The remainder: 1. That is the .5 you lost, expressed as what was left."
               },
               {
-                "label": "precedence",
-                "text": "Brackets, then * / %, then + -. Same-level operations run left to right."
+                "label": "2 + 3 * 4 is 14",
+                "text": "Brackets first, then * / %, then + -. Operations of equal rank run left to right, which is why 7 / 20 * 100 divides before it multiplies."
               }
             ]
           },
@@ -1431,27 +1431,27 @@
             "instruction": "Your character has 7 XP. The next level needs 20.",
             "points": [
               {
-                "label": "the readout",
-                "text": "We want the bar to say Progress: 35% — the share of the way there, as a whole number."
+                "label": "Progress: 35%",
+                "text": "The share of the way to the next level, shown as a whole number."
               },
               {
-                "label": "the sum",
-                "text": "7 out of 20 is 7 / 20, times 100. Straightforward maths."
+                "label": "7 / 20 * 100",
+                "text": "Seven out of twenty, as a percentage. Straightforward arithmetic."
               },
               {
-                "label": "the catch",
-                "text": "Written the obvious way in Java, that prints 0. Not 35, not 0.35 — zero."
+                "label": "7 / 20 * 100 gives 0",
+                "text": "Written the obvious way, Java prints 0. Not 35, not 0.35 — zero, because 7 / 20 is worked out as two ints before the 100 is ever reached."
               },
               {
-                "label": "this lesson",
-                "text": "Why it does that, and the one tool that fixes it."
+                "label": "(double) and (int)",
+                "text": "Two casts, doing opposite jobs. One keeps a decimal the division would destroy; the other removes it again for display."
               }
             ]
           },
           {
             "id": "c_zero",
             "kind": "teach",
-            "instruction": "Here it is going wrong. Watch closely.",
+            "instruction": "7 XP out of 20, times 100. Java prints 0.",
             "code": "int xp = 7;\nint needed = 20;\nSystem.out.println(xp / needed * 100);",
             "output": "0",
             "points": [
@@ -1468,8 +1468,8 @@
                 "text": "Zero times anything is zero. The answer was already destroyed before the 100 arrived."
               },
               {
-                "label": "the real problem",
-                "text": "Nothing is broken. Java did exactly what int division always does — it just was not what we wanted."
+                "label": "Java is not broken",
+                "text": "It did exactly what int division always does. The code is correct and the answer is still useless."
               }
             ]
           },
@@ -1492,12 +1492,12 @@
                 "text": "The type you want, in brackets, in front of the value. Here it turns 7 into 7.0."
               },
               {
-                "label": "why that works",
-                "text": "Now the division has a decimal on one side, so Java keeps the decimal: 0.35 instead of 0."
+                "label": "7.0 / 20",
+                "text": "With a decimal on one side, Java keeps the decimal: 0.35 instead of 0."
               },
               {
-                "label": "one side is enough",
-                "text": "You only cast one of them. Java converts the other automatically."
+                "label": "(double) xp",
+                "text": "Only one value needs casting. Java converts the other automatically."
               },
               {
                 "label": "35.0",
@@ -1535,30 +1535,30 @@
           {
             "id": "c_timing",
             "kind": "teach",
-            "instruction": "That is the rule worth remembering.",
+            "instruction": "A cast only reaches what comes immediately after it.",
             "points": [
               {
-                "label": "cast before, not after",
-                "text": "(double) x / y works. (double) (x / y) does not. The cast has to reach the division before it happens."
+                "label": "(double) x / y",
+                "text": "Works. (double) (x / y) does not — the cast has to reach the division before it happens."
               },
               {
-                "label": "why",
-                "text": "Once two ints divide, the fraction is gone. Casting afterwards converts a number that is already wrong."
+                "label": "(double) (7 / 20)",
+                "text": "7 / 20 runs first as two ints and gives 0. Casting 0 to a double gives 0.0. The fraction was destroyed before the cast existed."
               },
               {
-                "label": "how to read it",
-                "text": "A cast only applies to the thing immediately after it. Brackets change what that thing is."
+                "label": "(double) x",
+                "text": "A cast applies only to the thing immediately after it. Brackets change what that thing is."
               },
               {
-                "label": "the habit",
-                "text": "Put the cast on the first value, not around the whole sum."
+                "label": "(double) xp / needed",
+                "text": "Put the cast on the first value, so it reaches the division. Not around the whole sum."
               }
             ]
           },
           {
             "id": "c_toint",
             "kind": "teach",
-            "instruction": "Now the other direction: 35.0 should display as 35.",
+            "instruction": "35.0 has a decimal point. The bar should read 35.",
             "code": "double percent = 35.9;\nSystem.out.println((int) percent);",
             "output": "35",
             "points": [
@@ -1567,16 +1567,16 @@
                 "text": "Turns a decimal into a whole number."
               },
               {
-                "label": "it chops",
-                "text": "35.9 becomes 35. Everything after the point is thrown away — it does NOT round."
+                "label": "35.9 gives 35",
+                "text": "Everything after the decimal point is thrown away. 35.999 also gives 35."
               },
               {
                 "label": "even 35.999",
                 "text": "Still 35. Casting never looks at how close it was."
               },
               {
-                "label": "remember this",
-                "text": "The test asks exactly this: (int) 9.9 is 9."
+                "label": "(int) 9.9 is 9",
+                "text": "The exact question the quiz asks. Not 10."
               }
             ]
           },
@@ -1592,15 +1592,15 @@
                 "text": "37.5 + 0.5 is 38.0, which chops to 38. Rounded up, using only chopping."
               },
               {
-                "label": "rounding down still works",
-                "text": "37.4 + 0.5 is 37.9, which chops to 37. Correct."
+                "label": "37.4 + 0.5 is 37.9",
+                "text": "Which chops to 37. The nudge is too small to reach 38, which is correct."
               },
               {
                 "label": "exactly .5 goes up",
                 "text": "That is the rule you were taught in maths, and this reproduces it."
               },
               {
-                "label": "the brackets matter",
+                "label": "(int) (percent + 0.5)",
                 "text": "The + 0.5 must happen before the chop, so it needs its own brackets inside the cast."
               }
             ]
@@ -1618,13 +1618,13 @@
           {
             "id": "c_sharp",
             "kind": "teach",
-            "instruction": "The exact rules, so they hold up in a test.",
+            "instruction": "(int) chops. (double) must arrive before the division.",
             "code": "System.out.println((int) 9.9);\nSystem.out.println((double) 9 / 2);\nSystem.out.println((double) (9 / 2));",
             "output": "9\n4.5\n4.0",
             "points": [
               {
-                "label": "casting is conversion",
-                "text": "Taking a value of one type and treating it as another. That is the whole definition."
+                "label": "(int) and (double)",
+                "text": "Taking a value of one type and treating it as another. That is the entire definition."
               },
               {
                 "label": "(int) 9.9 is 9",
@@ -1765,12 +1765,12 @@
                 "text": "None of these is a count or a measurement. There is no \"3 alive\". It is yes or no, and nothing else."
               },
               {
-                "label": "why it deserves a type",
-                "text": "A yes/no fact is so common that Java gives it its own type, with exactly two possible values."
+                "label": "true or false",
+                "text": "A yes/no fact is so common that Java gives it a type of its own, with exactly two possible values."
               },
               {
-                "label": "later",
-                "text": "These are also what decisions are built from. Every \"if the door is locked\" starts as one of these."
+                "label": "doorLocked",
+                "text": "From lesson 3.11 onwards, a program decides what to do next by looking at a value like this one. Booleans are what those decisions are made of."
               }
             ]
           },
@@ -1834,21 +1834,21 @@
                 "text": "hasKey = false is not \"empty\" or \"unset\". It is a definite no."
               },
               {
-                "label": "reading the panel",
-                "text": "Alive and quest done, but no key. That is a complete picture of the player in three words."
+                "label": "alive, no key, quest done",
+                "text": "Three words describe the player completely."
               }
             ]
           },
           {
             "id": "o_vsstring",
             "kind": "teach",
-            "instruction": "Careful: true and \"true\" look identical on screen.",
+            "instruction": "true and \"true\" both print as true. They are different types.",
             "code": "boolean answer = true;\nString word = \"true\";\nSystem.out.println(answer);\nSystem.out.println(word);",
             "output": "true\ntrue",
             "points": [
               {
-                "label": "same output",
-                "text": "Both print true. Quotes never appear, so you cannot tell them apart by looking."
+                "label": "true and \"true\"",
+                "text": "Both print true. Quotes never appear in output, so you cannot tell them apart by looking."
               },
               {
                 "label": "true",
@@ -1859,8 +1859,8 @@
                 "text": "A String. Four letters that happen to spell true. Java cannot make a decision from it."
               },
               {
-                "label": "the others",
-                "text": "'T' is a char. 10.1 is a double. Only bare true and false are booleans."
+                "label": "'T' and 10.1",
+                "text": "'T' is a char — one character in single quotes. 10.1 is a double. Neither is a boolean; only bare true and false are."
               }
             ]
           },
@@ -1941,7 +1941,7 @@
           {
             "id": "o_sharp",
             "kind": "teach",
-            "instruction": "The exact rules, so they hold up in a test.",
+            "instruction": "A boolean is true or false — and nothing else is.",
             "points": [
               {
                 "label": "what it is",
@@ -1952,8 +1952,8 @@
                 "text": "true and false. There is no third option and no \"empty\"."
               },
               {
-                "label": "the trap",
-                "text": "\"true\" with quotes is a String. 't' is a char. 10.1 is a double. Only the bare words count."
+                "label": "\"true\", 't', 10.1",
+                "text": "A String, a char and a double. Not one of them is a boolean, however much \"true\" looks like one."
               },
               {
                 "label": "what it is for",
@@ -2263,8 +2263,8 @@
                 "label": ">= and <="
               },
               {
-                "text": "A comparison is not a number. It comes back as true or false — a boolean.",
-                "label": "the result"
+                "text": "The answer is not a number. A comparison produces true or false — a boolean, the type you met last lesson.",
+                "label": "10 > 3 gives true"
               }
             ],
             "instruction": "Comparing two numbers gives you a boolean."
@@ -2312,8 +2312,8 @@
                 "label": "!="
               },
               {
-                "text": "Writing = when you meant == is the single most common mistake in this unit.",
-                "label": "the classic bug"
+                "text": "Writing = where you meant == is the most common mistake in this unit. One puts a value in; the other asks a question.",
+                "label": "= vs =="
               }
             ],
             "instruction": "== asks a question. = gives an answer."
@@ -2344,8 +2344,8 @@
                 "label": "boolean"
               },
               {
-                "text": "A well-named boolean like scoredEnough explains itself. You will do exactly this in a moment.",
-                "label": "why bother"
+                "text": "A named boolean says what the comparison MEANS, so the line that uses it reads like English instead of arithmetic.",
+                "label": "scoredEnough"
               }
             ],
             "instruction": "A comparison can be stored, just like any other value."
@@ -3077,12 +3077,12 @@
                 "label": "but look"
               },
               {
-                "text": "A while loop checks its condition first, so you must already have a guess before the loop can start.",
-                "label": "why"
+                "text": "The condition is checked before the first pass, so a guess has to exist already. That is what forces the extra readInt above the loop.",
+                "label": "while (guess != 6)"
               },
               {
-                "text": "Two copies of the same line means two places to change, and one you will forget.",
-                "label": "the risk"
+                "text": "The same question exists in two places. Reword one and forget the other, and the program asks two different things.",
+                "label": "readInt written twice"
               }
             ],
             "instruction": "Here is the problem this lesson solves."
@@ -3332,8 +3332,8 @@
                 "label": "swap them and it breaks"
               },
               {
-                "text": "With short-circuiting, the ORDER of your conditions is part of whether the program works.",
-                "label": "so"
+                "text": "The guard has to be on the left. Swap the two sides and the division runs before anything checks n, and the program crashes.",
+                "label": "(n != 0) && (10 / n > 1)"
               }
             ],
             "instruction": "Which side you put things on is now a real decision."
@@ -3631,7 +3631,7 @@
               },
               {
                 "text": "Text is compared with .equals(). Numbers and booleans still use ==.",
-                "label": "the rule"
+                "label": ".equals() vs =="
               }
             ],
             "instruction": "To compare text, use .equals() — not ==."
