@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { curriculumBrief } from "@/lib/curriculum/codehs";
 
 // Flow authoring kit: copy the mega-prompt (the full step-type catalog with one
 // worked example per kind) into any strong external AI together with your
@@ -80,7 +81,9 @@ SHAPE: teach the first idea → let them run/tweak it → teach the next idea �
 
 AUDIENCE: absolute beginners AND impatient students who half-know it. Assume they cannot remember syntax from a previous lesson and will not go looking for it.
 
-CURRICULUM: this course targets AP Computer Science A. Unit 1 is Using Objects and Methods (primitive types, variables, expressions, Strings, Scanner input). Unit 2 is Selection and Iteration (boolean expressions, if/else, for and while loops). Unit 3 is Class Creation. Unit 4 is Data Collections (arrays, ArrayList, 2D arrays, and reading data from files with File and Scanner). Tag steps with "skills" phrased as concrete abilities ("predict the result of integer division"), and keep them consistent across steps that test the same thing.
+{{CURRICULUM}}
+
+Tag steps with "skills" phrased as concrete abilities ("predict the result of integer division"), and keep them consistent across steps that test the same thing.
 
 Output the JSON only.
 
@@ -127,7 +130,7 @@ export default function FlowKit({ lessons }: { lessons: { code: string; title: s
       <div className="runrow">
         <button
           className="btn ghost"
-          onClick={async () => { await navigator.clipboard.writeText(MEGA_PROMPT); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+          onClick={async () => { await navigator.clipboard.writeText(MEGA_PROMPT.replace("{{CURRICULUM}}", curriculumBrief(lessonCode))); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
         >
           {copied ? "copied ✓" : "📋 Copy the flow-design prompt"}
         </button>

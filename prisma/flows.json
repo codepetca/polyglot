@@ -895,9 +895,9 @@
           },
           {
             "id": "f29_10",
-            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(\"[\" + \"#\".repeat(i) + \".\".repeat(5 - i) + \"] \" + (i * 20) + \"%\");\n}",
+            "code": "String bar = \"\";\nfor (int i = 1; i <= 5; i++) {\n  bar = bar + \"#\";\n  System.out.println(bar + \"  \" + (i * 20) + \"%\");\n}",
             "kind": "run",
-            "after": "A loading bar — from three lines of code. Same loop you've been using all lesson.",
+            "after": "A loading bar — from one loop. Same loop you've been using all lesson.",
             "skills": [
               "write a for-loop that counts to a target"
             ],

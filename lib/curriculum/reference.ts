@@ -36,10 +36,10 @@ export const REFERENCE: Section[] = [
     id: "input",
     title: "Asking the user",
     entries: [
-      { name: "Set up the reader", code: "Scanner input = new Scanner(System.in);", note: "Do this once, before reading anything." },
-      { name: "Read text", code: 'System.out.print("Name? ");\nString name = input.nextLine();', note: "Ask first, then read — otherwise the user sees nothing." },
-      { name: "Read a whole number", code: "int age = input.nextInt();", note: "Use when you want to do maths with the answer." },
-      { name: "Read a decimal", code: "double h = input.nextDouble();", note: "For values like 1.75." },
+      { name: "Read text", code: 'String name = readLine("Name? ");', note: "The question goes inside the brackets. You get back what they typed." },
+      { name: "Read a whole number", code: 'int age = readInt("Age? ");', note: "Use when you want to do maths with the answer." },
+      { name: "Read a decimal", code: 'double h = readDouble("Height? ");', note: "For values like 1.75." },
+      { name: "Read true or false", code: 'boolean ok = readBoolean("Ready? ");', note: "They type true or false." },
     ],
   },
   {
@@ -48,8 +48,9 @@ export const REFERENCE: Section[] = [
     entries: [
       { name: "The operators", code: "+   -   *   /   %", note: "% is the remainder: 7 % 2 is 1." },
       { name: "Order", code: "2 + 3 * 4   // 14\n(2 + 3) * 4 // 20", note: "× and ÷ happen before + and −. Brackets go first." },
-      { name: "Whole-number division", code: "7 / 2   // 3, not 3.5", note: "Two whole numbers divide into a whole number." },
-      { name: "Is it even?", code: "if (n % 2 == 0) { }", note: "Divides evenly means remainder 0." },
+      { name: "Whole-number division", code: "7 / 2   // 3, not 3.5", note: "Two whole numbers divide into a whole number. The rest is thrown away." },
+      { name: "Decimal division", code: "7.0 / 2   // 3.5", note: "If either side is a decimal, the answer keeps its decimal." },
+      { name: "Shortcuts", code: "n++;   n--;\nn += 5;   n -= 5;", note: "n++ means n = n + 1. n += 5 means n = n + 5." },
     ],
   },
   {
