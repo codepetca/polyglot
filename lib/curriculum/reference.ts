@@ -53,14 +53,28 @@ export const REFERENCE: Section[] = [
       { name: "Shortcuts", code: "n++;   n--;\nn += 5;   n -= 5;", note: "n++ means n = n + 1. n += 5 means n = n + 5." },
     ],
   },
+  // SPLIT ON PURPOSE. Comparisons and logical operators are CodeHS 3.7/3.8;
+  // `if` is 3.11, three lessons later. Keeping them in one section meant the
+  // always-visible reference showed if/else syntax during Booleans, Logical
+  // Operators and Comparison Operators — teaching ahead of the curriculum on
+  // exactly the panel that is meant to be trustworthy.
+  {
+    id: "logic",
+    title: "True and false",
+    entries: [
+      { name: "True or false", code: "boolean passed = true;", note: "Only two values. No quotes — \"true\" with quotes is text, not a boolean." },
+      { name: "Comparing", code: "==   !=   <   >   <=   >=", note: "Each one answers a yes/no question. == compares; a single = assigns instead — a very common bug." },
+      { name: "At least / at most", code: "points >= 10", note: ">= includes the number itself. > does not." },
+      { name: "And / or / not", code: "&&   ||   !", note: "&& needs both true. || needs at least one. ! flips it." },
+      { name: "Store the answer", code: "boolean oldEnough = age >= 18;", note: "A comparison gives back true or false, so it fits in a boolean." },
+    ],
+  },
   {
     id: "if",
     title: "Making decisions",
     entries: [
       { name: "If", code: 'if (age >= 18) {\n  System.out.println("adult");\n}', note: "Runs the block only when the condition is true." },
       { name: "If / else", code: 'if (n > 0) {\n  System.out.println("yes");\n} else {\n  System.out.println("no");\n}', note: "One or the other, never both." },
-      { name: "Comparing", code: "==   !=   <   >   <=   >=", note: "== compares. A single = assigns — a very common bug." },
-      { name: "And / or / not", code: "&&   ||   !", note: "&& needs both true. || needs at least one." },
     ],
   },
   {
@@ -84,15 +98,16 @@ const BY_LESSON: Record<string, string[]> = {
   "2.3": ["input", "vars", "print"],
   "2.4": ["maths", "vars"],
   "2.5": ["vars", "maths"],
-  "2.6": ["if", "vars"],
-  "2.7": ["if"],
-  "2.8": ["if", "maths"],
+  // No "if" before 2.11 — CodeHS does not teach it until then.
+  "2.6": ["logic", "input", "vars"],
+  "2.7": ["logic"],
+  "2.8": ["logic", "vars"],
   "2.9": ["loops", "print", "vars"],
-  "2.10": ["loops", "vars"],
-  "2.11": ["if", "vars"],
-  "2.12": ["loops", "if"],
-  "2.13": ["if"],
-  "2.14": ["if"],
+  "2.10": ["loops", "logic", "vars"],
+  "2.11": ["if", "logic", "vars"],
+  "2.12": ["loops", "if", "logic", "input"],
+  "2.13": ["logic", "if"],
+  "2.14": ["logic"],
   "2.15": ["print", "vars"],
 };
 

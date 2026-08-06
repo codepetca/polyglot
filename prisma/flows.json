@@ -246,6 +246,203 @@
       }
     },
     {
+      "code": "2.10",
+      "title": "While Loops",
+      "objectives": [
+        "decide when a while loop fits better than a for loop",
+        "trace a while loop's variable until its condition fails",
+        "recognise why a while loop never stops"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f210_t1",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "kind": "teach",
+            "output": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
+            "points": [
+              {
+                "text": "The condition is checked before every turn, exactly like a for loop.",
+                "label": "while (fuel > 0)"
+              },
+              {
+                "text": "Something inside MUST move the condition towards false, or it never stops.",
+                "label": "fuel--"
+              },
+              {
+                "text": "Outside the braces, so it runs once, after the loop finishes.",
+                "label": "\"empty\""
+              },
+              {
+                "text": "There is no built-in counter. You make the variable yourself, before the loop.",
+                "label": "no counter"
+              }
+            ],
+            "instruction": "A while loop repeats for as long as something stays true."
+          },
+          {
+            "id": "f210_1",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "kind": "run",
+            "after": "It repeated until the condition stopped being true — no counting required up front.",
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "instruction": "This one keeps going until told to stop. Run it."
+          },
+          {
+            "id": "f210_2",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "hint": "Only the first line decides how much you start with.",
+            "kind": "tweak",
+            "after": "You never told it how many times to loop — it worked that out from the condition.",
+            "target": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
+            "instruction": "Start with more fuel. Run it."
+          },
+          {
+            "id": "f210_t2",
+            "kind": "teach",
+            "points": [
+              {
+                "text": "Use it when you know how many times up front: 10 rows, 100 numbers, 1000 greetings.",
+                "label": "for"
+              },
+              {
+                "text": "Use it when you do not: keep going until the user says stop, until the total is big enough, until the fuel runs out.",
+                "label": "while"
+              },
+              {
+                "text": "Anything a for loop does, a while loop can do too. Pick whichever says what you mean more clearly.",
+                "label": "either works"
+              },
+              {
+                "text": "A condition that is never false. It runs forever unless something inside stops it.",
+                "label": "while (true)"
+              }
+            ],
+            "instruction": "for or while? It depends on whether you know the count."
+          },
+          {
+            "id": "f210_3",
+            "why": "The condition is checked BEFORE the first pass. 10 < 5 is already false, so the body never runs even once.",
+            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
+            "kind": "predict",
+            "opts": [
+              "done",
+              "inside\ndone",
+              "inside",
+              "(an error)"
+            ],
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "correct": 0,
+            "instruction": "What prints?"
+          },
+          {
+            "id": "f210_4",
+            "code": "int total = 0;\nint i = 1;\nwhile (i <= 3) {\n  total = total + i;\n  i++;\n}",
+            "kind": "trace",
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "questions": [
+              {
+                "why": "0 + 1.",
+                "opts": [
+                  "1",
+                  "0",
+                  "3"
+                ],
+                "prompt": "after the first pass, total = ?",
+                "correct": 0
+              },
+              {
+                "why": "1 + 2.",
+                "opts": [
+                  "3",
+                  "2",
+                  "4"
+                ],
+                "prompt": "after the second pass, total = ?",
+                "correct": 0
+              },
+              {
+                "why": "1 + 2 + 3. It stops once i reaches 4, because 4 <= 3 is false.",
+                "opts": [
+                  "6",
+                  "3",
+                  "10"
+                ],
+                "prompt": "when the loop finally stops, total = ?",
+                "correct": 0
+              }
+            ],
+            "instruction": "Follow total."
+          },
+          {
+            "id": "f210_5",
+            "why": "Nothing inside the loop ever changes count, so count <= 3 stays true forever. A while loop will not update your variable for you — you must do it in the body.",
+            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
+            "kind": "spot",
+            "skills": [
+              "recognise why a while loop never stops"
+            ],
+            "correct": 2,
+            "instruction": "This never stops. Tap the line that should be changing count."
+          },
+          {
+            "id": "f210_6",
+            "code": "int i = 1;\nwhile (i < 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
+            "hint": "With i < 3 starting at 1, which values does i actually take before it quits?",
+            "kind": "fix",
+            "after": "Same off-by-one trap as for-loops — the condition decides the last value that still counts.",
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "target": "pass 1\npass 2\npass 3",
+            "solution": "int i = 1;\nwhile (i <= 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
+            "instruction": "It stops one step too early. Fix it."
+          },
+          {
+            "id": "f210_7",
+            "hint": "Declare it, test it, print it, shrink it, close it.",
+            "kind": "arrange",
+            "after": "A for-loop would be awkward here — you don't know up front how many halvings it takes. That's when while wins.",
+            "lines": [
+              "int n = 20;",
+              "while (n > 1) {",
+              "  System.out.print(n + \" \");",
+              "  n = n / 2;",
+              "}"
+            ],
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "target": "20 10 5 2",
+            "distractors": [
+              "  n = n * 2;"
+            ],
+            "instruction": "Tap the lines in order to halve 20 down past 1."
+          },
+          {
+            "id": "f210_8",
+            "code": "// your code here\n",
+            "hint": "Same shape as the trace step — a running total, a counter, and remember to change the counter.",
+            "kind": "write",
+            "after": "You wrote a loop that decides its own length. That's the whole idea of while.",
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "target": "15",
+            "solution": "int total = 0;\nint i = 1;\nwhile (i <= 5) {\n  total = total + i;\n  i++;\n}\nSystem.out.println(total);",
+            "instruction": "Use a while loop to add 1 through 5 and print the total."
+          }
+        ]
+      }
+    },
+    {
       "code": "2.2",
       "title": "Variables and Types",
       "objectives": [
@@ -965,6 +1162,556 @@
       }
     },
     {
+      "code": "2.6",
+      "title": "Booleans",
+      "objectives": [
+        "create boolean variables that hold true or false",
+        "tell a boolean apart from text, a character and a number",
+        "read a true/false answer from the user"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f26_1",
+            "kind": "teach",
+            "instruction": "A boolean holds one of exactly two things.",
+            "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
+            "output": "true\nfalse",
+            "points": [
+              {
+                "label": "boolean",
+                "text": "The type. A box that can only ever hold true or false."
+              },
+              {
+                "label": "true / false",
+                "text": "The only two values there are. All lowercase, and never in quotes."
+              },
+              {
+                "label": "no maybe",
+                "text": "There is no third option. That is the whole point of a boolean."
+              },
+              {
+                "label": "isRaining",
+                "text": "Naming it like a yes/no question makes the code read like English later."
+              }
+            ]
+          },
+          {
+            "id": "f26_2",
+            "kind": "run",
+            "instruction": "Run it.",
+            "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
+            "after": "Two boxes, two answers."
+          },
+          {
+            "id": "f26_3",
+            "kind": "tweak",
+            "instruction": "Make it print false twice.",
+            "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
+            "target": "false\nfalse",
+            "hint": "Change the value, not the type.",
+            "after": "You set them. Later the program will work them out for itself.",
+            "skills": [
+              "create boolean variables that hold true or false"
+            ]
+          },
+          {
+            "id": "f26_4",
+            "kind": "teach",
+            "instruction": "true and \"true\" look the same on screen. They are not the same.",
+            "code": "boolean answer = true;\nString word = \"true\";\nSystem.out.println(answer);\nSystem.out.println(word);",
+            "output": "true\ntrue",
+            "points": [
+              {
+                "label": "identical output",
+                "text": "Both print true. Quotes never appear in the output, so you cannot tell them apart by looking."
+              },
+              {
+                "label": "true",
+                "text": "A boolean. Java understands it as a yes."
+              },
+              {
+                "label": "\"true\"",
+                "text": "A String. Four letters of text that happen to spell true. Java cannot reason with it."
+              },
+              {
+                "label": "watch out",
+                "text": "'T' is a char and 10.1 is a double. Only bare true and false are booleans."
+              }
+            ]
+          },
+          {
+            "id": "f26_5",
+            "kind": "bucket",
+            "instruction": "Which type is each one?",
+            "buckets": [
+              "boolean",
+              "String",
+              "char",
+              "double"
+            ],
+            "items": [
+              {
+                "text": "true",
+                "bucket": 0
+              },
+              {
+                "text": "\"true\"",
+                "bucket": 1
+              },
+              {
+                "text": "'F'",
+                "bucket": 2
+              },
+              {
+                "text": "10.1",
+                "bucket": 3
+              },
+              {
+                "text": "false",
+                "bucket": 0
+              },
+              {
+                "text": "\"yes\"",
+                "bucket": 1
+              }
+            ],
+            "why": "Bare true/false → boolean. Double quotes → String. Single quotes around one character → char. A decimal number → double.",
+            "skills": [
+              "tell a boolean apart from text, a character and a number"
+            ]
+          },
+          {
+            "id": "f26_6",
+            "kind": "teach",
+            "instruction": "You can ask the user a yes/no question.",
+            "code": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
+            "stdin": "true",
+            "output": "Are you a student? true\ntrue",
+            "points": [
+              {
+                "label": "readBoolean",
+                "text": "Asks your question and hands back true or false."
+              },
+              {
+                "label": "they type",
+                "text": "The user has to type the word true or the word false."
+              },
+              {
+                "label": "the box",
+                "text": "It gives back a boolean, so it has to go in a boolean."
+              }
+            ]
+          },
+          {
+            "id": "f26_7",
+            "kind": "run",
+            "instruction": "Run it. We'll answer true for you.",
+            "code": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
+            "stdin": "true",
+            "after": "Asked, stored, printed.",
+            "skills": [
+              "read a true/false answer from the user"
+            ]
+          },
+          {
+            "id": "f26_8",
+            "kind": "fix",
+            "instruction": "The box is the wrong type. Fix it.",
+            "code": "String isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
+            "stdin": "true",
+            "target": "Are you a student? true\ntrue",
+            "solution": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
+            "hint": "readBoolean gives back a boolean. What kind of box does that need?",
+            "after": "The box has to match what the method gives back.",
+            "skills": [
+              "read a true/false answer from the user"
+            ]
+          },
+          {
+            "id": "f26_9",
+            "kind": "predict",
+            "instruction": "What prints?",
+            "code": "boolean done = false;\ndone = true;\nSystem.out.println(done);",
+            "opts": [
+              "true",
+              "false",
+              "\"true\"",
+              "(an error)"
+            ],
+            "correct": 0,
+            "why": "The second line replaces what is in the box, exactly like any other variable.",
+            "skills": [
+              "create boolean variables that hold true or false"
+            ]
+          },
+          {
+            "id": "f26_10",
+            "kind": "write",
+            "instruction": "Your turn: ask if they like ice cream, then print the answer.",
+            "code": "// ask with readBoolean, then print\n",
+            "stdin": "true",
+            "target": "Do you like ice cream? true\ntrue",
+            "solution": "boolean likesIceCream = readBoolean(\"Do you like ice cream? \");\nSystem.out.println(likesIceCream);",
+            "hint": "One line to ask and store, one line to print.",
+            "after": "That is CodeHS exercise 3.6.4, Ice Cream — you just wrote it.",
+            "skills": [
+              "read a true/false answer from the user"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.7",
+      "title": "Logical Operators",
+      "objectives": [
+        "combine two booleans with && and ||",
+        "flip a boolean with !",
+        "work out the value of an expression that mixes them"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f27_1",
+            "kind": "teach",
+            "instruction": "&& means BOTH have to be true.",
+            "code": "boolean tall = true;\nboolean old = true;\nSystem.out.println(tall && old);\nSystem.out.println(tall && false);",
+            "output": "true\nfalse",
+            "points": [
+              {
+                "label": "&&",
+                "text": "Two ampersands. Read it as \"and\"."
+              },
+              {
+                "label": "both true",
+                "text": "true && true is the only combination that gives true."
+              },
+              {
+                "label": "one false",
+                "text": "If either side is false, the whole thing is false."
+              }
+            ]
+          },
+          {
+            "id": "f27_2",
+            "kind": "run",
+            "instruction": "Run it.",
+            "code": "boolean tall = true;\nboolean old = true;\nSystem.out.println(tall && old);\nSystem.out.println(tall && false);",
+            "after": "&& is strict. Everything must be true."
+          },
+          {
+            "id": "f27_3",
+            "kind": "predict",
+            "instruction": "What prints?",
+            "code": "System.out.println(false && true);",
+            "opts": [
+              "false",
+              "true",
+              "(an error)",
+              "nothing"
+            ],
+            "correct": 0,
+            "why": "&& needs both sides true. The first is false, so the answer is false.",
+            "skills": [
+              "combine two booleans with && and ||"
+            ]
+          },
+          {
+            "id": "f27_4",
+            "kind": "teach",
+            "instruction": "|| means AT LEAST ONE has to be true.",
+            "code": "System.out.println(true || false);\nSystem.out.println(false || false);",
+            "output": "true\nfalse",
+            "points": [
+              {
+                "label": "||",
+                "text": "Two pipe characters, above the backslash key. Read it as \"or\"."
+              },
+              {
+                "label": "one is enough",
+                "text": "true || false is true. Only one side needs to hold up."
+              },
+              {
+                "label": "both false",
+                "text": "The only way to get false is if neither side is true."
+              }
+            ]
+          },
+          {
+            "id": "f27_5",
+            "kind": "predict",
+            "instruction": "And this one?",
+            "code": "System.out.println(false || true);",
+            "opts": [
+              "true",
+              "false",
+              "(an error)",
+              "nothing"
+            ],
+            "correct": 0,
+            "why": "|| only needs one side to be true, and the second one is.",
+            "skills": [
+              "combine two booleans with && and ||"
+            ]
+          },
+          {
+            "id": "f27_6",
+            "kind": "teach",
+            "instruction": "! flips a boolean to its opposite.",
+            "code": "System.out.println(!true);\nSystem.out.println(!false);\nSystem.out.println(true && !false);",
+            "output": "false\ntrue\ntrue",
+            "points": [
+              {
+                "label": "!",
+                "text": "An exclamation mark in front. Read it as \"not\"."
+              },
+              {
+                "label": "!true",
+                "text": "Becomes false. !false becomes true. It just swaps."
+              },
+              {
+                "label": "true && !false",
+                "text": "Do the ! first: !false is true. So it is true && true, which is true."
+              },
+              {
+                "label": "order",
+                "text": "! happens before && and ||, the same way × happens before +."
+              }
+            ]
+          },
+          {
+            "id": "f27_7",
+            "kind": "trace",
+            "instruction": "Work these out.",
+            "code": "boolean a = true;\nboolean b = false;",
+            "questions": [
+              {
+                "prompt": "a && b",
+                "opts": [
+                  "false",
+                  "true"
+                ],
+                "correct": 0,
+                "why": "&& needs both. b is false."
+              },
+              {
+                "prompt": "a || b",
+                "opts": [
+                  "true",
+                  "false"
+                ],
+                "correct": 0,
+                "why": "|| needs one. a is true."
+              },
+              {
+                "prompt": "!b",
+                "opts": [
+                  "true",
+                  "false"
+                ],
+                "correct": 0,
+                "why": "! flips false to true."
+              }
+            ],
+            "skills": [
+              "work out the value of an expression that mixes them"
+            ]
+          },
+          {
+            "id": "f27_8",
+            "kind": "fill",
+            "instruction": "Fill in the operator so it prints false.",
+            "code": "boolean tallEnough = true;\nboolean oldEnough = false;\nSystem.out.println(tallEnough ⟦1⟧ oldEnough);",
+            "blanks": [
+              {
+                "chips": [
+                  "&&",
+                  "||"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "false",
+            "hint": "Which one refuses when only ONE side is true?",
+            "after": "&& is the strict one. || is the generous one.",
+            "skills": [
+              "combine two booleans with && and ||"
+            ]
+          },
+          {
+            "id": "f27_9",
+            "kind": "write",
+            "instruction": "Your turn: they can ride only if they are BOTH tall enough and old enough.",
+            "code": "// ask both questions, then print whether they can ride\n",
+            "stdin": "true\ntrue",
+            "target": "Tall enough? true\nOld enough? true\ntrue",
+            "solution": "boolean tallEnough = readBoolean(\"Tall enough? \");\nboolean oldEnough = readBoolean(\"Old enough? \");\nSystem.out.println(tallEnough && oldEnough);",
+            "hint": "Two readBoolean calls, then join them with &&.",
+            "after": "That is CodeHS exercise 3.7.4, Roller Coaster.",
+            "skills": [
+              "combine two booleans with && and ||"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.8",
+      "title": "Comparison Operators",
+      "objectives": [
+        "compare two values to get true or false",
+        "choose between ==, !=, <, >, <= and >=",
+        "store a comparison in a boolean"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f28_1",
+            "kind": "teach",
+            "instruction": "Comparing two numbers gives you a boolean.",
+            "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);",
+            "output": "true\nfalse\ntrue",
+            "points": [
+              {
+                "label": "> and <",
+                "text": "Greater than, less than. Exactly like maths class."
+              },
+              {
+                "label": ">= and <=",
+                "text": "Greater-or-equal, less-or-equal. 80 >= 80 is true, because equal counts."
+              },
+              {
+                "label": "the result",
+                "text": "A comparison is not a number. It comes back as true or false — a boolean."
+              }
+            ]
+          },
+          {
+            "id": "f28_2",
+            "kind": "run",
+            "instruction": "Run it.",
+            "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);",
+            "after": "Every comparison answers one yes/no question."
+          },
+          {
+            "id": "f28_3",
+            "kind": "predict",
+            "instruction": "What prints?",
+            "code": "System.out.println(5 <= 4);",
+            "opts": [
+              "false",
+              "true",
+              "(an error)",
+              "5"
+            ],
+            "correct": 0,
+            "why": "5 is not less than 4, and it is not equal to 4 either. So false.",
+            "skills": [
+              "choose between ==, !=, <, >, <= and >="
+            ]
+          },
+          {
+            "id": "f28_4",
+            "kind": "teach",
+            "instruction": "== asks a question. = gives an answer.",
+            "code": "int score = 7;\nSystem.out.println(score == 7);\nSystem.out.println(score != 7);",
+            "output": "true\nfalse",
+            "points": [
+              {
+                "label": "==",
+                "text": "TWO equals signs. Asks \"are these the same?\" and gives back true or false."
+              },
+              {
+                "label": "=",
+                "text": "ONE equals sign. Puts a value into a box. It does not ask anything."
+              },
+              {
+                "label": "!=",
+                "text": "Not equal. The ! means \"not\", the same as last lesson."
+              },
+              {
+                "label": "the classic bug",
+                "text": "Writing = when you meant == is the single most common mistake in this unit."
+              }
+            ]
+          },
+          {
+            "id": "f28_5",
+            "kind": "spot",
+            "instruction": "A score of exactly 7 should count as a pass, but this says false. Tap the line at fault.",
+            "code": "int score = 7;\nboolean passed = score > 7;\nSystem.out.println(passed);",
+            "correct": 1,
+            "why": "> means strictly greater, so 7 does not count. It should be >= to include 7 itself.",
+            "skills": [
+              "choose between ==, !=, <, >, <= and >="
+            ]
+          },
+          {
+            "id": "f28_6",
+            "kind": "teach",
+            "instruction": "A comparison can be stored, just like any other value.",
+            "code": "int points = 12;\nboolean scoredEnough = points >= 10;\nSystem.out.println(scoredEnough);",
+            "output": "true",
+            "points": [
+              {
+                "label": "the right-hand side",
+                "text": "points >= 10 is worked out first. It becomes true."
+              },
+              {
+                "label": "boolean",
+                "text": "True or false has to go in a boolean box."
+              },
+              {
+                "label": "why bother",
+                "text": "A well-named boolean like scoredEnough explains itself. You will do exactly this in a moment."
+              }
+            ]
+          },
+          {
+            "id": "f28_7",
+            "kind": "fill",
+            "instruction": "Fill it in so it is true only when points reaches 10 or more.",
+            "code": "int points = 10;\nboolean scoredEnough = points ⟦1⟧ 10;\nSystem.out.println(scoredEnough);",
+            "blanks": [
+              {
+                "chips": [
+                  ">=",
+                  ">",
+                  "==",
+                  "<"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "true",
+            "hint": "10 itself must count.",
+            "after": "\"At least\" always means >=, never >.",
+            "skills": [
+              "choose between ==, !=, <, >, <= and >="
+            ]
+          },
+          {
+            "id": "f28_8",
+            "kind": "write",
+            "instruction": "Your turn: a triple double needs at least 10 in all three categories.",
+            "code": "// read points, rebounds and assists, then print the verdict\n",
+            "stdin": "10\n11\n12",
+            "target": "Points? 10\nRebounds? 11\nAssists? 12\nGot a Triple Double? true",
+            "solution": "int points = readInt(\"Points? \");\nint rebounds = readInt(\"Rebounds? \");\nint assists = readInt(\"Assists? \");\nboolean tripleDouble = points >= 10 && rebounds >= 10 && assists >= 10;\nSystem.out.println(\"Got a Triple Double? \" + tripleDouble);",
+            "hint": "Three readInt calls, then chain three >= checks with &&.",
+            "after": "That is CodeHS exercise 3.8.4, Triple Double.",
+            "skills": [
+              "store a comparison in a boolean"
+            ]
+          }
+        ]
+      }
+    },
+    {
       "code": "2.9",
       "title": "For Loops",
       "objectives": [
@@ -1228,203 +1975,6 @@
             "target": "1\n3\n5\n7\n9",
             "solution": "for (int i = 1; i <= 9; i = i + 2) {\n  System.out.println(i);\n}",
             "instruction": "Your turn: print the odd numbers from 1 to 9."
-          }
-        ]
-      }
-    },
-    {
-      "code": "2.10",
-      "title": "While Loops",
-      "objectives": [
-        "decide when a while loop fits better than a for loop",
-        "trace a while loop's variable until its condition fails",
-        "recognise why a while loop never stops"
-      ],
-      "flow": {
-        "v": 1,
-        "steps": [
-          {
-            "id": "f210_t1",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "kind": "teach",
-            "output": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
-            "points": [
-              {
-                "text": "The condition is checked before every turn, exactly like a for loop.",
-                "label": "while (fuel > 0)"
-              },
-              {
-                "text": "Something inside MUST move the condition towards false, or it never stops.",
-                "label": "fuel--"
-              },
-              {
-                "text": "Outside the braces, so it runs once, after the loop finishes.",
-                "label": "\"empty\""
-              },
-              {
-                "text": "There is no built-in counter. You make the variable yourself, before the loop.",
-                "label": "no counter"
-              }
-            ],
-            "instruction": "A while loop repeats for as long as something stays true."
-          },
-          {
-            "id": "f210_1",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "kind": "run",
-            "after": "It repeated until the condition stopped being true — no counting required up front.",
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "instruction": "This one keeps going until told to stop. Run it."
-          },
-          {
-            "id": "f210_2",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "hint": "Only the first line decides how much you start with.",
-            "kind": "tweak",
-            "after": "You never told it how many times to loop — it worked that out from the condition.",
-            "target": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
-            "instruction": "Start with more fuel. Run it."
-          },
-          {
-            "id": "f210_t2",
-            "kind": "teach",
-            "points": [
-              {
-                "text": "Use it when you know how many times up front: 10 rows, 100 numbers, 1000 greetings.",
-                "label": "for"
-              },
-              {
-                "text": "Use it when you do not: keep going until the user says stop, until the total is big enough, until the fuel runs out.",
-                "label": "while"
-              },
-              {
-                "text": "Anything a for loop does, a while loop can do too. Pick whichever says what you mean more clearly.",
-                "label": "either works"
-              },
-              {
-                "text": "A condition that is never false. It runs forever unless something inside stops it.",
-                "label": "while (true)"
-              }
-            ],
-            "instruction": "for or while? It depends on whether you know the count."
-          },
-          {
-            "id": "f210_3",
-            "why": "The condition is checked BEFORE the first pass. 10 < 5 is already false, so the body never runs even once.",
-            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
-            "kind": "predict",
-            "opts": [
-              "done",
-              "inside\ndone",
-              "inside",
-              "(an error)"
-            ],
-            "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
-            "correct": 0,
-            "instruction": "What prints?"
-          },
-          {
-            "id": "f210_4",
-            "code": "int total = 0;\nint i = 1;\nwhile (i <= 3) {\n  total = total + i;\n  i++;\n}",
-            "kind": "trace",
-            "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
-            "questions": [
-              {
-                "why": "0 + 1.",
-                "opts": [
-                  "1",
-                  "0",
-                  "3"
-                ],
-                "prompt": "after the first pass, total = ?",
-                "correct": 0
-              },
-              {
-                "why": "1 + 2.",
-                "opts": [
-                  "3",
-                  "2",
-                  "4"
-                ],
-                "prompt": "after the second pass, total = ?",
-                "correct": 0
-              },
-              {
-                "why": "1 + 2 + 3. It stops once i reaches 4, because 4 <= 3 is false.",
-                "opts": [
-                  "6",
-                  "3",
-                  "10"
-                ],
-                "prompt": "when the loop finally stops, total = ?",
-                "correct": 0
-              }
-            ],
-            "instruction": "Follow total."
-          },
-          {
-            "id": "f210_5",
-            "why": "Nothing inside the loop ever changes count, so count <= 3 stays true forever. A while loop will not update your variable for you — you must do it in the body.",
-            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
-            "kind": "spot",
-            "skills": [
-              "recognise why a while loop never stops"
-            ],
-            "correct": 2,
-            "instruction": "This never stops. Tap the line that should be changing count."
-          },
-          {
-            "id": "f210_6",
-            "code": "int i = 1;\nwhile (i < 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
-            "hint": "With i < 3 starting at 1, which values does i actually take before it quits?",
-            "kind": "fix",
-            "after": "Same off-by-one trap as for-loops — the condition decides the last value that still counts.",
-            "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
-            "target": "pass 1\npass 2\npass 3",
-            "solution": "int i = 1;\nwhile (i <= 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
-            "instruction": "It stops one step too early. Fix it."
-          },
-          {
-            "id": "f210_7",
-            "hint": "Declare it, test it, print it, shrink it, close it.",
-            "kind": "arrange",
-            "after": "A for-loop would be awkward here — you don't know up front how many halvings it takes. That's when while wins.",
-            "lines": [
-              "int n = 20;",
-              "while (n > 1) {",
-              "  System.out.print(n + \" \");",
-              "  n = n / 2;",
-              "}"
-            ],
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "target": "20 10 5 2",
-            "distractors": [
-              "  n = n * 2;"
-            ],
-            "instruction": "Tap the lines in order to halve 20 down past 1."
-          },
-          {
-            "id": "f210_8",
-            "code": "// your code here\n",
-            "hint": "Same shape as the trace step — a running total, a counter, and remember to change the counter.",
-            "kind": "write",
-            "after": "You wrote a loop that decides its own length. That's the whole idea of while.",
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "target": "15",
-            "solution": "int total = 0;\nint i = 1;\nwhile (i <= 5) {\n  total = total + i;\n  i++;\n}\nSystem.out.println(total);",
-            "instruction": "Use a while loop to add 1 through 5 and print the total."
           }
         ]
       }
