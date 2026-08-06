@@ -1415,166 +1415,266 @@
       "code": "2.5",
       "title": "Casting",
       "objectives": [
-        "turn a double into an int with (int)",
-        "use (double) to stop whole-number division",
-        "round a number to the nearest whole number using casting"
+        "use (double) so whole-number division keeps its decimal",
+        "use (int) to turn a decimal into a whole number",
+        "round to the nearest whole number using casting"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "f25_1",
-            "code": "double price = 9.9;\nint whole = (int) price;\nSystem.out.println(whole);",
+            "id": "c_task",
             "kind": "teach",
-            "output": "9",
+            "instruction": "Your character has 7 XP. The next level needs 20.",
             "points": [
               {
-                "text": "The type you want, in brackets, in front of the value.",
-                "label": "(int)"
+                "label": "the readout",
+                "text": "We want the bar to say Progress: 35% — the share of the way there, as a whole number."
               },
               {
-                "text": "9.9 becomes 9. It does NOT round — everything after the point is thrown away.",
-                "label": "chops"
+                "label": "the sum",
+                "text": "7 out of 20 is 7 / 20, times 100. Straightforward maths."
               },
               {
-                "text": "Still 9. Even 9.999999 is 9. Casting never rounds up.",
-                "label": "9.99 too"
+                "label": "the catch",
+                "text": "Written the obvious way in Java, that prints 0. Not 35, not 0.35 — zero."
               },
               {
-                "text": "The result is a whole number, so it goes in an int.",
-                "label": "the box"
+                "label": "this lesson",
+                "text": "Why it does that, and the one tool that fixes it."
               }
-            ],
-            "instruction": "(int) turns a decimal into a whole number by chopping."
+            ]
           },
           {
-            "id": "f25_2",
-            "code": "double price = 9.9;\nint whole = (int) price;\nSystem.out.println(whole);",
+            "id": "c_zero",
+            "kind": "teach",
+            "instruction": "Here it is going wrong. Watch closely.",
+            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println(xp / needed * 100);",
+            "output": "0",
+            "points": [
+              {
+                "label": "7 / 20 first",
+                "text": "Division happens before multiplication? No — they are equal, so it runs left to right. 7 / 20 goes first."
+              },
+              {
+                "label": "both are ints",
+                "text": "From last lesson: two whole numbers give a whole answer. 7 / 20 is 0.35, so Java gives 0."
+              },
+              {
+                "label": "then 0 * 100",
+                "text": "Zero times anything is zero. The answer was already destroyed before the 100 arrived."
+              },
+              {
+                "label": "the real problem",
+                "text": "Nothing is broken. Java did exactly what int division always does — it just was not what we wanted."
+              }
+            ]
+          },
+          {
+            "id": "c_run0",
             "kind": "run",
-            "after": "The .9 is gone, not rounded.",
-            "instruction": "Run it."
+            "instruction": "Run it and see the 0 for yourself.",
+            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println(xp / needed * 100);",
+            "after": "A correct program giving a useless answer. Now we fix it."
           },
           {
-            "id": "f25_3",
-            "why": "Casting chops. 3.99 loses everything after the point and becomes 3, even though it is nearly 4.",
-            "code": "System.out.println((int) 3.99);",
-            "kind": "predict",
-            "opts": [
-              "3",
-              "4",
-              "3.99",
-              "(an error)"
-            ],
-            "skills": [
-              "turn a double into an int with (int)"
-            ],
-            "correct": 0,
-            "instruction": "What prints?"
-          },
-          {
-            "id": "f25_4",
-            "code": "int a = 3;\nint b = 4;\nSystem.out.println(a / b);\nSystem.out.println((double) a / b);",
+            "id": "c_cast",
             "kind": "teach",
-            "output": "0\n0.75",
+            "instruction": "Casting tells Java to treat a value as a different type.",
+            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println((double) xp / needed * 100);",
+            "output": "35.0",
             "points": [
               {
-                "text": "Two ints, so Java does whole-number division. 3 / 4 is 0 with 3 left over — you get 0.",
-                "label": "a / b"
+                "label": "(double)",
+                "text": "The type you want, in brackets, in front of the value. Here it turns 7 into 7.0."
               },
               {
-                "text": "Turns 3 into 3.0 BEFORE the divide, so it becomes decimal division.",
-                "label": "(double) a"
+                "label": "why that works",
+                "text": "Now the division has a decimal on one side, so Java keeps the decimal: 0.35 instead of 0."
               },
               {
-                "text": "The answer you actually wanted.",
-                "label": "0.75"
+                "label": "one side is enough",
+                "text": "You only cast one of them. Java converts the other automatically."
               },
               {
-                "text": "Only one side has to be a double. The other is converted automatically.",
-                "label": "one is enough"
+                "label": "35.0",
+                "text": "A double, so it shows a decimal point. Turning that into a plain 35 is coming."
               }
-            ],
-            "instruction": "(double) rescues you from whole-number division."
+            ]
           },
           {
-            "id": "f25_5",
-            "code": "int a = 3;\nint b = 4;\nSystem.out.println(a / b);\nSystem.out.println((double) a / b);",
+            "id": "c_run1",
             "kind": "run",
-            "after": "The types decided the answer, not the numbers.",
+            "instruction": "Run the fixed version.",
+            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println((double) xp / needed * 100);",
+            "after": "One word changed. The answer went from useless to right.",
             "skills": [
-              "use (double) to stop whole-number division"
-            ],
-            "instruction": "Run it. Same two numbers, two different answers."
+              "use (double) so whole-number division keeps its decimal"
+            ]
           },
           {
-            "id": "f25_6",
-            "code": "System.out.println((double) (3 / 4));\nSystem.out.println((double) 3 / 4);",
-            "kind": "teach",
-            "output": "0.0\n0.75",
-            "points": [
-              {
-                "text": "Brackets first. 3 / 4 already happened as ints and gave 0. Casting 0 gives 0.0 — too late.",
-                "label": "(double) (3 / 4)"
-              },
-              {
-                "text": "The cast lands on the 3 first, so the division is decimal from the start. 0.75.",
-                "label": "(double) 3 / 4"
-              },
-              {
-                "text": "Cast BEFORE the division, not after. Rescuing a lost answer is impossible.",
-                "label": "the rule"
-              }
-            ],
-            "instruction": "Where you put the cast changes everything."
-          },
-          {
-            "id": "f25_7",
-            "why": "7 / 2 is done first as ints and gives 3. Casting that gives 3.0 — the .5 was already thrown away.",
-            "code": "System.out.println((double) (7 / 2));",
+            "id": "c_where",
             "kind": "predict",
+            "instruction": "Same cast, moved. What does this print?",
+            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println((double) (xp / needed) * 100);",
             "opts": [
-              "3.0",
-              "3.5",
               "0.0",
-              "(an error)"
-            ],
-            "skills": [
-              "use (double) to stop whole-number division"
+              "35.0",
+              "0",
+              "0.35"
             ],
             "correct": 0,
-            "instruction": "Which one gives 0.0?"
+            "why": "The brackets make xp / needed happen FIRST, as two ints — that is already 0. Casting 0 gives 0.0. The cast arrived too late to save anything.",
+            "skills": [
+              "use (double) so whole-number division keeps its decimal"
+            ]
           },
           {
-            "id": "f25_8",
-            "code": "double rating = 3.7;\nint rounded = (int) (rating + 0.5);\nSystem.out.println(rounded);",
+            "id": "c_timing",
             "kind": "teach",
-            "output": "4",
+            "instruction": "That is the rule worth remembering.",
             "points": [
               {
-                "text": "3.7 + 0.5 is 4.2. Chopping 4.2 gives 4. Rounded up, using only chopping.",
-                "label": "the trick"
+                "label": "cast before, not after",
+                "text": "(double) x / y works. (double) (x / y) does not. The cast has to reach the division before it happens."
               },
               {
-                "text": "3.4 + 0.5 is 3.9. Chopping gives 3. Rounded down, correctly.",
-                "label": "rounding down"
+                "label": "why",
+                "text": "Once two ints divide, the fraction is gone. Casting afterwards converts a number that is already wrong."
               },
               {
-                "text": "3.5 + 0.5 is 4.0, which chops to 4 — .5 rounds up, the way you were taught.",
-                "label": "exactly .5"
+                "label": "how to read it",
+                "text": "A cast only applies to the thing immediately after it. Brackets change what that thing is."
               },
               {
-                "text": "The + 0.5 must happen first, so it needs its own brackets inside the cast.",
-                "label": "the brackets"
+                "label": "the habit",
+                "text": "Put the cast on the first value, not around the whole sum."
               }
-            ],
-            "instruction": "Add 0.5, then chop — that is how you round."
+            ]
           },
           {
-            "id": "f25_9",
-            "code": "double rating = 3.4;\nint rounded = (int) (rating ⟦1⟧ 0.5);\nSystem.out.println(rounded);",
-            "hint": "Nudge it up by half, then let the chop decide.",
+            "id": "c_toint",
+            "kind": "teach",
+            "instruction": "Now the other direction: 35.0 should display as 35.",
+            "code": "double percent = 35.9;\nSystem.out.println((int) percent);",
+            "output": "35",
+            "points": [
+              {
+                "label": "(int)",
+                "text": "Turns a decimal into a whole number."
+              },
+              {
+                "label": "it chops",
+                "text": "35.9 becomes 35. Everything after the point is thrown away — it does NOT round."
+              },
+              {
+                "label": "even 35.999",
+                "text": "Still 35. Casting never looks at how close it was."
+              },
+              {
+                "label": "remember this",
+                "text": "The test asks exactly this: (int) 9.9 is 9."
+              }
+            ]
+          },
+          {
+            "id": "c_round",
+            "kind": "teach",
+            "instruction": "To round properly, nudge it first.",
+            "code": "double percent = 37.5;\nSystem.out.println((int) (percent + 0.5));",
+            "output": "38",
+            "points": [
+              {
+                "label": "+ 0.5 then chop",
+                "text": "37.5 + 0.5 is 38.0, which chops to 38. Rounded up, using only chopping."
+              },
+              {
+                "label": "rounding down still works",
+                "text": "37.4 + 0.5 is 37.9, which chops to 37. Correct."
+              },
+              {
+                "label": "exactly .5 goes up",
+                "text": "That is the rule you were taught in maths, and this reproduces it."
+              },
+              {
+                "label": "the brackets matter",
+                "text": "The + 0.5 must happen before the chop, so it needs its own brackets inside the cast."
+              }
+            ]
+          },
+          {
+            "id": "c_final",
+            "kind": "run",
+            "instruction": "Run the finished XP readout.",
+            "code": "int xp = 7;\nint needed = 20;\ndouble percent = (double) xp / needed * 100;\nint shown = (int) (percent + 0.5);\nSystem.out.println(\"XP: \" + xp + \" / \" + needed);\nSystem.out.println(\"Progress: \" + shown + \"%\");",
+            "after": "Both casts, doing different jobs: one to keep the decimal, one to get rid of it.",
+            "skills": [
+              "round to the nearest whole number using casting"
+            ]
+          },
+          {
+            "id": "c_sharp",
+            "kind": "teach",
+            "instruction": "The exact rules, so they hold up in a test.",
+            "code": "System.out.println((int) 9.9);\nSystem.out.println((double) 9 / 2);\nSystem.out.println((double) (9 / 2));",
+            "output": "9\n4.5\n4.0",
+            "points": [
+              {
+                "label": "casting is conversion",
+                "text": "Taking a value of one type and treating it as another. That is the whole definition."
+              },
+              {
+                "label": "(int) 9.9 is 9",
+                "text": "Chops. Never rounds. This is the single most asked casting question."
+              },
+              {
+                "label": "(double) 9 / 2 is 4.5",
+                "text": "The cast reaches the 9 before the division, so the division is decimal."
+              },
+              {
+                "label": "(double) (9 / 2) is 4.0",
+                "text": "The brackets divide first as ints — 4 — and then convert. Same symbols, different answer."
+              }
+            ]
+          },
+          {
+            "id": "c_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "double d = 9.9;\nint i = (int) d;",
+            "questions": [
+              {
+                "prompt": "What is casting in Java?",
+                "opts": [
+                  "Turning a value of one type into another type",
+                  "A way to get user input",
+                  "A way to print to the screen",
+                  "What Karel does when she breaks her leg"
+                ],
+                "correct": 0,
+                "why": "That is the whole idea: the value stays, the type it is treated as changes."
+              },
+              {
+                "prompt": "What does (int) 9.9 evaluate to?",
+                "opts": [
+                  "9",
+                  "10",
+                  "0",
+                  "5"
+                ],
+                "correct": 0,
+                "why": "Casting to int chops everything after the decimal point. It does not round, so 9.9 gives 9, not 10."
+              }
+            ],
+            "skills": [
+              "use (int) to turn a decimal into a whole number"
+            ]
+          },
+          {
+            "id": "c_d1",
             "kind": "fill",
-            "after": "3.4 + 0.5 is 3.9, which chops to 3. The nudge is not big enough to reach 4.",
+            "instruction": "Fill it in so 3.4 rounds to 3 — and 3.6 would round to 4.",
+            "code": "double rating = 3.4;\nSystem.out.println((int) (rating ⟦1⟧ 0.5));",
             "blanks": [
               {
                 "chips": [
@@ -1585,25 +1685,54 @@
                 "answer": 0
               }
             ],
-            "skills": [
-              "round a number to the nearest whole number using casting"
-            ],
             "target": "3",
-            "instruction": "Fill it in so 3.4 rounds to 3 and 3.7 would round to 4."
+            "hint": "Nudge it up by half, then let the chop decide.",
+            "after": "3.4 + 0.5 is 3.9, which chops to 3. Not enough of a nudge to reach 4 — exactly right.",
+            "skills": [
+              "round to the nearest whole number using casting"
+            ]
           },
           {
-            "id": "f25_10",
-            "code": "// read a double, round it with casting, print \"Rating rounded: N\"\n",
-            "hint": "Prompt is \"Please enter a movie rating: \". Then add 0.5 and cast to int.",
+            "id": "c_d2",
             "kind": "write",
-            "after": "That is CodeHS exercise 3.5.8, Movie Ratings.",
-            "stdin": "3.5",
+            "instruction": "Read a decimal and print it as a whole number.",
+            "code": "double myDouble = readDouble(\"Please input your double: \");\n// print the int version\n",
+            "stdin": "9.9",
+            "target": "Please input your double: 9.9\n9",
+            "solution": "double myDouble = readDouble(\"Please input your double: \");\nSystem.out.println((int) myDouble);",
+            "hint": "Put (int) in front of it. No rounding — just the cast.",
+            "after": "That is CodeHS exercise 3.5.4, Casting to an Int.",
             "skills": [
-              "round a number to the nearest whole number using casting"
-            ],
+              "use (int) to turn a decimal into a whole number"
+            ]
+          },
+          {
+            "id": "c_d3",
+            "kind": "write",
+            "instruction": "Read two whole numbers and divide them — but keep the decimal.",
+            "code": "int firstInt = readInt(\"First Int: \");\nint secondInt = readInt(\"Second Int: \");\n// print the division as a double\n",
+            "stdin": "3\n4",
+            "target": "First Int: 3\nSecond Int: 4\n0.75",
+            "solution": "int firstInt = readInt(\"First Int: \");\nint secondInt = readInt(\"Second Int: \");\nSystem.out.println((double) firstInt / secondInt);",
+            "hint": "Cast the FIRST one, before the division happens. 3 / 4 as ints would be 0.",
+            "after": "That is CodeHS exercise 3.5.5, Casting to a Double.",
+            "skills": [
+              "use (double) so whole-number division keeps its decimal"
+            ]
+          },
+          {
+            "id": "c_d4",
+            "kind": "write",
+            "instruction": "Last one: round a film rating to the nearest whole star.",
+            "code": "double movieRating = readDouble(\"Please enter a movie rating: \");\n// round it and print \"Rating rounded: N\"\n",
+            "stdin": "3.5",
             "target": "Please enter a movie rating: 3.5\nRating rounded: 4",
             "solution": "double movieRating = readDouble(\"Please enter a movie rating: \");\nint rounded = (int) (movieRating + 0.5);\nSystem.out.println(\"Rating rounded: \" + rounded);",
-            "instruction": "Your turn: read a movie rating and round it to the nearest whole star."
+            "hint": "Add 0.5, cast to int, then join it into the sentence.",
+            "after": "That is CodeHS exercise 3.5.8, Movie Ratings. Lesson done.",
+            "skills": [
+              "round to the nearest whole number using casting"
+            ]
           }
         ]
       }
