@@ -60,13 +60,22 @@ export interface RunResult {
 // does not match their coursework or their exam. So the wrapper provides the
 // CodeHS methods with the same signatures and behaviour. Scanner still works
 // for anyone who wants it, since java.util.Scanner is imported.
+// ECHO: CodeHS runs these programs in a console where the student TYPES the
+// answer, so the answer appears on screen after the prompt. Here the answer
+// arrives on stdin and is never displayed, which silently broke fidelity: with
+// two prompts in a row the output ran together as
+// "Tall enough? Old enough? true" instead of one question per line. Every
+// CodeHS sample transcript (About You, Making Taffy, Guess the Number) shows
+// the typed value echoed, so __rd prints what it read. Verified against
+// CodeHS's own "About You" sample output, character for character.
 const HEADER = `import java.util.Scanner;
 class Main {
     static Scanner __sc = new Scanner(System.in);
-    static String readLine(String p){ System.out.print(p); return __sc.nextLine(); }
-    static int readInt(String p){ System.out.print(p); return Integer.parseInt(__sc.nextLine().trim()); }
-    static double readDouble(String p){ System.out.print(p); return Double.parseDouble(__sc.nextLine().trim()); }
-    static boolean readBoolean(String p){ System.out.print(p); return Boolean.parseBoolean(__sc.nextLine().trim()); }
+    static String __rd(String p){ System.out.print(p); String v = __sc.nextLine(); System.out.println(v); return v; }
+    static String readLine(String p){ return __rd(p); }
+    static int readInt(String p){ return Integer.parseInt(__rd(p).trim()); }
+    static double readDouble(String p){ return Double.parseDouble(__rd(p).trim()); }
+    static boolean readBoolean(String p){ return Boolean.parseBoolean(__rd(p).trim()); }
     public static void main(String[] args) {
 `;
 const FOOTER = `

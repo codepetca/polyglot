@@ -155,7 +155,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["boolean variables", "true", "false", "boolean expressions"],
     exercises: ["Ice Cream"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.6.4", name: "Ice Cream", requires: "Ask with readBoolean whether they like ice cream, store it in a boolean, print it. Output: 'Do you like ice cream? true' then 'true' on the next line." },
+    ],
+    cfu: [
+      "what a boolean is — a true/false value, not a number, char or String",
+      "which literal IS a boolean: `true`, versus the distractors \"true\" (a String), 'F' (a char) and 10.1",
+    ],
   },
   {
     code: "2.7",
@@ -168,7 +174,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["&&", "||", "!"],
     exercises: ["Roller Coaster"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.7.4", name: "Roller Coaster", requires: "Read two booleans (tallEnough, oldEnough) with readBoolean, combine them with a logical operator so the rider is allowed only when BOTH are true, print true or false." },
+    ],
+    cfu: [
+      "which symbol is a logical operator — ! (the distractors are ##, ** and %)",
+      "evaluating true && !false → true",
+    ],
   },
   {
     code: "2.8",
@@ -181,7 +193,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["==", "!=", ">", "<", ">=", "<="],
     exercises: ["Triple Double"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.8.4", name: "Triple Double", requires: "Read points, rebounds and assists with three separate readInt calls. Set a boolean tripleDouble that is true only when all three are at least 10, then print 'Got a Triple Double? ' + tripleDouble." },
+    ],
+    cfu: [
+      "which symbol is NOT a comparison operator — ? (the others are <, == and >=)",
+      "that 80 >= 80 evaluates to true (boolean true, not the String \"true\")",
+    ],
   },
   {
     code: "2.9",
@@ -237,7 +255,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["if", "else", "nested if", "% in conditions", "string methods in conditions"],
     exercises: ["Find the Minimum"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.11.5", name: "Find the Minimum", requires: "Read three ints ('Enter first number: ' etc.) and print the smallest. Sample: 10, 15, 20 → 10." },
+    ],
+    cfu: [
+      "why if statements exist — do something ONLY IF a condition is true (vs while / for / break)",
+      "which if syntax is correct: `if(expr) { }` with round brackets and braces — not a colon, not square brackets, not a bare condition",
+    ],
   },
   {
     code: "2.12",
@@ -250,7 +274,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["while (true) with break", "sentinel values"],
     exercises: ["Guess the Number"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.12.4", name: "Guess the Number", requires: "THE EXAM CAPSTONE. secretNumber = 6 (the grader requires exactly 6). Print \"I'm thinking of a number between 1 and 10.\" and 'See if you can guess the number!', then keep reading 'Enter your guess: ' — printing 'Try again!' for each wrong guess — until the guess matches, then print 'Correct!'." },
+    ],
+    cfu: [
+      "that `break;` is the statement that ends a loop early",
+      "the loop-and-a-half shape: while(true) { code; if(condition) { break; } code; }",
+    ],
   },
   {
     code: "2.13",

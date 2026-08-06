@@ -521,7 +521,7 @@
             "code": "String favColor = readLine(\"Hello, what is your favorite color? \");\nSystem.out.println(favColor);",
             "kind": "teach",
             "stdin": "blue",
-            "output": "Hello, what is your favorite color? blue",
+            "output": "Hello, what is your favorite color? blue\nblue",
             "points": [
               {
                 "text": "Asks your question and hands back whatever the user typed, as text.",
@@ -536,8 +536,8 @@
                 "label": "String favColor"
               },
               {
-                "text": "The question and the answer end up on the same line, because the user types right where the cursor is.",
-                "label": "one line"
+                "label": "two lines",
+                "text": "The first line is the question with your answer typed after it. The second is what println printed."
               }
             ],
             "instruction": "Programs can ask the person using them a question."
@@ -563,7 +563,7 @@
             "skills": [
               "read text from the user with readLine"
             ],
-            "target": "Hello, what is your favorite color? blue",
+            "target": "Hello, what is your favorite color? blue\nblue",
             "instruction": "Change the question it asks. Run it."
           },
           {
@@ -625,11 +625,11 @@
             "code": "int age = readInt(\"Hello, how old are you? \");\nSystem.out.println(age + 1);",
             "kind": "teach",
             "stdin": "16",
-            "output": "Hello, how old are you? 17",
+            "output": "Hello, how old are you? 16\n17",
             "points": [
               {
-                "text": "Gives back a real number, so age + 1 does maths and gives 17.",
-                "label": "readInt"
+                "label": "readInt",
+                "text": "Gives back a real number, so age + 1 does maths and prints 17."
               },
               {
                 "text": "The box has to match what you asked for: a whole number goes in an int.",
@@ -644,13 +644,13 @@
           },
           {
             "id": "f23_c7",
-            "why": "The question stays on the same line as what they type. And because readInt gives a number, age + 1 is maths (17), not gluing (161).",
+            "why": "What you type appears right after the question, on the same line. And because readInt gives a number, age + 1 is maths (17), not gluing (161).",
             "code": "int age = readInt(\"How old are you? \");\nSystem.out.println(\"Next year: \" + (age + 1));",
             "kind": "predict",
             "opts": [
-              "How old are you? Next year: 17",
-              "How old are you?\nNext year: 17",
-              "How old are you? Next year: 161",
+              "How old are you? 16\nNext year: 17",
+              "How old are you?\n16\nNext year: 17",
+              "How old are you? 16\nNext year: 161",
               "Next year: 17"
             ],
             "stdin": "16",
@@ -670,7 +670,7 @@
             "skills": [
               "choose between readLine, readInt, readDouble and readBoolean"
             ],
-            "target": "What is your name? Hi, Ada!",
+            "target": "What is your name? Ada\nHi, Ada!",
             "solution": "String name = readLine(\"What is your name? \");\nSystem.out.println(\"Hi, \" + name + \"!\");",
             "instruction": "This asks for a name but reads it the wrong way. Fix it."
           },
@@ -684,7 +684,7 @@
             "skills": [
               "use a value the user typed in your program"
             ],
-            "target": "How many miles have you traveled? 5.0",
+            "target": "How many miles have you traveled? 2.5\n5.0",
             "solution": "double miles = readDouble(\"How many miles have you traveled? \");\nSystem.out.println(miles * 2);",
             "instruction": "Ask how many miles they travelled, then print it doubled."
           }
