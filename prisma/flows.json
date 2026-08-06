@@ -1978,6 +1978,378 @@
           }
         ]
       }
+    },
+    {
+      "code": "2.11",
+      "title": "If Statements",
+      "objectives": [
+        "run a block of code only when a condition is true",
+        "use else to handle the other case",
+        "use the remainder operator inside a condition"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f211_1",
+            "kind": "teach",
+            "instruction": "An if statement runs a block only when something is true.",
+            "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
+            "output": "adult\ndone",
+            "points": [
+              {
+                "label": "if (…)",
+                "text": "The condition goes in round brackets. It has to be something true-or-false — exactly what you built last lesson."
+              },
+              {
+                "label": "the braces",
+                "text": "Everything inside { } runs only when the condition is true."
+              },
+              {
+                "label": "\"done\"",
+                "text": "Outside the braces, so it prints either way. Indentation is for you; the braces are what Java reads."
+              },
+              {
+                "label": "no semicolon",
+                "text": "There is no ; after the round brackets. Putting one there is a classic bug."
+              }
+            ]
+          },
+          {
+            "id": "f211_2",
+            "kind": "run",
+            "instruction": "Run it.",
+            "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
+            "after": "The condition was true, so the block ran."
+          },
+          {
+            "id": "f211_3",
+            "kind": "tweak",
+            "instruction": "Change the age so \"adult\" does NOT print.",
+            "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
+            "target": "done",
+            "hint": "The condition is age >= 18. Make it false.",
+            "after": "False condition, block skipped — and the line after it still runs.",
+            "skills": [
+              "run a block of code only when a condition is true"
+            ]
+          },
+          {
+            "id": "f211_4",
+            "kind": "teach",
+            "instruction": "else covers the other case.",
+            "code": "int n = -5;\nif (n > 0) {\n  System.out.println(\"positive\");\n} else {\n  System.out.println(\"not positive\");\n}",
+            "output": "not positive",
+            "points": [
+              {
+                "label": "else",
+                "text": "Runs when the condition was false. No condition of its own."
+              },
+              {
+                "label": "one or the other",
+                "text": "Exactly one of the two blocks runs. Never both, never neither."
+              },
+              {
+                "label": "} else {",
+                "text": "else sits on the closing brace of the if."
+              }
+            ]
+          },
+          {
+            "id": "f211_5",
+            "kind": "predict",
+            "instruction": "n is 0 this time. What prints?",
+            "code": "int n = 0;\nif (n > 0) {\n  System.out.println(\"positive\");\n} else {\n  System.out.println(\"not positive\");\n}",
+            "opts": [
+              "not positive",
+              "positive",
+              "both",
+              "(nothing)"
+            ],
+            "correct": 0,
+            "why": "0 is not greater than 0, so the condition is false and else runs. Zero catches people out constantly.",
+            "skills": [
+              "use else to handle the other case"
+            ]
+          },
+          {
+            "id": "f211_6",
+            "kind": "teach",
+            "instruction": "The remainder tells you if a number is even.",
+            "code": "int n = 7;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "output": "odd",
+            "points": [
+              {
+                "label": "n % 2",
+                "text": "The remainder after dividing by 2 — from the arithmetic lesson. It is 0 or 1."
+              },
+              {
+                "label": "== 0",
+                "text": "Asks whether that remainder is zero. Remainder 0 means it divided evenly."
+              },
+              {
+                "label": "together",
+                "text": "n % 2 == 0 is THE way to test for even. Worth memorising."
+              },
+              {
+                "label": "7",
+                "text": "7 % 2 is 1, not 0, so the condition is false and else runs."
+              }
+            ]
+          },
+          {
+            "id": "f211_7",
+            "kind": "fix",
+            "instruction": "8 is even, but this says odd. Fix it.",
+            "code": "int n = 8;\nif (n % 2 == 1) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "target": "even",
+            "solution": "int n = 8;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "hint": "What remainder does an even number leave when you divide by 2?",
+            "after": "Remainder 0 is even, remainder 1 is odd. The condition was testing the wrong one.",
+            "skills": [
+              "use the remainder operator inside a condition"
+            ]
+          },
+          {
+            "id": "f211_8",
+            "kind": "teach",
+            "instruction": "else if lets you check several things in order.",
+            "code": "int score = 75;\nif (score >= 90) {\n  System.out.println(\"A\");\n} else if (score >= 80) {\n  System.out.println(\"B\");\n} else {\n  System.out.println(\"C\");\n}",
+            "output": "C",
+            "points": [
+              {
+                "label": "top to bottom",
+                "text": "Java checks each condition in order and stops at the first true one."
+              },
+              {
+                "label": "the rest are skipped",
+                "text": "Once one matches, none of the others are even looked at."
+              },
+              {
+                "label": "else last",
+                "text": "The final else catches everything that matched nothing."
+              },
+              {
+                "label": "75",
+                "text": "Not >= 90, not >= 80, so it falls through to else."
+              }
+            ]
+          },
+          {
+            "id": "f211_9",
+            "kind": "fill",
+            "instruction": "Fill it in so min ends up holding the smaller number.",
+            "code": "int a = 12;\nint b = 5;\nint min = a;\nif (b ⟦1⟧ min) {\n  min = b;\n}\nSystem.out.println(min);",
+            "blanks": [
+              {
+                "chips": [
+                  "<",
+                  ">",
+                  "=="
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "5",
+            "hint": "Replace min only when b is SMALLER than what is already there.",
+            "after": "Assume the first is smallest, then replace it if you find better. That scales to any number of values.",
+            "skills": [
+              "run a block of code only when a condition is true"
+            ]
+          },
+          {
+            "id": "f211_10",
+            "kind": "write",
+            "instruction": "Your turn: read three numbers and print the smallest.",
+            "code": "// read three ints, then print the smallest\n",
+            "stdin": "10\n15\n20",
+            "target": "Enter first number: 10\nEnter second number: 15\nEnter third number: 20\n10",
+            "solution": "int a = readInt(\"Enter first number: \");\nint b = readInt(\"Enter second number: \");\nint c = readInt(\"Enter third number: \");\nint min = a;\nif (b < min) {\n  min = b;\n}\nif (c < min) {\n  min = c;\n}\nSystem.out.println(min);",
+            "hint": "Start with min = a, then use two ifs to replace it if b or c is smaller. Prompts are \"Enter first number: \" and so on.",
+            "after": "That is CodeHS exercise 3.11.5, Find the Minimum.",
+            "skills": [
+              "run a block of code only when a condition is true"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.12",
+      "title": "Loop-and-a-Half",
+      "objectives": [
+        "use break to leave a loop from the middle",
+        "write a while (true) loop that asks once and checks once",
+        "stop a loop on a sentinel value"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f212_1",
+            "kind": "teach",
+            "instruction": "Here is the problem this lesson solves.",
+            "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
+            "stdin": "4\n6",
+            "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
+            "points": [
+              {
+                "label": "it works",
+                "text": "The output is right. Nothing here is broken."
+              },
+              {
+                "label": "but look",
+                "text": "The readInt line appears TWICE — once before the loop, once inside it."
+              },
+              {
+                "label": "why",
+                "text": "A while loop checks its condition first, so you must already have a guess before the loop can start."
+              },
+              {
+                "label": "the risk",
+                "text": "Two copies of the same line means two places to change, and one you will forget."
+              }
+            ]
+          },
+          {
+            "id": "f212_2",
+            "kind": "run",
+            "instruction": "Run it. We'll guess 4, then 6.",
+            "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
+            "stdin": "4\n6",
+            "after": "Correct output, duplicated line. Now the better way."
+          },
+          {
+            "id": "f212_3",
+            "kind": "teach",
+            "instruction": "Loop forever, and break out of the middle.",
+            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "stdin": "4\n6",
+            "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
+            "points": [
+              {
+                "label": "while (true)",
+                "text": "A condition that is always true, so the loop never stops on its own."
+              },
+              {
+                "label": "break;",
+                "text": "Jumps straight out of the loop, immediately, ignoring everything below it."
+              },
+              {
+                "label": "asked once",
+                "text": "readInt now appears exactly once. That is the whole point."
+              },
+              {
+                "label": "the \"half\"",
+                "text": "On the last pass only the top half runs — you ask, you check, you leave before \"Try again!\"."
+              }
+            ]
+          },
+          {
+            "id": "f212_4",
+            "kind": "run",
+            "instruction": "Same answers, same output — one copy of the question.",
+            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "stdin": "4\n6",
+            "after": "This shape has a name: the loop-and-a-half.",
+            "skills": [
+              "write a while (true) loop that asks once and checks once"
+            ]
+          },
+          {
+            "id": "f212_5",
+            "kind": "predict",
+            "instruction": "break works in any loop. What prints?",
+            "code": "for (int i = 1; i <= 5; i++) {\n  if (i == 3) {\n    break;\n  }\n  System.out.println(i);\n}",
+            "opts": [
+              "1\n2",
+              "1\n2\n3",
+              "1\n2\n4\n5",
+              "1\n2\n3\n4\n5"
+            ],
+            "correct": 0,
+            "why": "When i reaches 3 the break runs before the println, and the loop ends entirely — it does not skip one and carry on.",
+            "skills": [
+              "use break to leave a loop from the middle"
+            ]
+          },
+          {
+            "id": "f212_6",
+            "kind": "spot",
+            "instruction": "Tap the only line that can end this loop.",
+            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "stdin": "6",
+            "correct": 3,
+            "why": "while (true) is never false, so nothing else can stop it. Take the break away and it runs forever.",
+            "skills": [
+              "use break to leave a loop from the middle"
+            ]
+          },
+          {
+            "id": "f212_7",
+            "kind": "teach",
+            "instruction": "A sentinel is a value that means \"stop\".",
+            "code": "int total = 0;\nwhile (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    break;\n  }\n  total = total + n;\n}\nSystem.out.println(total);",
+            "stdin": "5\n7\n0",
+            "output": "Number (0 to stop): 5\nNumber (0 to stop): 7\nNumber (0 to stop): 0\n12",
+            "points": [
+              {
+                "label": "sentinel",
+                "text": "Here it is 0 — a value the user types to say they are finished."
+              },
+              {
+                "label": "say so",
+                "text": "The prompt tells them what it is. A secret sentinel is a broken program."
+              },
+              {
+                "label": "not counted",
+                "text": "The break happens before the adding, so the 0 never joins the total. 5 + 7 = 12."
+              },
+              {
+                "label": "choosing one",
+                "text": "Pick something that cannot be real data — 0 marks here, -1 for a temperature."
+              }
+            ]
+          },
+          {
+            "id": "f212_8",
+            "kind": "fill",
+            "instruction": "Fill in the statement that leaves the loop.",
+            "code": "while (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    ⟦1⟧\n  }\n  System.out.println(n);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "break;",
+                  "continue;",
+                  "return;"
+                ],
+                "answer": 0
+              }
+            ],
+            "stdin": "5\n0",
+            "target": "Number (0 to stop): 5\n5\nNumber (0 to stop): 0",
+            "hint": "You want out of the loop entirely, not on to the next turn.",
+            "after": "break leaves the loop. That is the one statement this whole lesson rests on.",
+            "skills": [
+              "use break to leave a loop from the middle"
+            ]
+          },
+          {
+            "id": "f212_9",
+            "kind": "write",
+            "instruction": "Your turn: the number guessing game. The secret is 6.",
+            "code": "int secretNumber = 6;\n// greet, then keep asking until they get it\n",
+            "stdin": "4\n3\n6",
+            "target": "I'm thinking of a number between 1 and 10.\nSee if you can guess the number!\nEnter your guess: 4\nTry again!\nEnter your guess: 3\nTry again!\nEnter your guess: 6\nCorrect!",
+            "solution": "int secretNumber = 6;\nSystem.out.println(\"I'm thinking of a number between 1 and 10.\");\nSystem.out.println(\"See if you can guess the number!\");\nwhile (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == secretNumber) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "hint": "Two greeting lines first. Then while (true): ask, break if correct, otherwise print \"Try again!\". \"Correct!\" goes after the loop.",
+            "after": "That is CodeHS exercise 3.12.4, Guess the Number — and the program your final exam asks for.",
+            "skills": [
+              "write a while (true) loop that asks once and checks once"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
