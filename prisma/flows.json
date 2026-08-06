@@ -1088,232 +1088,270 @@
       "title": "Arithmetic Expressions",
       "objectives": [
         "evaluate arithmetic expressions using order of operations",
-        "predict the result of integer division",
-        "use the modulo operator to find remainders"
+        "predict the result of whole-number division",
+        "use the remainder operator to find what is left over"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "f24_a1",
+            "id": "m_task",
             "kind": "teach",
+            "instruction": "Your party just found a pile of loot. Time to split it.",
             "points": [
               {
-                "text": "Add, subtract, multiply. * is a star, not an ×.",
-                "label": "+  -  *"
+                "label": "the job",
+                "text": "17 coins, 5 players. How many does each one get, and what is left in the pot?"
               },
               {
-                "text": "Divide. It behaves differently for whole numbers than you expect — that's coming up.",
-                "label": "/"
+                "label": "why it is not obvious",
+                "text": "You cannot hand out a third of a coin. Java has a particular idea about this, and it surprises people."
               },
               {
-                "text": "Remainder. 7 % 2 is 1, because 2 goes into 7 three times with 1 left over.",
-                "label": "%"
-              },
-              {
-                "text": "Brackets, to force what happens first.",
-                "label": "( )"
+                "label": "on the way",
+                "text": "We do the ordinary maths first — buying, totals — then get to the splitting."
               }
-            ],
-            "instruction": "Java does maths with these six symbols."
+            ]
           },
           {
-            "id": "f24_a2",
-            "code": "System.out.println(10 + 3);\nSystem.out.println(10 - 3);\nSystem.out.println(10 * 3);",
+            "id": "m_ops",
+            "kind": "teach",
+            "instruction": "Java does maths with the symbols you already know.",
+            "code": "int gold = 50;\nint found = 12;\nSystem.out.println(gold + found);\nSystem.out.println(gold - found);\nSystem.out.println(gold * 2);",
+            "output": "62\n38\n100",
+            "points": [
+              {
+                "label": "+ and -",
+                "text": "Add and subtract, exactly as you would expect."
+              },
+              {
+                "label": "*",
+                "text": "Multiply. A star, not an × — there is no × key on a keyboard."
+              },
+              {
+                "label": "boxes work too",
+                "text": "gold + found uses what is inside each box. The maths happens on the values."
+              },
+              {
+                "label": "nothing changed",
+                "text": "Printing gold + found does not alter gold. It works out an answer and prints it."
+              }
+            ]
+          },
+          {
+            "id": "m_run1",
             "kind": "run",
-            "after": "Exactly like a calculator. The interesting part is next.",
-            "skills": [
-              "evaluate arithmetic expressions using order of operations"
-            ],
-            "instruction": "Run it. Nothing surprising yet."
+            "instruction": "Run it.",
+            "code": "int gold = 50;\nint found = 12;\nSystem.out.println(gold + found);\nSystem.out.println(gold - found);\nSystem.out.println(gold * 2);",
+            "after": "Three sums, three answers."
           },
           {
-            "id": "f24_a3",
-            "code": "System.out.println(2 + 3 * 4);",
+            "id": "m_order",
             "kind": "teach",
-            "output": "14",
+            "instruction": "Buying two potions and a sword — order matters.",
+            "code": "int potion = 3;\nint sword = 10;\nSystem.out.println(2 * potion + sword);",
+            "output": "16",
             "points": [
               {
-                "text": "* and / and % happen BEFORE + and -. Same rule you already use in maths class.",
-                "label": "first"
+                "label": "2 * potion + sword",
+                "text": "Two potions at 3 gold, plus one sword at 10."
               },
               {
-                "text": "2 + 3 * 4 is 2 + 12, which is 14. It is NOT 5 * 4.",
-                "label": "so"
+                "label": "* goes first",
+                "text": "Multiply and divide happen before add and subtract — the same rule as maths class."
               },
               {
-                "text": "Put brackets around what you want to happen first.",
-                "label": "override"
+                "label": "so",
+                "text": "2 * 3 is 6, then 6 + 10 is 16. It is NOT 2 * 13."
+              },
+              {
+                "label": "brackets win",
+                "text": "Anything in brackets is worked out first, before everything else."
               }
-            ],
-            "instruction": "When there's more than one operator, order matters."
+            ]
           },
           {
-            "id": "f24_a4",
-            "why": "Brackets go first, so it's 5 * 4 = 20. Without them it would have been 14.",
-            "code": "System.out.println((2 + 3) * 4);",
+            "id": "m_predict1",
             "kind": "predict",
+            "instruction": "Brackets added. Now what?",
+            "code": "int potion = 3;\nint sword = 10;\nSystem.out.println(2 * (potion + sword));",
             "opts": [
-              "20",
-              "14",
-              "24",
-              "11"
-            ],
-            "skills": [
-              "evaluate arithmetic expressions using order of operations"
+              "26",
+              "16",
+              "23",
+              "(an error)"
             ],
             "correct": 0,
-            "instruction": "Brackets added. Now what?"
+            "why": "The brackets force potion + sword first: 3 + 10 is 13, then 2 * 13 is 26. Same numbers, different answer.",
+            "skills": [
+              "evaluate arithmetic expressions using order of operations"
+            ]
           },
           {
-            "id": "f24_a5",
-            "code": "System.out.println(7 / 2);",
+            "id": "m_div",
             "kind": "teach",
+            "instruction": "Now the split. This is the one that catches everybody.",
+            "code": "int coins = 17;\nint players = 5;\nSystem.out.println(coins / players);",
             "output": "3",
             "points": [
               {
-                "text": "When BOTH numbers are whole numbers, Java throws away the fraction. It does not round.",
-                "label": "3, not 3.5"
+                "label": "17 / 5",
+                "text": "In maths that is 3.4. Java says 3."
               },
               {
-                "text": "A whole number divided by a whole number has to stay a whole number. 3.5 can't fit, so the .5 is dropped.",
-                "label": "why"
+                "label": "why",
+                "text": "Both numbers are whole numbers, so Java keeps the answer whole. It does not round — it throws the rest away."
               },
               {
-                "text": "Gives 4, not 4.5 and not 5. Always chops downward.",
-                "label": "9 / 2"
+                "label": "it fits the job",
+                "text": "You cannot hand out 0.4 of a coin, so 3 each is actually the right answer here."
               },
               {
-                "text": "Make one of them a decimal: 7.0 / 2 gives 3.5.",
-                "label": "want 3.5?"
+                "label": "but",
+                "text": "Something IS left over, and Java just dropped it. Getting it back is the next step."
               }
-            ],
-            "instruction": "Now the one that catches everybody."
+            ]
           },
           {
-            "id": "f24_a6",
-            "why": "Both are whole numbers, so the .5 is thrown away and you get 4.",
-            "code": "System.out.println(9 / 2);",
+            "id": "m_predict2",
             "kind": "predict",
+            "instruction": "What does this print?",
+            "code": "System.out.println(9 / 2);",
             "opts": [
               "4",
               "4.5",
               "5",
               "(an error)"
             ],
-            "skills": [
-              "predict the result of integer division"
-            ],
             "correct": 0,
-            "instruction": "So what does this print?"
-          },
-          {
-            "id": "f24_a7",
-            "why": "The division happens FIRST, as whole numbers, giving 4. Only then is 4 stored in a double. Storing it in a double afterwards can't bring the .5 back — it prints 4.0.",
-            "code": "double avg = 9 / 2;\nSystem.out.println(avg);",
-            "kind": "spot",
+            "why": "Two whole numbers, so the answer stays whole. 4.5 chops down to 4 — it never rounds up.",
             "skills": [
-              "predict the result of integer division"
-            ],
-            "correct": 0,
-            "instruction": "This one looks safe but isn't. Tap the line that goes wrong."
+              "predict the result of whole-number division"
+            ]
           },
           {
-            "id": "f24_a8",
-            "code": "double avg = 9 / 2;\nSystem.out.println(avg);",
-            "hint": "One of the two numbers has to be a decimal BEFORE the division happens.",
-            "kind": "fix",
-            "after": "Making one side a decimal changes the whole sum to decimal maths.",
-            "skills": [
-              "predict the result of integer division"
-            ],
-            "target": "4.5",
-            "solution": "double avg = 9.0 / 2;\nSystem.out.println(avg);",
-            "instruction": "Make it print the real average, 4.5."
-          },
-          {
-            "id": "f24_a9",
-            "code": "System.out.println(7 % 2);\nSystem.out.println(10 % 5);\nSystem.out.println(14 % 3);",
+            "id": "m_mod",
             "kind": "teach",
-            "output": "1\n0\n2",
+            "instruction": "% gives you exactly what was left over.",
+            "code": "int coins = 17;\nint players = 5;\nSystem.out.println(coins / players);\nSystem.out.println(coins % players);",
+            "output": "3\n2",
             "points": [
               {
-                "text": "2 fits into 7 three times (6), and 1 is left over. So 1.",
-                "label": "7 % 2"
+                "label": "%",
+                "text": "The remainder. Read it as \"what is left after dividing\"."
               },
               {
-                "text": "5 fits exactly, nothing left over. So 0.",
-                "label": "10 % 5"
+                "label": "17 % 5",
+                "text": "5 goes into 17 three times, using 15 coins. 2 are left. So 2."
               },
               {
-                "text": "A remainder of 0 means it divides evenly — that's how you test if a number is even, or a multiple of anything.",
-                "label": "0 means"
+                "label": "the pair",
+                "text": "/ tells you how many each. % tells you what stays in the pot. Together they split anything."
+              },
+              {
+                "label": "% 2",
+                "text": "A remainder of 0 means it divided evenly. That is how you will test for even numbers later."
               }
-            ],
-            "instruction": "% gives you what's left over."
+            ]
           },
           {
-            "id": "f24_a10",
-            "code": "System.out.println(20 % 6);\nSystem.out.println(20 % 4);",
-            "kind": "trace",
+            "id": "m_shortcut",
+            "kind": "teach",
+            "instruction": "One more thing: changing a number you already have.",
+            "code": "int gold = 50;\ngold += 12;\nSystem.out.println(gold);\ngold++;\nSystem.out.println(gold);",
+            "output": "62\n63",
+            "points": [
+              {
+                "label": "gold += 12",
+                "text": "Short for gold = gold + 12. Take what is in the box, add 12, put it back."
+              },
+              {
+                "label": "gold++",
+                "text": "Short for gold = gold + 1. Adds exactly one."
+              },
+              {
+                "label": "the others",
+                "text": "-= takes away, *= multiplies, /= divides. Same pattern every time."
+              },
+              {
+                "label": "why you care",
+                "text": "You will see ++ constantly once loops start. This is where it comes from."
+              }
+            ]
+          },
+          {
+            "id": "m_runloot",
+            "kind": "run",
+            "instruction": "Run the finished loot split.",
+            "code": "int coins = 17;\nint players = 5;\nint each = coins / players;\nint leftOver = coins % players;\nSystem.out.println(\"Each player gets: \" + each);\nSystem.out.println(\"Left in the pot:  \" + leftOver);",
+            "after": "Three each, two in the pot. That is the whole job done with / and %.",
             "skills": [
-              "use the modulo operator to find remainders"
-            ],
+              "use the remainder operator to find what is left over"
+            ]
+          },
+          {
+            "id": "m_sharp",
+            "kind": "teach",
+            "instruction": "The exact rules, so they hold up in a test.",
+            "code": "System.out.println(7 / 2);\nSystem.out.println(7.0 / 2);\nSystem.out.println(7 % 2);",
+            "output": "3\n3.5\n1",
+            "points": [
+              {
+                "label": "7 / 2",
+                "text": "Two whole numbers, whole answer: 3. The .5 is gone, not rounded."
+              },
+              {
+                "label": "7.0 / 2",
+                "text": "One decimal is enough to make the whole thing decimal: 3.5."
+              },
+              {
+                "label": "7 % 2",
+                "text": "The remainder: 1. That is the .5 you lost, expressed as what was left."
+              },
+              {
+                "label": "precedence",
+                "text": "Brackets, then * / %, then + -. Same-level operations run left to right."
+              }
+            ]
+          },
+          {
+            "id": "m_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "int a = 150;\nint b = 100;",
             "questions": [
               {
-                "why": "6 fits 3 times (18), leaving 2.",
+                "prompt": "What is 150 % 100?",
                 "opts": [
-                  "2",
-                  "3",
-                  "4"
-                ],
-                "prompt": "20 % 6 = ?",
-                "correct": 0
-              },
-              {
-                "why": "4 fits exactly 5 times, nothing left over.",
-                "opts": [
+                  "50",
+                  "1",
                   "0",
-                  "4",
-                  "5"
+                  "150"
                 ],
-                "prompt": "20 % 4 = ?",
-                "correct": 0
+                "correct": 0,
+                "why": "100 goes into 150 once, using 100. 50 is left over."
+              },
+              {
+                "prompt": "Which of these is NOT a Java arithmetic operator?",
+                "opts": [
+                  "#",
+                  "+",
+                  "-",
+                  "/"
+                ],
+                "correct": 0,
+                "why": "Java uses + - * / and %. The # symbol means nothing to it."
               }
             ],
-            "instruction": "Work these out."
+            "skills": [
+              "use the remainder operator to find what is left over"
+            ]
           },
           {
-            "id": "f24_a10b",
-            "code": "int score = 10;\nscore++;\nSystem.out.println(score);\nscore += 5;\nSystem.out.println(score);",
-            "kind": "teach",
-            "output": "11\n16",
-            "points": [
-              {
-                "text": "Short for score = score + 1. Adds one.",
-                "label": "score++"
-              },
-              {
-                "text": "Short for score = score - 1. Takes one away.",
-                "label": "score--"
-              },
-              {
-                "text": "Short for score = score + 5. There is -= and *= and /= too.",
-                "label": "score += 5"
-              },
-              {
-                "text": "Same meaning, less typing. You will see these constantly once loops start.",
-                "label": "why bother"
-              }
-            ],
-            "instruction": "Shortcuts for changing a number you already have."
-          },
-          {
-            "id": "f24_a11",
-            "code": "int total = 17;\nint perBox = 5;\nint boxes = total ⟦1⟧ perBox;\nint leftOver = total ⟦2⟧ perBox;\nSystem.out.println(boxes + \" boxes, \" + leftOver + \" left over\");",
-            "hint": "One of them counts how many fit. The other is what refuses to fit.",
+            "id": "m_d1",
             "kind": "fill",
-            "after": "/ tells you how many fit. % tells you what is left. Together they split any number.",
+            "instruction": "Fill it in so it splits 17 into boxes of 5.",
+            "code": "int total = 17;\nint perBox = 5;\nSystem.out.println(total ⟦1⟧ perBox);\nSystem.out.println(total ⟦2⟧ perBox);",
             "blanks": [
               {
                 "chips": [
@@ -1332,26 +1370,43 @@
                 "answer": 0
               }
             ],
+            "target": "3\n2",
+            "hint": "First how many fit, then what refuses to fit.",
+            "after": "/ and % are a pair. You will almost always want both.",
             "skills": [
-              "predict the result of integer division",
-              "use the modulo operator to find remainders"
-            ],
-            "target": "3 boxes, 2 left over",
-            "instruction": "Fill it in so it splits 17 into boxes of 5."
+              "predict the result of whole-number division"
+            ]
           },
           {
-            "id": "f24_a12",
-            "code": "int totalSeconds = 200;\n// print: 3 min 20 sec\n",
-            "hint": "/ 60 gives the whole minutes. % 60 gives the seconds left over.",
-            "kind": "write",
-            "after": "Whole part with /, leftover with %. Same trick for time, money, anything.",
-            "skills": [
-              "predict the result of integer division",
-              "use the modulo operator to find remainders"
+            "id": "m_d2",
+            "kind": "predict",
+            "instruction": "One decimal in the sum. What now?",
+            "code": "System.out.println(9 / 2.0);",
+            "opts": [
+              "4.5",
+              "4",
+              "5",
+              "(an error)"
             ],
-            "target": "3 min 20 sec",
-            "solution": "int totalSeconds = 200;\nSystem.out.println(totalSeconds / 60 + \" min \" + totalSeconds % 60 + \" sec\");",
-            "instruction": "Your turn: turn 200 seconds into minutes and seconds."
+            "correct": 0,
+            "why": "2.0 is a decimal, so Java keeps the decimal answer. Compare with 9 / 2, which gave 4.",
+            "skills": [
+              "predict the result of whole-number division"
+            ]
+          },
+          {
+            "id": "m_d3",
+            "kind": "write",
+            "instruction": "Last one: work out what a pyramid weighs. Each block is 2.5 tons.",
+            "code": "// ask how many blocks, then print the weight\n",
+            "stdin": "3",
+            "target": "Enter the number of blocks used to build the pyramid: 3\nThe pyramid weighs 7.5 tons",
+            "solution": "int blocks = readInt(\"Enter the number of blocks used to build the pyramid: \");\nSystem.out.println(\"The pyramid weighs \" + (blocks * 2.5) + \" tons\");",
+            "hint": "Read the count with readInt, multiply by 2.5, and join it into the sentence. Keep the brackets around the sum.",
+            "after": "That is CodeHS exercise 3.4.5, Weight of a Pyramid. Lesson done.",
+            "skills": [
+              "evaluate arithmetic expressions using order of operations"
+            ]
           }
         ]
       }
