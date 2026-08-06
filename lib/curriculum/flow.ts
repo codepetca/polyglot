@@ -34,7 +34,7 @@ import { runJava } from "@/lib/java/piston";
 
 export type FlowStep = {
   id: string;
-  kind: "teach" | "run" | "tweak" | "note" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "explain" | "branch";
+  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "explain" | "branch";
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -43,12 +43,24 @@ export type FlowStep = {
   // per-kind payload (see validate below for exact requirements)
   code?: string;
   target?: string;
-  // Simulated keyboard input for Scanner-based steps (run/tweak/fix/write/
-  // arrange). One line per input() call the code makes, newline-joined. NOT
-  // secret — ships to the client like `code`, since the student needs to know
-  // what "typing" is being simulated (there's no real keyboard in a run-and-
-  // watch step).
+  // Pre-supplied keyboard input for run-and-watch steps (run/tweak/fix/write/
+  // arrange). One line per read call the code makes, newline-joined. NOT
+  // secret — ships to the client like `code`.
+  //
+  // PREFER `ask` FOR TEACHING INPUT. Pre-supplying stdin and captioning it
+  // "we'll type Ada for you" is theatre: the student watches a value they did
+  // not choose appear from nowhere, which is the opposite of understanding that
+  // readLine collects what THEY typed. Use stdin only where the typing is
+  // incidental to the point being made; use `ask` whenever the input itself is
+  // the thing being taught.
   stdin?: string;
+  // ask: one field per read call the code makes, in order. The student types a
+  // real value into each; those become stdin. `sample` never reaches the
+  // browser — it exists so the compiler gate can still run the snippet.
+  // `holds` is the variable this answer lands in. After the run, the step spells
+  // out "name now holds Ada" — the single connection the whole lesson exists to
+  // make, and the one a pre-supplied stdin can never demonstrate.
+  fields?: { label: string; sample: string; placeholder?: string; holds?: string }[];
   // teach: the output to display without making the student run it.
   output?: string;
   opts?: string[];
@@ -91,6 +103,14 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
         if (!s.code && !(s.points || []).length) errors.push(`${at}: needs code and/or points[]`);
         break;
       case "note": break;
+      case "ask":
+        if (!s.code) errors.push(`${at}: needs code`);
+        if (!s.fields?.length) errors.push(`${at}: needs fields[] — one per read call, in order`);
+        (s.fields || []).forEach((fl, i) => {
+          if (!fl.label) errors.push(`${at}: field ${i + 1} needs a label`);
+          if (fl.sample === undefined || fl.sample === "") errors.push(`${at}: field ${i + 1} needs a sample (server-only, for the compiler gate)`);
+        });
+        break;
       case "predict":
         if (!s.code || !s.opts || s.opts.length < 2 || typeof s.correct !== "number" || !s.why) errors.push(`${at}: needs code, 2+ opts, correct, why`);
         else if (s.correct < 0 || s.correct >= s.opts.length) errors.push(`${at}: correct out of range`);
@@ -163,6 +183,9 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       return { ...base, lefts, rights };
     }
     case "teach": return { ...base, points: s.points, output: s.output };
+    // The samples stay server-side: if the browser knew them it would be
+    // pre-filling the answer the student is supposed to invent.
+    case "ask": return { ...base, fields: (s.fields || []).map((fl) => ({ label: fl.label, placeholder: fl.placeholder, holds: fl.holds })) };
     case "explain": return { ...base, prompt: s.prompt, persona: s.persona };
     case "branch": return { ...base, options: s.options };
     default: return base; // run / tweak / note
@@ -210,6 +233,18 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true });
           if (!r.compiled || r.error) failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`);
           else results.push(`${name}: ✓ runs, prints ${JSON.stringify(norm(r.stdout)).slice(0, 60)}`);
+          break;
+        }
+        case "ask": {
+          // The student supplies the real input, so there is no fixed output to
+          // assert. What must hold is that the snippet compiles and consumes
+          // exactly as many lines as there are fields — a mismatch means the
+          // student would be asked for a value the program never reads, or the
+          // program would block waiting for one they were never asked for.
+          const stdin = (s.fields || []).map((fl) => fl.sample).join("\n");
+          const r = await runJava(s.code!, stdin, { wrapBeginner: true });
+          if (!r.compiled || r.error) failures.push(`${name}: does not run clean with the sample answers: ${(r.error || "").slice(0, 100)}`);
+          else results.push(`${name}: ✓ runs with ${(s.fields || []).length} typed value(s)`);
           break;
         }
         case "tweak": {

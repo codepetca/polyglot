@@ -760,209 +760,212 @@
       "title": "User Input",
       "objectives": [
         "read what the user types with readLine",
-        "choose between readLine, readInt, readDouble and readBoolean",
-        "use a value the user typed in the rest of the program"
+        "choose the reader that matches the type you need",
+        "store a typed value in a variable and use it later"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "i_task",
+            "id": "k_task",
             "kind": "teach",
-            "instruction": "Last lesson you built a player card. It always says Ada.",
+            "instruction": "Your player card always says Ada. A real game asks the player.",
             "points": [
               {
-                "label": "the problem",
-                "text": "Every value is typed into the code. To play as someone else you have to edit the program."
+                "label": "String name = \"Ada\";",
+                "text": "Every value on the card was typed by YOU, into the code. To play as someone else you would have to edit the program and save it again."
               },
               {
-                "label": "real games",
-                "text": "A real game asks YOU. You type your name, it puts it on the card."
+                "label": "What a game does instead",
+                "text": "It prints a question, then stops and waits. Nothing else happens until the player types something and presses enter."
               },
               {
-                "label": "what we need",
-                "text": "A way to stop, wait for the player to type something, and keep what they typed."
-              },
-              {
-                "label": "today",
-                "text": "We turn the card into a character creator. Same card, filled in by whoever is playing."
+                "label": "Where the answer goes",
+                "text": "Whatever they typed has to be kept somewhere, or it is lost the moment the next line runs. It goes into a variable, exactly like any other value."
               }
             ]
           },
           {
-            "id": "i_readline",
+            "id": "k_readline",
             "kind": "teach",
-            "instruction": "readLine asks a question and hands back the answer.",
-            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);",
-            "stdin": "Ada",
-            "output": "Your name? Ada\n=== PLAYER CARD ===\nName:   Ada",
+            "instruction": "readLine does all three things in one line.",
+            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"Welcome, \" + name + \"!\");",
             "points": [
               {
-                "label": "readLine",
-                "text": "Stops the program, waits for the player to type, and gives back whatever they typed."
+                "label": "readLine(\"Your name? \")",
+                "text": "Prints the question \"Your name? \", then stops the program and waits for the player to type a line and press enter."
               },
               {
-                "label": "the question goes inside",
-                "text": "\"Your name? \" sits in the brackets. You do NOT print it separately — readLine prints it for you."
+                "label": "\"Your name? \"",
+                "text": "The question goes INSIDE the brackets. You do not print it yourself on a separate line — readLine prints it for you."
               },
               {
                 "label": "String name =",
-                "text": "The answer is text, so it goes into a String box. Same four parts as always: type, name, =, value."
+                "text": "Whatever the player typed comes back out of readLine and is stored in name. From this line onwards, name holds their answer."
               },
               {
-                "label": "read the output",
-                "text": "Line 1 is the question with Ada typed after it. The card below uses that same Ada."
+                "label": "\"Welcome, \" + name",
+                "text": "name is used further down, so the greeting is different for every player. That is the entire point."
               }
             ]
           },
           {
-            "id": "i_run1",
-            "kind": "run",
-            "instruction": "Run it. We'll type Ada for you.",
-            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);",
-            "stdin": "Ada",
-            "after": "The program waited, took the answer, and used it.",
-            "skills": [
-              "read what the user types with readLine"
-            ]
-          },
-          {
-            "id": "i_tweak",
-            "kind": "tweak",
-            "instruction": "Change the question to \"Who are you? \"",
-            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);",
-            "stdin": "Ada",
-            "target": "Who are you? Ada\n=== PLAYER CARD ===\nName:   Ada",
-            "hint": "The question is the text inside readLine's brackets. Keep the space before the closing quote.",
-            "after": "You decide exactly what the player is asked.",
-            "skills": [
-              "read what the user types with readLine"
-            ]
-          },
-          {
-            "id": "i_readint",
-            "kind": "teach",
-            "instruction": "The level has to be a number, so it needs a different reader.",
-            "code": "String name = readLine(\"Your name? \");\nint level = readInt(\"Starting level? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);",
-            "stdin": "Ada\n7",
-            "output": "Your name? Ada\nStarting level? 7\n=== PLAYER CARD ===\nName:   Ada\nLevel:  7",
-            "points": [
+            "id": "k_ask1",
+            "kind": "ask",
+            "instruction": "Your turn — type a name, any name, and run it.",
+            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"Welcome, \" + name + \"!\");",
+            "fields": [
               {
-                "label": "readInt",
-                "text": "Same idea as readLine, but it hands back a whole number instead of text."
-              },
-              {
-                "label": "why it matters",
-                "text": "A level gets added to later. readLine would give you the TEXT \"7\", and text cannot do maths."
-              },
-              {
-                "label": "the box matches",
-                "text": "readInt gives an int, so it goes in an int. The reader and the box always agree."
-              },
-              {
-                "label": "same shape",
-                "text": "Question in the brackets, answer comes back. All four readers work this way."
+                "label": "Your name?",
+                "sample": "Ada",
+                "placeholder": "type any name",
+                "holds": "name"
               }
-            ]
-          },
-          {
-            "id": "i_predict",
-            "kind": "predict",
-            "instruction": "The player types 10. What appears?",
-            "code": "int level = readInt(\"Level? \");\nSystem.out.println(level);",
-            "stdin": "10",
-            "opts": [
-              "Level? 10\n10",
-              "Level? 10",
-              "Level? \n10",
-              "10"
             ],
-            "correct": 0,
-            "why": "Line 1 is the question with 10 typed straight after it, because the question does not end its line. Line 2 is the println.",
+            "after": "Whatever you typed is what came back out. Nothing about the name is written in the code.",
             "skills": [
-              "choose between readLine, readInt, readDouble and readBoolean"
+              "read what the user types with readLine"
             ]
           },
           {
-            "id": "i_readdouble",
+            "id": "k_what",
             "kind": "teach",
-            "instruction": "Health can be half a heart, so it needs the decimal reader.",
-            "code": "String name = readLine(\"Your name? \");\nint level = readInt(\"Starting level? \");\ndouble health = readDouble(\"Starting health? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);",
-            "stdin": "Ada\n7\n2.5",
-            "output": "Your name? Ada\nStarting level? 7\nStarting health? 2.5\n=== PLAYER CARD ===\nName:   Ada\nLevel:  7\nHealth: 2.5",
+            "instruction": "Three things happened, in order.",
             "points": [
               {
-                "label": "readDouble",
-                "text": "Hands back a number that can have a decimal point."
+                "label": "1. The question printed",
+                "text": "\"Your name? \" appeared, with no line break after it, so your answer landed on the same line."
               },
               {
-                "label": "match the type",
-                "text": "readDouble → double, exactly like readInt → int. Pick the reader that matches the box you want."
+                "label": "2. The program stopped",
+                "text": "It waited. Java did not run the next line until it had a full line of input from you."
               },
               {
-                "label": "three so far",
-                "text": "Text, whole number, decimal. One left."
+                "label": "3. Your text went into name",
+                "text": "readLine handed back exactly the characters you typed, and the = put them into the name box."
+              },
+              {
+                "label": "Run it again",
+                "text": "Go back a step and type something different. The code does not change; the output does."
               }
             ]
           },
           {
-            "id": "i_readbool",
+            "id": "k_ask2",
+            "kind": "ask",
+            "instruction": "Now two questions. Type a name and a starting level.",
+            "code": "String name = readLine(\"Your name? \");\nint level = readInt(\"Starting level? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);",
+            "fields": [
+              {
+                "label": "Your name?",
+                "sample": "Ada",
+                "placeholder": "a name",
+                "holds": "name"
+              },
+              {
+                "label": "Starting level?",
+                "sample": "7",
+                "placeholder": "a whole number",
+                "holds": "level"
+              }
+            ],
+            "after": "Two reads, two answers, in the order the code asks for them.",
+            "skills": [
+              "store a typed value in a variable and use it later"
+            ]
+          },
+          {
+            "id": "k_types",
             "kind": "teach",
-            "instruction": "Last one: a yes or no answer.",
-            "code": "String name = readLine(\"Your name? \");\nint level = readInt(\"Starting level? \");\ndouble health = readDouble(\"Starting health? \");\nboolean online = readBoolean(\"Online now? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);\nSystem.out.println(\"Online: \" + online);",
-            "stdin": "Ada\n7\n2.5\ntrue",
-            "output": "Your name? Ada\nStarting level? 7\nStarting health? 2.5\nOnline now? true\n=== PLAYER CARD ===\nName:   Ada\nLevel:  7\nHealth: 2.5\nOnline: true",
+            "instruction": "readInt was used for the level, not readLine. That matters.",
             "points": [
               {
-                "label": "readBoolean",
-                "text": "Hands back true or false. The player types the word true or the word false."
+                "label": "readInt(\"Starting level? \")",
+                "text": "Asks the question the same way, but hands back a whole number instead of text."
               },
               {
-                "label": "the set is complete",
-                "text": "readLine, readInt, readDouble, readBoolean. There are four, and that is all of them."
+                "label": "int level =",
+                "text": "A number came back, so it goes in an int. The reader decides the type, and the box has to match it."
               },
               {
-                "label": "creator done",
-                "text": "Every value on the card now comes from whoever is playing."
+                "label": "level + 1",
+                "text": "Because level is a real number, you can do maths on it. If you had used readLine you would have the TEXT \"7\", and \"7\" + 1 glues instead of adding."
+              },
+              {
+                "label": "readDouble / readBoolean",
+                "text": "The same pattern for a decimal and for true/false. Four readers, one per type of answer."
               }
             ]
           },
           {
-            "id": "i_runall",
-            "kind": "run",
-            "instruction": "Run the finished character creator.",
+            "id": "k_ask3",
+            "kind": "ask",
+            "instruction": "Build the whole character creator. Fill in all four.",
             "code": "String name = readLine(\"Your name? \");\nint level = readInt(\"Starting level? \");\ndouble health = readDouble(\"Starting health? \");\nboolean online = readBoolean(\"Online now? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);\nSystem.out.println(\"Online: \" + online);",
-            "stdin": "Ada\n7\n2.5\ntrue",
-            "after": "Four questions, four types, one card. That is a real program.",
+            "fields": [
+              {
+                "label": "Your name?",
+                "sample": "Ada",
+                "placeholder": "text",
+                "holds": "name"
+              },
+              {
+                "label": "Starting level?",
+                "sample": "7",
+                "placeholder": "a whole number",
+                "holds": "level"
+              },
+              {
+                "label": "Starting health?",
+                "sample": "2.5",
+                "placeholder": "a decimal, like 2.5",
+                "holds": "health"
+              },
+              {
+                "label": "Online now?",
+                "sample": "true",
+                "placeholder": "true or false",
+                "holds": "online"
+              }
+            ],
+            "after": "Four questions, four types, four variables — and a card that belongs to whoever is playing.",
             "skills": [
-              "use a value the user typed in the rest of the program"
+              "choose the reader that matches the type you need"
             ]
           },
           {
-            "id": "i_sharp",
+            "id": "k_sharp",
             "kind": "teach",
             "instruction": "The exact rules, so they hold up in a test.",
             "points": [
               {
-                "label": "four readers, no more",
-                "text": "readLine → String. readInt → int. readDouble → double. readBoolean → boolean. There is no readChar."
+                "label": "readLine",
+                "text": "Hands back a String. Use it for names, words, sentences — anything that is text."
               },
               {
-                "label": "the prompt is an argument",
-                "text": "It goes inside the brackets. Printing it on a separate line first is a different, worse program."
+                "label": "readInt",
+                "text": "Hands back an int. Use it for counts and whole numbers you will calculate with."
               },
               {
-                "label": "no line break",
-                "text": "The question does not end its line, so what the player types appears right after it. That is deliberate."
+                "label": "readDouble",
+                "text": "Hands back a double. Use it for measurements that can have a decimal point."
               },
               {
-                "label": "box must match",
-                "text": "The reader decides the type. Put readInt in a String and Java refuses."
+                "label": "readBoolean",
+                "text": "Hands back a boolean. The player types the word true or the word false."
+              },
+              {
+                "label": "There is no readChar",
+                "text": "Those four are the complete set. A single character comes back as a String."
+              },
+              {
+                "label": "The prompt is an argument",
+                "text": "It goes inside the brackets, and it does not end its line — which is why the typed answer appears right beside it."
               }
             ]
           },
           {
-            "id": "i_mcq",
+            "id": "k_mcq",
             "kind": "trace",
             "instruction": "Two the test always asks.",
             "code": "String s = readLine(\"Text? \");\nint i = readInt(\"Whole number? \");\ndouble d = readDouble(\"Decimal? \");\nboolean b = readBoolean(\"True or false? \");",
@@ -976,10 +979,10 @@
                   "readBoolean"
                 ],
                 "correct": 0,
-                "why": "There are exactly four, and readChar is not one of them. A single character comes back as a String."
+                "why": "Java on CodeHS gives you exactly four readers, and readChar is not one of them. To read a single character you use readLine and get a String back."
               },
               {
-                "prompt": "int n = readInt(\"Number \"); then println(n). The user types 10. What prints after the question?",
+                "prompt": "int n = readInt(\"Number \"); then println(n). The player types 10. What appears after the question?",
                 "opts": [
                   "10",
                   "n",
@@ -987,58 +990,58 @@
                   "nothing"
                 ],
                 "correct": 0,
-                "why": "readInt hands back the number itself. Printing it shows 10 — not the variable name, and not with quotes."
+                "why": "readInt hands back the number 10 itself, and println prints what is inside n. The variable name is not printed, and there are no quotes because it is a number, not text."
               }
             ],
             "skills": [
-              "choose between readLine, readInt, readDouble and readBoolean"
+              "choose the reader that matches the type you need"
             ]
           },
           {
-            "id": "i_d1",
+            "id": "k_d1",
             "kind": "match",
-            "instruction": "Match each reader to what it hands back.",
+            "instruction": "Match each reader to the type it hands back.",
             "pairs": [
               [
                 "readLine",
-                "text"
+                "String — text"
               ],
               [
                 "readInt",
-                "a whole number"
+                "int — a whole number"
               ],
               [
                 "readDouble",
-                "a decimal number"
+                "double — a decimal"
               ],
               [
                 "readBoolean",
-                "true or false"
+                "boolean — true or false"
               ]
             ],
-            "why": "The name tells you the type it returns, and that decides the box you need.",
+            "why": "The reader you pick decides the type that comes back, and that decides the box you must store it in.",
             "skills": [
-              "choose between readLine, readInt, readDouble and readBoolean"
+              "choose the reader that matches the type you need"
             ]
           },
           {
-            "id": "i_d2",
+            "id": "k_d2",
             "kind": "fix",
-            "instruction": "A name is not a number. Fix the reader.",
+            "instruction": "A name is text, but this asks for a number. Fix the reader.",
             "code": "String name = readInt(\"Your name? \");\nSystem.out.println(\"Hi, \" + name + \"!\");",
             "stdin": "Ada",
             "target": "Your name? Ada\nHi, Ada!",
             "solution": "String name = readLine(\"Your name? \");\nSystem.out.println(\"Hi, \" + name + \"!\");",
-            "hint": "Which of the four hands back text?",
-            "after": "The reader has to match the kind of answer, and the box has to match the reader.",
+            "hint": "readInt hands back an int, and an int will not fit in a String box. Which reader hands back text?",
+            "after": "The reader must match the kind of answer, and the box must match the reader. Both, every time.",
             "skills": [
-              "choose between readLine, readInt, readDouble and readBoolean"
+              "choose the reader that matches the type you need"
             ]
           },
           {
-            "id": "i_d3",
+            "id": "k_d3",
             "kind": "fill",
-            "instruction": "Pick the reader for each question.",
+            "instruction": "Pick the reader that fits each question.",
             "code": "int age = ⟦1⟧(\"How old are you? \");\ndouble price = ⟦2⟧(\"Price? \");\nSystem.out.println(age);\nSystem.out.println(price);",
             "blanks": [
               {
@@ -1060,24 +1063,24 @@
             ],
             "stdin": "16\n9.99",
             "target": "How old are you? 16\nPrice? 9.99\n16\n9.99",
-            "hint": "An age is whole. A price is not.",
-            "after": "Reader, box, and the kind of answer all have to agree.",
+            "hint": "An age is a whole number. A price like 9.99 is not.",
+            "after": "The box on the left already tells you which reader belongs on the right.",
             "skills": [
-              "choose between readLine, readInt, readDouble and readBoolean"
+              "choose the reader that matches the type you need"
             ]
           },
           {
-            "id": "i_d4",
+            "id": "k_d4",
             "kind": "write",
             "instruction": "Last one: ask three questions, then print the three answers.",
             "code": "// ask about food, colour and movie, then print all three\n",
             "stdin": "pasta\ngreen\nMoana",
             "target": "What is your favorite food? pasta\nWhat is your favorite color? green\nWhat is your favorite movie? Moana\npasta\ngreen\nMoana",
             "solution": "String food = readLine(\"What is your favorite food? \");\nString color = readLine(\"What is your favorite color? \");\nString movie = readLine(\"What is your favorite movie? \");\nSystem.out.println(food);\nSystem.out.println(color);\nSystem.out.println(movie);",
-            "hint": "Three readLine calls first, storing each answer, then three printlns. Questions are \"What is your favorite food? \" and so on.",
+            "hint": "Three readLine calls storing three answers, then three printlns. The questions are \"What is your favorite food? \", \"What is your favorite color? \" and \"What is your favorite movie? \".",
             "after": "That is CodeHS exercise 3.3.4, About You. Lesson done.",
             "skills": [
-              "use a value the user typed in the rest of the program"
+              "store a typed value in a variable and use it later"
             ]
           }
         ]

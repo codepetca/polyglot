@@ -7,9 +7,11 @@ import Docs from "./Docs";
 import { readLang, LANG_EVENT } from "@/components/LanguagePicker";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
-// text. 14 step kinds (see lib/curriculum/flow.ts, the canonical spec):
-//   run · tweak · note · predict · spot · trace · fix · write · arrange ·
+// text. 15 step kinds (see lib/curriculum/flow.ts, the canonical spec):
+//   run · tweak · note · ask · predict · spot · trace · fix · write · arrange ·
 //   fill · bucket · match · explain · branch
+// `ask` is the input kind: the student types real values into one field per
+// read call, and those become the program's stdin.
 // All answer keys live server-side; grading happens at /api/lesson/flow.
 // Help ladder on doing-steps: fail once → authored 💡 hint; twice → 🤖 tutor
 // called with the step's code/target/actual-output as context.
@@ -23,6 +25,9 @@ type Step = {
   code?: string;
   target?: string;
   stdin?: string;
+  // ask: one field per read call. `sample` is stripped server-side, so the
+  // browser only ever sees the label the student is answering.
+  fields?: { label: string; placeholder?: string; holds?: string }[];
   opts?: string[];
   questions?: { prompt: string; opts: string[] }[];
   lines?: string[];
@@ -216,6 +221,8 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   const [assign, setAssign] = useState<number[]>([]); // bucket: bucket idx per item
   const [pairsMade, setPairsMade] = useState<[number, string][]>([]); // match
   const [leftSel, setLeftSel] = useState<number | null>(null);
+  // ask: what the student actually types, one entry per read call in the code.
+  const [typed, setTyped] = useState<string[]>(() => (step.fields || []).map(() => ""));
   const [explainText, setExplainText] = useState("");
   const [explainReply, setExplainReply] = useState("");
   const [hintOpen, setHintOpen] = useState(false);
@@ -244,7 +251,14 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       r = await fetch("/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: assembled, wrap: true, lessonCode, stdin: step.stdin || "" }),
+        // On an `ask` step the keyboard is real: whatever the student typed
+        // into the fields IS the stdin the program reads.
+        body: JSON.stringify({
+          code: assembled,
+          wrap: true,
+          lessonCode,
+          stdin: step.kind === "ask" ? typed.join("\n") : step.stdin || "",
+        }),
       }).then((x) => x.json());
     } catch {
       // Network died mid-run — say so plainly instead of hanging on "running…".
@@ -255,7 +269,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
     }
     setOut(r);
     const ok =
-      step.kind === "run" ? r.compiled && !r.error
+      step.kind === "run" || step.kind === "ask" ? r.compiled && !r.error
       : step.kind === "tweak" ? r.compiled && !r.error && norm(r.stdout) !== norm(step.target || "") && norm(r.stdout).length > 0
       : r.compiled && !r.error && norm(r.stdout) === norm(step.target || "");
     if (ok) setWon(true);
@@ -326,7 +340,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
     setAiBusy(false);
   }
 
-  const runnable = ["run", "tweak", "fix", "write", "arrange"].includes(step.kind);
+  const runnable = ["run", "tweak", "fix", "write", "arrange", "ask"].includes(step.kind);
   const editable = ["tweak", "fix", "write"].includes(step.kind);
   const codeLines = (step.code || "").split("\n");
   const advanceReady = won || (reveal && step.kind !== "fill" && step.kind !== "bucket");
@@ -387,6 +401,50 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       ) : step.code ? (
         <pre className="flowcode ro">{step.code}</pre>
       ) : null}
+
+      {/* ── ask: the student types the input themselves ──
+          The whole point of an input lesson is that YOU supply the value. A
+          pre-filled stdin captioned "we'll type Ada for you" teaches nothing —
+          the value appears from nowhere and the link between the prompt, the
+          typing and the variable is never made. Here each read call in the
+          code gets its own field, and what you type is genuinely what the
+          program reads. */}
+      {step.kind === "ask" && (
+        <div className="askbox">
+          <div className="lbl">WHAT YOU TYPE WHEN IT ASKS</div>
+          {(step.fields || []).map((fl: any, j: number) => (
+            <label key={j} className="askrow">
+              <span className="askq">{fl.label}</span>
+              <input
+                className="askin"
+                value={typed[j] ?? ""}
+                placeholder={fl.placeholder || "type your answer"}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  // functional updater: two quick edits in one render must not
+                  // lose the first (this bit us before on fill/bucket).
+                  setTyped((prev) => { const n = [...prev]; n[j] = v; return n; });
+                  setWon(false);
+                  setOut(null);
+                }}
+              />
+            </label>
+          ))}
+        </div>
+      )}
+
+      {/* After the run, name the connection out loud. */}
+      {step.kind === "ask" && won && (step.fields || []).some((fl: any) => fl.holds) && (
+        <div className="askheld">
+          {(step.fields || []).map((fl: any, j: number) =>
+            fl.holds ? (
+              <div key={j}>
+                <code>{fl.holds}</code> now holds <b>{typed[j] === "" ? "(nothing)" : typed[j]}</b>
+              </div>
+            ) : null
+          )}
+        </div>
+      )}
 
       {/* no real keyboard in a run-and-watch step — show what's "typed" */}
       {step.stdin && (

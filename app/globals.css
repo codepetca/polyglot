@@ -535,6 +535,15 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 .flowdots .d { width: 9px; height: 9px; border-radius: 99px; background: var(--line); transition: all .25s; padding: 0; border: none; appearance: none; }
 .flowdots .d:not(:disabled) { cursor: pointer; }
 .flowdots .d:not(:disabled):hover { transform: scale(1.5); }
+/* ask: real typing, one field per read call the program makes */
+.askbox { margin-top: 12px; border: 1.5px dashed var(--accent); border-radius: 10px; padding: 12px 14px; }
+.askrow { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.askrow:first-of-type { margin-top: 6px; }
+.askq { font-family: var(--mono); font-size: 13.5px; color: var(--muted); }
+.askin { flex: 1; min-width: 140px; font-family: var(--mono); font-size: 14.5px; padding: 7px 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
+.askin:focus { outline: none; border-color: var(--accent); }
+.askheld { margin-top: 10px; font-size: 14px; }
+.askheld code { font-family: var(--mono); background: var(--line); padding: 1px 5px; border-radius: 4px; }
 .flowback { background: none; border: none; padding: 0 2px; font-size: 19px; line-height: 1; color: var(--muted); cursor: pointer; }
 .flowback:hover { color: var(--ink); }
 .flowdots .d.on { background: var(--accent); }
