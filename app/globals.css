@@ -530,7 +530,13 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 .flowplay { margin: 18px 0; }
 .flowbar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
 .flowdots { display: flex; gap: 5px; align-items: center; }
-.flowdots .d { width: 9px; height: 9px; border-radius: 99px; background: var(--line); transition: all .25s; }
+/* Dots are buttons now (any step you've reached is a way back to it), so the
+   button chrome has to be stripped or they stop looking like dots. */
+.flowdots .d { width: 9px; height: 9px; border-radius: 99px; background: var(--line); transition: all .25s; padding: 0; border: none; appearance: none; }
+.flowdots .d:not(:disabled) { cursor: pointer; }
+.flowdots .d:not(:disabled):hover { transform: scale(1.5); }
+.flowback { background: none; border: none; padding: 0 2px; font-size: 19px; line-height: 1; color: var(--muted); cursor: pointer; }
+.flowback:hover { color: var(--ink); }
 .flowdots .d.on { background: var(--accent); }
 .flowdots .d.now { background: var(--ink); transform: scale(1.35); }
 .flowstep { padding: 22px 26px; transition: border-color .3s; }

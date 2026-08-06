@@ -125,10 +125,38 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
 
   return (
     <div className="flowplay">
+      {/* REVIEW. A student could previously only ever go forwards: once a step
+          was answered it was gone, so "wait, what did that say?" had no answer
+          and the only way back was reloading the lesson from step one. For
+          someone who is behind, being unable to re-read the thing that just
+          confused them is the moment they give up.
+
+          It costs no new buttons: the progress dots were already on screen, so
+          any dot you have reached is now a way back to it. The arrow is there
+          because 9px dots are a poor target for the one move — one step back —
+          that gets used most. */}
       <div className="flowbar">
+        {(i > 0 || done) && (
+          <button
+            className="flowback"
+            onClick={() => setI((n) => Math.max(0, Math.min(n, steps.length) - 1))}
+            title="Go back a step"
+            aria-label="Go back a step"
+          >
+            ←
+          </button>
+        )}
         <span className="flowdots">
           {steps.map((s, j) => (
-            <span key={s.id} className={j < i ? "d on" : j === i ? "d now" : "d"} />
+            <button
+              key={s.id}
+              type="button"
+              className={j < i ? "d on" : j === i ? "d now" : "d"}
+              disabled={j > i}
+              onClick={() => setI(j)}
+              title={j <= i ? `Back to step ${j + 1}` : undefined}
+              aria-label={`Step ${j + 1} of ${steps.length}`}
+            />
           ))}
         </span>
         <span className="meta" style={{ margin: 0 }}>{done ? "done!" : `${i + 1} / ${steps.length}`}</span>
