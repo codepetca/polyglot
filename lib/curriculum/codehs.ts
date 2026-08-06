@@ -54,15 +54,22 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
       "tell apart the display behaviour of System.out.print and System.out.println",
       "create string literals",
     ],
-    // NOTE: `+` here is string concatenation, which every later lesson needs for
-    // output. Numeric `+` is 2.4. Keeping them separate stops notYetTaught()
-    // from forbidding "Name is: " + name in lessons 2.2–2.3, which is exactly
-    // what CodeHS's own 3.3.3 example does.
-    teaches: ["System.out.println", "System.out.print", "string literals (double quotes)", "string concatenation with +", "escape sequences \\n \\t \\\" \\\\"],
+    // CORRECTION: this list used to include escape sequences and string
+    // concatenation. Neither is justified here.
+    //   - Escapes: 3.1's quiz tests only println spelling and that two printlns
+    //     make two lines. Both exercises are solvable with plain printlns —
+    //     ASCII Art's drawing is all FORWARD slashes, so nothing needs escaping.
+    //     (An earlier version of this file claimed the opposite. It was wrong.)
+    //   - Concatenation: you need a variable before joining text to anything is
+    //     useful, and 3.2.4 Our First Integer is the first exercise that
+    //     requires it. So it belongs to 2.2, and is listed there.
+    // 3.1.4 "Printing Multiple Lines" is the one item that could overturn the
+    // escapes call; it is login-gated and has not been read.
+    teaches: ["System.out.println", "System.out.print", "string literals (double quotes)", 'println("") for a blank line'],
     exercises: ["Welcome Program", "ASCII Art"],
     exerciseSpecs: [
       { codehsCode: "3.1.5", name: "Welcome Program", requires: "Print two lines with println: a name line and a fun-fact line. Grader requires the word 'name' on line 1 and 'like' on line 2." },
-      { codehsCode: "3.1.6", name: "ASCII Art", requires: "Reproduce a given drawing exactly with println. The drawing contains backslashes, so students must escape them as \\\\." },
+      { codehsCode: "3.1.6", name: "ASCII Art", requires: "Reproduce a given drawing exactly, one println per line. The drawing is all forward slashes and spaces — nothing needs escaping. Leading spaces go inside the quotes." },
     ],
     cfu: [
       "which of four spellings actually prints (System.out.println, vs printLine / System.println / bare print)",
@@ -79,7 +86,10 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
       "find and fix errors in declarations and assignments",
       "use variables to store and change data",
     ],
-    teaches: ["int", "double", "char", "boolean", "String", "declaration and assignment", "char uses single quotes", "case sensitivity", "naming rules"],
+    // Concatenation lives here, not 2.1: joining text is only useful once there
+    // is a variable to join, and 3.2.4 Our First Integer is the first exercise
+    // that needs it. Numeric `+` is different and stays in 2.4.
+    teaches: ["int", "double", "char", "boolean", "String", "declaration and assignment", "char uses single quotes", "case sensitivity", "naming rules", "string concatenation with +"],
     exercises: ["Our First Integer", "Answering Questions"],
     exerciseSpecs: [
       { codehsCode: "3.2.4", name: "Our First Integer", requires: "Declare an int named year, set it to the current year, print it in a sentence. Grader requires the year and the word 'year' in the output." },
