@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-06T09:24:24.607Z",
+  "exportedAt": "2026-08-06T10:30:35.279Z",
   "note": "Interactive lesson flows. Restore with: node --env-file=.env scripts/flows.mjs restore",
   "lessons": [
     {
@@ -241,203 +241,6 @@
             "after": "You wrote a real program from scratch. Everything on this receipt, you now control.",
             "target": "Coffee\t$3\nDonut\t$2",
             "instruction": "Your turn. Print this receipt — match it exactly."
-          }
-        ]
-      }
-    },
-    {
-      "code": "2.10",
-      "title": "While Loops",
-      "objectives": [
-        "decide when a while loop fits better than a for loop",
-        "trace a while loop's variable until its condition fails",
-        "recognise why a while loop never stops"
-      ],
-      "flow": {
-        "v": 1,
-        "steps": [
-          {
-            "id": "f210_t1",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "kind": "teach",
-            "output": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
-            "points": [
-              {
-                "text": "The condition is checked before every turn, exactly like a for loop.",
-                "label": "while (fuel > 0)"
-              },
-              {
-                "text": "Something inside MUST move the condition towards false, or it never stops.",
-                "label": "fuel--"
-              },
-              {
-                "text": "Outside the braces, so it runs once, after the loop finishes.",
-                "label": "\"empty\""
-              },
-              {
-                "text": "There is no built-in counter. You make the variable yourself, before the loop.",
-                "label": "no counter"
-              }
-            ],
-            "instruction": "A while loop repeats for as long as something stays true."
-          },
-          {
-            "id": "f210_1",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "kind": "run",
-            "after": "It repeated until the condition stopped being true — no counting required up front.",
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "instruction": "This one keeps going until told to stop. Run it."
-          },
-          {
-            "id": "f210_2",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "hint": "Only the first line decides how much you start with.",
-            "kind": "tweak",
-            "after": "You never told it how many times to loop — it worked that out from the condition.",
-            "target": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
-            "instruction": "Start with more fuel. Run it."
-          },
-          {
-            "id": "f210_t2",
-            "kind": "teach",
-            "points": [
-              {
-                "text": "Use it when you know how many times up front: 10 rows, 100 numbers, 1000 greetings.",
-                "label": "for"
-              },
-              {
-                "text": "Use it when you do not: keep going until the user says stop, until the total is big enough, until the fuel runs out.",
-                "label": "while"
-              },
-              {
-                "text": "Anything a for loop does, a while loop can do too. Pick whichever says what you mean more clearly.",
-                "label": "either works"
-              },
-              {
-                "text": "A condition that is never false. It runs forever unless something inside stops it.",
-                "label": "while (true)"
-              }
-            ],
-            "instruction": "for or while? It depends on whether you know the count."
-          },
-          {
-            "id": "f210_3",
-            "why": "The condition is checked BEFORE the first pass. 10 < 5 is already false, so the body never runs even once.",
-            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
-            "kind": "predict",
-            "opts": [
-              "done",
-              "inside\ndone",
-              "inside",
-              "(an error)"
-            ],
-            "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
-            "correct": 0,
-            "instruction": "What prints?"
-          },
-          {
-            "id": "f210_4",
-            "code": "int total = 0;\nint i = 1;\nwhile (i <= 3) {\n  total = total + i;\n  i++;\n}",
-            "kind": "trace",
-            "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
-            "questions": [
-              {
-                "why": "0 + 1.",
-                "opts": [
-                  "1",
-                  "0",
-                  "3"
-                ],
-                "prompt": "after the first pass, total = ?",
-                "correct": 0
-              },
-              {
-                "why": "1 + 2.",
-                "opts": [
-                  "3",
-                  "2",
-                  "4"
-                ],
-                "prompt": "after the second pass, total = ?",
-                "correct": 0
-              },
-              {
-                "why": "1 + 2 + 3. It stops once i reaches 4, because 4 <= 3 is false.",
-                "opts": [
-                  "6",
-                  "3",
-                  "10"
-                ],
-                "prompt": "when the loop finally stops, total = ?",
-                "correct": 0
-              }
-            ],
-            "instruction": "Follow total."
-          },
-          {
-            "id": "f210_5",
-            "why": "Nothing inside the loop ever changes count, so count <= 3 stays true forever. A while loop will not update your variable for you — you must do it in the body.",
-            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
-            "kind": "spot",
-            "skills": [
-              "recognise why a while loop never stops"
-            ],
-            "correct": 2,
-            "instruction": "This never stops. Tap the line that should be changing count."
-          },
-          {
-            "id": "f210_6",
-            "code": "int i = 1;\nwhile (i < 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
-            "hint": "With i < 3 starting at 1, which values does i actually take before it quits?",
-            "kind": "fix",
-            "after": "Same off-by-one trap as for-loops — the condition decides the last value that still counts.",
-            "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
-            "target": "pass 1\npass 2\npass 3",
-            "solution": "int i = 1;\nwhile (i <= 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
-            "instruction": "It stops one step too early. Fix it."
-          },
-          {
-            "id": "f210_7",
-            "hint": "Declare it, test it, print it, shrink it, close it.",
-            "kind": "arrange",
-            "after": "A for-loop would be awkward here — you don't know up front how many halvings it takes. That's when while wins.",
-            "lines": [
-              "int n = 20;",
-              "while (n > 1) {",
-              "  System.out.print(n + \" \");",
-              "  n = n / 2;",
-              "}"
-            ],
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "target": "20 10 5 2",
-            "distractors": [
-              "  n = n * 2;"
-            ],
-            "instruction": "Tap the lines in order to halve 20 down past 1."
-          },
-          {
-            "id": "f210_8",
-            "code": "// your code here\n",
-            "hint": "Same shape as the trace step — a running total, a counter, and remember to change the counter.",
-            "kind": "write",
-            "after": "You wrote a loop that decides its own length. That's the whole idea of while.",
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "target": "15",
-            "solution": "int total = 0;\nint i = 1;\nwhile (i <= 5) {\n  total = total + i;\n  i++;\n}\nSystem.out.println(total);",
-            "instruction": "Use a while loop to add 1 through 5 and print the total."
           }
         ]
       }
@@ -733,8 +536,8 @@
                 "label": "String favColor"
               },
               {
-                "label": "two lines",
-                "text": "The first line is the question with your answer typed after it. The second is what println printed."
+                "text": "The first line is the question with your answer typed after it. The second is what println printed.",
+                "label": "two lines"
               }
             ],
             "instruction": "Programs can ask the person using them a question."
@@ -825,8 +628,8 @@
             "output": "Hello, how old are you? 16\n17",
             "points": [
               {
-                "label": "readInt",
-                "text": "Gives back a real number, so age + 1 does maths and prints 17."
+                "text": "Gives back a real number, so age + 1 does maths and prints 17.",
+                "label": "readInt"
               },
               {
                 "text": "The box has to match what you asked for: a whole number goes in an int.",
@@ -1162,6 +965,203 @@
       }
     },
     {
+      "code": "2.5",
+      "title": "Casting",
+      "objectives": [
+        "turn a double into an int with (int)",
+        "use (double) to stop whole-number division",
+        "round a number to the nearest whole number using casting"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f25_1",
+            "code": "double price = 9.9;\nint whole = (int) price;\nSystem.out.println(whole);",
+            "kind": "teach",
+            "output": "9",
+            "points": [
+              {
+                "text": "The type you want, in brackets, in front of the value.",
+                "label": "(int)"
+              },
+              {
+                "text": "9.9 becomes 9. It does NOT round — everything after the point is thrown away.",
+                "label": "chops"
+              },
+              {
+                "text": "Still 9. Even 9.999999 is 9. Casting never rounds up.",
+                "label": "9.99 too"
+              },
+              {
+                "text": "The result is a whole number, so it goes in an int.",
+                "label": "the box"
+              }
+            ],
+            "instruction": "(int) turns a decimal into a whole number by chopping."
+          },
+          {
+            "id": "f25_2",
+            "code": "double price = 9.9;\nint whole = (int) price;\nSystem.out.println(whole);",
+            "kind": "run",
+            "after": "The .9 is gone, not rounded.",
+            "instruction": "Run it."
+          },
+          {
+            "id": "f25_3",
+            "why": "Casting chops. 3.99 loses everything after the point and becomes 3, even though it is nearly 4.",
+            "code": "System.out.println((int) 3.99);",
+            "kind": "predict",
+            "opts": [
+              "3",
+              "4",
+              "3.99",
+              "(an error)"
+            ],
+            "skills": [
+              "turn a double into an int with (int)"
+            ],
+            "correct": 0,
+            "instruction": "What prints?"
+          },
+          {
+            "id": "f25_4",
+            "code": "int a = 3;\nint b = 4;\nSystem.out.println(a / b);\nSystem.out.println((double) a / b);",
+            "kind": "teach",
+            "output": "0\n0.75",
+            "points": [
+              {
+                "text": "Two ints, so Java does whole-number division. 3 / 4 is 0 with 3 left over — you get 0.",
+                "label": "a / b"
+              },
+              {
+                "text": "Turns 3 into 3.0 BEFORE the divide, so it becomes decimal division.",
+                "label": "(double) a"
+              },
+              {
+                "text": "The answer you actually wanted.",
+                "label": "0.75"
+              },
+              {
+                "text": "Only one side has to be a double. The other is converted automatically.",
+                "label": "one is enough"
+              }
+            ],
+            "instruction": "(double) rescues you from whole-number division."
+          },
+          {
+            "id": "f25_5",
+            "code": "int a = 3;\nint b = 4;\nSystem.out.println(a / b);\nSystem.out.println((double) a / b);",
+            "kind": "run",
+            "after": "The types decided the answer, not the numbers.",
+            "skills": [
+              "use (double) to stop whole-number division"
+            ],
+            "instruction": "Run it. Same two numbers, two different answers."
+          },
+          {
+            "id": "f25_6",
+            "code": "System.out.println((double) (3 / 4));\nSystem.out.println((double) 3 / 4);",
+            "kind": "teach",
+            "output": "0.0\n0.75",
+            "points": [
+              {
+                "text": "Brackets first. 3 / 4 already happened as ints and gave 0. Casting 0 gives 0.0 — too late.",
+                "label": "(double) (3 / 4)"
+              },
+              {
+                "text": "The cast lands on the 3 first, so the division is decimal from the start. 0.75.",
+                "label": "(double) 3 / 4"
+              },
+              {
+                "text": "Cast BEFORE the division, not after. Rescuing a lost answer is impossible.",
+                "label": "the rule"
+              }
+            ],
+            "instruction": "Where you put the cast changes everything."
+          },
+          {
+            "id": "f25_7",
+            "why": "7 / 2 is done first as ints and gives 3. Casting that gives 3.0 — the .5 was already thrown away.",
+            "code": "System.out.println((double) (7 / 2));",
+            "kind": "predict",
+            "opts": [
+              "3.0",
+              "3.5",
+              "0.0",
+              "(an error)"
+            ],
+            "skills": [
+              "use (double) to stop whole-number division"
+            ],
+            "correct": 0,
+            "instruction": "Which one gives 0.0?"
+          },
+          {
+            "id": "f25_8",
+            "code": "double rating = 3.7;\nint rounded = (int) (rating + 0.5);\nSystem.out.println(rounded);",
+            "kind": "teach",
+            "output": "4",
+            "points": [
+              {
+                "text": "3.7 + 0.5 is 4.2. Chopping 4.2 gives 4. Rounded up, using only chopping.",
+                "label": "the trick"
+              },
+              {
+                "text": "3.4 + 0.5 is 3.9. Chopping gives 3. Rounded down, correctly.",
+                "label": "rounding down"
+              },
+              {
+                "text": "3.5 + 0.5 is 4.0, which chops to 4 — .5 rounds up, the way you were taught.",
+                "label": "exactly .5"
+              },
+              {
+                "text": "The + 0.5 must happen first, so it needs its own brackets inside the cast.",
+                "label": "the brackets"
+              }
+            ],
+            "instruction": "Add 0.5, then chop — that is how you round."
+          },
+          {
+            "id": "f25_9",
+            "code": "double rating = 3.4;\nint rounded = (int) (rating ⟦1⟧ 0.5);\nSystem.out.println(rounded);",
+            "hint": "Nudge it up by half, then let the chop decide.",
+            "kind": "fill",
+            "after": "3.4 + 0.5 is 3.9, which chops to 3. The nudge is not big enough to reach 4.",
+            "blanks": [
+              {
+                "chips": [
+                  "+",
+                  "-",
+                  "*"
+                ],
+                "answer": 0
+              }
+            ],
+            "skills": [
+              "round a number to the nearest whole number using casting"
+            ],
+            "target": "3",
+            "instruction": "Fill it in so 3.4 rounds to 3 and 3.7 would round to 4."
+          },
+          {
+            "id": "f25_10",
+            "code": "// read a double, round it with casting, print \"Rating rounded: N\"\n",
+            "hint": "Prompt is \"Please enter a movie rating: \". Then add 0.5 and cast to int.",
+            "kind": "write",
+            "after": "That is CodeHS exercise 3.5.8, Movie Ratings.",
+            "stdin": "3.5",
+            "skills": [
+              "round a number to the nearest whole number using casting"
+            ],
+            "target": "Please enter a movie rating: 3.5\nRating rounded: 4",
+            "solution": "double movieRating = readDouble(\"Please enter a movie rating: \");\nint rounded = (int) (movieRating + 0.5);\nSystem.out.println(\"Rating rounded: \" + rounded);",
+            "instruction": "Your turn: read a movie rating and round it to the nearest whole star."
+          }
+        ]
+      }
+    },
+    {
       "code": "2.6",
       "title": "Booleans",
       "objectives": [
@@ -1174,83 +1174,77 @@
         "steps": [
           {
             "id": "f26_1",
-            "kind": "teach",
-            "instruction": "A boolean holds one of exactly two things.",
             "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
+            "kind": "teach",
             "output": "true\nfalse",
             "points": [
               {
-                "label": "boolean",
-                "text": "The type. A box that can only ever hold true or false."
+                "text": "The type. A box that can only ever hold true or false.",
+                "label": "boolean"
               },
               {
-                "label": "true / false",
-                "text": "The only two values there are. All lowercase, and never in quotes."
+                "text": "The only two values there are. All lowercase, and never in quotes.",
+                "label": "true / false"
               },
               {
-                "label": "no maybe",
-                "text": "There is no third option. That is the whole point of a boolean."
+                "text": "There is no third option. That is the whole point of a boolean.",
+                "label": "no maybe"
               },
               {
-                "label": "isRaining",
-                "text": "Naming it like a yes/no question makes the code read like English later."
+                "text": "Naming it like a yes/no question makes the code read like English later.",
+                "label": "isRaining"
               }
-            ]
+            ],
+            "instruction": "A boolean holds one of exactly two things."
           },
           {
             "id": "f26_2",
-            "kind": "run",
-            "instruction": "Run it.",
             "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
-            "after": "Two boxes, two answers."
+            "kind": "run",
+            "after": "Two boxes, two answers.",
+            "instruction": "Run it."
           },
           {
             "id": "f26_3",
-            "kind": "tweak",
-            "instruction": "Make it print false twice.",
             "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
-            "target": "false\nfalse",
             "hint": "Change the value, not the type.",
+            "kind": "tweak",
             "after": "You set them. Later the program will work them out for itself.",
             "skills": [
               "create boolean variables that hold true or false"
-            ]
+            ],
+            "target": "false\nfalse",
+            "instruction": "Make it print false twice."
           },
           {
             "id": "f26_4",
-            "kind": "teach",
-            "instruction": "true and \"true\" look the same on screen. They are not the same.",
             "code": "boolean answer = true;\nString word = \"true\";\nSystem.out.println(answer);\nSystem.out.println(word);",
+            "kind": "teach",
             "output": "true\ntrue",
             "points": [
               {
-                "label": "identical output",
-                "text": "Both print true. Quotes never appear in the output, so you cannot tell them apart by looking."
+                "text": "Both print true. Quotes never appear in the output, so you cannot tell them apart by looking.",
+                "label": "identical output"
               },
               {
-                "label": "true",
-                "text": "A boolean. Java understands it as a yes."
+                "text": "A boolean. Java understands it as a yes.",
+                "label": "true"
               },
               {
-                "label": "\"true\"",
-                "text": "A String. Four letters of text that happen to spell true. Java cannot reason with it."
+                "text": "A String. Four letters of text that happen to spell true. Java cannot reason with it.",
+                "label": "\"true\""
               },
               {
-                "label": "watch out",
-                "text": "'T' is a char and 10.1 is a double. Only bare true and false are booleans."
+                "text": "'T' is a char and 10.1 is a double. Only bare true and false are booleans.",
+                "label": "watch out"
               }
-            ]
+            ],
+            "instruction": "true and \"true\" look the same on screen. They are not the same."
           },
           {
             "id": "f26_5",
+            "why": "Bare true/false → boolean. Double quotes → String. Single quotes around one character → char. A decimal number → double.",
             "kind": "bucket",
-            "instruction": "Which type is each one?",
-            "buckets": [
-              "boolean",
-              "String",
-              "char",
-              "double"
-            ],
             "items": [
               {
                 "text": "true",
@@ -1277,88 +1271,94 @@
                 "bucket": 1
               }
             ],
-            "why": "Bare true/false → boolean. Double quotes → String. Single quotes around one character → char. A decimal number → double.",
             "skills": [
               "tell a boolean apart from text, a character and a number"
-            ]
+            ],
+            "buckets": [
+              "boolean",
+              "String",
+              "char",
+              "double"
+            ],
+            "instruction": "Which type is each one?"
           },
           {
             "id": "f26_6",
-            "kind": "teach",
-            "instruction": "You can ask the user a yes/no question.",
             "code": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
+            "kind": "teach",
             "stdin": "true",
             "output": "Are you a student? true\ntrue",
             "points": [
               {
-                "label": "readBoolean",
-                "text": "Asks your question and hands back true or false."
+                "text": "Asks your question and hands back true or false.",
+                "label": "readBoolean"
               },
               {
-                "label": "they type",
-                "text": "The user has to type the word true or the word false."
+                "text": "The user has to type the word true or the word false.",
+                "label": "they type"
               },
               {
-                "label": "the box",
-                "text": "It gives back a boolean, so it has to go in a boolean."
+                "text": "It gives back a boolean, so it has to go in a boolean.",
+                "label": "the box"
               }
-            ]
+            ],
+            "instruction": "You can ask the user a yes/no question."
           },
           {
             "id": "f26_7",
-            "kind": "run",
-            "instruction": "Run it. We'll answer true for you.",
             "code": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
-            "stdin": "true",
+            "kind": "run",
             "after": "Asked, stored, printed.",
+            "stdin": "true",
             "skills": [
               "read a true/false answer from the user"
-            ]
+            ],
+            "instruction": "Run it. We'll answer true for you."
           },
           {
             "id": "f26_8",
-            "kind": "fix",
-            "instruction": "The box is the wrong type. Fix it.",
             "code": "String isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
-            "stdin": "true",
-            "target": "Are you a student? true\ntrue",
-            "solution": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
             "hint": "readBoolean gives back a boolean. What kind of box does that need?",
+            "kind": "fix",
             "after": "The box has to match what the method gives back.",
+            "stdin": "true",
             "skills": [
               "read a true/false answer from the user"
-            ]
+            ],
+            "target": "Are you a student? true\ntrue",
+            "solution": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
+            "instruction": "The box is the wrong type. Fix it."
           },
           {
             "id": "f26_9",
-            "kind": "predict",
-            "instruction": "What prints?",
+            "why": "The second line replaces what is in the box, exactly like any other variable.",
             "code": "boolean done = false;\ndone = true;\nSystem.out.println(done);",
+            "kind": "predict",
             "opts": [
               "true",
               "false",
               "\"true\"",
               "(an error)"
             ],
-            "correct": 0,
-            "why": "The second line replaces what is in the box, exactly like any other variable.",
             "skills": [
               "create boolean variables that hold true or false"
-            ]
+            ],
+            "correct": 0,
+            "instruction": "What prints?"
           },
           {
             "id": "f26_10",
-            "kind": "write",
-            "instruction": "Your turn: ask if they like ice cream, then print the answer.",
             "code": "// ask with readBoolean, then print\n",
-            "stdin": "true",
-            "target": "Do you like ice cream? true\ntrue",
-            "solution": "boolean likesIceCream = readBoolean(\"Do you like ice cream? \");\nSystem.out.println(likesIceCream);",
             "hint": "One line to ask and store, one line to print.",
+            "kind": "write",
             "after": "That is CodeHS exercise 3.6.4, Ice Cream — you just wrote it.",
+            "stdin": "true",
             "skills": [
               "read a true/false answer from the user"
-            ]
+            ],
+            "target": "Do you like ice cream? true\ntrue",
+            "solution": "boolean likesIceCream = readBoolean(\"Do you like ice cream? \");\nSystem.out.println(likesIceCream);",
+            "instruction": "Your turn: ask if they like ice cream, then print the answer."
           }
         ]
       }
@@ -1376,155 +1376,156 @@
         "steps": [
           {
             "id": "f27_1",
-            "kind": "teach",
-            "instruction": "&& means BOTH have to be true.",
             "code": "boolean tall = true;\nboolean old = true;\nSystem.out.println(tall && old);\nSystem.out.println(tall && false);",
+            "kind": "teach",
             "output": "true\nfalse",
             "points": [
               {
-                "label": "&&",
-                "text": "Two ampersands. Read it as \"and\"."
+                "text": "Two ampersands. Read it as \"and\".",
+                "label": "&&"
               },
               {
-                "label": "both true",
-                "text": "true && true is the only combination that gives true."
+                "text": "true && true is the only combination that gives true.",
+                "label": "both true"
               },
               {
-                "label": "one false",
-                "text": "If either side is false, the whole thing is false."
+                "text": "If either side is false, the whole thing is false.",
+                "label": "one false"
               }
-            ]
+            ],
+            "instruction": "&& means BOTH have to be true."
           },
           {
             "id": "f27_2",
-            "kind": "run",
-            "instruction": "Run it.",
             "code": "boolean tall = true;\nboolean old = true;\nSystem.out.println(tall && old);\nSystem.out.println(tall && false);",
-            "after": "&& is strict. Everything must be true."
+            "kind": "run",
+            "after": "&& is strict. Everything must be true.",
+            "instruction": "Run it."
           },
           {
             "id": "f27_3",
-            "kind": "predict",
-            "instruction": "What prints?",
+            "why": "&& needs both sides true. The first is false, so the answer is false.",
             "code": "System.out.println(false && true);",
+            "kind": "predict",
             "opts": [
               "false",
               "true",
               "(an error)",
               "nothing"
             ],
-            "correct": 0,
-            "why": "&& needs both sides true. The first is false, so the answer is false.",
             "skills": [
               "combine two booleans with && and ||"
-            ]
+            ],
+            "correct": 0,
+            "instruction": "What prints?"
           },
           {
             "id": "f27_4",
-            "kind": "teach",
-            "instruction": "|| means AT LEAST ONE has to be true.",
             "code": "System.out.println(true || false);\nSystem.out.println(false || false);",
+            "kind": "teach",
             "output": "true\nfalse",
             "points": [
               {
-                "label": "||",
-                "text": "Two pipe characters, above the backslash key. Read it as \"or\"."
+                "text": "Two pipe characters, above the backslash key. Read it as \"or\".",
+                "label": "||"
               },
               {
-                "label": "one is enough",
-                "text": "true || false is true. Only one side needs to hold up."
+                "text": "true || false is true. Only one side needs to hold up.",
+                "label": "one is enough"
               },
               {
-                "label": "both false",
-                "text": "The only way to get false is if neither side is true."
+                "text": "The only way to get false is if neither side is true.",
+                "label": "both false"
               }
-            ]
+            ],
+            "instruction": "|| means AT LEAST ONE has to be true."
           },
           {
             "id": "f27_5",
-            "kind": "predict",
-            "instruction": "And this one?",
+            "why": "|| only needs one side to be true, and the second one is.",
             "code": "System.out.println(false || true);",
+            "kind": "predict",
             "opts": [
               "true",
               "false",
               "(an error)",
               "nothing"
             ],
-            "correct": 0,
-            "why": "|| only needs one side to be true, and the second one is.",
             "skills": [
               "combine two booleans with && and ||"
-            ]
+            ],
+            "correct": 0,
+            "instruction": "And this one?"
           },
           {
             "id": "f27_6",
-            "kind": "teach",
-            "instruction": "! flips a boolean to its opposite.",
             "code": "System.out.println(!true);\nSystem.out.println(!false);\nSystem.out.println(true && !false);",
+            "kind": "teach",
             "output": "false\ntrue\ntrue",
             "points": [
               {
-                "label": "!",
-                "text": "An exclamation mark in front. Read it as \"not\"."
+                "text": "An exclamation mark in front. Read it as \"not\".",
+                "label": "!"
               },
               {
-                "label": "!true",
-                "text": "Becomes false. !false becomes true. It just swaps."
+                "text": "Becomes false. !false becomes true. It just swaps.",
+                "label": "!true"
               },
               {
-                "label": "true && !false",
-                "text": "Do the ! first: !false is true. So it is true && true, which is true."
+                "text": "Do the ! first: !false is true. So it is true && true, which is true.",
+                "label": "true && !false"
               },
               {
-                "label": "order",
-                "text": "! happens before && and ||, the same way × happens before +."
+                "text": "! happens before && and ||, the same way × happens before +.",
+                "label": "order"
               }
-            ]
+            ],
+            "instruction": "! flips a boolean to its opposite."
           },
           {
             "id": "f27_7",
-            "kind": "trace",
-            "instruction": "Work these out.",
             "code": "boolean a = true;\nboolean b = false;",
+            "kind": "trace",
+            "skills": [
+              "work out the value of an expression that mixes them"
+            ],
             "questions": [
               {
-                "prompt": "a && b",
+                "why": "&& needs both. b is false.",
                 "opts": [
                   "false",
                   "true"
                 ],
-                "correct": 0,
-                "why": "&& needs both. b is false."
+                "prompt": "a && b",
+                "correct": 0
               },
               {
+                "why": "|| needs one. a is true.",
+                "opts": [
+                  "true",
+                  "false"
+                ],
                 "prompt": "a || b",
-                "opts": [
-                  "true",
-                  "false"
-                ],
-                "correct": 0,
-                "why": "|| needs one. a is true."
+                "correct": 0
               },
               {
-                "prompt": "!b",
+                "why": "! flips false to true.",
                 "opts": [
                   "true",
                   "false"
                 ],
-                "correct": 0,
-                "why": "! flips false to true."
+                "prompt": "!b",
+                "correct": 0
               }
             ],
-            "skills": [
-              "work out the value of an expression that mixes them"
-            ]
+            "instruction": "Work these out."
           },
           {
             "id": "f27_8",
-            "kind": "fill",
-            "instruction": "Fill in the operator so it prints false.",
             "code": "boolean tallEnough = true;\nboolean oldEnough = false;\nSystem.out.println(tallEnough ⟦1⟧ oldEnough);",
+            "hint": "Which one refuses when only ONE side is true?",
+            "kind": "fill",
+            "after": "&& is the strict one. || is the generous one.",
             "blanks": [
               {
                 "chips": [
@@ -1534,26 +1535,25 @@
                 "answer": 0
               }
             ],
-            "target": "false",
-            "hint": "Which one refuses when only ONE side is true?",
-            "after": "&& is the strict one. || is the generous one.",
             "skills": [
               "combine two booleans with && and ||"
-            ]
+            ],
+            "target": "false",
+            "instruction": "Fill in the operator so it prints false."
           },
           {
             "id": "f27_9",
-            "kind": "write",
-            "instruction": "Your turn: they can ride only if they are BOTH tall enough and old enough.",
             "code": "// ask both questions, then print whether they can ride\n",
-            "stdin": "true\ntrue",
-            "target": "Tall enough? true\nOld enough? true\ntrue",
-            "solution": "boolean tallEnough = readBoolean(\"Tall enough? \");\nboolean oldEnough = readBoolean(\"Old enough? \");\nSystem.out.println(tallEnough && oldEnough);",
             "hint": "Two readBoolean calls, then join them with &&.",
+            "kind": "write",
             "after": "That is CodeHS exercise 3.7.4, Roller Coaster.",
+            "stdin": "true\ntrue",
             "skills": [
               "combine two booleans with && and ||"
-            ]
+            ],
+            "target": "Tall enough? true\nOld enough? true\ntrue",
+            "solution": "boolean tallEnough = readBoolean(\"Tall enough? \");\nboolean oldEnough = readBoolean(\"Old enough? \");\nSystem.out.println(tallEnough && oldEnough);",
+            "instruction": "Your turn: they can ride only if they are BOTH tall enough and old enough."
           }
         ]
       }
@@ -1571,111 +1571,112 @@
         "steps": [
           {
             "id": "f28_1",
-            "kind": "teach",
-            "instruction": "Comparing two numbers gives you a boolean.",
             "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);",
+            "kind": "teach",
             "output": "true\nfalse\ntrue",
             "points": [
               {
-                "label": "> and <",
-                "text": "Greater than, less than. Exactly like maths class."
+                "text": "Greater than, less than. Exactly like maths class.",
+                "label": "> and <"
               },
               {
-                "label": ">= and <=",
-                "text": "Greater-or-equal, less-or-equal. 80 >= 80 is true, because equal counts."
+                "text": "Greater-or-equal, less-or-equal. 80 >= 80 is true, because equal counts.",
+                "label": ">= and <="
               },
               {
-                "label": "the result",
-                "text": "A comparison is not a number. It comes back as true or false — a boolean."
+                "text": "A comparison is not a number. It comes back as true or false — a boolean.",
+                "label": "the result"
               }
-            ]
+            ],
+            "instruction": "Comparing two numbers gives you a boolean."
           },
           {
             "id": "f28_2",
-            "kind": "run",
-            "instruction": "Run it.",
             "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);",
-            "after": "Every comparison answers one yes/no question."
+            "kind": "run",
+            "after": "Every comparison answers one yes/no question.",
+            "instruction": "Run it."
           },
           {
             "id": "f28_3",
-            "kind": "predict",
-            "instruction": "What prints?",
+            "why": "5 is not less than 4, and it is not equal to 4 either. So false.",
             "code": "System.out.println(5 <= 4);",
+            "kind": "predict",
             "opts": [
               "false",
               "true",
               "(an error)",
               "5"
             ],
-            "correct": 0,
-            "why": "5 is not less than 4, and it is not equal to 4 either. So false.",
             "skills": [
               "choose between ==, !=, <, >, <= and >="
-            ]
+            ],
+            "correct": 0,
+            "instruction": "What prints?"
           },
           {
             "id": "f28_4",
-            "kind": "teach",
-            "instruction": "== asks a question. = gives an answer.",
             "code": "int score = 7;\nSystem.out.println(score == 7);\nSystem.out.println(score != 7);",
+            "kind": "teach",
             "output": "true\nfalse",
             "points": [
               {
-                "label": "==",
-                "text": "TWO equals signs. Asks \"are these the same?\" and gives back true or false."
+                "text": "TWO equals signs. Asks \"are these the same?\" and gives back true or false.",
+                "label": "=="
               },
               {
-                "label": "=",
-                "text": "ONE equals sign. Puts a value into a box. It does not ask anything."
+                "text": "ONE equals sign. Puts a value into a box. It does not ask anything.",
+                "label": "="
               },
               {
-                "label": "!=",
-                "text": "Not equal. The ! means \"not\", the same as last lesson."
+                "text": "Not equal. The ! means \"not\", the same as last lesson.",
+                "label": "!="
               },
               {
-                "label": "the classic bug",
-                "text": "Writing = when you meant == is the single most common mistake in this unit."
+                "text": "Writing = when you meant == is the single most common mistake in this unit.",
+                "label": "the classic bug"
               }
-            ]
+            ],
+            "instruction": "== asks a question. = gives an answer."
           },
           {
             "id": "f28_5",
-            "kind": "spot",
-            "instruction": "A score of exactly 7 should count as a pass, but this says false. Tap the line at fault.",
-            "code": "int score = 7;\nboolean passed = score > 7;\nSystem.out.println(passed);",
-            "correct": 1,
             "why": "> means strictly greater, so 7 does not count. It should be >= to include 7 itself.",
+            "code": "int score = 7;\nboolean passed = score > 7;\nSystem.out.println(passed);",
+            "kind": "spot",
             "skills": [
               "choose between ==, !=, <, >, <= and >="
-            ]
+            ],
+            "correct": 1,
+            "instruction": "A score of exactly 7 should count as a pass, but this says false. Tap the line at fault."
           },
           {
             "id": "f28_6",
-            "kind": "teach",
-            "instruction": "A comparison can be stored, just like any other value.",
             "code": "int points = 12;\nboolean scoredEnough = points >= 10;\nSystem.out.println(scoredEnough);",
+            "kind": "teach",
             "output": "true",
             "points": [
               {
-                "label": "the right-hand side",
-                "text": "points >= 10 is worked out first. It becomes true."
+                "text": "points >= 10 is worked out first. It becomes true.",
+                "label": "the right-hand side"
               },
               {
-                "label": "boolean",
-                "text": "True or false has to go in a boolean box."
+                "text": "True or false has to go in a boolean box.",
+                "label": "boolean"
               },
               {
-                "label": "why bother",
-                "text": "A well-named boolean like scoredEnough explains itself. You will do exactly this in a moment."
+                "text": "A well-named boolean like scoredEnough explains itself. You will do exactly this in a moment.",
+                "label": "why bother"
               }
-            ]
+            ],
+            "instruction": "A comparison can be stored, just like any other value."
           },
           {
             "id": "f28_7",
-            "kind": "fill",
-            "instruction": "Fill it in so it is true only when points reaches 10 or more.",
             "code": "int points = 10;\nboolean scoredEnough = points ⟦1⟧ 10;\nSystem.out.println(scoredEnough);",
+            "hint": "10 itself must count.",
+            "kind": "fill",
+            "after": "\"At least\" always means >=, never >.",
             "blanks": [
               {
                 "chips": [
@@ -1687,26 +1688,25 @@
                 "answer": 0
               }
             ],
-            "target": "true",
-            "hint": "10 itself must count.",
-            "after": "\"At least\" always means >=, never >.",
             "skills": [
               "choose between ==, !=, <, >, <= and >="
-            ]
+            ],
+            "target": "true",
+            "instruction": "Fill it in so it is true only when points reaches 10 or more."
           },
           {
             "id": "f28_8",
-            "kind": "write",
-            "instruction": "Your turn: a triple double needs at least 10 in all three categories.",
             "code": "// read points, rebounds and assists, then print the verdict\n",
-            "stdin": "10\n11\n12",
-            "target": "Points? 10\nRebounds? 11\nAssists? 12\nGot a Triple Double? true",
-            "solution": "int points = readInt(\"Points? \");\nint rebounds = readInt(\"Rebounds? \");\nint assists = readInt(\"Assists? \");\nboolean tripleDouble = points >= 10 && rebounds >= 10 && assists >= 10;\nSystem.out.println(\"Got a Triple Double? \" + tripleDouble);",
             "hint": "Three readInt calls, then chain three >= checks with &&.",
+            "kind": "write",
             "after": "That is CodeHS exercise 3.8.4, Triple Double.",
+            "stdin": "10\n11\n12",
             "skills": [
               "store a comparison in a boolean"
-            ]
+            ],
+            "target": "Points? 10\nRebounds? 11\nAssists? 12\nGot a Triple Double? true",
+            "solution": "int points = readInt(\"Points? \");\nint rebounds = readInt(\"Rebounds? \");\nint assists = readInt(\"Assists? \");\nboolean tripleDouble = points >= 10 && rebounds >= 10 && assists >= 10;\nSystem.out.println(\"Got a Triple Double? \" + tripleDouble);",
+            "instruction": "Your turn: a triple double needs at least 10 in all three categories."
           }
         ]
       }
@@ -1980,6 +1980,203 @@
       }
     },
     {
+      "code": "2.10",
+      "title": "While Loops",
+      "objectives": [
+        "decide when a while loop fits better than a for loop",
+        "trace a while loop's variable until its condition fails",
+        "recognise why a while loop never stops"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f210_t1",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "kind": "teach",
+            "output": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
+            "points": [
+              {
+                "text": "The condition is checked before every turn, exactly like a for loop.",
+                "label": "while (fuel > 0)"
+              },
+              {
+                "text": "Something inside MUST move the condition towards false, or it never stops.",
+                "label": "fuel--"
+              },
+              {
+                "text": "Outside the braces, so it runs once, after the loop finishes.",
+                "label": "\"empty\""
+              },
+              {
+                "text": "There is no built-in counter. You make the variable yourself, before the loop.",
+                "label": "no counter"
+              }
+            ],
+            "instruction": "A while loop repeats for as long as something stays true."
+          },
+          {
+            "id": "f210_1",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "kind": "run",
+            "after": "It repeated until the condition stopped being true — no counting required up front.",
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "instruction": "This one keeps going until told to stop. Run it."
+          },
+          {
+            "id": "f210_2",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "hint": "Only the first line decides how much you start with.",
+            "kind": "tweak",
+            "after": "You never told it how many times to loop — it worked that out from the condition.",
+            "target": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
+            "instruction": "Start with more fuel. Run it."
+          },
+          {
+            "id": "f210_t2",
+            "kind": "teach",
+            "points": [
+              {
+                "text": "Use it when you know how many times up front: 10 rows, 100 numbers, 1000 greetings.",
+                "label": "for"
+              },
+              {
+                "text": "Use it when you do not: keep going until the user says stop, until the total is big enough, until the fuel runs out.",
+                "label": "while"
+              },
+              {
+                "text": "Anything a for loop does, a while loop can do too. Pick whichever says what you mean more clearly.",
+                "label": "either works"
+              },
+              {
+                "text": "A condition that is never false. It runs forever unless something inside stops it.",
+                "label": "while (true)"
+              }
+            ],
+            "instruction": "for or while? It depends on whether you know the count."
+          },
+          {
+            "id": "f210_3",
+            "why": "The condition is checked BEFORE the first pass. 10 < 5 is already false, so the body never runs even once.",
+            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
+            "kind": "predict",
+            "opts": [
+              "done",
+              "inside\ndone",
+              "inside",
+              "(an error)"
+            ],
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "correct": 0,
+            "instruction": "What prints?"
+          },
+          {
+            "id": "f210_4",
+            "code": "int total = 0;\nint i = 1;\nwhile (i <= 3) {\n  total = total + i;\n  i++;\n}",
+            "kind": "trace",
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "questions": [
+              {
+                "why": "0 + 1.",
+                "opts": [
+                  "1",
+                  "0",
+                  "3"
+                ],
+                "prompt": "after the first pass, total = ?",
+                "correct": 0
+              },
+              {
+                "why": "1 + 2.",
+                "opts": [
+                  "3",
+                  "2",
+                  "4"
+                ],
+                "prompt": "after the second pass, total = ?",
+                "correct": 0
+              },
+              {
+                "why": "1 + 2 + 3. It stops once i reaches 4, because 4 <= 3 is false.",
+                "opts": [
+                  "6",
+                  "3",
+                  "10"
+                ],
+                "prompt": "when the loop finally stops, total = ?",
+                "correct": 0
+              }
+            ],
+            "instruction": "Follow total."
+          },
+          {
+            "id": "f210_5",
+            "why": "Nothing inside the loop ever changes count, so count <= 3 stays true forever. A while loop will not update your variable for you — you must do it in the body.",
+            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
+            "kind": "spot",
+            "skills": [
+              "recognise why a while loop never stops"
+            ],
+            "correct": 2,
+            "instruction": "This never stops. Tap the line that should be changing count."
+          },
+          {
+            "id": "f210_6",
+            "code": "int i = 1;\nwhile (i < 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
+            "hint": "With i < 3 starting at 1, which values does i actually take before it quits?",
+            "kind": "fix",
+            "after": "Same off-by-one trap as for-loops — the condition decides the last value that still counts.",
+            "skills": [
+              "trace a while loop's variable until its condition fails"
+            ],
+            "target": "pass 1\npass 2\npass 3",
+            "solution": "int i = 1;\nwhile (i <= 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
+            "instruction": "It stops one step too early. Fix it."
+          },
+          {
+            "id": "f210_7",
+            "hint": "Declare it, test it, print it, shrink it, close it.",
+            "kind": "arrange",
+            "after": "A for-loop would be awkward here — you don't know up front how many halvings it takes. That's when while wins.",
+            "lines": [
+              "int n = 20;",
+              "while (n > 1) {",
+              "  System.out.print(n + \" \");",
+              "  n = n / 2;",
+              "}"
+            ],
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "target": "20 10 5 2",
+            "distractors": [
+              "  n = n * 2;"
+            ],
+            "instruction": "Tap the lines in order to halve 20 down past 1."
+          },
+          {
+            "id": "f210_8",
+            "code": "// your code here\n",
+            "hint": "Same shape as the trace step — a running total, a counter, and remember to change the counter.",
+            "kind": "write",
+            "after": "You wrote a loop that decides its own length. That's the whole idea of while.",
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ],
+            "target": "15",
+            "solution": "int total = 0;\nint i = 1;\nwhile (i <= 5) {\n  total = total + i;\n  i++;\n}\nSystem.out.println(total);",
+            "instruction": "Use a while loop to add 1 through 5 and print the total."
+          }
+        ]
+      }
+    },
+    {
       "code": "2.11",
       "title": "If Statements",
       "objectives": [
@@ -1992,154 +2189,155 @@
         "steps": [
           {
             "id": "f211_1",
-            "kind": "teach",
-            "instruction": "An if statement runs a block only when something is true.",
             "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
+            "kind": "teach",
             "output": "adult\ndone",
             "points": [
               {
-                "label": "if (…)",
-                "text": "The condition goes in round brackets. It has to be something true-or-false — exactly what you built last lesson."
+                "text": "The condition goes in round brackets. It has to be something true-or-false — exactly what you built last lesson.",
+                "label": "if (…)"
               },
               {
-                "label": "the braces",
-                "text": "Everything inside { } runs only when the condition is true."
+                "text": "Everything inside { } runs only when the condition is true.",
+                "label": "the braces"
               },
               {
-                "label": "\"done\"",
-                "text": "Outside the braces, so it prints either way. Indentation is for you; the braces are what Java reads."
+                "text": "Outside the braces, so it prints either way. Indentation is for you; the braces are what Java reads.",
+                "label": "\"done\""
               },
               {
-                "label": "no semicolon",
-                "text": "There is no ; after the round brackets. Putting one there is a classic bug."
+                "text": "There is no ; after the round brackets. Putting one there is a classic bug.",
+                "label": "no semicolon"
               }
-            ]
+            ],
+            "instruction": "An if statement runs a block only when something is true."
           },
           {
             "id": "f211_2",
-            "kind": "run",
-            "instruction": "Run it.",
             "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
-            "after": "The condition was true, so the block ran."
+            "kind": "run",
+            "after": "The condition was true, so the block ran.",
+            "instruction": "Run it."
           },
           {
             "id": "f211_3",
-            "kind": "tweak",
-            "instruction": "Change the age so \"adult\" does NOT print.",
             "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
-            "target": "done",
             "hint": "The condition is age >= 18. Make it false.",
+            "kind": "tweak",
             "after": "False condition, block skipped — and the line after it still runs.",
             "skills": [
               "run a block of code only when a condition is true"
-            ]
+            ],
+            "target": "done",
+            "instruction": "Change the age so \"adult\" does NOT print."
           },
           {
             "id": "f211_4",
-            "kind": "teach",
-            "instruction": "else covers the other case.",
             "code": "int n = -5;\nif (n > 0) {\n  System.out.println(\"positive\");\n} else {\n  System.out.println(\"not positive\");\n}",
+            "kind": "teach",
             "output": "not positive",
             "points": [
               {
-                "label": "else",
-                "text": "Runs when the condition was false. No condition of its own."
+                "text": "Runs when the condition was false. No condition of its own.",
+                "label": "else"
               },
               {
-                "label": "one or the other",
-                "text": "Exactly one of the two blocks runs. Never both, never neither."
+                "text": "Exactly one of the two blocks runs. Never both, never neither.",
+                "label": "one or the other"
               },
               {
-                "label": "} else {",
-                "text": "else sits on the closing brace of the if."
+                "text": "else sits on the closing brace of the if.",
+                "label": "} else {"
               }
-            ]
+            ],
+            "instruction": "else covers the other case."
           },
           {
             "id": "f211_5",
-            "kind": "predict",
-            "instruction": "n is 0 this time. What prints?",
+            "why": "0 is not greater than 0, so the condition is false and else runs. Zero catches people out constantly.",
             "code": "int n = 0;\nif (n > 0) {\n  System.out.println(\"positive\");\n} else {\n  System.out.println(\"not positive\");\n}",
+            "kind": "predict",
             "opts": [
               "not positive",
               "positive",
               "both",
               "(nothing)"
             ],
-            "correct": 0,
-            "why": "0 is not greater than 0, so the condition is false and else runs. Zero catches people out constantly.",
             "skills": [
               "use else to handle the other case"
-            ]
+            ],
+            "correct": 0,
+            "instruction": "n is 0 this time. What prints?"
           },
           {
             "id": "f211_6",
-            "kind": "teach",
-            "instruction": "The remainder tells you if a number is even.",
             "code": "int n = 7;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "kind": "teach",
             "output": "odd",
             "points": [
               {
-                "label": "n % 2",
-                "text": "The remainder after dividing by 2 — from the arithmetic lesson. It is 0 or 1."
+                "text": "The remainder after dividing by 2 — from the arithmetic lesson. It is 0 or 1.",
+                "label": "n % 2"
               },
               {
-                "label": "== 0",
-                "text": "Asks whether that remainder is zero. Remainder 0 means it divided evenly."
+                "text": "Asks whether that remainder is zero. Remainder 0 means it divided evenly.",
+                "label": "== 0"
               },
               {
-                "label": "together",
-                "text": "n % 2 == 0 is THE way to test for even. Worth memorising."
+                "text": "n % 2 == 0 is THE way to test for even. Worth memorising.",
+                "label": "together"
               },
               {
-                "label": "7",
-                "text": "7 % 2 is 1, not 0, so the condition is false and else runs."
+                "text": "7 % 2 is 1, not 0, so the condition is false and else runs.",
+                "label": "7"
               }
-            ]
+            ],
+            "instruction": "The remainder tells you if a number is even."
           },
           {
             "id": "f211_7",
-            "kind": "fix",
-            "instruction": "8 is even, but this says odd. Fix it.",
             "code": "int n = 8;\nif (n % 2 == 1) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
-            "target": "even",
-            "solution": "int n = 8;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
             "hint": "What remainder does an even number leave when you divide by 2?",
+            "kind": "fix",
             "after": "Remainder 0 is even, remainder 1 is odd. The condition was testing the wrong one.",
             "skills": [
               "use the remainder operator inside a condition"
-            ]
+            ],
+            "target": "even",
+            "solution": "int n = 8;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "instruction": "8 is even, but this says odd. Fix it."
           },
           {
             "id": "f211_8",
-            "kind": "teach",
-            "instruction": "else if lets you check several things in order.",
             "code": "int score = 75;\nif (score >= 90) {\n  System.out.println(\"A\");\n} else if (score >= 80) {\n  System.out.println(\"B\");\n} else {\n  System.out.println(\"C\");\n}",
+            "kind": "teach",
             "output": "C",
             "points": [
               {
-                "label": "top to bottom",
-                "text": "Java checks each condition in order and stops at the first true one."
+                "text": "Java checks each condition in order and stops at the first true one.",
+                "label": "top to bottom"
               },
               {
-                "label": "the rest are skipped",
-                "text": "Once one matches, none of the others are even looked at."
+                "text": "Once one matches, none of the others are even looked at.",
+                "label": "the rest are skipped"
               },
               {
-                "label": "else last",
-                "text": "The final else catches everything that matched nothing."
+                "text": "The final else catches everything that matched nothing.",
+                "label": "else last"
               },
               {
-                "label": "75",
-                "text": "Not >= 90, not >= 80, so it falls through to else."
+                "text": "Not >= 90, not >= 80, so it falls through to else.",
+                "label": "75"
               }
-            ]
+            ],
+            "instruction": "else if lets you check several things in order."
           },
           {
             "id": "f211_9",
-            "kind": "fill",
-            "instruction": "Fill it in so min ends up holding the smaller number.",
             "code": "int a = 12;\nint b = 5;\nint min = a;\nif (b ⟦1⟧ min) {\n  min = b;\n}\nSystem.out.println(min);",
+            "hint": "Replace min only when b is SMALLER than what is already there.",
+            "kind": "fill",
+            "after": "Assume the first is smallest, then replace it if you find better. That scales to any number of values.",
             "blanks": [
               {
                 "chips": [
@@ -2150,26 +2348,25 @@
                 "answer": 0
               }
             ],
-            "target": "5",
-            "hint": "Replace min only when b is SMALLER than what is already there.",
-            "after": "Assume the first is smallest, then replace it if you find better. That scales to any number of values.",
             "skills": [
               "run a block of code only when a condition is true"
-            ]
+            ],
+            "target": "5",
+            "instruction": "Fill it in so min ends up holding the smaller number."
           },
           {
             "id": "f211_10",
-            "kind": "write",
-            "instruction": "Your turn: read three numbers and print the smallest.",
             "code": "// read three ints, then print the smallest\n",
-            "stdin": "10\n15\n20",
-            "target": "Enter first number: 10\nEnter second number: 15\nEnter third number: 20\n10",
-            "solution": "int a = readInt(\"Enter first number: \");\nint b = readInt(\"Enter second number: \");\nint c = readInt(\"Enter third number: \");\nint min = a;\nif (b < min) {\n  min = b;\n}\nif (c < min) {\n  min = c;\n}\nSystem.out.println(min);",
             "hint": "Start with min = a, then use two ifs to replace it if b or c is smaller. Prompts are \"Enter first number: \" and so on.",
+            "kind": "write",
             "after": "That is CodeHS exercise 3.11.5, Find the Minimum.",
+            "stdin": "10\n15\n20",
             "skills": [
               "run a block of code only when a condition is true"
-            ]
+            ],
+            "target": "Enter first number: 10\nEnter second number: 15\nEnter third number: 20\n10",
+            "solution": "int a = readInt(\"Enter first number: \");\nint b = readInt(\"Enter second number: \");\nint c = readInt(\"Enter third number: \");\nint min = a;\nif (b < min) {\n  min = b;\n}\nif (c < min) {\n  min = c;\n}\nSystem.out.println(min);",
+            "instruction": "Your turn: read three numbers and print the smallest."
           }
         ]
       }
@@ -2187,135 +2384,137 @@
         "steps": [
           {
             "id": "f212_1",
-            "kind": "teach",
-            "instruction": "Here is the problem this lesson solves.",
             "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
+            "kind": "teach",
             "stdin": "4\n6",
             "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
             "points": [
               {
-                "label": "it works",
-                "text": "The output is right. Nothing here is broken."
+                "text": "The output is right. Nothing here is broken.",
+                "label": "it works"
               },
               {
-                "label": "but look",
-                "text": "The readInt line appears TWICE — once before the loop, once inside it."
+                "text": "The readInt line appears TWICE — once before the loop, once inside it.",
+                "label": "but look"
               },
               {
-                "label": "why",
-                "text": "A while loop checks its condition first, so you must already have a guess before the loop can start."
+                "text": "A while loop checks its condition first, so you must already have a guess before the loop can start.",
+                "label": "why"
               },
               {
-                "label": "the risk",
-                "text": "Two copies of the same line means two places to change, and one you will forget."
+                "text": "Two copies of the same line means two places to change, and one you will forget.",
+                "label": "the risk"
               }
-            ]
+            ],
+            "instruction": "Here is the problem this lesson solves."
           },
           {
             "id": "f212_2",
-            "kind": "run",
-            "instruction": "Run it. We'll guess 4, then 6.",
             "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
+            "kind": "run",
+            "after": "Correct output, duplicated line. Now the better way.",
             "stdin": "4\n6",
-            "after": "Correct output, duplicated line. Now the better way."
+            "instruction": "Run it. We'll guess 4, then 6."
           },
           {
             "id": "f212_3",
-            "kind": "teach",
-            "instruction": "Loop forever, and break out of the middle.",
             "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "kind": "teach",
             "stdin": "4\n6",
             "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
             "points": [
               {
-                "label": "while (true)",
-                "text": "A condition that is always true, so the loop never stops on its own."
+                "text": "A condition that is always true, so the loop never stops on its own.",
+                "label": "while (true)"
               },
               {
-                "label": "break;",
-                "text": "Jumps straight out of the loop, immediately, ignoring everything below it."
+                "text": "Jumps straight out of the loop, immediately, ignoring everything below it.",
+                "label": "break;"
               },
               {
-                "label": "asked once",
-                "text": "readInt now appears exactly once. That is the whole point."
+                "text": "readInt now appears exactly once. That is the whole point.",
+                "label": "asked once"
               },
               {
-                "label": "the \"half\"",
-                "text": "On the last pass only the top half runs — you ask, you check, you leave before \"Try again!\"."
+                "text": "On the last pass only the top half runs — you ask, you check, you leave before \"Try again!\".",
+                "label": "the \"half\""
               }
-            ]
+            ],
+            "instruction": "Loop forever, and break out of the middle."
           },
           {
             "id": "f212_4",
-            "kind": "run",
-            "instruction": "Same answers, same output — one copy of the question.",
             "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "stdin": "4\n6",
+            "kind": "run",
             "after": "This shape has a name: the loop-and-a-half.",
+            "stdin": "4\n6",
             "skills": [
               "write a while (true) loop that asks once and checks once"
-            ]
+            ],
+            "instruction": "Same answers, same output — one copy of the question."
           },
           {
             "id": "f212_5",
-            "kind": "predict",
-            "instruction": "break works in any loop. What prints?",
+            "why": "When i reaches 3 the break runs before the println, and the loop ends entirely — it does not skip one and carry on.",
             "code": "for (int i = 1; i <= 5; i++) {\n  if (i == 3) {\n    break;\n  }\n  System.out.println(i);\n}",
+            "kind": "predict",
             "opts": [
               "1\n2",
               "1\n2\n3",
               "1\n2\n4\n5",
               "1\n2\n3\n4\n5"
             ],
-            "correct": 0,
-            "why": "When i reaches 3 the break runs before the println, and the loop ends entirely — it does not skip one and carry on.",
             "skills": [
               "use break to leave a loop from the middle"
-            ]
+            ],
+            "correct": 0,
+            "instruction": "break works in any loop. What prints?"
           },
           {
             "id": "f212_6",
-            "kind": "spot",
-            "instruction": "Tap the only line that can end this loop.",
-            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "stdin": "6",
-            "correct": 3,
             "why": "while (true) is never false, so nothing else can stop it. Take the break away and it runs forever.",
+            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "kind": "spot",
+            "stdin": "6",
             "skills": [
               "use break to leave a loop from the middle"
-            ]
+            ],
+            "correct": 3,
+            "instruction": "Tap the only line that can end this loop."
           },
           {
             "id": "f212_7",
-            "kind": "teach",
-            "instruction": "A sentinel is a value that means \"stop\".",
             "code": "int total = 0;\nwhile (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    break;\n  }\n  total = total + n;\n}\nSystem.out.println(total);",
+            "kind": "teach",
             "stdin": "5\n7\n0",
             "output": "Number (0 to stop): 5\nNumber (0 to stop): 7\nNumber (0 to stop): 0\n12",
             "points": [
               {
-                "label": "sentinel",
-                "text": "Here it is 0 — a value the user types to say they are finished."
+                "text": "Here it is 0 — a value the user types to say they are finished.",
+                "label": "sentinel"
               },
               {
-                "label": "say so",
-                "text": "The prompt tells them what it is. A secret sentinel is a broken program."
+                "text": "The prompt tells them what it is. A secret sentinel is a broken program.",
+                "label": "say so"
               },
               {
-                "label": "not counted",
-                "text": "The break happens before the adding, so the 0 never joins the total. 5 + 7 = 12."
+                "text": "The break happens before the adding, so the 0 never joins the total. 5 + 7 = 12.",
+                "label": "not counted"
               },
               {
-                "label": "choosing one",
-                "text": "Pick something that cannot be real data — 0 marks here, -1 for a temperature."
+                "text": "Pick something that cannot be real data — 0 marks here, -1 for a temperature.",
+                "label": "choosing one"
               }
-            ]
+            ],
+            "instruction": "A sentinel is a value that means \"stop\"."
           },
           {
             "id": "f212_8",
-            "kind": "fill",
-            "instruction": "Fill in the statement that leaves the loop.",
             "code": "while (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    ⟦1⟧\n  }\n  System.out.println(n);\n}",
+            "hint": "You want out of the loop entirely, not on to the next turn.",
+            "kind": "fill",
+            "after": "break leaves the loop. That is the one statement this whole lesson rests on.",
+            "stdin": "5\n0",
             "blanks": [
               {
                 "chips": [
@@ -2326,27 +2525,522 @@
                 "answer": 0
               }
             ],
-            "stdin": "5\n0",
-            "target": "Number (0 to stop): 5\n5\nNumber (0 to stop): 0",
-            "hint": "You want out of the loop entirely, not on to the next turn.",
-            "after": "break leaves the loop. That is the one statement this whole lesson rests on.",
             "skills": [
               "use break to leave a loop from the middle"
-            ]
+            ],
+            "target": "Number (0 to stop): 5\n5\nNumber (0 to stop): 0",
+            "instruction": "Fill in the statement that leaves the loop."
           },
           {
             "id": "f212_9",
-            "kind": "write",
-            "instruction": "Your turn: the number guessing game. The secret is 6.",
             "code": "int secretNumber = 6;\n// greet, then keep asking until they get it\n",
-            "stdin": "4\n3\n6",
-            "target": "I'm thinking of a number between 1 and 10.\nSee if you can guess the number!\nEnter your guess: 4\nTry again!\nEnter your guess: 3\nTry again!\nEnter your guess: 6\nCorrect!",
-            "solution": "int secretNumber = 6;\nSystem.out.println(\"I'm thinking of a number between 1 and 10.\");\nSystem.out.println(\"See if you can guess the number!\");\nwhile (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == secretNumber) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
             "hint": "Two greeting lines first. Then while (true): ask, break if correct, otherwise print \"Try again!\". \"Correct!\" goes after the loop.",
+            "kind": "write",
             "after": "That is CodeHS exercise 3.12.4, Guess the Number — and the program your final exam asks for.",
+            "stdin": "4\n3\n6",
             "skills": [
               "write a while (true) loop that asks once and checks once"
-            ]
+            ],
+            "target": "I'm thinking of a number between 1 and 10.\nSee if you can guess the number!\nEnter your guess: 4\nTry again!\nEnter your guess: 3\nTry again!\nEnter your guess: 6\nCorrect!",
+            "solution": "int secretNumber = 6;\nSystem.out.println(\"I'm thinking of a number between 1 and 10.\");\nSystem.out.println(\"See if you can guess the number!\");\nwhile (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == secretNumber) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "instruction": "Your turn: the number guessing game. The secret is 6."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.13",
+      "title": "Short-Circuit Evaluation",
+      "objectives": [
+        "explain why the right-hand side of && or || is sometimes skipped",
+        "put a guard on the left so the right side is safe",
+        "work out which side of an expression actually runs"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f213_1",
+            "code": "int n = 0;\nboolean ok = (n != 0) && (10 / n > 1);\nSystem.out.println(ok);",
+            "kind": "teach",
+            "output": "false",
+            "points": [
+              {
+                "text": "n is 0. Dividing by zero crashes a Java program instantly.",
+                "label": "10 / n"
+              },
+              {
+                "text": "(n != 0) is false, and false && anything is false — so Java never looks at the right side.",
+                "label": "but it did not"
+              },
+              {
+                "text": "That is the name: stopping early because the answer is already decided.",
+                "label": "short-circuit"
+              },
+              {
+                "text": "It is not an optimisation you can ignore. It is what keeps the division from ever happening.",
+                "label": "you rely on this"
+              }
+            ],
+            "instruction": "&& stops the moment it finds a false."
+          },
+          {
+            "id": "f213_2",
+            "code": "int n = 0;\nboolean ok = (n != 0) && (10 / n > 1);\nSystem.out.println(ok);",
+            "kind": "run",
+            "after": "The guard on the left protected the division on the right.",
+            "instruction": "Run it. A divide by zero that never divides."
+          },
+          {
+            "id": "f213_3",
+            "why": "|| only needs one true and it found one immediately on the left, so the 5 / 0 is never evaluated. No crash.",
+            "code": "System.out.println(true || (5 / 0 == 0));",
+            "kind": "predict",
+            "opts": [
+              "true",
+              "(a crash)",
+              "false",
+              "0"
+            ],
+            "skills": [
+              "explain why the right-hand side of && or || is sometimes skipped"
+            ],
+            "correct": 0,
+            "instruction": "5 / 0 would crash. Does this?"
+          },
+          {
+            "id": "f213_4",
+            "code": "int n = 0;\nboolean safe = (n == 0) || (10 / n > 1);\nSystem.out.println(safe);",
+            "kind": "teach",
+            "output": "true",
+            "points": [
+              {
+                "text": "&& gives up on the first false. || gives up on the first true.",
+                "label": "mirror image"
+              },
+              {
+                "text": "This is true, so || already knows the whole thing is true.",
+                "label": "(n == 0)"
+              },
+              {
+                "text": "The division on the right never runs, for the same reason as before.",
+                "label": "skipped again"
+              }
+            ],
+            "instruction": "|| stops the moment it finds a true."
+          },
+          {
+            "id": "f213_5",
+            "code": "int n = 0;\nboolean safe = (n == 0) || (10 / n > 1);\nSystem.out.println(safe);",
+            "kind": "run",
+            "after": "Same protection, opposite operator.",
+            "instruction": "Run it."
+          },
+          {
+            "id": "f213_6",
+            "kind": "teach",
+            "points": [
+              {
+                "text": "Java always evaluates the left side first. Always.",
+                "label": "left to right"
+              },
+              {
+                "text": "The check that makes the other side safe has to come first.",
+                "label": "guard on the left"
+              },
+              {
+                "text": "(10 / n > 1) && (n != 0) crashes when n is 0 — the division runs before anything checks it.",
+                "label": "swap them and it breaks"
+              },
+              {
+                "text": "With short-circuiting, the ORDER of your conditions is part of whether the program works.",
+                "label": "so"
+              }
+            ],
+            "instruction": "Which side you put things on is now a real decision."
+          },
+          {
+            "id": "f213_7",
+            "code": "// X is some expression that would crash",
+            "kind": "trace",
+            "skills": [
+              "work out which side of an expression actually runs"
+            ],
+            "questions": [
+              {
+                "why": "false && anything is false. Java stops.",
+                "opts": [
+                  "no",
+                  "yes"
+                ],
+                "prompt": "false && X",
+                "correct": 0
+              },
+              {
+                "why": "true || anything is true. Java stops.",
+                "opts": [
+                  "no",
+                  "yes"
+                ],
+                "prompt": "true || X",
+                "correct": 0
+              },
+              {
+                "why": "true tells && nothing yet — the answer still depends on X, so X runs. This one is not protected.",
+                "opts": [
+                  "yes",
+                  "no"
+                ],
+                "prompt": "true && X",
+                "correct": 0
+              }
+            ],
+            "instruction": "Does the right-hand side get evaluated?"
+          },
+          {
+            "id": "f213_8",
+            "code": "int n = 0;\nboolean ok = (n != 0) ⟦1⟧ (10 / n > 1);\nSystem.out.println(ok);",
+            "hint": "You need the false on the left to STOP everything. Which operator gives up on a false?",
+            "kind": "fill",
+            "after": "With || the left being false is not enough to decide, so the division runs — and crashes. Try it if you want to see.",
+            "blanks": [
+              {
+                "chips": [
+                  "&&",
+                  "||"
+                ],
+                "answer": 0
+              }
+            ],
+            "skills": [
+              "put a guard on the left so the right side is safe"
+            ],
+            "target": "false",
+            "instruction": "Pick the operator that keeps this safe."
+          },
+          {
+            "id": "f213_9",
+            "code": "int dividend = readInt(\"Enter the dividend: \");\nint divisor = readInt(\"Enter the divisor: \");\n// guard the division, then print the verdict\n",
+            "hint": "Put divisor != 0 first, then &&, then the divisibility test. Messages are \"X is divisible by Y!\" and \"X is not divisible by Y\".",
+            "kind": "write",
+            "after": "That is CodeHS exercise 3.13.4, Divisibility — the guard is the whole exercise.",
+            "stdin": "10\n0",
+            "skills": [
+              "put a guard on the left so the right side is safe"
+            ],
+            "target": "Enter the dividend: 10\nEnter the divisor: 0\n10 is not divisible by 0",
+            "solution": "int dividend = readInt(\"Enter the dividend: \");\nint divisor = readInt(\"Enter the divisor: \");\nif (divisor != 0 && dividend / divisor == (double) dividend / divisor) {\n  System.out.println(dividend + \" is divisible by \" + divisor + \"!\");\n} else {\n  System.out.println(dividend + \" is not divisible by \" + divisor);\n}",
+            "instruction": "Your turn: say whether one number divides evenly into another — without crashing on 0."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.14",
+      "title": "De Morgan's Laws",
+      "objectives": [
+        "rewrite !(a && b) without the outer not",
+        "rewrite !(a || b) without the outer not",
+        "check that two boolean expressions mean the same thing"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f214_1",
+            "code": "boolean oldEnough = true;\nboolean tallEnough = false;\nSystem.out.println(!(oldEnough && tallEnough));\nSystem.out.println(!oldEnough || !tallEnough);",
+            "kind": "teach",
+            "output": "true\ntrue",
+            "points": [
+              {
+                "text": "Two different-looking lines, one answer. That is the point of the law.",
+                "label": "same answer"
+              },
+              {
+                "text": "Move the ! onto each part, and flip && into ||.",
+                "label": "the recipe"
+              },
+              {
+                "text": "\"Not (old enough AND tall enough)\" means \"too young OR too short\".",
+                "label": "in English"
+              },
+              {
+                "text": "The operator MUST change. !a && !b would mean something else entirely.",
+                "label": "watch the flip"
+              }
+            ],
+            "instruction": "\"Not both\" is the same as \"one of them is missing\"."
+          },
+          {
+            "id": "f214_2",
+            "code": "boolean oldEnough = true;\nboolean tallEnough = false;\nSystem.out.println(!(oldEnough && tallEnough));\nSystem.out.println(!oldEnough || !tallEnough);",
+            "kind": "run",
+            "after": "Only one of the two requirements failed, and that is enough to be turned away.",
+            "instruction": "Run it. Both lines, one answer."
+          },
+          {
+            "id": "f214_3",
+            "why": "The ! goes onto both parts and the && flips to ||. Keeping the && is the mistake almost everyone makes first.",
+            "code": "// A and B are booleans",
+            "kind": "predict",
+            "opts": [
+              "!A || !B",
+              "!A && !B",
+              "!A || B",
+              "A && !B"
+            ],
+            "skills": [
+              "rewrite !(a && b) without the outer not"
+            ],
+            "correct": 0,
+            "instruction": "Which one equals !(A && B)?"
+          },
+          {
+            "id": "f214_4",
+            "code": "boolean canSwim = false;\nboolean hasLifeJacket = false;\nSystem.out.println(!(canSwim || hasLifeJacket));\nSystem.out.println(!canSwim && !hasLifeJacket);",
+            "kind": "teach",
+            "output": "true\ntrue",
+            "points": [
+              {
+                "text": "! onto each part, and flip the operator — this time || becomes &&.",
+                "label": "same recipe"
+              },
+              {
+                "text": "\"Not (can swim OR has a jacket)\" means \"cannot swim AND has no jacket\".",
+                "label": "in English"
+              },
+              {
+                "text": "Not-AND becomes OR. Not-OR becomes AND. The operator always flips.",
+                "label": "both laws"
+              }
+            ],
+            "instruction": "\"Neither\" is the same as \"not this AND not that\"."
+          },
+          {
+            "id": "f214_5",
+            "code": "boolean a = true;\nboolean b = false;",
+            "kind": "trace",
+            "skills": [
+              "check that two boolean expressions mean the same thing"
+            ],
+            "questions": [
+              {
+                "why": "a && b is false, and !false is true.",
+                "opts": [
+                  "true",
+                  "false"
+                ],
+                "prompt": "!(a && b)",
+                "correct": 0
+              },
+              {
+                "why": "!a is false, !b is true. false || true is true. Same answer.",
+                "opts": [
+                  "true",
+                  "false"
+                ],
+                "prompt": "!a || !b",
+                "correct": 0
+              },
+              {
+                "why": "a || b is true, and !true is false.",
+                "opts": [
+                  "false",
+                  "true"
+                ],
+                "prompt": "!(a || b)",
+                "correct": 0
+              }
+            ],
+            "instruction": "Check the laws with a = true, b = false."
+          },
+          {
+            "id": "f214_6",
+            "code": "boolean a = true;\nboolean b = false;\nSystem.out.println(!a ⟦1⟧ !b);",
+            "hint": "The && has to flip.",
+            "kind": "fill",
+            "after": "Not-AND becomes OR. Every time.",
+            "blanks": [
+              {
+                "chips": [
+                  "||",
+                  "&&"
+                ],
+                "answer": 0
+              }
+            ],
+            "skills": [
+              "rewrite !(a && b) without the outer not"
+            ],
+            "target": "true",
+            "instruction": "Rewrite !(a && b) without the outer brackets."
+          },
+          {
+            "id": "f214_7",
+            "code": "int age = readInt(\"Enter your age: \");\nint height = readInt(\"Enter your height in inches: \");\nboolean oldEnough = age >= 12;\nboolean tallEnough = height >= 48;\n// write cannotRide WITHOUT an outer !( ), then print it\n",
+            "hint": "!(oldEnough && tallEnough) converted is !oldEnough || !tallEnough.",
+            "kind": "write",
+            "after": "That is CodeHS exercise 3.14.5, Amusement Park.",
+            "stdin": "10\n50",
+            "skills": [
+              "rewrite !(a && b) without the outer not"
+            ],
+            "target": "Enter your age: 10\nEnter your height in inches: 50\ntrue",
+            "solution": "int age = readInt(\"Enter your age: \");\nint height = readInt(\"Enter your height in inches: \");\nboolean oldEnough = age >= 12;\nboolean tallEnough = height >= 48;\nboolean cannotRide = !oldEnough || !tallEnough;\nSystem.out.println(cannotRide);",
+            "instruction": "Your turn: work out whether someone is turned away from the ride — in De Morgan form."
+          }
+        ]
+      }
+    },
+    {
+      "code": "2.15",
+      "title": "Strings",
+      "objectives": [
+        "join Strings together with +",
+        "compare Strings with .equals()",
+        "explain why == is the wrong way to compare text"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "f215_1",
+            "code": "String name = \"Ada\";\nSystem.out.println(name);\nSystem.out.println(name + \" Lovelace\");",
+            "kind": "teach",
+            "output": "Ada\nAda Lovelace",
+            "points": [
+              {
+                "text": "Capital S. It is the odd one out among the types — the rest are lowercase.",
+                "label": "String"
+              },
+              {
+                "text": "Always. Single quotes make a char, which holds exactly one character.",
+                "label": "double quotes"
+              },
+              {
+                "text": "Joins Strings end to end. It adds no space, so put your own inside the quotes.",
+                "label": "+"
+              }
+            ],
+            "instruction": "A String is a run of characters, in double quotes."
+          },
+          {
+            "id": "f215_2",
+            "code": "String name = \"Ada\";\nSystem.out.println(name);\nSystem.out.println(name + \" Lovelace\");",
+            "kind": "run",
+            "after": "Text in, text out.",
+            "instruction": "Run it."
+          },
+          {
+            "id": "f215_3",
+            "code": "String typed = readLine(\"Type cat: \");\nString other = \"cat\";\nSystem.out.println(typed == other);\nSystem.out.println(typed.equals(other));",
+            "kind": "teach",
+            "stdin": "cat",
+            "output": "Type cat: cat\nfalse\ntrue",
+            "points": [
+              {
+                "text": "The user typed exactly \"cat\", and == still said false.",
+                "label": "look at that"
+              },
+              {
+                "text": "For Strings it asks \"are these the same object in memory?\", which is almost never what you mean.",
+                "label": "=="
+              },
+              {
+                "text": "Asks \"are these the same characters?\" — the actual question. It said true.",
+                "label": ".equals()"
+              },
+              {
+                "text": "Text is compared with .equals(). Numbers and booleans still use ==.",
+                "label": "the rule"
+              }
+            ],
+            "instruction": "To compare text, use .equals() — not ==."
+          },
+          {
+            "id": "f215_4",
+            "code": "String typed = readLine(\"Type cat: \");\nString other = \"cat\";\nSystem.out.println(typed == other);\nSystem.out.println(typed.equals(other));",
+            "kind": "run",
+            "after": "Same letters, different answer. That is why .equals() exists.",
+            "stdin": "cat",
+            "skills": [
+              "explain why == is the wrong way to compare text"
+            ],
+            "instruction": "Run it and watch == get it wrong."
+          },
+          {
+            "id": "f215_5",
+            "why": "Java quietly reuses identical text written directly in the code, so both names point at the same one and == says true. It looks like == works — and that is exactly the trap. The moment the text comes from the user it says false. Use .equals() and you never have to think about this.",
+            "code": "String a = \"cat\";\nString b = \"cat\";\nSystem.out.println(a == b);",
+            "kind": "predict",
+            "opts": [
+              "true",
+              "false",
+              "(an error)",
+              "cat"
+            ],
+            "skills": [
+              "explain why == is the wrong way to compare text"
+            ],
+            "correct": 0,
+            "instruction": "No user input this time. What prints?"
+          },
+          {
+            "id": "f215_6",
+            "code": "String first = \"pepper\";\nString second = \"mint\";\nString third = \"peppermint\";\nSystem.out.println((first + second).equals(third));",
+            "kind": "teach",
+            "output": "true",
+            "points": [
+              {
+                "text": "The brackets make the joining happen first, giving one String: \"peppermint\".",
+                "label": "(first + second)"
+              },
+              {
+                "text": "Then that whole thing is compared with third.",
+                "label": ".equals(third)"
+              },
+              {
+                "text": "Without them .equals would attach to second alone and ask the wrong question.",
+                "label": "why brackets"
+              }
+            ],
+            "instruction": "You can join first, then compare."
+          },
+          {
+            "id": "f215_7",
+            "code": "String typed = readLine(\"Type cat: \");\nSystem.out.println(typed⟦1⟧);",
+            "hint": "The text came from the user, so == will say false.",
+            "kind": "fill",
+            "after": ".equals() compares the characters. That is the only comparison you can trust for text.",
+            "stdin": "cat",
+            "blanks": [
+              {
+                "chips": [
+                  ".equals(\"cat\")",
+                  " == \"cat\""
+                ],
+                "answer": 0
+              }
+            ],
+            "skills": [
+              "compare Strings with .equals()"
+            ],
+            "target": "Type cat: cat\ntrue",
+            "instruction": "Fill in the right way to compare."
+          },
+          {
+            "id": "f215_8",
+            "code": "// read three strings, then compare first + second with third\n",
+            "hint": "Prompts are \"First string? \" and so on. Message is like \"pepper + mint is equal to peppermint!\".",
+            "kind": "write",
+            "after": "That is CodeHS exercise 3.15.4, Three Strings — the last exercise in the unit.",
+            "stdin": "pepper\nmint\npeppermint",
+            "skills": [
+              "compare Strings with .equals()"
+            ],
+            "target": "First string? pepper\nSecond string? mint\nThird string? peppermint\npepper + mint is equal to peppermint!",
+            "solution": "String first = readLine(\"First string? \");\nString second = readLine(\"Second string? \");\nString third = readLine(\"Third string? \");\nif ((first + second).equals(third)) {\n  System.out.println(first + \" + \" + second + \" is equal to \" + third + \"!\");\n} else {\n  System.out.println(first + \" + \" + second + \" is not equal to \" + third + \"!\");\n}",
+            "instruction": "Your turn: ask for three strings, and say whether the first two joined make the third."
           }
         ]
       }

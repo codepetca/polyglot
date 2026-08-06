@@ -18,10 +18,11 @@
 // THIS platform calls the lesson; `codehsCode` is what the student sees in
 // CodeHS. Item numbering follows the CodeHS one (e.g. exercise 3.3.4 About You).
 //
-// Verified against the live course: unit list, all 16 lesson titles in order, and
-// all 100 item titles in Unit 3. Lessons carrying `unverified` have had their
-// per-item content (Check-for-Understanding questions, example code, exercise
-// specs) NOT yet opened; the others have.
+// Verified against the live course: the unit list, all 16 lesson titles in order,
+// all 100 item titles in Unit 3, and — opened one by one — every graded exercise
+// spec and every Check-for-Understanding quiz for lessons 3.1 through 3.15.
+// Nothing here is inferred from the public catalogue any more. `unverified` is
+// kept on the type for whoever extends this to Unit 4.
 
 export type CodeHSLesson = {
   /** What this platform calls the lesson. */
@@ -142,7 +143,15 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["(int) cast", "(double) cast", "casting and order of operations", "rounding using casting"],
     exercises: ["Casting to an Int", "Casting to a Double", "Movie Ratings"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.5.4", name: "Casting to an Int", requires: "Starter already reads a double with readDouble(\"Please input your double: \"). Print the (int) cast of it." },
+      { codehsCode: "3.5.5", name: "Casting to a Double", requires: "Starter reads two ints ('First Int: ', 'Second Int: '). Print their division as a double — 3 and 4 must give 0.75, so cast before dividing." },
+      { codehsCode: "3.5.8", name: "Movie Ratings", requires: "Read a rating with readDouble(\"Please enter a movie rating: \"), round to nearest int using the (int)(x + 0.5) technique, print 'Rating rounded: N'. 3.5 must round up to 4." },
+    ],
+    cfu: [
+      "what casting is — turning a value of one type into another",
+      "that (int) 9.9 is 9, not 10 — casting chops, it never rounds",
+    ],
   },
   {
     code: "2.6",
@@ -293,7 +302,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["short-circuit && and ||", "truth tables"],
     exercises: ["Divisibility"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.13.4", name: "Divisibility", requires: "Given working code that crashes when the divisor is 0, add a short-circuit guard so the division never runs. Prompts 'Enter the dividend: ' / 'Enter the divisor: '; messages 'X is divisible by Y!' and 'X is not divisible by Y'." },
+    ],
+    cfu: [
+      "in true || (5 / 0 == 0), the right side is NOT evaluated",
+      "in true && (5 / 0 == 0), the right side IS evaluated — true does not decide an &&",
+    ],
   },
   {
     code: "2.14",
@@ -306,7 +321,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["!(a && b) == !a || !b", "!(a || b) == !a && !b"],
     exercises: ["Amusement Park"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.14.5", name: "Amusement Park", requires: "Rewrite two given lines in De Morgan form: cannotRide = !(oldEnough && tallEnough) and cannotSwim = !(canSwim || hasLifeJacket). Both variables must still appear in the result." },
+    ],
+    cfu: [
+      "!(A && B) is equivalent to !A || !B",
+      "!(A || B) is equivalent to !A && !B",
+    ],
   },
   {
     code: "2.15",
@@ -319,7 +340,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["String variables", ".equals()", "why == is wrong for Strings"],
     exercises: ["Three Strings"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.15.4", name: "Three Strings", requires: "Read three strings with readLine ('First string? ' etc). Print whether the first joined to the second equals the third: 'pepper + mint is equal to peppermint!' or '... is not equal to ...!'." },
+    ],
+    cfu: [
+      "what a String is — a sequence of characters",
+      "that .equals() is the correct way to compare Strings, NOT ==",
+    ],
   },
 ];
 
