@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-06T07:26:03.771Z",
+  "exportedAt": "2026-08-06T09:24:24.607Z",
   "note": "Interactive lesson flows. Restore with: node --env-file=.env scripts/flows.mjs restore",
   "lessons": [
     {
@@ -13,6 +13,31 @@
       "flow": {
         "v": 1,
         "steps": [
+          {
+            "id": "f21_t1",
+            "code": "System.out.println(\"Hello, world!\");",
+            "kind": "teach",
+            "output": "Hello, world!",
+            "points": [
+              {
+                "text": "The command that prints. Spelled exactly like this — capital S, lowercase println.",
+                "label": "System.out.println"
+              },
+              {
+                "text": "Whatever sits inside the double quotes is what appears. Java does not read it, it just prints it.",
+                "label": "the quotes"
+              },
+              {
+                "text": "Ends the instruction. Every line like this needs one.",
+                "label": "the semicolon"
+              },
+              {
+                "text": "The ln on the end means \"then go to a new line\".",
+                "label": "ln"
+              }
+            ],
+            "instruction": "This is how you put something on the screen."
+          },
           {
             "id": "f21_1",
             "code": "System.out.println(\"Hello, world!\");",
@@ -28,6 +53,27 @@
             "after": "Your words, on the screen. That's programming.",
             "target": "Hello, world!",
             "instruction": "Change the message to anything you want. Run it."
+          },
+          {
+            "id": "f21_t2",
+            "code": "System.out.print(\"Hi\");\nSystem.out.print(\"Bye\");\nSystem.out.println(\"!\");\nSystem.out.println(\"next line\");",
+            "kind": "teach",
+            "output": "HiBye!\nnext line",
+            "points": [
+              {
+                "text": "Prints and STAYS on the line. The next print carries on right after it.",
+                "label": "print"
+              },
+              {
+                "text": "Prints and ENDS the line. Anything after it starts fresh below.",
+                "label": "println"
+              },
+              {
+                "text": "Three separate commands, one line of output — because the first two were print.",
+                "label": "HiBye!"
+              }
+            ],
+            "instruction": "print and println differ by one thing: the new line."
           },
           {
             "id": "f21_3",
@@ -67,6 +113,31 @@
             "instruction": "Make it match the target."
           },
           {
+            "id": "f21_t3",
+            "code": "System.out.println(\"one\\ntwo\");\nSystem.out.println(\"name\\tscore\");\nSystem.out.println(\"She said \\\"hi\\\"\");\nSystem.out.println(\"back \\\\ slash\");",
+            "kind": "teach",
+            "output": "one\ntwo\nname\tscore\nShe said \"hi\"\nback \\ slash",
+            "points": [
+              {
+                "text": "A new line, right where you put it — even in the middle of one message.",
+                "label": "\\n"
+              },
+              {
+                "text": "A tab. Useful for lining columns up.",
+                "label": "\\t"
+              },
+              {
+                "text": "A real quote mark. Without the backslash it would end your text early and break.",
+                "label": "\\\""
+              },
+              {
+                "text": "A single backslash. You need two because one backslash always means \"something special follows\".",
+                "label": "\\\\"
+              }
+            ],
+            "instruction": "A backslash gives you characters you cannot just type."
+          },
+          {
             "id": "f21_6",
             "code": "System.out.println(\"one\\ntwo\\nthree\");",
             "kind": "run",
@@ -97,11 +168,29 @@
             "instruction": "It's broken. Run it, read the error, fix it."
           },
           {
-            "id": "f21_9",
-            "code": "System.out.println(\"Ada\" + \"Lovelace\");",
-            "kind": "run",
-            "after": "+ glues text together — and adds no space. You control the spaces.",
-            "instruction": "Run it. What does + do to text?"
+            "id": "f21_t4",
+            "code": "System.out.println(\"Ada\" + \" \" + \"Lovelace\");\nSystem.out.println(\"1\" + 2 + 3);\nSystem.out.println(1 + 2 + \"3\");",
+            "kind": "teach",
+            "output": "Ada Lovelace\n123\n33",
+            "points": [
+              {
+                "text": "Between pieces of text, + joins them. It adds no space — you add your own.",
+                "label": "gluing"
+              },
+              {
+                "text": "Left to right. \"1\"+2 is already text, so 3 gets glued on: 123.",
+                "label": "\"1\" + 2 + 3"
+              },
+              {
+                "text": "Left to right again. 1+2 is real maths first (3), THEN the text joins: 33.",
+                "label": "1 + 2 + \"3\""
+              },
+              {
+                "text": "Once text is involved, + stops adding and starts gluing.",
+                "label": "the rule"
+              }
+            ],
+            "instruction": "The + sign glues text together."
           },
           {
             "id": "f21_10",
@@ -168,6 +257,31 @@
         "v": 1,
         "steps": [
           {
+            "id": "f22_t1",
+            "code": "int age = 16;\nSystem.out.println(age);",
+            "kind": "teach",
+            "output": "16",
+            "points": [
+              {
+                "text": "The type. It says what kind of value is allowed in the box.",
+                "label": "int"
+              },
+              {
+                "text": "The name. You pick it, and you use it to get the value back.",
+                "label": "age"
+              },
+              {
+                "text": "The value going in. The = means \"put this in the box\", not \"equals\".",
+                "label": "= 16"
+              },
+              {
+                "text": "No quotes around age, so Java prints what is IN the box, not the word.",
+                "label": "println(age)"
+              }
+            ],
+            "instruction": "A variable is a box you give a name to."
+          },
+          {
             "id": "f22_1",
             "code": "int age = 16;\nSystem.out.println(age);",
             "kind": "run",
@@ -184,6 +298,77 @@
             "instruction": "Change the number. Make it your age."
           },
           {
+            "id": "f22_t2",
+            "code": "int score = 100;\ndouble price = 9.99;\nchar grade = 'A';\nboolean passed = true;\nString name = \"Ada\";\nSystem.out.println(score);\nSystem.out.println(price);\nSystem.out.println(grade);\nSystem.out.println(passed);\nSystem.out.println(name);",
+            "kind": "teach",
+            "output": "100\n9.99\nA\ntrue\nAda",
+            "points": [
+              {
+                "text": "Whole numbers. No decimal point.",
+                "label": "int"
+              },
+              {
+                "text": "Numbers that can have a decimal point.",
+                "label": "double"
+              },
+              {
+                "text": "Exactly ONE character, in SINGLE quotes: 'A'.",
+                "label": "char"
+              },
+              {
+                "text": "Only true or false. Nothing else.",
+                "label": "boolean"
+              },
+              {
+                "text": "Text of any length, in DOUBLE quotes: \"Ada\". Capital S — it is the odd one out.",
+                "label": "String"
+              }
+            ],
+            "instruction": "Five types, one for each kind of value."
+          },
+          {
+            "id": "f22_5",
+            "why": "Whole number → int. Decimal → double. One letter in single quotes → char. Text in double quotes → String. true/false → boolean.",
+            "kind": "bucket",
+            "items": [
+              {
+                "text": "42",
+                "bucket": 0
+              },
+              {
+                "text": "3.14",
+                "bucket": 1
+              },
+              {
+                "text": "'A'",
+                "bucket": 2
+              },
+              {
+                "text": "\"hello\"",
+                "bucket": 4
+              },
+              {
+                "text": "true",
+                "bucket": 3
+              },
+              {
+                "text": "-7",
+                "bucket": 0
+              }
+            ],
+            "skills": [
+              "choose between int, double, char, boolean and String for a given value"
+            ],
+            "buckets": [
+              "int",
+              "double",
+              "char",
+              "boolean",
+              "String"
+            ],
+            "instruction": "Which type holds it?"
+          },
+          {
             "id": "f22_3",
             "why": "Reassigning REPLACES the value — the 5 is gone the instant x = 8 runs.",
             "code": "int x = 5;\nx = 8;\nSystem.out.println(x);",
@@ -196,6 +381,41 @@
             ],
             "correct": 0,
             "instruction": "What does x end up as?"
+          },
+          {
+            "id": "f22_t3",
+            "code": "int x = 5;\nSystem.out.println(x);\nx = 8;\nSystem.out.println(x);",
+            "kind": "teach",
+            "output": "5\n8",
+            "points": [
+              {
+                "text": "Making the box. This is the only line that says int.",
+                "label": "int x = 5;"
+              },
+              {
+                "text": "Changing what is inside. No type — the box already exists.",
+                "label": "x = 8;"
+              },
+              {
+                "text": "Would be an ERROR here. You cannot make the same box twice.",
+                "label": "int x = 8;"
+              },
+              {
+                "text": "Capitals matter. x and X are two different boxes.",
+                "label": "careful"
+              }
+            ],
+            "instruction": "You say the type once. After that, just the name."
+          },
+          {
+            "id": "f22_6",
+            "code": "int price = 9.99;\nSystem.out.println(price);",
+            "hint": "9.99 isn't whole — which type actually holds decimals?",
+            "kind": "fix",
+            "after": "int only holds whole numbers. double holds decimals.",
+            "target": "9.99",
+            "solution": "double price = 9.99;\nSystem.out.println(price);",
+            "instruction": "Make it compile and match the target."
           },
           {
             "id": "f22_4",
@@ -226,54 +446,6 @@
             "instruction": "Follow x."
           },
           {
-            "id": "f22_5",
-            "why": "Whole numbers → int, decimals → double, quoted text → String, true/false → boolean.",
-            "kind": "bucket",
-            "items": [
-              {
-                "text": "42",
-                "bucket": 0
-              },
-              {
-                "text": "3.14",
-                "bucket": 1
-              },
-              {
-                "text": "\"hello\"",
-                "bucket": 2
-              },
-              {
-                "text": "true",
-                "bucket": 3
-              },
-              {
-                "text": "-7",
-                "bucket": 0
-              },
-              {
-                "text": "2.0",
-                "bucket": 1
-              }
-            ],
-            "buckets": [
-              "int",
-              "double",
-              "String",
-              "boolean"
-            ],
-            "instruction": "Which type holds it?"
-          },
-          {
-            "id": "f22_6",
-            "code": "int price = 9.99;\nSystem.out.println(price);",
-            "hint": "9.99 isn't whole — which type actually holds decimals?",
-            "kind": "fix",
-            "after": "int only holds whole numbers. double holds decimals.",
-            "target": "9.99",
-            "solution": "double price = 9.99;\nSystem.out.println(price);",
-            "instruction": "Make it compile and match the target."
-          },
-          {
             "id": "f22_7",
             "why": "Once it's stored as a double, Java shows the decimal — even a whole number becomes 7.0.",
             "code": "int a = 7;\ndouble b = a;\nSystem.out.println(b);",
@@ -288,13 +460,47 @@
             "instruction": "b is declared as a double. What prints?"
           },
           {
+            "id": "f22_f1",
+            "code": "String myName = ⟦1⟧;\nint luckyNumber = ⟦2⟧;\ndouble currentTemperature = 75.3;\nboolean isStudent = true;\nSystem.out.println(myName);\nSystem.out.println(luckyNumber);\nSystem.out.println(currentTemperature);\nSystem.out.println(isStudent);",
+            "hint": "Text needs double quotes. A whole number needs none.",
+            "kind": "fill",
+            "after": "Every value has to match the type of its box — quotes and all.",
+            "blanks": [
+              {
+                "chips": [
+                  "\"Karel the Dog\"",
+                  "Karel the Dog",
+                  "'Karel the Dog'"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "11",
+                  "\"11\"",
+                  "11.0"
+                ],
+                "answer": 0
+              }
+            ],
+            "skills": [
+              "declare and initialize variables with the correct type"
+            ],
+            "target": "Karel the Dog\n11\n75.3\ntrue",
+            "instruction": "Fill in the two missing values so it prints the card below."
+          },
+          {
             "id": "f22_8",
-            "code": "// your code here\n",
-            "hint": "One String, one int, one double.",
+            "code": "// declare an int called year, then print it\n",
+            "hint": "Make the box first. Then join text and the box with a +.",
             "kind": "write",
-            "target": "Ada is 16, 5.4 ft tall",
-            "solution": "String name = \"Ada\";\nint age = 16;\ndouble height = 5.4;\nSystem.out.println(name + \" is \" + age + \", \" + height + \" ft tall\");",
-            "instruction": "Print this exactly — pick the right type for each."
+            "after": "Declare, store, use. That is every program from here on.",
+            "skills": [
+              "declare and initialize variables with the correct type"
+            ],
+            "target": "The current year is 2026",
+            "solution": "int year = 2026;\nSystem.out.println(\"The current year is \" + year);",
+            "instruction": "Your turn: store the year in an int, then print the sentence."
           }
         ]
       }
@@ -770,6 +976,31 @@
         "v": 1,
         "steps": [
           {
+            "id": "f29_t1",
+            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}",
+            "kind": "teach",
+            "output": "1\n2\n3\n4\n5",
+            "points": [
+              {
+                "text": "Where the counter starts. It runs once, at the very beginning.",
+                "label": "int i = 1"
+              },
+              {
+                "text": "Checked before every turn. While it is true the block runs; the moment it is false the loop stops.",
+                "label": "i <= 5"
+              },
+              {
+                "text": "Runs after each turn. It adds 1 to i — without it the loop would never end.",
+                "label": "i++"
+              },
+              {
+                "text": "Everything inside { } is what gets repeated.",
+                "label": "the braces"
+              }
+            ],
+            "instruction": "A for loop repeats a block a set number of times."
+          },
+          {
             "id": "f29_1",
             "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}",
             "kind": "run",
@@ -790,6 +1021,27 @@
             ],
             "target": "1\n2\n3\n4\n5",
             "instruction": "Make it count to 10 instead."
+          },
+          {
+            "id": "f29_t2",
+            "code": "for (int i = 0; i < 3; i++) {\n  System.out.println(i);\n}",
+            "kind": "teach",
+            "output": "0\n1\n2",
+            "points": [
+              {
+                "text": "Three turns — but the numbers stop at 2, because < 3 is false when i reaches 3.",
+                "label": "0, 1, 2"
+              },
+              {
+                "text": "Start at 0 with <, or start at 1 with <=. Both give you N turns. Mixing them up is the classic off-by-one.",
+                "label": "< vs <="
+              },
+              {
+                "text": "You will see this everywhere in Java, so it is worth getting used to now.",
+                "label": "why 0"
+              }
+            ],
+            "instruction": "Counting from 0 is the normal way to repeat N times."
           },
           {
             "id": "f29_3",
@@ -878,6 +1130,27 @@
             "instruction": "Tap the line that makes this run forever."
           },
           {
+            "id": "f29_t3",
+            "code": "for (int i = 2; i <= 10; i = i + 2) {\n  System.out.println(i);\n}",
+            "kind": "teach",
+            "output": "2\n4\n6\n8\n10",
+            "points": [
+              {
+                "text": "The last part is just \"what to do after each turn\". It can be anything.",
+                "label": "i = i + 2"
+              },
+              {
+                "text": "The short way of writing the same thing.",
+                "label": "i += 2"
+              },
+              {
+                "text": "Counts DOWN. Start high and end low for a countdown.",
+                "label": "i--"
+              }
+            ],
+            "instruction": "The counter does not have to go up by one."
+          },
+          {
             "id": "f29_7",
             "code": "for (int i = ⟦1⟧; i <= 10; i = i + ⟦2⟧) {\n  System.out.print(i + \" \");\n}",
             "hint": "Start on the first even number, and step by how far apart evens are.",
@@ -945,16 +1218,16 @@
           },
           {
             "id": "f29_12",
-            "code": "// your code here\n",
-            "hint": "Keep a String that grows by one star each pass, and print it after it grows.",
+            "code": "// print 1, 3, 5, 7, 9 — one per line\n",
+            "hint": "Start at 1, and step by 2 instead of 1.",
             "kind": "write",
-            "after": "You just drew a shape with a loop. That's the same tool games use to draw everything on screen.",
+            "after": "Change the 9 to 99 and you have written a real CodeHS exercise — Print The Odds.",
             "skills": [
               "write a for-loop that counts to a target"
             ],
-            "target": "*\n**\n***\n****",
-            "solution": "String bar = \"\";\nfor (int i = 1; i <= 4; i++) {\n  bar = bar + \"*\";\n  System.out.println(bar);\n}",
-            "instruction": "Your turn: draw a 4-row staircase of stars."
+            "target": "1\n3\n5\n7\n9",
+            "solution": "for (int i = 1; i <= 9; i = i + 2) {\n  System.out.println(i);\n}",
+            "instruction": "Your turn: print the odd numbers from 1 to 9."
           }
         ]
       }
@@ -970,6 +1243,31 @@
       "flow": {
         "v": 1,
         "steps": [
+          {
+            "id": "f210_t1",
+            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "kind": "teach",
+            "output": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
+            "points": [
+              {
+                "text": "The condition is checked before every turn, exactly like a for loop.",
+                "label": "while (fuel > 0)"
+              },
+              {
+                "text": "Something inside MUST move the condition towards false, or it never stops.",
+                "label": "fuel--"
+              },
+              {
+                "text": "Outside the braces, so it runs once, after the loop finishes.",
+                "label": "\"empty\""
+              },
+              {
+                "text": "There is no built-in counter. You make the variable yourself, before the loop.",
+                "label": "no counter"
+              }
+            ],
+            "instruction": "A while loop repeats for as long as something stays true."
+          },
           {
             "id": "f210_1",
             "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
@@ -988,6 +1286,29 @@
             "after": "You never told it how many times to loop — it worked that out from the condition.",
             "target": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
             "instruction": "Start with more fuel. Run it."
+          },
+          {
+            "id": "f210_t2",
+            "kind": "teach",
+            "points": [
+              {
+                "text": "Use it when you know how many times up front: 10 rows, 100 numbers, 1000 greetings.",
+                "label": "for"
+              },
+              {
+                "text": "Use it when you do not: keep going until the user says stop, until the total is big enough, until the fuel runs out.",
+                "label": "while"
+              },
+              {
+                "text": "Anything a for loop does, a while loop can do too. Pick whichever says what you mean more clearly.",
+                "label": "either works"
+              },
+              {
+                "text": "A condition that is never false. It runs forever unless something inside stops it.",
+                "label": "while (true)"
+              }
+            ],
+            "instruction": "for or while? It depends on whether you know the count."
           },
           {
             "id": "f210_3",

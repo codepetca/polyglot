@@ -80,6 +80,10 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["int", "double", "char", "boolean", "String", "declaration and assignment", "char uses single quotes", "case sensitivity", "naming rules"],
     exercises: ["Our First Integer", "Answering Questions"],
+    exerciseSpecs: [
+      { codehsCode: "3.2.4", name: "Our First Integer", requires: "Declare an int named year, set it to the current year, print it in a sentence. Grader requires the year and the word 'year' in the output." },
+      { codehsCode: "3.2.5", name: "Answering Questions", requires: "Given four declarations (String / int / double / boolean) with the values missing, fill them so the program prints exactly: Karel the Dog / 11 / 75.3 / true — one per line." },
+    ],
     cfu: [
       "which of int / char / boolean / double / apple is NOT a primitive type — char IS examinable here",
       "which form correctly declares AND initialises (`int myNumber = 10;`)",
@@ -191,7 +195,16 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["for loop", "initialise / condition / increment", "i++", "i--", "i += 2", "loop variable scope"],
     exercises: ["Repeat 1000 Times", "Print The Odds", "Factorial"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.9.4", name: "Repeat 1000 Times", requires: "Print 'Hello Karel' exactly 1000 times." },
+      { codehsCode: "3.9.8", name: "Print The Odds", requires: "Print the odd numbers from 1 to 100." },
+      { codehsCode: "3.9.11", name: "Factorial", requires: "Read a number with readInt, compute its factorial with a for loop (no built-in operator), print it. Sample: input 4 → 24." },
+    ],
+    cfu: [
+      "why for loops exist — to repeat a FIXED number of times (vs while / if / break)",
+      "which of four for-loop forms is syntactically correct",
+      "counting iterations: for (int i = 0; i < n; i += 2) runs (n + 1) / 2 times — AP-style, harder than the rest of the unit",
+    ],
   },
   {
     code: "2.10",
@@ -205,7 +218,13 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     ],
     teaches: ["while loop", "infinite loops", "when to prefer while over for"],
     exercises: ["Making Taffy"],
-    unverified: true,
+    exerciseSpecs: [
+      { codehsCode: "3.10.4", name: "Making Taffy", requires: "Print 'Starting Taffy Timer...', then keep reading a temperature with readInt until it reaches 270. Below 270 print \"The mixture isn't ready yet.\"; at 270+ print 'Your taffy is ready for the next step!' and stop." },
+    ],
+    cfu: [
+      "why while loops exist — repeat WHILE a condition holds (vs a fixed count)",
+      "that while(true) with no exit is an infinite loop",
+    ],
   },
   {
     code: "2.11",
