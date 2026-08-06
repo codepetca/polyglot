@@ -78,7 +78,7 @@ const lessons = LESSONS.map((L, idx) => ({
   quizBank: [],
 }));
 
-const out = { chapters: [{ order: 2, title: "Unit 2 — Basic Java", lessons }] };
+const out = { chapters: [{ order: 2, title: "Unit 3 — Basic Java", lessons }] };
 writeFileSync(OUT, JSON.stringify(out, null, 2));
 console.log(`Imported ${lessons.length} lessons from ${SRC} -> ${OUT}`);
 console.log("Now run:  npm run db:seed");

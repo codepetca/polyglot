@@ -149,7 +149,7 @@ async function main() {
 
   const chapters: any[] = existsSync(SEED_JSON)
     ? JSON.parse(readFileSync(SEED_JSON, "utf8")).chapters
-    : [{ order: 2, title: "Unit 2 — Basic Java", lessons: UNIT2 }];
+    : [{ order: 2, title: "Unit 3 — Basic Java", lessons: UNIT2 }];
 
   let lessonCount = 0;
   for (const c of chapters) {
