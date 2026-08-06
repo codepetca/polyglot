@@ -1749,78 +1749,128 @@
         "v": 1,
         "steps": [
           {
-            "id": "f26_1",
-            "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
+            "id": "o_task",
             "kind": "teach",
-            "output": "true\nfalse",
+            "instruction": "A game is full of facts that are simply yes or no.",
             "points": [
               {
-                "text": "The type. A box that can only ever hold true or false.",
-                "label": "boolean"
+                "label": "the panel",
+                "text": "Is the player alive? Do they have the key? Is the quest finished? We are building that status screen."
               },
               {
-                "text": "The only two values there are. All lowercase, and never in quotes.",
-                "label": "true / false"
+                "label": "not a number",
+                "text": "None of these is a count or a measurement. There is no \"3 alive\". It is yes or no, and nothing else."
               },
               {
-                "text": "There is no third option. That is the whole point of a boolean.",
-                "label": "no maybe"
+                "label": "why it deserves a type",
+                "text": "A yes/no fact is so common that Java gives it its own type, with exactly two possible values."
               },
               {
-                "text": "Naming it like a yes/no question makes the code read like English later.",
-                "label": "isRaining"
+                "label": "later",
+                "text": "These are also what decisions are built from. Every \"if the door is locked\" starts as one of these."
               }
-            ],
-            "instruction": "A boolean holds one of exactly two things."
+            ]
           },
           {
-            "id": "f26_2",
-            "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
+            "id": "o_bool",
+            "kind": "teach",
+            "instruction": "boolean holds one of exactly two values.",
+            "code": "boolean alive = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);",
+            "output": "=== STATUS ===\nAlive:      true",
+            "points": [
+              {
+                "label": "boolean",
+                "text": "The type. Same four parts as always: type, name, =, value."
+              },
+              {
+                "label": "true",
+                "text": "One of only two values it can ever hold. The other is false."
+              },
+              {
+                "label": "lowercase, no quotes",
+                "text": "true, not True and not \"true\". Java is strict about this."
+              },
+              {
+                "label": "alive",
+                "text": "Naming it like a yes/no question makes the code read like English."
+              }
+            ]
+          },
+          {
+            "id": "o_run1",
             "kind": "run",
-            "after": "Two boxes, two answers.",
-            "instruction": "Run it."
+            "instruction": "Run it.",
+            "code": "boolean alive = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);",
+            "after": "One fact, on the panel."
           },
           {
-            "id": "f26_3",
-            "code": "boolean isRaining = true;\nboolean isSunny = false;\nSystem.out.println(isRaining);\nSystem.out.println(isSunny);",
-            "hint": "Change the value, not the type.",
+            "id": "o_tweak",
             "kind": "tweak",
-            "after": "You set them. Later the program will work them out for itself.",
+            "instruction": "The player just died. Make the panel say so.",
+            "code": "boolean alive = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);",
+            "target": "=== STATUS ===\nAlive:      false",
+            "hint": "There is only one other value it could be.",
+            "after": "Two values, and you have now used both.",
             "skills": [
               "create boolean variables that hold true or false"
-            ],
-            "target": "false\nfalse",
-            "instruction": "Make it print false twice."
+            ]
           },
           {
-            "id": "f26_4",
-            "code": "boolean answer = true;\nString word = \"true\";\nSystem.out.println(answer);\nSystem.out.println(word);",
+            "id": "o_panel",
             "kind": "teach",
+            "instruction": "Three facts, three booleans.",
+            "code": "boolean alive = true;\nboolean hasKey = false;\nboolean questDone = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);\nSystem.out.println(\"Has key:    \" + hasKey);\nSystem.out.println(\"Quest done: \" + questDone);",
+            "output": "=== STATUS ===\nAlive:      true\nHas key:    false\nQuest done: true",
+            "points": [
+              {
+                "label": "one box per fact",
+                "text": "Each yes/no answer needs its own boolean. They do not share."
+              },
+              {
+                "label": "false is a real value",
+                "text": "hasKey = false is not \"empty\" or \"unset\". It is a definite no."
+              },
+              {
+                "label": "reading the panel",
+                "text": "Alive and quest done, but no key. That is a complete picture of the player in three words."
+              }
+            ]
+          },
+          {
+            "id": "o_vsstring",
+            "kind": "teach",
+            "instruction": "Careful: true and \"true\" look identical on screen.",
+            "code": "boolean answer = true;\nString word = \"true\";\nSystem.out.println(answer);\nSystem.out.println(word);",
             "output": "true\ntrue",
             "points": [
               {
-                "text": "Both print true. Quotes never appear in the output, so you cannot tell them apart by looking.",
-                "label": "identical output"
+                "label": "same output",
+                "text": "Both print true. Quotes never appear, so you cannot tell them apart by looking."
               },
               {
-                "text": "A boolean. Java understands it as a yes.",
-                "label": "true"
+                "label": "true",
+                "text": "A boolean. Java understands it as a yes and can reason with it."
               },
               {
-                "text": "A String. Four letters of text that happen to spell true. Java cannot reason with it.",
-                "label": "\"true\""
+                "label": "\"true\"",
+                "text": "A String. Four letters that happen to spell true. Java cannot make a decision from it."
               },
               {
-                "text": "'T' is a char and 10.1 is a double. Only bare true and false are booleans.",
-                "label": "watch out"
+                "label": "the others",
+                "text": "'T' is a char. 10.1 is a double. Only bare true and false are booleans."
               }
-            ],
-            "instruction": "true and \"true\" look the same on screen. They are not the same."
+            ]
           },
           {
-            "id": "f26_5",
-            "why": "Bare true/false → boolean. Double quotes → String. Single quotes around one character → char. A decimal number → double.",
+            "id": "o_bucket",
             "kind": "bucket",
+            "instruction": "Which type is each value?",
+            "buckets": [
+              "boolean",
+              "String",
+              "char",
+              "double"
+            ],
             "items": [
               {
                 "text": "true",
@@ -1847,94 +1897,144 @@
                 "bucket": 1
               }
             ],
+            "why": "Bare true/false → boolean. Double quotes → String. Single quotes around one character → char. A decimal → double.",
             "skills": [
               "tell a boolean apart from text, a character and a number"
-            ],
-            "buckets": [
-              "boolean",
-              "String",
-              "char",
-              "double"
-            ],
-            "instruction": "Which type is each one?"
+            ]
           },
           {
-            "id": "f26_6",
-            "code": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
+            "id": "o_ask",
             "kind": "teach",
+            "instruction": "Let the player answer it themselves.",
+            "code": "boolean hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Has key:    \" + hasKey);",
             "stdin": "true",
-            "output": "Are you a student? true\ntrue",
+            "output": "Did you find the key? true\n=== STATUS ===\nHas key:    true",
             "points": [
               {
-                "text": "Asks your question and hands back true or false.",
-                "label": "readBoolean"
+                "label": "readBoolean",
+                "text": "The fourth reader from the input lesson. It hands back true or false."
               },
               {
-                "text": "The user has to type the word true or the word false.",
-                "label": "they type"
+                "label": "they type the word",
+                "text": "The player types true or false. Anything else is not an answer to a yes/no question."
               },
               {
-                "text": "It gives back a boolean, so it has to go in a boolean.",
-                "label": "the box"
+                "label": "box matches reader",
+                "text": "readBoolean gives a boolean, so it goes in a boolean. Same rule as always."
+              }
+            ]
+          },
+          {
+            "id": "o_run2",
+            "kind": "run",
+            "instruction": "Run it. We'll answer true.",
+            "code": "boolean hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Has key:    \" + hasKey);",
+            "stdin": "true",
+            "after": "The panel now reports what actually happened in the game.",
+            "skills": [
+              "read a true/false answer from the user"
+            ]
+          },
+          {
+            "id": "o_sharp",
+            "kind": "teach",
+            "instruction": "The exact rules, so they hold up in a test.",
+            "points": [
+              {
+                "label": "what it is",
+                "text": "A boolean is a true-or-false value. Not a number, not a character, not text."
+              },
+              {
+                "label": "exactly two",
+                "text": "true and false. There is no third option and no \"empty\"."
+              },
+              {
+                "label": "the trap",
+                "text": "\"true\" with quotes is a String. 't' is a char. 10.1 is a double. Only the bare words count."
+              },
+              {
+                "label": "what it is for",
+                "text": "Storing a yes/no fact, and — from the next lesson on — deciding what the program does."
+              }
+            ]
+          },
+          {
+            "id": "o_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "boolean alive = true;\nboolean hasKey = false;",
+            "questions": [
+              {
+                "prompt": "What is a boolean in Java?",
+                "opts": [
+                  "A true or false value",
+                  "A single character",
+                  "A sequence of characters",
+                  "A very precise number"
+                ],
+                "correct": 0,
+                "why": "That is the whole type: two values, true and false."
+              },
+              {
+                "prompt": "Which of these IS a boolean?",
+                "opts": [
+                  "true",
+                  "\"true\"",
+                  "'F'",
+                  "10.1"
+                ],
+                "correct": 0,
+                "why": "Bare true is the boolean. \"true\" is a String, 'F' is a char, and 10.1 is a double."
               }
             ],
-            "instruction": "You can ask the user a yes/no question."
-          },
-          {
-            "id": "f26_7",
-            "code": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
-            "kind": "run",
-            "after": "Asked, stored, printed.",
-            "stdin": "true",
             "skills": [
-              "read a true/false answer from the user"
-            ],
-            "instruction": "Run it. We'll answer true for you."
+              "tell a boolean apart from text, a character and a number"
+            ]
           },
           {
-            "id": "f26_8",
-            "code": "String isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
-            "hint": "readBoolean gives back a boolean. What kind of box does that need?",
-            "kind": "fix",
-            "after": "The box has to match what the method gives back.",
-            "stdin": "true",
-            "skills": [
-              "read a true/false answer from the user"
-            ],
-            "target": "Are you a student? true\ntrue",
-            "solution": "boolean isStudent = readBoolean(\"Are you a student? \");\nSystem.out.println(isStudent);",
-            "instruction": "The box is the wrong type. Fix it."
-          },
-          {
-            "id": "f26_9",
-            "why": "The second line replaces what is in the box, exactly like any other variable.",
-            "code": "boolean done = false;\ndone = true;\nSystem.out.println(done);",
+            "id": "o_d1",
             "kind": "predict",
+            "instruction": "The player unlocks the door. What prints?",
+            "code": "boolean doorLocked = true;\ndoorLocked = false;\nSystem.out.println(doorLocked);",
             "opts": [
-              "true",
               "false",
-              "\"true\"",
+              "true",
+              "\"false\"",
               "(an error)"
             ],
+            "correct": 0,
+            "why": "The second line puts a new value in the box, exactly like any other variable. The true is gone.",
             "skills": [
               "create boolean variables that hold true or false"
-            ],
-            "correct": 0,
-            "instruction": "What prints?"
+            ]
           },
           {
-            "id": "f26_10",
-            "code": "// ask with readBoolean, then print\n",
-            "hint": "One line to ask and store, one line to print.",
-            "kind": "write",
-            "after": "That is CodeHS exercise 3.6.4, Ice Cream — you just wrote it.",
+            "id": "o_d2",
+            "kind": "fix",
+            "instruction": "The box is the wrong type. Fix it.",
+            "code": "String hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(hasKey);",
             "stdin": "true",
+            "target": "Did you find the key? true\ntrue",
+            "solution": "boolean hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(hasKey);",
+            "hint": "What type does readBoolean hand back?",
+            "after": "Reader and box always have to agree.",
             "skills": [
               "read a true/false answer from the user"
-            ],
+            ]
+          },
+          {
+            "id": "o_d3",
+            "kind": "write",
+            "instruction": "Last one: ask whether they like ice cream, then print the answer.",
+            "code": "// ask with readBoolean, store it, print it\n",
+            "stdin": "true",
             "target": "Do you like ice cream? true\ntrue",
             "solution": "boolean likesIceCream = readBoolean(\"Do you like ice cream? \");\nSystem.out.println(likesIceCream);",
-            "instruction": "Your turn: ask if they like ice cream, then print the answer."
+            "hint": "The question is \"Do you like ice cream? \" — mind the space before the closing quote.",
+            "after": "That is CodeHS exercise 3.6.4, Ice Cream. Lesson done.",
+            "skills": [
+              "read a true/false answer from the user"
+            ]
           }
         ]
       }
