@@ -63,8 +63,9 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
     //   - Concatenation: you need a variable before joining text to anything is
     //     useful, and 3.2.4 Our First Integer is the first exercise that
     //     requires it. So it belongs to 2.2, and is listed there.
-    // 3.1.4 "Printing Multiple Lines" is the one item that could overturn the
-    // escapes call; it is login-gated and has not been read.
+    // CONFIRMED from the live course: 3.1.4 "Printing Multiple Lines" is two
+    // plain printlns ("Hello world." / "Another line") with no \n anywhere. The
+    // multiple-lines idea is taught by stacking printlns, not by escaping.
     teaches: ["System.out.println", "System.out.print", "string literals (double quotes)", 'println("") for a blank line'],
     exercises: ["Welcome Program", "ASCII Art"],
     exerciseSpecs: [
