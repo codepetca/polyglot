@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-05T07:05:19.151Z",
+  "exportedAt": "2026-08-06T07:26:03.771Z",
   "note": "Interactive lesson flows. Restore with: node --env-file=.env scripts/flows.mjs restore",
   "lessons": [
     {
@@ -686,47 +686,74 @@
             "instruction": "Work these out."
           },
           {
+            "id": "f24_a10b",
+            "code": "int score = 10;\nscore++;\nSystem.out.println(score);\nscore += 5;\nSystem.out.println(score);",
+            "kind": "teach",
+            "output": "11\n16",
+            "points": [
+              {
+                "text": "Short for score = score + 1. Adds one.",
+                "label": "score++"
+              },
+              {
+                "text": "Short for score = score - 1. Takes one away.",
+                "label": "score--"
+              },
+              {
+                "text": "Short for score = score + 5. There is -= and *= and /= too.",
+                "label": "score += 5"
+              },
+              {
+                "text": "Same meaning, less typing. You will see these constantly once loops start.",
+                "label": "why bother"
+              }
+            ],
+            "instruction": "Shortcuts for changing a number you already have."
+          },
+          {
             "id": "f24_a11",
-            "code": "int n = 8;\nif (n ⟦1⟧ 2 ⟦2⟧ 0) {\n  System.out.println(\"even\");\n}",
-            "hint": "Even means: divide by 2 and nothing is left over.",
+            "code": "int total = 17;\nint perBox = 5;\nint boxes = total ⟦1⟧ perBox;\nint leftOver = total ⟦2⟧ perBox;\nSystem.out.println(boxes + \" boxes, \" + leftOver + \" left over\");",
+            "hint": "One of them counts how many fit. The other is what refuses to fit.",
             "kind": "fill",
-            "after": "n % 2 == 0 is the standard way to test for even. You'll use it constantly.",
+            "after": "/ tells you how many fit. % tells you what is left. Together they split any number.",
             "blanks": [
               {
                 "chips": [
-                  "%",
                   "/",
+                  "%",
                   "*"
                 ],
                 "answer": 0
               },
               {
                 "chips": [
-                  "==",
-                  "=",
-                  "!="
+                  "%",
+                  "/",
+                  "-"
                 ],
                 "answer": 0
               }
             ],
             "skills": [
+              "predict the result of integer division",
               "use the modulo operator to find remainders"
             ],
-            "target": "even",
-            "instruction": "Fill it in so it only prints when n is even."
+            "target": "3 boxes, 2 left over",
+            "instruction": "Fill it in so it splits 17 into boxes of 5."
           },
           {
             "id": "f24_a12",
-            "code": "int n = 17;\n// print \"odd\" or \"even\"\n",
-            "hint": "Use the same n % 2 == 0 test, with an else for the other case.",
+            "code": "int totalSeconds = 200;\n// print: 3 min 20 sec\n",
+            "hint": "/ 60 gives the whole minutes. % 60 gives the seconds left over.",
             "kind": "write",
-            "after": "You just used remainder to make a decision — that's most of what % is for.",
+            "after": "Whole part with /, leftover with %. Same trick for time, money, anything.",
             "skills": [
+              "predict the result of integer division",
               "use the modulo operator to find remainders"
             ],
-            "target": "odd",
-            "solution": "int n = 17;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
-            "instruction": "Your turn: print whether 17 is even or odd."
+            "target": "3 min 20 sec",
+            "solution": "int totalSeconds = 200;\nSystem.out.println(totalSeconds / 60 + \" min \" + totalSeconds % 60 + \" sec\");",
+            "instruction": "Your turn: turn 200 seconds into minutes and seconds."
           }
         ]
       }
