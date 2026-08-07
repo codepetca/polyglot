@@ -535,6 +535,26 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 .flowdots .d { width: 9px; height: 9px; border-radius: 99px; background: var(--line); transition: all .25s; padding: 0; border: none; appearance: none; }
 .flowdots .d:not(:disabled) { cursor: pointer; }
 .flowdots .d:not(:disabled):hover { transform: scale(1.5); }
+/* table: a truth table the student completes — the rows must read as a grid,
+   because the pattern across them is the thing being taught */
+.flowtable { margin-top: 14px; overflow-x: auto; }
+.flowtable table { border-collapse: collapse; font-family: var(--mono); font-size: 14px; }
+.flowtable th, .flowtable td { border: 1.5px solid var(--line); padding: 7px 14px; text-align: center; }
+/* The global `th` rule uppercases headers. Here the headers ARE Java —
+   variable names and expressions — and 3.2 spends a teach step on capitals
+   mattering, so rendering hasKey as HASKEY contradicts the lesson. */
+.flowtable th { font-size: 12px; letter-spacing: .04em; color: var(--muted); font-weight: 600; text-transform: none; background: none; text-align: center; padding: 7px 14px; border-bottom: 1.5px solid var(--line); }
+.flowtable th.fillcol { color: var(--ink); }
+.flowtable td.given { color: var(--muted); }
+.flowtable td.right { background: #eaf5ea; }
+.flowtable td.wrong { background: #fdeceb; }
+:root[data-theme="dark"] .flowtable td.right { background: #16241a; }
+:root[data-theme="dark"] .flowtable td.wrong { background: #2a1a1a; }
+.tcell { min-width: 62px; background: none; border: none; font-family: var(--mono); font-size: 14px; color: var(--muted); cursor: pointer; padding: 2px 4px; border-radius: 6px; }
+.tcell.filled { color: var(--ink); }
+.tcell.sel { outline: 2px solid var(--accent); }
+.tchips { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+
 /* ask: real typing, one field per read call the program makes */
 .askbox { margin-top: 12px; border: 1.5px dashed var(--accent); border-radius: 10px; padding: 12px 14px; }
 .askrow { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; }

@@ -121,6 +121,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ correct: allCorrect, verdicts, answers: allCorrect ? undefined : step.items.map((it) => it.bucket), why: allCorrect ? step.why || "" : "" });
     }
 
+    // table: every blank cell tapped in → per-cell verdicts, row-major
+    case "table": {
+      if (step.kind !== "table" || !step.rows) return NextResponse.json({ error: "not a table step" }, { status: 400 });
+      const from = step.fillFrom ?? 1;
+      const cells = (body.cells || []) as string[]; // row-major over fillable columns only
+      const want: string[] = [];
+      for (const row of step.rows) for (let c = from; c < row.length; c++) want.push(row[c]);
+      const verdicts = want.map((w, i) => cells[i] === w);
+      const allCorrect = verdicts.every(Boolean) && cells.length === want.length;
+      evidence(allCorrect);
+      return NextResponse.json({
+        correct: allCorrect,
+        verdicts,
+        answers: allCorrect ? undefined : want,
+        why: allCorrect ? step.why || "" : "",
+      });
+    }
+
     // match: pairs as [leftIndex, rightTEXT] — the mapping never left the server
     case "match": {
       if (step.kind !== "match" || !step.pairs) return NextResponse.json({ error: "not a match step" }, { status: 400 });

@@ -2046,165 +2046,290 @@
       "code": "2.7",
       "title": "Logical Operators",
       "objectives": [
-        "combine two booleans with && and ||",
-        "flip a boolean with !",
-        "work out the value of an expression that mixes them"
+        "combine two booleans with && so both must be true",
+        "combine two booleans with || so either will do",
+        "flip a boolean with !"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "f27_1",
-            "code": "boolean tall = true;\nboolean old = true;\nSystem.out.println(tall && old);\nSystem.out.println(tall && false);",
+            "id": "g_task",
             "kind": "teach",
-            "output": "true\nfalse",
+            "instruction": "A dungeon door. You get through with the key AND enough strength.",
             "points": [
               {
-                "text": "Two ampersands. Read it as \"and\".",
-                "label": "&&"
+                "label": "two facts",
+                "text": "hasKey is true or false. strongEnough is true or false. You already know how to store both."
               },
               {
-                "text": "true && true is the only combination that gives true.",
-                "label": "both true"
+                "label": "one answer",
+                "text": "The door needs a single true or false: does it open? That answer has to be built out of the two facts."
               },
               {
-                "text": "If either side is false, the whole thing is false.",
-                "label": "one false"
+                "label": "AND, OR, NOT",
+                "text": "Three symbols combine booleans. This lesson is those three and nothing else."
               }
-            ],
-            "instruction": "&& means BOTH have to be true."
+            ]
           },
           {
-            "id": "f27_2",
-            "code": "boolean tall = true;\nboolean old = true;\nSystem.out.println(tall && old);\nSystem.out.println(tall && false);",
+            "id": "g_and",
+            "kind": "teach",
+            "instruction": "&& is true only when both sides are true.",
+            "code": "boolean hasKey = true;\nboolean strongEnough = true;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
+            "output": "=== DUNGEON DOOR ===\nHas key:       true\nStrong enough: true\nDoor opens:    true",
+            "points": [
+              {
+                "label": "&&",
+                "text": "Two ampersands, no space between them. Read it as \"and\"."
+              },
+              {
+                "label": "hasKey && strongEnough",
+                "text": "Both are true here, so the whole expression is true and the door opens."
+              },
+              {
+                "label": "the brackets",
+                "text": "( ) around the expression keep it separate from the text being joined with +. Without them Java would try to add a boolean to a String in the wrong order."
+              },
+              {
+                "label": "one false is enough",
+                "text": "Set either fact to false and the door stays shut. && has no tolerance."
+              }
+            ]
+          },
+          {
+            "id": "g_run1",
             "kind": "run",
-            "after": "&& is strict. Everything must be true.",
-            "instruction": "Run it."
+            "instruction": "Run it. Both facts are true, so the door opens.",
+            "code": "boolean hasKey = true;\nboolean strongEnough = true;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
+            "after": "One answer, built from two facts."
           },
           {
-            "id": "f27_3",
-            "why": "&& needs both sides true. The first is false, so the answer is false.",
-            "code": "System.out.println(false && true);",
-            "kind": "predict",
-            "opts": [
-              "false",
+            "id": "g_tweak",
+            "kind": "tweak",
+            "instruction": "The player is not strong enough yet. Make the door stay shut.",
+            "code": "boolean hasKey = true;\nboolean strongEnough = true;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
+            "target": "=== DUNGEON DOOR ===\nHas key:       true\nStrong enough: false\nDoor opens:    false",
+            "hint": "Change one of the two facts at the top. Do not touch the last line.",
+            "after": "Key but no strength, and the door refuses. That is && being strict.",
+            "skills": [
+              "combine two booleans with && so both must be true"
+            ]
+          },
+          {
+            "id": "g_table_and",
+            "kind": "table",
+            "instruction": "Fill in every combination of && .",
+            "columns": [
+              "hasKey",
+              "strongEnough",
+              "hasKey && strongEnough"
+            ],
+            "fillFrom": 2,
+            "chips": [
               "true",
+              "false"
+            ],
+            "exprs": [
+              "hasKey && strongEnough"
+            ],
+            "rows": [
+              [
+                "true",
+                "true",
+                "true"
+              ],
+              [
+                "true",
+                "false",
+                "false"
+              ],
+              [
+                "false",
+                "true",
+                "false"
+              ],
+              [
+                "false",
+                "false",
+                "false"
+              ]
+            ],
+            "why": "Exactly one row out of four is true. && is the strict one: everything must hold.",
+            "skills": [
+              "combine two booleans with && so both must be true"
+            ]
+          },
+          {
+            "id": "g_or",
+            "kind": "teach",
+            "instruction": "|| is true when either side is true.",
+            "code": "boolean hasKey = false;\nboolean knowsPassword = true;\nSystem.out.println(\"Secret passage: \" + (hasKey || knowsPassword));",
+            "output": "Secret passage: true",
+            "points": [
+              {
+                "label": "||",
+                "text": "Two pipe characters, on the backslash key. Read it as \"or\"."
+              },
+              {
+                "label": "hasKey is false",
+                "text": "It does not matter. knowsPassword is true, and || only needs one side."
+              },
+              {
+                "label": "|| vs everyday \"or\"",
+                "text": "In English \"tea or coffee\" usually means one or the other. In Java || is also true when BOTH are true."
+              }
+            ]
+          },
+          {
+            "id": "g_table_or",
+            "kind": "table",
+            "instruction": "Now the same four combinations with || .",
+            "columns": [
+              "hasKey",
+              "knowsPassword",
+              "hasKey || knowsPassword"
+            ],
+            "fillFrom": 2,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "exprs": [
+              "hasKey || knowsPassword"
+            ],
+            "rows": [
+              [
+                "true",
+                "true",
+                "true"
+              ],
+              [
+                "true",
+                "false",
+                "true"
+              ],
+              [
+                "false",
+                "true",
+                "true"
+              ],
+              [
+                "false",
+                "false",
+                "false"
+              ]
+            ],
+            "why": "Exactly one row out of four is false — the mirror image of &&. || only fails when nothing is true.",
+            "skills": [
+              "combine two booleans with || so either will do"
+            ]
+          },
+          {
+            "id": "g_not",
+            "kind": "teach",
+            "instruction": "! flips a boolean to its opposite.",
+            "code": "boolean hasKey = false;\nSystem.out.println(\"Door is locked: \" + !hasKey);",
+            "output": "Door is locked: true",
+            "points": [
+              {
+                "label": "!",
+                "text": "An exclamation mark in front of the value. Read it as \"not\"."
+              },
+              {
+                "label": "!hasKey",
+                "text": "hasKey is false, so !hasKey is true. The door is locked precisely because you have no key."
+              },
+              {
+                "label": "!true is false",
+                "text": "And !false is true. It only ever swaps the two values."
+              },
+              {
+                "label": "! runs first",
+                "text": "Before && and ||, the same way * runs before +. So true && !false is true && true, which is true."
+              }
+            ]
+          },
+          {
+            "id": "g_predict",
+            "kind": "predict",
+            "instruction": "The exact expression the quiz asks about.",
+            "code": "System.out.println(true && !false);",
+            "opts": [
+              "true",
+              "false",
               "(an error)",
               "nothing"
             ],
-            "skills": [
-              "combine two booleans with && and ||"
-            ],
             "correct": 0,
-            "instruction": "What prints?"
+            "why": "!false is true, so this becomes true && true. Both sides are true, so && gives true.",
+            "skills": [
+              "flip a boolean with !"
+            ]
           },
           {
-            "id": "f27_4",
-            "code": "System.out.println(true || false);\nSystem.out.println(false || false);",
+            "id": "g_sharp",
             "kind": "teach",
-            "output": "true\nfalse",
+            "instruction": "&& needs all. || needs one. ! swaps.",
             "points": [
               {
-                "text": "Two pipe characters, above the backslash key. Read it as \"or\".",
-                "label": "||"
+                "label": "&&",
+                "text": "True only when BOTH sides are true. One row of four."
               },
               {
-                "text": "true || false is true. Only one side needs to hold up.",
-                "label": "one is enough"
+                "label": "||",
+                "text": "True when EITHER side is true, including when both are. Three rows of four."
               },
               {
-                "text": "The only way to get false is if neither side is true.",
-                "label": "both false"
+                "label": "!",
+                "text": "Turns true into false and false into true."
+              },
+              {
+                "label": "order",
+                "text": "! first, then &&, then ||. Brackets override all of it."
+              },
+              {
+                "label": "&& is not &",
+                "text": "Two characters, both times. A single & is a different operator you have not been taught."
               }
-            ],
-            "instruction": "|| means AT LEAST ONE has to be true."
+            ]
           },
           {
-            "id": "f27_5",
-            "why": "|| only needs one side to be true, and the second one is.",
-            "code": "System.out.println(false || true);",
-            "kind": "predict",
-            "opts": [
-              "true",
-              "false",
-              "(an error)",
-              "nothing"
-            ],
-            "skills": [
-              "combine two booleans with && and ||"
-            ],
-            "correct": 0,
-            "instruction": "And this one?"
-          },
-          {
-            "id": "f27_6",
-            "code": "System.out.println(!true);\nSystem.out.println(!false);\nSystem.out.println(true && !false);",
-            "kind": "teach",
-            "output": "false\ntrue\ntrue",
-            "points": [
-              {
-                "text": "An exclamation mark in front. Read it as \"not\".",
-                "label": "!"
-              },
-              {
-                "text": "Becomes false. !false becomes true. It just swaps.",
-                "label": "!true"
-              },
-              {
-                "text": "Do the ! first: !false is true. So it is true && true, which is true.",
-                "label": "true && !false"
-              },
-              {
-                "text": "! happens before && and ||, the same way × happens before +.",
-                "label": "order"
-              }
-            ],
-            "instruction": "! flips a boolean to its opposite."
-          },
-          {
-            "id": "f27_7",
-            "code": "boolean a = true;\nboolean b = false;",
+            "id": "g_mcq",
             "kind": "trace",
-            "skills": [
-              "work out the value of an expression that mixes them"
-            ],
+            "instruction": "Two the test always asks.",
+            "code": "boolean a = true;\nboolean b = false;",
             "questions": [
               {
-                "why": "&& needs both. b is false.",
+                "prompt": "Which of these is a logical operator?",
                 "opts": [
-                  "false",
-                  "true"
+                  "!",
+                  "##",
+                  "**",
+                  "%"
                 ],
-                "prompt": "a && b",
-                "correct": 0
+                "correct": 0,
+                "why": "! is NOT. The other logical operators are && and ||. % is the remainder operator — arithmetic, not logic — and ## and ** are not Java at all."
               },
               {
-                "why": "|| needs one. a is true.",
+                "prompt": "What does true && !false evaluate to?",
                 "opts": [
                   "true",
                   "false"
                 ],
-                "prompt": "a || b",
-                "correct": 0
-              },
-              {
-                "why": "! flips false to true.",
-                "opts": [
-                  "true",
-                  "false"
-                ],
-                "prompt": "!b",
-                "correct": 0
+                "correct": 0,
+                "why": "! runs first and turns false into true, leaving true && true, which is true."
               }
             ],
-            "instruction": "Work these out."
+            "skills": [
+              "flip a boolean with !"
+            ]
           },
           {
-            "id": "f27_8",
-            "code": "boolean tallEnough = true;\nboolean oldEnough = false;\nSystem.out.println(tallEnough ⟦1⟧ oldEnough);",
-            "hint": "Which one refuses when only ONE side is true?",
+            "id": "g_d1",
             "kind": "fill",
-            "after": "&& is the strict one. || is the generous one.",
+            "instruction": "Only one operator makes this print false.",
+            "code": "boolean tallEnough = true;\nboolean oldEnough = false;\nSystem.out.println(tallEnough ⟦1⟧ oldEnough);",
             "blanks": [
               {
                 "chips": [
@@ -2214,25 +2339,26 @@
                 "answer": 0
               }
             ],
-            "skills": [
-              "combine two booleans with && and ||"
-            ],
             "target": "false",
-            "instruction": "Fill in the operator so it prints false."
+            "hint": "One side is false. Which operator refuses to accept that?",
+            "after": "&& fails on a single false. || would have accepted the one true and printed true.",
+            "skills": [
+              "combine two booleans with && so both must be true"
+            ]
           },
           {
-            "id": "f27_9",
-            "code": "// ask both questions, then print whether they can ride\n",
-            "hint": "Two readBoolean calls, then join them with &&.",
+            "id": "g_d2",
             "kind": "write",
-            "after": "That is CodeHS exercise 3.7.4, Roller Coaster.",
+            "instruction": "Last one: they ride only if they are tall enough AND old enough.",
+            "code": "// ask both questions with readBoolean, then print whether they can ride\n",
             "stdin": "true\ntrue",
-            "skills": [
-              "combine two booleans with && and ||"
-            ],
             "target": "Tall enough? true\nOld enough? true\ntrue",
             "solution": "boolean tallEnough = readBoolean(\"Tall enough? \");\nboolean oldEnough = readBoolean(\"Old enough? \");\nSystem.out.println(tallEnough && oldEnough);",
-            "instruction": "Your turn: they can ride only if they are BOTH tall enough and old enough."
+            "hint": "Two readBoolean calls storing tallEnough and oldEnough, then print the two joined with &&. The questions are \"Tall enough? \" and \"Old enough? \".",
+            "after": "That is CodeHS exercise 3.7.4, Roller Coaster. Lesson done.",
+            "skills": [
+              "combine two booleans with && so both must be true"
+            ]
           }
         ]
       }

@@ -28,6 +28,11 @@ type Step = {
   // ask: one field per read call. `sample` is stripped server-side, so the
   // browser only ever sees the label the student is answering.
   fields?: { label: string; placeholder?: string; holds?: string }[];
+  // table: rows arrive with the fillable cells blanked out
+  columns?: string[];
+  rows?: string[][];
+  fillFrom?: number;
+  chips?: string[];
   opts?: string[];
   questions?: { prompt: string; opts: string[] }[];
   lines?: string[];
@@ -223,6 +228,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   const [leftSel, setLeftSel] = useState<number | null>(null);
   // ask: what the student actually types, one entry per read call in the code.
   const [typed, setTyped] = useState<string[]>(() => (step.fields || []).map(() => ""));
+  // table: one entry per blank cell, row-major over the fillable columns.
+  const blankCount = (step.rows || []).length * Math.max(0, (step.columns || []).length - (step.fillFrom ?? 1));
+  const [cells, setCells] = useState<string[]>(() => Array(blankCount).fill(""));
+  const [cellSel, setCellSel] = useState<number | null>(null);
   const [explainText, setExplainText] = useState("");
   const [explainReply, setExplainReply] = useState("");
   const [hintOpen, setHintOpen] = useState(false);
@@ -305,6 +314,12 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
     const d = await post({ action: "bucket", assignments: assign, attempt: fails + 1 });
     setVerdicts(d.verdicts || []);
     setServerAnswers(d.answers || null);
+    if (d.correct) { setReveal({ correct: true, why: d.why }); setWon(true); }
+  }
+  async function checkTable() {
+    onAttempt(step.id);
+    const d = await post({ action: "table", cells, attempt: fails + 1 });
+    setVerdicts(d.verdicts || []);
     if (d.correct) { setReveal({ correct: true, why: d.why }); setWon(true); }
   }
   async function checkMatch() {
@@ -548,6 +563,78 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           )}
         </div>
       )}
+
+      {/* ── table ──
+          The rows have to sit together, because the pattern IS the lesson:
+          && is true in exactly one row of four, || false in exactly one. A
+          sequence of separate questions can teach each row and still leave the
+          shape invisible. */}
+      {step.kind === "table" && (() => {
+        const from = step.fillFrom ?? 1;
+        const cols = step.columns || [];
+        const fillCols = cols.length - from;
+        return (
+          <div className="flowtable">
+            <table>
+              <thead>
+                <tr>{cols.map((c, ci) => <th key={ci} className={ci >= from ? "fillcol" : ""}>{c}</th>)}</tr>
+              </thead>
+              <tbody>
+                {(step.rows || []).map((row, ri) => (
+                  <tr key={ri}>
+                    {row.map((cell, ci) => {
+                      if (ci < from) return <td key={ci} className="given">{cell}</td>;
+                      const idx = ri * fillCols + (ci - from);
+                      const v = verdicts ? verdicts[idx] : null;
+                      return (
+                        <td key={ci} className={v === null ? "" : v ? "right" : "wrong"}>
+                          <button
+                            className={`tcell ${cells[idx] ? "filled" : ""} ${cellSel === idx ? "sel" : ""}`}
+                            onClick={() => setCellSel(idx)}
+                          >
+                            {cells[idx] || "?"}
+                          </button>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="tchips">
+              {(step.chips || []).map((ch) => (
+                <button
+                  key={ch}
+                  className="bchip"
+                  disabled={cellSel === null}
+                  onClick={() => {
+                    if (cellSel === null) return;
+                    // functional update: rapid taps must not drop one
+                    setCells((prev) => { const n = [...prev]; n[cellSel] = ch; return n; });
+                    setVerdicts(null);
+                    setCellSel((s) => (s === null ? null : s + 1 < blankCount ? s + 1 : null));
+                  }}
+                >
+                  {ch}
+                </button>
+              ))}
+              <span className="meta" style={{ margin: 0 }}>
+                {cellSel === null ? "tap a ? then pick a value" : "now pick a value"}
+              </span>
+            </div>
+            {!won && (
+              <button
+                className="btn green"
+                style={{ marginTop: 10 }}
+                disabled={cells.some((c) => !c)}
+                onClick={checkTable}
+              >
+                Check
+              </button>
+            )}
+          </div>
+        );
+      })()}
 
       {step.kind === "match" && (
         <div className="flowmatch">

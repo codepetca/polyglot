@@ -34,7 +34,7 @@ import { runJava } from "@/lib/java/piston";
 
 export type FlowStep = {
   id: string;
-  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "explain" | "branch";
+  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "explain" | "branch";
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -73,6 +73,22 @@ export type FlowStep = {
   buckets?: string[];
   items?: { text: string; bucket: number }[];
   pairs?: [string, string][];
+  // table: a truth table the student completes.
+  //
+  // Sequential predict steps can teach what `true && false` gives, but they
+  // cannot show the SHAPE — that && is true in exactly one row of four and ||
+  // is false in exactly one. That contrast is the whole idea, and it only
+  // exists when the rows sit together. 3.14 needs it even more: two columns
+  // side by side is what "these expressions are equivalent" actually looks like.
+  //
+  // Columns before `fillFrom` are given; the rest are tapped in from `chips`.
+  // `exprs` (one per fillable column) lets the compiler gate check the answers
+  // against real Java instead of trusting the author's logic.
+  columns?: string[];
+  rows?: string[][];
+  fillFrom?: number;
+  chips?: string[];
+  exprs?: string[];
   // teach: short labelled explanation lines shown beside/below the code.
   points?: { label: string; text: string }[];
   prompt?: string;
@@ -145,6 +161,24 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       case "match":
         if (!s.pairs || s.pairs.length < 2) errors.push(`${at}: needs 2+ pairs`);
         break;
+      case "table": {
+        if (!s.columns || s.columns.length < 2) errors.push(`${at}: needs 2+ columns`);
+        if (!s.rows?.length) errors.push(`${at}: needs rows[]`);
+        if (!s.chips || s.chips.length < 2) errors.push(`${at}: needs chips[] to tap in`);
+        const from = s.fillFrom ?? 0;
+        if (from < 1) errors.push(`${at}: fillFrom must be >= 1 (at least one column must be given)`);
+        if (s.columns && from >= s.columns.length) errors.push(`${at}: fillFrom leaves nothing to fill`);
+        for (const [i, r] of (s.rows || []).entries()) {
+          if (r.length !== (s.columns?.length || 0)) errors.push(`${at}: row ${i + 1} has ${r.length} cells, expected ${s.columns?.length}`);
+          for (let c = from; c < r.length; c++) {
+            if (!(s.chips || []).includes(r[c])) errors.push(`${at}: row ${i + 1} col ${c + 1} answer "${r[c]}" is not one of the chips`);
+          }
+        }
+        if (s.exprs && s.exprs.length !== (s.columns?.length || 0) - from) {
+          errors.push(`${at}: exprs must have one entry per fillable column`);
+        }
+        break;
+      }
       case "explain":
         if (!s.prompt || !s.rubric) errors.push(`${at}: needs prompt + rubric`);
         break;
@@ -183,6 +217,18 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       return { ...base, lefts, rights };
     }
     case "teach": return { ...base, points: s.points, output: s.output };
+    // Blank out every cell the student is meant to work out; the answers stay
+    // on the server like every other answer key.
+    case "table": {
+      const from = s.fillFrom ?? 1;
+      return {
+        ...base,
+        columns: s.columns,
+        chips: s.chips,
+        fillFrom: from,
+        rows: (s.rows || []).map((r) => r.map((cell, c) => (c < from ? cell : ""))),
+      };
+    }
     // The samples stay server-side: if the browser knew them it would be
     // pre-filling the answer the student is supposed to invent.
     case "ask": return { ...base, fields: (s.fields || []).map((fl) => ({ label: fl.label, placeholder: fl.placeholder, holds: fl.holds })) };
@@ -262,6 +308,26 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           } else if (!r.compiled || r.error) failures.push(`${name}: doesn't run: ${(r.error || "").slice(0, 100)}`);
           else if (norm(r.stdout) !== norm(claimed)) failures.push(`${name}: prints ${JSON.stringify(norm(r.stdout))}, but correct opt says ${JSON.stringify(norm(claimed))}`);
           else results.push(`${name}: ✓ prints the correct option`);
+          break;
+        }
+        case "table": {
+          // A truth table is a claim about what Java does, so it gets checked
+          // like any other claim. One program per row: bind the given columns
+          // as booleans, print each fillable expression, compare to the cells
+          // the step says are correct.
+          if (!s.exprs?.length) { results.push(`${name}: – no exprs to verify against`); break; }
+          const from = s.fillFrom ?? 1;
+          const names = (s.columns || []).slice(0, from);
+          let bad = 0;
+          for (const [ri, row] of (s.rows || []).entries()) {
+            const decls = names.map((n, i) => `boolean ${n} = ${row[i]};`).join("\n");
+            const prints = s.exprs.map((e) => `System.out.println(${e});`).join("\n");
+            const r = await runJava(`${decls}\n${prints}`, "", { wrapBeginner: true });
+            const want = row.slice(from).join("\n");
+            if (!r.compiled || r.error) { failures.push(`${name}: row ${ri + 1} does not run: ${(r.error || "").slice(0, 90)}`); bad++; }
+            else if (norm(r.stdout) !== norm(want)) { failures.push(`${name}: row ${ri + 1} — Java gives ${JSON.stringify(norm(r.stdout))}, table says ${JSON.stringify(want)}`); bad++; }
+          }
+          if (!bad) results.push(`${name}: ✓ all ${(s.rows || []).length} rows match real Java`);
           break;
         }
         case "fix": case "write": {
