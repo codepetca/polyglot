@@ -2671,194 +2671,268 @@
       "code": "2.9",
       "title": "For Loops",
       "objectives": [
-        "trace a for-loop's counter through each iteration",
-        "predict how many times a loop body runs",
-        "write a for-loop that counts to a target"
+        "write a for loop that repeats a fixed number of times",
+        "control where a loop starts, stops and how far it steps",
+        "work out how many times a loop body runs"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "f29_t1",
-            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}",
+            "id": "r_task",
             "kind": "teach",
-            "output": "1\n2\n3\n4\n5",
+            "instruction": "The dungeon has 5 floors, and each one needs a line.",
+            "code": "System.out.println(\"Floor 1\");\nSystem.out.println(\"Floor 2\");\nSystem.out.println(\"Floor 3\");\nSystem.out.println(\"Floor 4\");\nSystem.out.println(\"Floor 5\");",
+            "output": "Floor 1\nFloor 2\nFloor 3\nFloor 4\nFloor 5",
             "points": [
               {
-                "text": "Where the counter starts. It runs once, at the very beginning.",
-                "label": "int i = 1"
+                "label": "five printlns",
+                "text": "This works. The output is exactly right and nothing here is broken."
               },
               {
-                "text": "Checked before every turn. While it is true the block runs; the moment it is false the loop stops.",
-                "label": "i <= 5"
+                "label": "\"Floor 1\" … \"Floor 5\"",
+                "text": "Every line is identical apart from one number that goes up by one."
               },
               {
-                "text": "Runs after each turn. It adds 1 to i — without it the loop would never end.",
-                "label": "i++"
+                "label": "8 floors",
+                "text": "Would mean typing three more lines. 100 floors would mean typing 95 more."
               },
               {
-                "text": "Everything inside { } is what gets repeated.",
-                "label": "the braces"
+                "label": "what we want",
+                "text": "To say the repeating line ONCE, and say how many times to do it."
               }
-            ],
-            "instruction": "A for loop repeats a block a set number of times."
+            ]
           },
           {
-            "id": "f29_1",
-            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}",
-            "kind": "run",
-            "after": "One line of code, five lines of output. That's a loop.",
-            "skills": [
-              "write a for-loop that counts to a target"
-            ],
-            "instruction": "This repeats itself. Run it."
-          },
-          {
-            "id": "f29_2",
-            "code": "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}",
-            "hint": "Only one number decides where it stops.",
-            "kind": "tweak",
-            "after": "The middle part is the stop condition — it decides when to quit.",
-            "skills": [
-              "write a for-loop that counts to a target"
-            ],
-            "target": "1\n2\n3\n4\n5",
-            "instruction": "Make it count to 10 instead."
-          },
-          {
-            "id": "f29_t2",
-            "code": "for (int i = 0; i < 3; i++) {\n  System.out.println(i);\n}",
+            "id": "r_for",
             "kind": "teach",
+            "instruction": "A for loop says the line once and repeats it.",
+            "code": "for (int floor = 1; floor <= 5; floor++) {\n  System.out.println(\"Floor \" + floor);\n}",
+            "output": "Floor 1\nFloor 2\nFloor 3\nFloor 4\nFloor 5",
+            "points": [
+              {
+                "label": "int floor = 1",
+                "text": "Where the counter starts. This runs once, before anything else."
+              },
+              {
+                "label": "floor <= 5",
+                "text": "Checked before every pass. While it is true the block runs; the moment it is false the loop is over."
+              },
+              {
+                "label": "floor++",
+                "text": "Runs after each pass, adding 1 to floor. Without it floor stays 1 and the loop never ends."
+              },
+              {
+                "label": "{ }",
+                "text": "Everything inside the braces is what gets repeated. Here that is one println."
+              }
+            ]
+          },
+          {
+            "id": "r_run",
+            "kind": "run",
+            "instruction": "Run it. Same five lines, one println.",
+            "code": "for (int floor = 1; floor <= 5; floor++) {\n  System.out.println(\"Floor \" + floor);\n}",
+            "after": "One line of code produced five lines of output."
+          },
+          {
+            "id": "r_tweak",
+            "kind": "tweak",
+            "instruction": "The dungeon just grew. Make it print 8 floors.",
+            "code": "for (int floor = 1; floor <= 5; floor++) {\n  System.out.println(\"Floor \" + floor);\n}",
+            "target": "Floor 1\nFloor 2\nFloor 3\nFloor 4\nFloor 5\nFloor 6\nFloor 7\nFloor 8",
+            "hint": "Only the number in the middle part needs to change.",
+            "after": "One character changed. The five-println version would have needed three whole new lines.",
+            "skills": [
+              "write a for loop that repeats a fixed number of times"
+            ]
+          },
+          {
+            "id": "r_table",
+            "kind": "table",
+            "instruction": "The condition is checked before every pass — including one that fails.",
+            "columns": [
+              "floor",
+              "floor <= 5"
+            ],
+            "fillFrom": 1,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "exprs": [
+              "floor <= 5"
+            ],
+            "rows": [
+              [
+                "1",
+                "true"
+              ],
+              [
+                "2",
+                "true"
+              ],
+              [
+                "3",
+                "true"
+              ],
+              [
+                "4",
+                "true"
+              ],
+              [
+                "5",
+                "true"
+              ],
+              [
+                "6",
+                "false"
+              ]
+            ],
+            "why": "Six checks for five passes. After printing Floor 5 the counter becomes 6, the check fails, and the loop stops — so the counter always ends up one past the last value it printed.",
+            "skills": [
+              "work out how many times a loop body runs"
+            ]
+          },
+          {
+            "id": "r_zero",
+            "kind": "teach",
+            "instruction": "Starting at 0 with < is the other common shape.",
+            "code": "for (int i = 0; i < 3; i++) {\n  System.out.println(i);\n}",
             "output": "0\n1\n2",
             "points": [
               {
-                "text": "Three turns — but the numbers stop at 2, because < 3 is false when i reaches 3.",
-                "label": "0, 1, 2"
+                "label": "i = 0 … i < 3",
+                "text": "Three passes, printing 0, 1 and 2. It stops before 3, so 3 never appears."
               },
               {
-                "text": "Start at 0 with <, or start at 1 with <=. Both give you N turns. Mixing them up is the classic off-by-one.",
-                "label": "< vs <="
+                "label": "i = 1 … i <= 3",
+                "text": "Also three passes, printing 1, 2 and 3. Same count, different numbers."
               },
               {
-                "text": "You will see this everywhere in Java, so it is worth getting used to now.",
-                "label": "why 0"
+                "label": "i = 0 … i <= 3",
+                "text": "FOUR passes. Mixing the two shapes is the off-by-one that catches everyone."
+              },
+              {
+                "label": "which to use",
+                "text": "Start at 0 with < when you just need N repeats. Start at 1 with <= when the number itself is being shown, like a floor."
               }
-            ],
-            "instruction": "Counting from 0 is the normal way to repeat N times."
+            ]
           },
           {
-            "id": "f29_3",
-            "why": "i < 5 stops BEFORE 5, so it runs on 1,2,3,4 — four times, not five. This one character is the most common loop bug there is.",
-            "code": "for (int i = 1; i < 5; i++) {\n  System.out.print(i);\n}",
+            "id": "r_predict",
             "kind": "predict",
+            "instruction": "How many lines does this print?",
+            "code": "for (int i = 0; i < 4; i++) {\n  System.out.println(\"x\");\n}",
             "opts": [
-              "1234",
-              "12345",
-              "2345",
+              "x\nx\nx\nx",
+              "x\nx\nx",
+              "x\nx\nx\nx\nx",
               "(nothing)"
             ],
-            "skills": [
-              "predict how many times a loop body runs"
-            ],
             "correct": 0,
-            "instruction": "Note the < instead of <=. What prints?"
-          },
-          {
-            "id": "f29_4",
-            "why": "Starting at 0 and stopping before 3 gives 0,1,2 — three runs. Starting at 0 with < is the standard way to repeat something N times.",
-            "code": "for (int i = 0; i < 3; i++) {\n  System.out.print(\"x\");\n}",
-            "kind": "predict",
-            "opts": [
-              "xxx",
-              "xx",
-              "xxxx",
-              "(nothing)"
-            ],
+            "why": "i takes the values 0, 1, 2 and 3 — four passes. It stops at 4 because 4 < 4 is false.",
             "skills": [
-              "predict how many times a loop body runs"
-            ],
-            "correct": 0,
-            "instruction": "How many x's?"
+              "work out how many times a loop body runs"
+            ]
           },
           {
-            "id": "f29_5",
-            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(i * 10);\n}",
-            "kind": "trace",
-            "skills": [
-              "trace a for-loop's counter through each iteration"
-            ],
-            "questions": [
-              {
-                "why": "i starts at 1, so i * 10 is 10.",
-                "opts": [
-                  "10",
-                  "1",
-                  "30"
-                ],
-                "prompt": "first time through, what prints?",
-                "correct": 0
-              },
-              {
-                "why": "i reaches 3 (since i <= 3), so 3 * 10 = 30.",
-                "opts": [
-                  "30",
-                  "40",
-                  "3"
-                ],
-                "prompt": "and the last thing it prints?",
-                "correct": 0
-              },
-              {
-                "why": "i takes the values 1, 2, 3 — three passes, three lines.",
-                "opts": [
-                  "3",
-                  "4",
-                  "2"
-                ],
-                "prompt": "so how many lines total?",
-                "correct": 0
-              }
-            ],
-            "instruction": "Follow i."
-          },
-          {
-            "id": "f29_6",
-            "why": "That line drags i back to 1 on every pass, so i++ can never get it past 3. The body can change the counter — and that's how loops get stuck.",
-            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"row \" + i);\n  i = 1;\n}",
-            "kind": "spot",
-            "skills": [
-              "trace a for-loop's counter through each iteration"
-            ],
-            "correct": 2,
-            "instruction": "Tap the line that makes this run forever."
-          },
-          {
-            "id": "f29_t3",
-            "code": "for (int i = 2; i <= 10; i = i + 2) {\n  System.out.println(i);\n}",
+            "id": "r_step",
             "kind": "teach",
-            "output": "2\n4\n6\n8\n10",
+            "instruction": "The counter does not have to go up by one.",
+            "code": "for (int i = 1; i <= 9; i += 2) {\n  System.out.println(i);\n}",
+            "output": "1\n3\n5\n7\n9",
             "points": [
               {
-                "text": "The last part is just \"what to do after each turn\". It can be anything.",
-                "label": "i = i + 2"
+                "label": "i += 2",
+                "text": "Adds 2 after each pass instead of 1, so the counter lands on 1, 3, 5, 7, 9."
               },
               {
-                "text": "The short way of writing the same thing.",
-                "label": "i += 2"
+                "label": "i++",
+                "text": "Just the shorthand for i += 1. The last part can be any change you like."
               },
               {
-                "text": "Counts DOWN. Start high and end low for a countdown.",
-                "label": "i--"
+                "label": "i--",
+                "text": "Counts DOWN. Start high, end low, and the condition becomes something like i >= 1."
+              },
+              {
+                "label": "odd numbers",
+                "text": "Starting at 1 and stepping by 2 gives every odd number. Starting at 2 gives every even one."
               }
-            ],
-            "instruction": "The counter does not have to go up by one."
+            ]
           },
           {
-            "id": "f29_7",
-            "code": "for (int i = ⟦1⟧; i <= 10; i = i + ⟦2⟧) {\n  System.out.print(i + \" \");\n}",
-            "hint": "Start on the first even number, and step by how far apart evens are.",
+            "id": "r_sharp",
+            "kind": "teach",
+            "instruction": "Three parts, separated by semicolons, then a block.",
+            "points": [
+              {
+                "label": "for (start; condition; change)",
+                "text": "Start runs once. Condition is checked before every pass. Change runs after every pass."
+              },
+              {
+                "label": "for (int i = 0; i < 10; i++)",
+                "text": "The most common loop in Java: ten passes, i going 0 to 9."
+              },
+              {
+                "label": "the counter is local",
+                "text": "An i declared in the for line exists only inside the loop. After the loop it is gone."
+              },
+              {
+                "label": "for (int i = 0; i < n; i += 2)",
+                "text": "Steps of 2 up to n gives (n + 1) / 2 passes — the counting question the quiz asks."
+              }
+            ]
+          },
+          {
+            "id": "r_mcq",
+            "kind": "trace",
+            "instruction": "Three the test always asks.",
+            "code": "for (int i = 0; i < 10; i++) {\n  System.out.println(i);\n}",
+            "questions": [
+              {
+                "prompt": "Why do we use for loops in Java?",
+                "opts": [
+                  "To repeat something a fixed number of times",
+                  "To do something if a condition is true",
+                  "To do something while a condition is true",
+                  "To break out of some block of code"
+                ],
+                "correct": 0,
+                "why": "A for loop is the shape you reach for when you already know the count. Repeating while something stays true is a while loop, which is the next lesson."
+              },
+              {
+                "prompt": "Which for loop correctly prints \"hello\" 10 times?",
+                "opts": [
+                  "for(int i = 0; i < 10; i++)",
+                  "for(int i = 10)",
+                  "for(int i = 0; i++; i < 10)",
+                  "for(int i = 10; i < 0; i++)"
+                ],
+                "correct": 0,
+                "why": "Start, condition, change — in that order. The second has no condition, the third has them swapped, and the fourth starts at 10 where 10 < 0 is already false, so it runs zero times."
+              },
+              {
+                "prompt": "for (int i = 0; i < n; i += 2) — at most how many passes, in terms of n?",
+                "opts": [
+                  "(n + 1) / 2",
+                  "n / 2",
+                  "(n - 1) / 2",
+                  "n"
+                ],
+                "correct": 0,
+                "why": "i lands on 0, 2, 4 … so it takes every other value below n. For n = 5 that is 0, 2, 4 — three passes, and (5 + 1) / 2 is 3."
+              }
+            ],
+            "skills": [
+              "work out how many times a loop body runs"
+            ]
+          },
+          {
+            "id": "r_d1",
             "kind": "fill",
-            "after": "The third part doesn't have to be i++ — you can step by any amount.",
+            "instruction": "Make it print the even numbers up to 10.",
+            "code": "for (int i = ⟦1⟧; i <= 10; i += ⟦2⟧) {\n  System.out.println(i);\n}",
             "blanks": [
               {
                 "chips": [
@@ -2872,65 +2946,55 @@
                 "chips": [
                   "2",
                   "1",
-                  "10"
+                  "3"
                 ],
                 "answer": 0
               }
             ],
+            "target": "2\n4\n6\n8\n10",
+            "hint": "Start on the first even number, then jump over every odd one.",
+            "after": "Start at 2, step by 2. Starting at 1 with the same step would have given the odds instead.",
             "skills": [
-              "write a for-loop that counts to a target"
-            ],
-            "target": "2 4 6 8 10",
-            "instruction": "Fill the blanks to print the even numbers up to 10."
+              "control where a loop starts, stops and how far it steps"
+            ]
           },
           {
-            "id": "f29_8",
-            "code": "for (int i = 1; i < 3; i++) {\n  System.out.println(\"hi\");\n}",
-            "hint": "Count it out: with i < 3 starting at 1, which values does i actually take?",
-            "kind": "fix",
-            "after": "Off by one. Always count the actual values — 1, 2 is two passes, not three.",
+            "id": "r_d2",
+            "kind": "spot",
+            "instruction": "This one never stops. Tap the line to blame.",
+            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"row \" + i);\n  i = 1;\n}",
+            "correct": 2,
+            "why": "i = 1 drags the counter back to 1 on every pass, so i++ can never get it past 3. The body is allowed to change the counter, and this is how loops get stuck.",
             "skills": [
-              "predict how many times a loop body runs"
-            ],
-            "target": "hi\nhi\nhi",
-            "solution": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"hi\");\n}",
-            "instruction": "It should print hi three times. Fix it."
+              "work out how many times a loop body runs"
+            ]
           },
           {
-            "id": "f29_10",
-            "code": "String bar = \"\";\nfor (int i = 1; i <= 5; i++) {\n  bar = bar + \"#\";\n  System.out.println(bar + \"  \" + (i * 20) + \"%\");\n}",
-            "kind": "run",
-            "after": "A loading bar — from one loop. Same loop you've been using all lesson.",
-            "skills": [
-              "write a for-loop that counts to a target"
-            ],
-            "instruction": "Loops can draw. Run it."
-          },
-          {
-            "id": "f29_11",
-            "code": "String bar = \"\";\nfor (int i = 1; i <= 5; i++) {\n  System.out.println(bar);\n  bar = bar + \"*\";\n}",
-            "hint": "It prints BEFORE adding the star. What should happen first?",
-            "kind": "fix",
-            "after": "Order inside the loop body matters as much as the loop itself.",
-            "skills": [
-              "trace a for-loop's counter through each iteration"
-            ],
-            "target": "*\n**\n***\n****\n*****",
-            "solution": "String bar = \"\";\nfor (int i = 1; i <= 5; i++) {\n  bar = bar + \"*\";\n  System.out.println(bar);\n}",
-            "instruction": "The first row is blank and the last star is missing. Fix the order."
-          },
-          {
-            "id": "f29_12",
-            "code": "// print 1, 3, 5, 7, 9 — one per line\n",
-            "hint": "Start at 1, and step by 2 instead of 1.",
+            "id": "r_d3",
             "kind": "write",
-            "after": "Change the 9 to 99 and you have written a real CodeHS exercise — Print The Odds.",
-            "skills": [
-              "write a for-loop that counts to a target"
-            ],
+            "instruction": "Print the odd numbers from 1 to 9.",
+            "code": "// print 1, 3, 5, 7, 9 — one per line\n",
             "target": "1\n3\n5\n7\n9",
-            "solution": "for (int i = 1; i <= 9; i = i + 2) {\n  System.out.println(i);\n}",
-            "instruction": "Your turn: print the odd numbers from 1 to 9."
+            "solution": "for (int i = 1; i <= 9; i += 2) {\n  System.out.println(i);\n}",
+            "hint": "Start at 1 and step by 2.",
+            "after": "Change the 9 to 99 and you have written CodeHS exercise 3.9.8, Print The Odds.",
+            "skills": [
+              "control where a loop starts, stops and how far it steps"
+            ]
+          },
+          {
+            "id": "r_d4",
+            "kind": "write",
+            "instruction": "Last one: a factorial. 4 means 4 * 3 * 2 * 1.",
+            "code": "int n = readInt(\"What number would you like to compute the factorial for? \");\n// multiply 1 by every number up to n, then print it\n",
+            "stdin": "4",
+            "target": "What number would you like to compute the factorial for? 4\n24",
+            "solution": "int n = readInt(\"What number would you like to compute the factorial for? \");\nint result = 1;\nfor (int i = 1; i <= n; i++) {\n  result = result * i;\n}\nSystem.out.println(result);",
+            "hint": "Start result at 1 — not 0, or everything multiplies to nothing. Then loop i from 1 to n doing result = result * i.",
+            "after": "That is CodeHS exercise 3.9.11, Factorial. Lesson done.",
+            "skills": [
+              "write a for loop that repeats a fixed number of times"
+            ]
           }
         ]
       }
