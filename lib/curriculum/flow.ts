@@ -318,9 +318,22 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           if (!s.exprs?.length) { results.push(`${name}: – no exprs to verify against`); break; }
           const from = s.fillFrom ?? 1;
           const names = (s.columns || []).slice(0, from);
+          // Given columns are not always booleans — 3.8 compares ints, so the
+          // declared type is inferred from the literal rather than assumed.
+          const javaType = (v: string) =>
+            /^(true|false)$/.test(v) ? "boolean"
+            : /^-?\d+$/.test(v) ? "int"
+            : /^-?\d*\.\d+$/.test(v) ? "double"
+            : "String";
           let bad = 0;
           for (const [ri, row] of (s.rows || []).entries()) {
-            const decls = names.map((n, i) => `boolean ${n} = ${row[i]};`).join("\n");
+            const decls = names
+              .map((n, i) => {
+                const t = javaType(row[i]);
+                const lit = t === "String" ? JSON.stringify(row[i]) : row[i];
+                return `${t} ${n} = ${lit};`;
+              })
+              .join("\n");
             const prints = s.exprs.map((e) => `System.out.println(${e});`).join("\n");
             const r = await runJava(`${decls}\n${prints}`, "", { wrapBeginner: true });
             const want = row.slice(from).join("\n");

@@ -2369,119 +2369,269 @@
       "objectives": [
         "compare two values to get true or false",
         "choose between ==, !=, <, >, <= and >=",
-        "store a comparison in a boolean"
+        "store a comparison in a boolean and use it"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "f28_1",
-            "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);",
+            "id": "q_task",
             "kind": "teach",
-            "output": "true\nfalse\ntrue",
+            "instruction": "Last lesson strongEnough was simply handed to you as true.",
             "points": [
               {
-                "text": "Greater than, less than. Exactly like maths class.",
-                "label": "> and <"
+                "label": "boolean strongEnough = true;",
+                "text": "You typed the answer in. The program never worked anything out."
               },
               {
-                "text": "Greater-or-equal, less-or-equal. 80 >= 80 is true, because equal counts.",
-                "label": ">= and <="
+                "label": "what a game has",
+                "text": "A level — a number, like 7 — and a rule: you need at least 5 to get through this door."
               },
               {
-                "text": "The answer is not a number. A comparison produces true or false — a boolean, the type you met last lesson.",
-                "label": "10 > 3 gives true"
+                "label": "the missing piece",
+                "text": "Something that turns \"7 and the rule needs 5\" into a plain true or false. That is what a comparison does."
               }
-            ],
-            "instruction": "Comparing two numbers gives you a boolean."
+            ]
           },
           {
-            "id": "f28_2",
-            "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);",
+            "id": "q_cmp",
+            "kind": "teach",
+            "instruction": "level >= required is worked out into true or false.",
+            "code": "int level = 7;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
+            "output": "--- DUNGEON DOOR ---\nLevel:         7\nStrong enough: true\nDoor opens:    true",
+            "points": [
+              {
+                "label": "level >= required",
+                "text": "Reads as \"level is at least required\". 7 is at least 5, so this whole thing becomes true."
+              },
+              {
+                "label": "boolean strongEnough =",
+                "text": "The comparison produces true or false, so it fits in a boolean — the same kind of box you filled by hand last lesson."
+              },
+              {
+                "label": "hasKey && strongEnough",
+                "text": "Unchanged from last lesson. The && does not care that one value was typed and the other was calculated."
+              },
+              {
+                "label": ">= not >",
+                "text": "\"At least 5\" includes 5 itself. Using > would shut the door on a player who is exactly level 5."
+              }
+            ]
+          },
+          {
+            "id": "q_run",
             "kind": "run",
-            "after": "Every comparison answers one yes/no question.",
-            "instruction": "Run it."
+            "instruction": "Run it. Level 7 against a requirement of 5.",
+            "code": "int level = 7;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
+            "after": "The program decided strongEnough for itself."
           },
           {
-            "id": "f28_3",
-            "why": "5 is not less than 4, and it is not equal to 4 either. So false.",
-            "code": "System.out.println(5 <= 4);",
-            "kind": "predict",
-            "opts": [
-              "false",
-              "true",
-              "(an error)",
-              "5"
+            "id": "q_tweak",
+            "kind": "tweak",
+            "instruction": "Send in a level 3 player. The door should shut.",
+            "code": "int level = 7;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
+            "target": "--- DUNGEON DOOR ---\nLevel:         3\nStrong enough: false\nDoor opens:    false",
+            "hint": "Change only the level on line 1.",
+            "after": "3 is not at least 5, so strongEnough became false and && shut the door.",
+            "skills": [
+              "compare two values to get true or false"
+            ]
+          },
+          {
+            "id": "q_six",
+            "kind": "teach",
+            "instruction": "There are six comparisons, and they all give true or false.",
+            "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);\nSystem.out.println(80 > 80);\nSystem.out.println(5 == 5);\nSystem.out.println(5 != 5);",
+            "output": "true\nfalse\ntrue\nfalse\ntrue\nfalse",
+            "points": [
+              {
+                "label": "> and <",
+                "text": "Strictly greater, strictly less. 10 > 3 is true; 10 < 3 is false."
+              },
+              {
+                "label": ">= and <=",
+                "text": "Greater-or-equal, less-or-equal. 80 >= 80 is true because equal counts."
+              },
+              {
+                "label": "80 > 80",
+                "text": "False. Strictly greater excludes the number itself — this one line is the difference between the two."
+              },
+              {
+                "label": "== and !=",
+                "text": "Equal and not-equal. 5 == 5 is true; 5 != 5 is false."
+              }
+            ]
+          },
+          {
+            "id": "q_table",
+            "kind": "table",
+            "instruction": "Where exactly do > and >= differ?",
+            "columns": [
+              "level",
+              "level > 5",
+              "level >= 5"
             ],
+            "fillFrom": 1,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "exprs": [
+              "level > 5",
+              "level >= 5"
+            ],
+            "rows": [
+              [
+                "4",
+                "false",
+                "false"
+              ],
+              [
+                "5",
+                "false",
+                "true"
+              ],
+              [
+                "6",
+                "true",
+                "true"
+              ]
+            ],
+            "why": "They agree everywhere except at exactly 5. That single row is the whole difference, and it is where off-by-one bugs live.",
             "skills": [
               "choose between ==, !=, <, >, <= and >="
+            ]
+          },
+          {
+            "id": "q_eq",
+            "kind": "teach",
+            "instruction": "== asks a question. = gives an answer.",
+            "points": [
+              {
+                "label": "==",
+                "text": "TWO equals signs. Asks \"are these the same?\" and produces true or false."
+              },
+              {
+                "label": "=",
+                "text": "ONE equals sign. Puts the value on the right into the box on the left. It asks nothing."
+              },
+              {
+                "label": "int x = 5;",
+                "text": "Assignment — creating a box and filling it."
+              },
+              {
+                "label": "x == 5",
+                "text": "Comparison — a question whose answer is true or false."
+              },
+              {
+                "label": "!=",
+                "text": "Not equal. The ! is the same \"not\" you met last lesson."
+              }
+            ]
+          },
+          {
+            "id": "q_predict",
+            "kind": "predict",
+            "instruction": "The exact expression the quiz asks about.",
+            "code": "System.out.println(80 >= 80);",
+            "opts": [
+              "true",
+              "false",
+              "(an error)",
+              "80"
             ],
             "correct": 0,
-            "instruction": "What prints?"
-          },
-          {
-            "id": "f28_4",
-            "code": "int score = 7;\nSystem.out.println(score == 7);\nSystem.out.println(score != 7);",
-            "kind": "teach",
-            "output": "true\nfalse",
-            "points": [
-              {
-                "text": "TWO equals signs. Asks \"are these the same?\" and gives back true or false.",
-                "label": "=="
-              },
-              {
-                "text": "ONE equals sign. Puts a value into a box. It does not ask anything.",
-                "label": "="
-              },
-              {
-                "text": "Not equal. The ! means \"not\", the same as last lesson.",
-                "label": "!="
-              },
-              {
-                "text": "Writing = where you meant == is the most common mistake in this unit. One puts a value in; the other asks a question.",
-                "label": "= vs =="
-              }
-            ],
-            "instruction": "== asks a question. = gives an answer."
-          },
-          {
-            "id": "f28_5",
-            "why": "> means strictly greater, so 7 does not count. It should be >= to include 7 itself.",
-            "code": "int score = 7;\nboolean passed = score > 7;\nSystem.out.println(passed);",
-            "kind": "spot",
+            "why": ">= is satisfied by being greater OR equal. 80 is equal to 80, so it is true. Only > would be false here.",
             "skills": [
               "choose between ==, !=, <, >, <= and >="
-            ],
-            "correct": 1,
-            "instruction": "A score of exactly 7 should count as a pass, but this says false. Tap the line at fault."
+            ]
           },
           {
-            "id": "f28_6",
-            "code": "int points = 12;\nboolean scoredEnough = points >= 10;\nSystem.out.println(scoredEnough);",
+            "id": "q_combine",
             "kind": "teach",
-            "output": "true",
+            "instruction": "Comparisons join with && exactly like any other booleans.",
+            "code": "int points = 12;\nint rebounds = 10;\nint assists = 7;\nboolean tripleDouble = points >= 10 && rebounds >= 10 && assists >= 10;\nSystem.out.println(\"Got a Triple Double? \" + tripleDouble);",
+            "output": "Got a Triple Double? false",
             "points": [
               {
-                "text": "points >= 10 is worked out first. It becomes true.",
-                "label": "the right-hand side"
+                "label": "points >= 10 && rebounds >= 10 && assists >= 10",
+                "text": "Three separate comparisons, each producing true or false, chained with &&."
               },
               {
-                "text": "True or false has to go in a boolean box.",
-                "label": "boolean"
+                "label": "assists is 7",
+                "text": "7 >= 10 is false, and && needs every part true, so the whole thing is false."
               },
               {
-                "text": "A named boolean says what the comparison MEANS, so the line that uses it reads like English instead of arithmetic.",
-                "label": "scoredEnough"
+                "label": "no brackets needed",
+                "text": "Comparisons are worked out before && , so each >= finishes before the ands combine them."
+              },
+              {
+                "label": "tripleDouble",
+                "text": "A name that says what the answer MEANS, so the line that prints it reads like English."
               }
-            ],
-            "instruction": "A comparison can be stored, just like any other value."
+            ]
           },
           {
-            "id": "f28_7",
-            "code": "int points = 10;\nboolean scoredEnough = points ⟦1⟧ 10;\nSystem.out.println(scoredEnough);",
-            "hint": "10 itself must count.",
+            "id": "q_sharp",
+            "kind": "teach",
+            "instruction": "Six operators, one result type: boolean.",
+            "points": [
+              {
+                "label": ">  <  >=  <=  ==  !=",
+                "text": "The complete set. Every one of them produces true or false, never a number."
+              },
+              {
+                "label": "?",
+                "text": "Not a comparison operator. Java has no such thing — it is the quiz distractor."
+              },
+              {
+                "label": "80 >= 80 is true",
+                "text": "Equal counts for >= and <=. It does not count for > or <."
+              },
+              {
+                "label": "= vs ==",
+                "text": "Writing = where you meant == is the most common mistake in this unit."
+              }
+            ]
+          },
+          {
+            "id": "q_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "int score = 80;",
+            "questions": [
+              {
+                "prompt": "Which of the following is NOT a comparison operator?",
+                "opts": [
+                  "?",
+                  "<",
+                  "==",
+                  ">="
+                ],
+                "correct": 0,
+                "why": "Java compares with > < >= <= == and !=. The ? is not one of them."
+              },
+              {
+                "prompt": "What does 80 >= 80 evaluate to?",
+                "opts": [
+                  "true",
+                  "false",
+                  "\"true\"",
+                  "This expression will error"
+                ],
+                "correct": 0,
+                "why": ">= means greater than OR equal to, and 80 equals 80. The answer is the boolean true — not the text \"true\"."
+              }
+            ],
+            "skills": [
+              "choose between ==, !=, <, >, <= and >="
+            ]
+          },
+          {
+            "id": "q_d1",
             "kind": "fill",
-            "after": "\"At least\" always means >=, never >.",
+            "instruction": "A score of exactly 10 must count as enough.",
+            "code": "int points = 10;\nboolean scoredEnough = points ⟦1⟧ 10;\nSystem.out.println(scoredEnough);",
             "blanks": [
               {
                 "chips": [
@@ -2493,25 +2643,26 @@
                 "answer": 0
               }
             ],
+            "target": "true",
+            "hint": "\"At least 10\" has to include 10 itself.",
+            "after": "\"At least\" is always >=. Using > would have excluded exactly 10 and printed false.",
             "skills": [
               "choose between ==, !=, <, >, <= and >="
-            ],
-            "target": "true",
-            "instruction": "Fill it in so it is true only when points reaches 10 or more."
+            ]
           },
           {
-            "id": "f28_8",
-            "code": "// read points, rebounds and assists, then print the verdict\n",
-            "hint": "Three readInt calls, then chain three >= checks with &&.",
+            "id": "q_d2",
             "kind": "write",
-            "after": "That is CodeHS exercise 3.8.4, Triple Double.",
+            "instruction": "Last one: a triple double needs at least 10 in all three.",
+            "code": "// read points, rebounds and assists, then print the verdict\n",
             "stdin": "10\n11\n12",
-            "skills": [
-              "store a comparison in a boolean"
-            ],
             "target": "Points? 10\nRebounds? 11\nAssists? 12\nGot a Triple Double? true",
             "solution": "int points = readInt(\"Points? \");\nint rebounds = readInt(\"Rebounds? \");\nint assists = readInt(\"Assists? \");\nboolean tripleDouble = points >= 10 && rebounds >= 10 && assists >= 10;\nSystem.out.println(\"Got a Triple Double? \" + tripleDouble);",
-            "instruction": "Your turn: a triple double needs at least 10 in all three categories."
+            "hint": "Three readInt calls with the prompts \"Points? \", \"Rebounds? \" and \"Assists? \", then chain three >= 10 checks with &&, and print \"Got a Triple Double? \" + the result.",
+            "after": "That is CodeHS exercise 3.8.4, Triple Double. Lesson done.",
+            "skills": [
+              "store a comparison in a boolean and use it"
+            ]
           }
         ]
       }
