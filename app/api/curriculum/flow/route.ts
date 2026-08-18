@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { requireRoleApi } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { validateFlow, verifyFlow, type Flow } from "@/lib/curriculum/flow";
+import { validateFlow, type Flow } from "@/lib/curriculum/flow";
+import { verifyFlow } from "@/lib/curriculum/verify";
 
 // Flow authoring import (admin). The anti-hallucination gate: a pasted flow is
 // (1) structurally validated, then (2) every verifiable snippet is compiled and

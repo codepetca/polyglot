@@ -1,4 +1,5 @@
 import "server-only";
+import { wrap } from "./wrapper";
 
 // Java execution, with failover.
 //
@@ -40,51 +41,6 @@ export interface RunResult {
   stdout: string;
   error: string; // compile or runtime error, remapped to the student's line numbers
   runner?: string; // which lane served it (diagnostics; never shown to students)
-}
-
-// Beginner template: students write `String n = input("Your name? ");` with no
-// Scanner boilerplate. NOTE: `class Main` is deliberately NOT public — runners
-// save the source under arbitrary filenames (example.java on godbolt), and
-// javac only allows that for non-public classes.
-// CODEHS PARITY.
-//
-// The course this platform mirrors is CodeHS AP CS in Java, and CodeHS does NOT
-// teach Scanner. Its programs extend ConsoleProgram and read input with
-// readLine / readInt / readDouble / readBoolean, each taking the PROMPT as an
-// argument rather than printing it separately:
-//
-//     String favColor = readLine("What is your favorite color? ");
-//     int age = readInt("How old are you? ");
-//
-// Teaching Scanner here would mean students write code on this platform that
-// does not match their coursework or their exam. So the wrapper provides the
-// CodeHS methods with the same signatures and behaviour. Scanner still works
-// for anyone who wants it, since java.util.Scanner is imported.
-// ECHO: CodeHS runs these programs in a console where the student TYPES the
-// answer, so the answer appears on screen after the prompt. Here the answer
-// arrives on stdin and is never displayed, which silently broke fidelity: with
-// two prompts in a row the output ran together as
-// "Tall enough? Old enough? true" instead of one question per line. Every
-// CodeHS sample transcript (About You, Making Taffy, Guess the Number) shows
-// the typed value echoed, so __rd prints what it read. Verified against
-// CodeHS's own "About You" sample output, character for character.
-const HEADER = `import java.util.Scanner;
-class Main {
-    static Scanner __sc = new Scanner(System.in);
-    static String __rd(String p){ System.out.print(p); String v = __sc.nextLine(); System.out.println(v); return v; }
-    static String readLine(String p){ return __rd(p); }
-    static int readInt(String p){ return Integer.parseInt(__rd(p).trim()); }
-    static double readDouble(String p){ return Double.parseDouble(__rd(p).trim()); }
-    static boolean readBoolean(String p){ return Boolean.parseBoolean(__rd(p).trim()); }
-    public static void main(String[] args) {
-`;
-const FOOTER = `
-    }
-}`;
-
-function wrap(code: string): { source: string; offset: number } {
-  const offset = HEADER.split("\n").length - 1;
-  return { source: HEADER + code + FOOTER, offset };
 }
 
 // Remap compiler/stack-trace line numbers back to the student's editor lines.

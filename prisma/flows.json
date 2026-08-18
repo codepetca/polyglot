@@ -67,10 +67,10 @@
           {
             "id": "p_tweak",
             "kind": "tweak",
-            "instruction": "Rename the game to SPACE RAIDER.",
+            "instruction": "Rename the game to anything you like.",
             "code": "System.out.println(\"*** DUNGEON QUEST ***\");",
-            "target": "*** SPACE RAIDER ***",
-            "hint": "Only the text between the quotes changes.",
+            "target": "*** DUNGEON QUEST ***",
+            "hint": "Change the text between the quotes.",
             "after": "Your game, your title.",
             "skills": [
               "print a line of text with System.out.println"
@@ -369,11 +369,11 @@
           {
             "id": "v_str_tweak",
             "kind": "tweak",
-            "instruction": "Make the player Grace instead.",
+            "instruction": "Put your own name on the card.",
             "code": "String name = \"Ada\";\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);",
-            "target": "=== PLAYER CARD ===\nName:   Grace",
-            "hint": "Only the text inside the quotes changes.",
-            "after": "One edit changed the card. The label stayed the same.",
+            "target": "=== PLAYER CARD ===\nName:   Ada",
+            "hint": "Change the text inside the quotes on line 1.",
+            "after": "One edit changed the card. The label on the left stayed put.",
             "skills": [
               "declare a variable by putting its type in front of its name"
             ]
@@ -1808,15 +1808,16 @@
           },
           {
             "id": "o_tweak",
-            "kind": "tweak",
+            "kind": "fix",
             "instruction": "The player just died. Make the panel say so.",
             "code": "boolean alive = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);",
             "target": "=== STATUS ===\nAlive:      false",
-            "hint": "There is only one other value it could be.",
+            "hint": "There is only one other value a boolean can hold.",
             "after": "Two values, and you have now used both.",
             "skills": [
               "create boolean variables that hold true or false"
-            ]
+            ],
+            "solution": "boolean alive = false;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);"
           },
           {
             "id": "o_panel",
@@ -2106,15 +2107,16 @@
           },
           {
             "id": "g_tweak",
-            "kind": "tweak",
+            "kind": "fix",
             "instruction": "The player is not strong enough yet. Make the door stay shut.",
             "code": "boolean hasKey = true;\nboolean strongEnough = true;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
             "target": "=== DUNGEON DOOR ===\nHas key:       true\nStrong enough: false\nDoor opens:    false",
-            "hint": "Change one of the two facts at the top. Do not touch the last line.",
+            "hint": "Change one of the two facts at the top. Leave the last line alone.",
             "after": "Key but no strength, and the door refuses. That is && being strict.",
             "skills": [
               "combine two booleans with && so both must be true"
-            ]
+            ],
+            "solution": "boolean hasKey = true;\nboolean strongEnough = false;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));"
           },
           {
             "id": "g_table_and",
@@ -2427,15 +2429,16 @@
           },
           {
             "id": "q_tweak",
-            "kind": "tweak",
+            "kind": "fix",
             "instruction": "Send in a level 3 player. The door should shut.",
             "code": "int level = 7;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
             "target": "--- DUNGEON DOOR ---\nLevel:         3\nStrong enough: false\nDoor opens:    false",
-            "hint": "Change only the level on line 1.",
+            "hint": "Change only the level on line 1. The comparison works it out from there.",
             "after": "3 is not at least 5, so strongEnough became false and && shut the door.",
             "skills": [
               "compare two values to get true or false"
-            ]
+            ],
+            "solution": "int level = 3;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));"
           },
           {
             "id": "q_six",
@@ -2737,15 +2740,16 @@
           },
           {
             "id": "r_tweak",
-            "kind": "tweak",
+            "kind": "fix",
             "instruction": "The dungeon just grew. Make it print 8 floors.",
             "code": "for (int floor = 1; floor <= 5; floor++) {\n  System.out.println(\"Floor \" + floor);\n}",
             "target": "Floor 1\nFloor 2\nFloor 3\nFloor 4\nFloor 5\nFloor 6\nFloor 7\nFloor 8",
-            "hint": "Only the number in the middle part needs to change.",
+            "hint": "Only the number in the middle part changes.",
             "after": "One character changed. The five-println version would have needed three whole new lines.",
             "skills": [
               "write a for loop that repeats a fixed number of times"
-            ]
+            ],
+            "solution": "for (int floor = 1; floor <= 8; floor++) {\n  System.out.println(\"Floor \" + floor);\n}"
           },
           {
             "id": "r_table",
@@ -3242,14 +3246,15 @@
           {
             "id": "f211_3",
             "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
-            "hint": "The condition is age >= 18. Make it false.",
-            "kind": "tweak",
+            "hint": "The condition is age >= 18. Pick an age that makes it false.",
+            "kind": "fix",
             "after": "False condition, block skipped — and the line after it still runs.",
             "skills": [
               "run a block of code only when a condition is true"
             ],
             "target": "done",
-            "instruction": "Change the age so \"adult\" does NOT print."
+            "instruction": "Change the age so \"adult\" does NOT print.",
+            "solution": "int age = 15;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");"
           },
           {
             "id": "f211_4",
