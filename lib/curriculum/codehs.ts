@@ -436,6 +436,9 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     objectives: ["Demonstrate an understanding of the differences between Strings and characters", "Examine how characters can be treated as numbers through their ASCII values", "Practice converting between char values and int values", "Print out special characters like quotes and new lines using escape sequence chars (such as", "Utilize Character class methods"],
     teaches: ["char vs String", "ASCII values", "casting char to int", "escape sequences \\\\n \\\\\" \\\\\\\\", "Character class methods"],
     exercises: ["Chars are Numbers", "Escape Sequences", "Character Methods", "Is it an Integer?"],
+    exerciseSpecs: [
+      { codehsCode: "4.6.5", name: "Is it an Integer?", requires: "UNIT-TESTED. Signature is fixed: public boolean isInteger(String str). True when EVERY character is a digit. CodeHS hints at Character.isDigit(). \"123\" is true, \"hello\" is false." },
+    ],
   },
   {
     code: "3.7",

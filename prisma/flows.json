@@ -5857,7 +5857,8 @@
       "title": "Strings and Characters",
       "objectives": [
         "loop through the characters of a String",
-        "tell a char apart from a String"
+        "use Character methods to test a character",
+        "read a char as its number"
       ],
       "flow": {
         "v": 1,
@@ -5908,6 +5909,24 @@
             ]
           },
           {
+            "id": "c_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  String s = \"abc\";\n  for (int i = 0; i < s.length(); i++) {\n    System.out.print(s.charAt(i));\n  }\n}",
+            "opts": [
+              "abc",
+              "a\nb\nc",
+              "cba",
+              "abc "
+            ],
+            "correct": 0,
+            "why": "print keeps them on one line, and the loop visits positions 0, 1, 2 in order.",
+            "skills": [
+              "loop through the characters of a String"
+            ]
+          },
+          {
             "id": "c_char",
             "kind": "teach",
             "wrap": "methods",
@@ -5930,21 +5949,29 @@
             ]
           },
           {
-            "id": "c_predict",
-            "kind": "predict",
+            "id": "c_ascii",
+            "kind": "teach",
             "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  String s = \"abc\";\n  for (int i = 0; i < s.length(); i++) {\n    System.out.print(s.charAt(i));\n  }\n}",
-            "opts": [
-              "abc",
-              "a\nb\nc",
-              "cba",
-              "abc "
-            ],
-            "correct": 0,
-            "why": "print keeps them on one line, and the loop visits positions 0, 1, 2 in order.",
-            "skills": [
-              "loop through the characters of a String"
+            "instruction": "Every char is secretly a number.",
+            "code": "public void run() {\n  char lowercaseA = 'a';\n  System.out.println(lowercaseA);\n  System.out.println((int) lowercaseA);\n  char uppercaseA = 'A';\n  System.out.println((int) uppercaseA);\n}",
+            "output": "a\n97\n65",
+            "points": [
+              {
+                "label": "(int) 'a'",
+                "text": "97. Casting a char to an int gives the number Java stores it as - its ASCII value."
+              },
+              {
+                "label": "(int) 'A'",
+                "text": "65. Capitals come before lowercase in the table, so they have smaller numbers."
+              },
+              {
+                "label": "'a' > 'A'",
+                "text": "True, because 97 > 65. Chars can be compared with < and > like numbers."
+              },
+              {
+                "label": "why it matters",
+                "text": "Testing c >= 'A' && c <= 'Z' for a capital works because those are just number comparisons."
+              }
             ]
           },
           {
@@ -5971,50 +5998,103 @@
             ]
           },
           {
+            "id": "c_esc",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A backslash gives you characters you cannot type directly.",
+            "code": "public void run() {\n  String manyLines = \"First Line\\nSecond Line\";\n  System.out.println(manyLines);\n  System.out.println(\"Make sure to finish your \\\"homework\\\"\");\n}",
+            "output": "First Line\nSecond Line\nMake sure to finish your \"homework\"",
+            "points": [
+              {
+                "label": "\\n",
+                "text": "A new line, in the middle of one String. One println, two lines of output."
+              },
+              {
+                "label": "\\\"",
+                "text": "A real quote mark. Without the backslash it would end the String early and break."
+              },
+              {
+                "label": "\\\\",
+                "text": "A single backslash, when you actually want one."
+              },
+              {
+                "label": "still one String",
+                "text": "\"First Line\\nSecond Line\" is a single value. The break is inside it."
+              }
+            ]
+          },
+          {
+            "id": "c_charm",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The Character class answers questions about a char.",
+            "code": "public void run() {\n  char ch = 'f';\n  System.out.println(Character.isUpperCase(ch));\n  System.out.println(Character.isLowerCase(ch));\n  System.out.println(Character.isDigit('7'));\n  System.out.println(Character.isLetter(ch));\n}",
+            "output": "false\ntrue\ntrue\ntrue",
+            "points": [
+              {
+                "label": "Character.isUpperCase(ch)",
+                "text": "false, because 'f' is lowercase."
+              },
+              {
+                "label": "Character.isDigit(c)",
+                "text": "true for '0' to '9'. This is how you check a character is a digit without comparing numbers yourself."
+              },
+              {
+                "label": "Character.",
+                "text": "These belong to the Character class, so the class name goes in front - not ch.isDigit()."
+              },
+              {
+                "label": "each returns a boolean",
+                "text": "So they drop straight into an if or an &&."
+              }
+            ]
+          },
+          {
             "id": "c_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
-            "code": "String s = \"cat\";\nchar c = s.charAt(1);",
+            "code": "char c = 'a';",
             "questions": [
               {
-                "prompt": "What type does charAt return?",
+                "prompt": "What does (int) 'a' give?",
                 "opts": [
-                  "char",
-                  "String",
-                  "int",
-                  "boolean"
+                  "97",
+                  "0",
+                  "1",
+                  "a"
                 ],
                 "correct": 0,
-                "why": "A single character, which is the char type - written in single quotes."
+                "why": "Casting a char to int gives its ASCII value, and 'a' is 97. 'A' is 65."
               },
               {
-                "prompt": "How do you compare two chars?",
+                "prompt": "Which checks whether a char is a digit?",
                 "opts": [
-                  "==",
-                  ".equals()",
-                  ".compare()",
-                  "="
+                  "Character.isDigit(c)",
+                  "c.isDigit()",
+                  "isDigit(c)",
+                  "c.digit()"
                 ],
                 "correct": 0,
-                "why": "char is a primitive, so == works. .equals() is for Strings."
+                "why": "It is a method on the Character CLASS, so the class name goes first."
               }
             ],
             "skills": [
-              "loop through the characters of a String"
+              "use Character methods to test a character"
             ]
           },
           {
             "id": "c_write",
             "kind": "write",
             "wrap": "methods",
-            "instruction": "Your turn: print each character of \"sword\" on its own line.",
-            "code": "public void run() {\n  String word = \"sword\";\n  // loop through and print each character\n}",
-            "target": "s\nw\no\nr\nd",
-            "solution": "public void run() {\n  String word = \"sword\";\n  for (int i = 0; i < word.length(); i++) {\n    System.out.println(word.charAt(i));\n  }\n}",
-            "hint": "for (int i = 0; i < word.length(); i++) then println(word.charAt(i)).",
-            "after": "length() to stop, charAt(i) to fetch. That pair walks any String.",
+            "instruction": "Your turn: is this String made only of digits?",
+            "harness": "public void run() {\n  System.out.println(isInteger(\"123\"));\n  System.out.println(isInteger(\"hello\"));\n  System.out.println(isInteger(\"12a\"));\n}",
+            "code": "public boolean isInteger(String str)\n{\n    \n}\n",
+            "target": "true\nfalse\nfalse",
+            "solution": "public boolean isInteger(String str)\n{\n    for (int i = 0; i < str.length(); i++) {\n      if (!Character.isDigit(str.charAt(i))) {\n        return false;\n      }\n    }\n    return true;\n}",
+            "hint": "Loop through the characters. If any one is NOT a digit, return false straight away. If the loop finishes, return true.",
+            "after": "That is CodeHS exercise 4.6.5, Is it an Integer? Returning false early is what stops one bad character being outvoted.",
             "skills": [
-              "loop through the characters of a String"
+              "use Character methods to test a character"
             ]
           }
         ]
