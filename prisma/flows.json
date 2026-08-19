@@ -4935,6 +4935,525 @@
           }
         ]
       }
+    },
+    {
+      "code": "3.2",
+      "title": "Methods and Parameters",
+      "objectives": [
+        "write a method that takes a parameter",
+        "tell an argument apart from a parameter"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "p_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Every room needs the same sentence with a different word in it.",
+            "code": "public void run() {\n  cellar();\n  crypt();\n}\n\npublic void cellar() {\n  System.out.println(\"You enter the cellar.\");\n}\n\npublic void crypt() {\n  System.out.println(\"You enter the crypt.\");\n}",
+            "output": "You enter the cellar.\nYou enter the crypt.",
+            "highlight": [
+              5,
+              6,
+              7,
+              9,
+              10,
+              11
+            ],
+            "points": [
+              {
+                "label": "cellar() and crypt()",
+                "text": "Two methods that differ by one word."
+              },
+              {
+                "label": "a third room",
+                "text": "Would need a third method. Twenty rooms, twenty methods."
+              },
+              {
+                "label": "what we want",
+                "text": "One method, told which room to name when it is called."
+              }
+            ]
+          },
+          {
+            "id": "p_param",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A parameter lets the caller hand the method a value.",
+            "code": "public void run() {\n  enter(\"cellar\");\n  enter(\"crypt\");\n}\n\npublic void enter(String room) {\n  System.out.println(\"You enter the \" + room + \".\");\n}",
+            "output": "You enter the cellar.\nYou enter the crypt.",
+            "highlight": [
+              1,
+              2,
+              5
+            ],
+            "points": [
+              {
+                "label": "String room",
+                "text": "The parameter. Inside the method, room behaves like a variable holding whatever was passed in."
+              },
+              {
+                "label": "enter(\"cellar\")",
+                "text": "The call passes \"cellar\", so room is \"cellar\" for that run."
+              },
+              {
+                "label": "enter(\"crypt\")",
+                "text": "Same method, different value, different sentence."
+              },
+              {
+                "label": "one definition",
+                "text": "Twenty rooms now need twenty calls but still one method."
+              }
+            ]
+          },
+          {
+            "id": "p_cmp",
+            "kind": "compare",
+            "instruction": "Same output. One of them scales.",
+            "sides": [
+              {
+                "label": "a method per room",
+                "code": "public void run() {\n  cellar();\n  crypt();\n}\n\npublic void cellar() {\n  System.out.println(\"You enter the cellar.\");\n}\n\npublic void crypt() {\n  System.out.println(\"You enter the crypt.\");\n}",
+                "output": "You enter the cellar.\nYou enter the crypt."
+              },
+              {
+                "label": "one method, a parameter",
+                "code": "public void run() {\n  enter(\"cellar\");\n  enter(\"crypt\");\n}\n\npublic void enter(String room) {\n  System.out.println(\"You enter the \" + room + \".\");\n}",
+                "output": "You enter the cellar.\nYou enter the crypt."
+              }
+            ],
+            "points": [
+              {
+                "label": "a method per room",
+                "text": "The sentence is written twice, so a wording change means editing both."
+              },
+              {
+                "label": "one method, a parameter",
+                "text": "The sentence exists once. Only the value changes."
+              }
+            ],
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_words",
+            "kind": "teach",
+            "instruction": "Two words for the two halves.",
+            "points": [
+              {
+                "label": "parameter",
+                "text": "The name in the definition: String room. It exists only inside the method."
+              },
+              {
+                "label": "argument",
+                "text": "The value in the call: \"cellar\". It is what the parameter is set to."
+              },
+              {
+                "label": "in order",
+                "text": "The first argument fills the first parameter, the second fills the second."
+              },
+              {
+                "label": "the type must match",
+                "text": "A String parameter needs a String argument. Passing 7 to it will not compile."
+              }
+            ]
+          },
+          {
+            "id": "p_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  greet(\"Ada\");\n  greet(\"Grace\");\n}\n\npublic void greet(String name) {\n  System.out.println(\"Hello, \" + name);\n}",
+            "opts": [
+              "Hello, Ada\nHello, Grace",
+              "Hello, name\nHello, name",
+              "Hello, Ada",
+              "Hello, Grace\nHello, Ada"
+            ],
+            "correct": 0,
+            "why": "name takes the value of each argument in turn, so the method runs twice with different values.",
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_two",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A method can take more than one value.",
+            "code": "public void run() {\n  attack(\"goblin\", 7);\n  attack(\"troll\", 12);\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
+            "output": "You hit the goblin for 7 damage.\nYou hit the troll for 12 damage.",
+            "points": [
+              {
+                "label": "(String enemy, int damage)",
+                "text": "Two parameters, separated by a comma. Each has its own type."
+              },
+              {
+                "label": "attack(\"goblin\", 7)",
+                "text": "enemy becomes \"goblin\", damage becomes 7. Order decides which is which."
+              },
+              {
+                "label": "attack(7, \"goblin\")",
+                "text": "Would not compile. The types are in the wrong order."
+              },
+              {
+                "label": "int damage",
+                "text": "A number, so it can be used in arithmetic inside the method."
+              }
+            ]
+          },
+          {
+            "id": "p_sharp",
+            "kind": "teach",
+            "instruction": "public void name(Type param) { } to define. name(value); to call.",
+            "points": [
+              {
+                "label": "the definition",
+                "text": "Each parameter needs a type and a name: (String room), (String enemy, int damage)."
+              },
+              {
+                "label": "the call",
+                "text": "Passes values in the same order, with no types: enter(\"cellar\")."
+              },
+              {
+                "label": "scope",
+                "text": "A parameter exists only inside its method. run() cannot see room."
+              },
+              {
+                "label": "no arguments",
+                "text": "Empty brackets mean the method needs nothing, like banner() last lesson."
+              }
+            ]
+          },
+          {
+            "id": "p_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "public void run() {\n  show(\"hi\", 3);\n}\n\npublic void show(String text, int times) {\n  System.out.println(text + times);\n}",
+            "questions": [
+              {
+                "prompt": "In show(\"hi\", 3), what is \"hi\" called?",
+                "opts": [
+                  "An argument",
+                  "A parameter",
+                  "A return value",
+                  "A variable type"
+                ],
+                "correct": 0,
+                "why": "The value passed at the call is the argument. The name in the definition (String text) is the parameter."
+              },
+              {
+                "prompt": "Why write one method with a parameter instead of one method per value?",
+                "opts": [
+                  "The logic exists once, so a change happens in one place",
+                  "It runs faster",
+                  "It uses less memory",
+                  "Java requires it"
+                ],
+                "correct": 0,
+                "why": "The point is maintenance, not speed. Twenty rooms need twenty calls but still only one method to fix."
+              }
+            ],
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Give the parameter the right type.",
+            "code": "public void run() {\n  heal(5);\n}\n\npublic void heal(⟦1⟧ amount) {\n  System.out.println(\"Healed \" + amount + \" HP.\");\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "int",
+                  "String",
+                  "void"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "Healed 5 HP.",
+            "hint": "The call passes 5, a whole number.",
+            "after": "The parameter type has to match what the call passes.",
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: one method that reports any loot find.",
+            "code": "public void run() {\n  // call it twice: 3 gold, then 12 gold\n}\n\n// define found(int coins) below\n",
+            "target": "You found 3 gold.\nYou found 12 gold.",
+            "solution": "public void run() {\n  found(3);\n  found(12);\n}\n\npublic void found(int coins) {\n  System.out.println(\"You found \" + coins + \" gold.\");\n}",
+            "hint": "Define public void found(int coins) printing \"You found \" + coins + \" gold.\", then call found(3); and found(12);",
+            "after": "One method, two different results. That is what a parameter buys you.",
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "3.3",
+      "title": "Methods and Return Values",
+      "objectives": [
+        "write a method that returns a value",
+        "use a returned value in the calling code"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "r_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "showDamage prints 12. Now add it to a running total.",
+            "code": "public void run() {\n  showDamage(4);\n}\n\npublic void showDamage(int hits) {\n  System.out.println(hits * 3);\n}",
+            "output": "12",
+            "highlight": [
+              4
+            ],
+            "points": [
+              {
+                "label": "System.out.println",
+                "text": "The method puts 12 on the screen and that is all it does."
+              },
+              {
+                "label": "the problem",
+                "text": "run() never receives the 12. It cannot add it to anything or compare it."
+              },
+              {
+                "label": "what we want",
+                "text": "A method that hands the number BACK, so the caller can use it."
+              }
+            ]
+          },
+          {
+            "id": "r_ret",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "return hands a value back to whoever called.",
+            "code": "public void run() {\n  int total = damage(4);\n  System.out.println(\"Total: \" + total);\n  System.out.println(\"Doubled: \" + damage(4) * 2);\n}\n\npublic int damage(int hits) {\n  return hits * 3;\n}",
+            "output": "Total: 12\nDoubled: 24",
+            "highlight": [
+              1,
+              5,
+              6
+            ],
+            "points": [
+              {
+                "label": "public int damage",
+                "text": "int instead of void: this method hands back a whole number."
+              },
+              {
+                "label": "return hits * 3;",
+                "text": "Works out 12 and sends it back. The method ends right there."
+              },
+              {
+                "label": "int total = damage(4);",
+                "text": "The call is replaced by 12, which then goes into total."
+              },
+              {
+                "label": "damage(4) * 2",
+                "text": "You can use the returned value directly in a bigger expression. This is 12 * 2."
+              }
+            ]
+          },
+          {
+            "id": "r_cmp",
+            "kind": "compare",
+            "instruction": "Printing a value, versus handing it back.",
+            "sides": [
+              {
+                "label": "void - prints it",
+                "code": "public void run() {\n  showDamage(4);\n}\n\npublic void showDamage(int hits) {\n  System.out.println(hits * 3);\n}",
+                "output": "12"
+              },
+              {
+                "label": "int - returns it",
+                "code": "public void run() {\n  int total = damage(4);\n  System.out.println(total + 100);\n}\n\npublic int damage(int hits) {\n  return hits * 3;\n}",
+                "output": "112"
+              }
+            ],
+            "points": [
+              {
+                "label": "void - prints it",
+                "text": "The 12 reaches the screen and nowhere else."
+              },
+              {
+                "label": "int - returns it",
+                "text": "The 12 reaches run(), which adds 100 to it. Only the returned version can be used."
+              }
+            ],
+            "skills": [
+              "write a method that returns a value"
+            ]
+          },
+          {
+            "id": "r_types",
+            "kind": "teach",
+            "instruction": "The return type says what comes back.",
+            "points": [
+              {
+                "label": "void",
+                "text": "Nothing comes back. A void method cannot be put on the right of an =."
+              },
+              {
+                "label": "int",
+                "text": "A whole number comes back, so int total = damage(4); works."
+              },
+              {
+                "label": "double, boolean, String",
+                "text": "Any type can be returned. The header and the returned value must agree."
+              },
+              {
+                "label": "return ends it",
+                "text": "Nothing after a return runs. It leaves the method immediately."
+              }
+            ]
+          },
+          {
+            "id": "r_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  System.out.println(twice(5));\n}\n\npublic int twice(int n) {\n  return n * 2;\n}",
+            "opts": [
+              "10",
+              "5",
+              "n * 2",
+              "(nothing)"
+            ],
+            "correct": 0,
+            "why": "twice(5) is replaced by the value it returns, 10, and println prints that.",
+            "skills": [
+              "write a method that returns a value"
+            ]
+          },
+          {
+            "id": "r_fix",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "This should return the total, not print it.",
+            "code": "public void run() {\n  int total = addUp(3, 4);\n  System.out.println(total);\n}\n\npublic int addUp(int a, int b) {\n  System.out.println(a + b);\n}",
+            "target": "7",
+            "solution": "public void run() {\n  int total = addUp(3, 4);\n  System.out.println(total);\n}\n\npublic int addUp(int a, int b) {\n  return a + b;\n}",
+            "hint": "The header promises an int. Replace the println with a return.",
+            "after": "A method whose header says int MUST return an int on every path, or it will not compile.",
+            "skills": [
+              "write a method that returns a value"
+            ]
+          },
+          {
+            "id": "r_sharp",
+            "kind": "teach",
+            "instruction": "public TYPE name(params) { return value; }",
+            "points": [
+              {
+                "label": "the header",
+                "text": "The type before the name is what comes back: public int damage(int hits)."
+              },
+              {
+                "label": "return",
+                "text": "Sends the value back and ends the method on the spot."
+              },
+              {
+                "label": "using it",
+                "text": "A call to a returning method IS its value, so it can go in a variable, an expression, or a println."
+              },
+              {
+                "label": "void vs a type",
+                "text": "void does something. A type answers something. Most useful methods answer."
+              }
+            ]
+          },
+          {
+            "id": "r_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "public int square(int n) {\n  return n * n;\n}",
+            "questions": [
+              {
+                "prompt": "What does the int in public int square(int n) mean?",
+                "opts": [
+                  "The method hands back a whole number",
+                  "The method takes a whole number",
+                  "The method prints a whole number",
+                  "The method is called once"
+                ],
+                "correct": 0,
+                "why": "The type before the name is the RETURN type. The type in the brackets is the parameter."
+              },
+              {
+                "prompt": "Why return a value instead of printing it?",
+                "opts": [
+                  "So the caller can use the value in further work",
+                  "So it prints faster",
+                  "So it uses less memory",
+                  "There is no difference"
+                ],
+                "correct": 0,
+                "why": "A printed value only reaches the screen. A returned value reaches the caller, which can store it, compare it, or calculate with it."
+              }
+            ],
+            "skills": [
+              "write a method that returns a value"
+            ]
+          },
+          {
+            "id": "r_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Complete the header and the return.",
+            "code": "public void run() {\n  System.out.println(half(10));\n}\n\npublic ⟦1⟧ half(int n) {\n  ⟦2⟧ n / 2;\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "int",
+                  "void",
+                  "String"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "return",
+                  "print",
+                  "give"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "5",
+            "hint": "It hands back a whole number, and the keyword for handing back is return.",
+            "after": "Header type and returned value must match. int in the header, an int returned.",
+            "skills": [
+              "write a method that returns a value"
+            ]
+          },
+          {
+            "id": "r_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: a method that returns the total gold after a find.",
+            "code": "public void run() {\n  int after = addGold(50, 12);\n  System.out.println(\"You now have \" + after + \" gold.\");\n}\n\n// define addGold(int current, int found) below\n",
+            "target": "You now have 62 gold.",
+            "solution": "public void run() {\n  int after = addGold(50, 12);\n  System.out.println(\"You now have \" + after + \" gold.\");\n}\n\npublic int addGold(int current, int found) {\n  return current + found;\n}",
+            "hint": "public int addGold(int current, int found) with return current + found;",
+            "after": "run() got the number back and used it in a sentence. That is what returning is for.",
+            "skills": [
+              "write a method that returns a value"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
