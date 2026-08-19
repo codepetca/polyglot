@@ -361,24 +361,120 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
   },
 ];
 
-const ORDER = CODEHS_BASIC_JAVA.map((l) => l.code);
+// ─── Unit 4: Methods ─────────────────────────────────────────────────────────
+//
+// Objectives are from the public lesson plans (scripts/syllabus.mjs). The
+// `teaches` lists are derived from those objectives, NOT read from the course —
+// exercise specs and quiz questions for this unit are still login-gated, so
+// every entry is marked unverified until someone opens the items.
+//
+// Numbering: ours continues from Basic Java's 2.x, so Methods is 3.x here and
+// 4.x for the student.
+export const CODEHS_METHODS: CodeHSLesson[] = [
+  {
+    code: "3.1",
+    codehsCode: "4.1",
+    title: "Java Methods",
+    objectives: ["Explain the purpose of methods", "Create their own methods", "Utilize methods to solve simple problems"],
+    teaches: ["defining a method", "calling a method", "void methods"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.2",
+    codehsCode: "4.2",
+    title: "Methods and Parameters",
+    objectives: ["Explore code examples that include methods and parameters", "Write methods that take parameters as inputs", "Apply knowledge of methods and parameters to solve coding exercises"],
+    teaches: ["parameters", "arguments", "methods with multiple parameters"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.3",
+    codehsCode: "4.3",
+    title: "Methods and Return Values",
+    objectives: ["Explain the purpose of returning a value from a method", "Create methods that return values", "Create programs that call methods with return values and store the result for later use", "Practice creating methods to perform specific calculations", "Apply method concepts to solve coding exercises"],
+    teaches: ["return values", "the return keyword", "non-void return types", "storing a returned value"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.4",
+    codehsCode: "4.4",
+    title: "Javadocs and More Methods",
+    objectives: ["Demonstrate an understanding of the purpose and syntax of Javadoc comments", "Analyze a given program for proper documentation", "Compare and contrast programs with good documentation against programs with poor documentation", "Write methods that perform specific calculations and return values", "Use Javadoc comments to document methods"],
+    teaches: ["Javadoc comments", "/** */", "@param", "@return"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.5",
+    codehsCode: "4.5",
+    title: "Strings Methods",
+    objectives: ["Read documentation for how to use the methods of the String class", "Either in the DOCS tab in the CodeHS editor, or elsewhere online", "Call methods on String objects to get information about the string, such as length or characters at given indices", "Utilize String methods to create programs that manipulate strings in different ways"],
+    teaches: [".length()", ".substring()", ".indexOf()", ".charAt()", ".toUpperCase()", ".toLowerCase()", "looping through a String"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.6",
+    codehsCode: "4.6",
+    title: "Strings and Characters",
+    objectives: ["Demonstrate an understanding of the differences between Strings and characters", "Examine how characters can be treated as numbers through their ASCII values", "Practice converting between char values and int values", "Print out special characters like quotes and new lines using escape sequence chars (such as", "Utilize Character class methods"],
+    teaches: ["char vs String", "ASCII values", "casting char to int", "escape sequences \\\\n \\\\\" \\\\\\\\", "Character class methods"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.7",
+    codehsCode: "4.7",
+    title: "Exceptions",
+    objectives: ["Demonstrate an understanding of syntax errors, compiler errors, run-time errors, and logic errors", "Identify arithmetic exceptions", "Use comments to identify errors and explain what caused it", "Utilize exceptions to find and fix bugs in programs"],
+    teaches: ["syntax errors", "compiler errors", "run-time errors", "logic errors", "ArithmeticException"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.8",
+    codehsCode: "4.8",
+    title: "String Processing",
+    objectives: ["Create methods that perform advanced manipulations on Strings and characters", "Develop pseudocode algorithms for solutions before writing the actual Java code", "Debug their code", "Practice the common algorithm for String manipulation, including:", "Looping through each character of the String", "Performing specific actions based on each character", "Building a result String by appending processed characters to an initially empty String", "Returning the final result String"],
+    teaches: ["building a result String", "looping over characters", "pseudocode before code"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "3.9",
+    codehsCode: "4.9",
+    title: "Methods Quiz",
+    objectives: ["Demonstrate an understanding of the concepts covered in the *Methods Unit* through a multiple choice quiz"],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+];
+
+/** Every lesson we mirror, in teaching order. */
+export const CODEHS_ALL: CodeHSLesson[] = [...CODEHS_BASIC_JAVA, ...CODEHS_METHODS];
+
+const ORDER = CODEHS_ALL.map((l) => l.code);
 
 /** Everything CodeHS has already taught by the time this lesson starts. */
 export function taughtBefore(code: string): string[] {
   const i = ORDER.indexOf(code);
   if (i <= 0) return [];
-  return CODEHS_BASIC_JAVA.slice(0, i).flatMap((l) => l.teaches);
+  return CODEHS_ALL.slice(0, i).flatMap((l) => l.teaches);
 }
 
 /** Everything CodeHS has NOT taught yet — a lesson must not use any of it. */
 export function notYetTaught(code: string): string[] {
   const i = ORDER.indexOf(code);
   if (i < 0) return [];
-  return CODEHS_BASIC_JAVA.slice(i + 1).flatMap((l) => l.teaches);
+  return CODEHS_ALL.slice(i + 1).flatMap((l) => l.teaches);
 }
 
 export function lessonSpec(code: string): CodeHSLesson | undefined {
-  return CODEHS_BASIC_JAVA.find((l) => l.code === code);
+  return CODEHS_ALL.find((l) => l.code === code);
 }
 
 /**
@@ -400,7 +496,7 @@ export function studentCode(code: string): string {
  */
 export function resolveLessonCode(input: string): string {
   if (lessonSpec(input)) return input;
-  return CODEHS_BASIC_JAVA.find((l) => l.codehsCode === input)?.code ?? input;
+  return CODEHS_ALL.find((l) => l.codehsCode === input)?.code ?? input;
 }
 
 /**

@@ -4684,6 +4684,257 @@
           }
         ]
       }
+    },
+    {
+      "code": "3.1",
+      "title": "Java Methods",
+      "objectives": [
+        "explain why a method is better than repeating code",
+        "create a method and call it"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "n_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Every dungeon room prints the same divider above its name.",
+            "code": "public void run() {\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the cellar.\");\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the crypt.\");\n}",
+            "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt.",
+            "highlight": [
+              1,
+              3
+            ],
+            "points": [
+              {
+                "label": "two identical lines",
+                "text": "The same println, written twice. Ten rooms would mean ten copies."
+              },
+              {
+                "label": "changing it",
+                "text": "Make the divider longer and you have to edit every copy, and you will miss one."
+              },
+              {
+                "label": "what we want",
+                "text": "Write the divider once, give it a name, and use the name wherever it is needed."
+              }
+            ]
+          },
+          {
+            "id": "n_def",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A method is a named block of code you can run by name.",
+            "code": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"------------------------\");\n}",
+            "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt.",
+            "highlight": [
+              6,
+              7,
+              8
+            ],
+            "points": [
+              {
+                "label": "public void banner()",
+                "text": "The definition. banner is the name you chose; the braces hold what it does."
+              },
+              {
+                "label": "banner();",
+                "text": "The call. It runs the block, then carries on with the next line."
+              },
+              {
+                "label": "called twice",
+                "text": "One definition, two calls, and the divider appears twice."
+              },
+              {
+                "label": "void",
+                "text": "This method hands nothing back. It just does something."
+              }
+            ]
+          },
+          {
+            "id": "n_cmp",
+            "kind": "compare",
+            "instruction": "Same output. One of them you can change in a single place.",
+            "sides": [
+              {
+                "label": "repeated",
+                "code": "public void run() {\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the cellar.\");\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the crypt.\");\n}",
+                "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt."
+              },
+              {
+                "label": "with a method",
+                "code": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"------------------------\");\n}",
+                "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt."
+              }
+            ],
+            "points": [
+              {
+                "label": "repeated",
+                "text": "The divider text exists twice. Ten rooms means ten copies."
+              },
+              {
+                "label": "with a method",
+                "text": "It exists once, inside banner(). Ten rooms means ten calls and still one copy."
+              }
+            ],
+            "skills": [
+              "explain why a method is better than repeating code"
+            ]
+          },
+          {
+            "id": "n_fix",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Make every divider say = instead of -. Change it in ONE place.",
+            "code": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"------------------------\");\n}",
+            "target": "========================\nYou are in the cellar.\n========================\nYou are in the crypt.",
+            "solution": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"========================\");\n}",
+            "hint": "Only the line inside banner() needs editing. Both dividers come from it.",
+            "after": "One edit, both dividers. That is the whole reason methods exist.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "n_order",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Defining a method does not run it.",
+            "code": "public void run() {\n  banner();\n  banner();\n  banner();\n}\n\npublic void banner() {\n  System.out.println(\"== ROOM ==\");\n}",
+            "output": "== ROOM ==\n== ROOM ==\n== ROOM ==",
+            "points": [
+              {
+                "label": "run()",
+                "text": "Java starts here. It is a method too - the one that runs automatically."
+              },
+              {
+                "label": "banner(); x3",
+                "text": "Three calls, so the block runs three times."
+              },
+              {
+                "label": "the definition",
+                "text": "Sitting below run() and never running on its own. It waits until something calls it."
+              },
+              {
+                "label": "order on the page",
+                "text": "Where you write the definition does not matter. Above or below run() both work."
+              }
+            ]
+          },
+          {
+            "id": "n_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  System.out.println(\"A\");\n  shout();\n  System.out.println(\"C\");\n}\n\npublic void shout() {\n  System.out.println(\"B\");\n}",
+            "opts": [
+              "A\nB\nC",
+              "A\nC\nB",
+              "A\nC",
+              "B\nA\nC"
+            ],
+            "correct": 0,
+            "why": "The call to shout() runs the whole method before the next line of run(). Java goes there, prints B, comes back, then prints C.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "n_sharp",
+            "kind": "teach",
+            "instruction": "public void name() { } to define. name(); to call.",
+            "points": [
+              {
+                "label": "public void banner()",
+                "text": "The header: who can use it, what it hands back, and its name."
+              },
+              {
+                "label": "void",
+                "text": "Hands nothing back. Later you will write methods that do."
+              },
+              {
+                "label": "()",
+                "text": "Empty brackets mean it needs no information. Parameters go there next lesson."
+              },
+              {
+                "label": "banner();",
+                "text": "A call needs the brackets and a semicolon. Without brackets Java thinks you mean a variable."
+              }
+            ]
+          },
+          {
+            "id": "n_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "public void run() {\n  hello();\n}\n\npublic void hello() {\n  System.out.println(\"hi\");\n}",
+            "questions": [
+              {
+                "prompt": "Why do we write methods?",
+                "opts": [
+                  "To name a block of code and reuse it without repeating it",
+                  "To store a single value",
+                  "To repeat something a fixed number of times",
+                  "To compare two values"
+                ],
+                "correct": 0,
+                "why": "A method gives a block a name so it can be run from anywhere, as many times as needed, and changed in one place."
+              },
+              {
+                "prompt": "Which line CALLS a method named hello?",
+                "opts": [
+                  "hello();",
+                  "public void hello()",
+                  "hello",
+                  "void hello();"
+                ],
+                "correct": 0,
+                "why": "A call is the name, brackets, semicolon. The second is a definition header, and the others are neither."
+              }
+            ],
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "n_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Finish the definition so the call works.",
+            "code": "public void run() {\n  cheer();\n}\n\npublic ⟦1⟧ cheer() {\n  System.out.println(\"Victory!\");\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "void",
+                  "int",
+                  "String"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "Victory!",
+            "hint": "The method prints something and hands nothing back.",
+            "after": "void means \"hands nothing back\". Methods that return a value come in 4.3.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "n_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: write a method that prints the game over screen, and call it twice.",
+            "code": "public void run() {\n  // call your method twice\n}\n\n// define gameOver() below\n",
+            "target": "GAME OVER\nGAME OVER",
+            "solution": "public void run() {\n  gameOver();\n  gameOver();\n}\n\npublic void gameOver() {\n  System.out.println(\"GAME OVER\");\n}",
+            "hint": "Define public void gameOver() printing \"GAME OVER\", then call gameOver(); twice inside run().",
+            "after": "You defined a method and used it twice. That is the whole of this lesson.",
+            "skills": [
+              "create a method and call it"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
