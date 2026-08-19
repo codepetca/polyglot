@@ -6105,7 +6105,7 @@
       "title": "Exceptions",
       "objectives": [
         "tell compile, run-time and logic errors apart",
-        "guard code that could crash"
+        "name the exception a crash throws"
       ],
       "flow": {
         "v": 1,
@@ -6180,28 +6180,52 @@
             ]
           },
           {
-            "id": "e_logic",
+            "id": "e_match",
+            "kind": "match",
+            "instruction": "Match each mistake to what Java does about it.",
+            "pairs": [
+              [
+                "10 / 0",
+                "ArithmeticException"
+              ],
+              [
+                "\"hello\".charAt(10)",
+                "IndexOutOfBoundsException"
+              ],
+              [
+                "int x = 3 with no semicolon",
+                "compile error - it never runs"
+              ],
+              [
+                "x + y / 2 instead of (x + y) / 2",
+                "no error at all, just a wrong answer"
+              ]
+            ],
+            "why": "Only the first two are exceptions. The third never starts, and the fourth finishes and lies to you.",
+            "skills": [
+              "name the exception a crash throws"
+            ]
+          },
+          {
+            "id": "e_named",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A logic error is silent. It just gives the wrong answer.",
-            "code": "public void run() {\n  int a = 8;\n  int b = 2;\n  System.out.println(average(a, b));\n}\n\npublic int average(int x, int y) {\n  return x + y / 2;\n}",
-            "output": "9",
+            "instruction": "Run-time crashes have names, and the test asks for them.",
             "points": [
               {
-                "label": "expected 5",
-                "text": "The average of 8 and 2 is 5. This prints 9."
+                "label": "ArithmeticException",
+                "text": "Thrown by integer division by zero: 10 / 0."
               },
               {
-                "label": "x + y / 2",
-                "text": "Division happens before addition, so it is 8 + 1, not (8 + 2) / 2."
+                "label": "IndexOutOfBoundsException",
+                "text": "Thrown by asking for a position that is not there: \"hello\".charAt(10) when the last position is 4."
               },
               {
-                "label": "no error",
-                "text": "It compiled, it ran, it printed a number. Nothing warned you."
+                "label": "a compile error has no exception",
+                "text": "A missing semicolon never runs, so nothing is thrown. Exceptions only happen to programs that started."
               },
               {
-                "label": "the fix",
-                "text": "Brackets: (x + y) / 2."
+                "label": "reading the name",
+                "text": "The exception name tells you what went wrong before you read a single line of your code."
               }
             ]
           },
@@ -6246,6 +6270,32 @@
             ]
           },
           {
+            "id": "e_logic",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A logic error is silent. It just gives the wrong answer.",
+            "code": "public void run() {\n  int a = 8;\n  int b = 2;\n  System.out.println(average(a, b));\n}\n\npublic int average(int x, int y) {\n  return x + y / 2;\n}",
+            "output": "9",
+            "points": [
+              {
+                "label": "expected 5",
+                "text": "The average of 8 and 2 is 5. This prints 9."
+              },
+              {
+                "label": "x + y / 2",
+                "text": "Division happens before addition, so it is 8 + 1, not (8 + 2) / 2."
+              },
+              {
+                "label": "no error",
+                "text": "It compiled, it ran, it printed a number. Nothing warned you."
+              },
+              {
+                "label": "the fix",
+                "text": "Brackets: (x + y) / 2."
+              }
+            ]
+          },
+          {
             "id": "e_fix",
             "kind": "fix",
             "wrap": "methods",
@@ -6263,31 +6313,45 @@
             "id": "e_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
-            "code": "int hits = 0;\nSystem.out.println(10 / hits);",
+            "code": "String hello = \"hello\";",
             "questions": [
               {
-                "prompt": "What kind of error is dividing by zero in Java?",
+                "prompt": "int x = 3 (no semicolon), then int y = 4; then int sum = x + y; — run-time error, compile error, both, or neither?",
                 "opts": [
-                  "A run-time error",
-                  "A compile error",
-                  "A logic error",
-                  "Not an error"
+                  "Compile time error",
+                  "Run time error",
+                  "Both",
+                  "Neither"
                 ],
                 "correct": 0,
-                "why": "It compiles perfectly. The program starts, reaches that line, and throws ArithmeticException."
+                "why": "Java cannot tell where the first statement ends, so it refuses to build the program. Nothing runs, so there is no run-time error to have."
               },
               {
-                "prompt": "Which error type gives NO message at all?",
+                "prompt": "String hello = \"hello\"; char last = hello.charAt(10); — which exception?",
                 "opts": [
-                  "A logic error",
-                  "A compile error",
-                  "A run-time error",
-                  "They all give messages"
+                  "IndexOutOfBoundsException",
+                  "ArithmeticException",
+                  "IllegalArgumentException",
+                  "None"
                 ],
                 "correct": 0,
-                "why": "A logic error runs to completion. The output is simply wrong, and only checking it reveals the problem."
+                "why": "\"hello\" has 5 characters, at positions 0 to 4. Position 10 is outside the String, and that is exactly what this exception means."
               }
             ],
+            "skills": [
+              "name the exception a crash throws"
+            ]
+          },
+          {
+            "id": "e_bug",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Two bugs, both stopping it compiling. Hunt them.",
+            "code": "public void run() {\n  String word = 'hello';\n  System.out.println(word)\n}",
+            "target": "hello",
+            "solution": "public void run() {\n  String word = \"hello\";\n  System.out.println(word);\n}",
+            "hint": "A String needs double quotes, and every statement needs a semicolon.",
+            "after": "That is CodeHS exercise 4.7.5, Bug Hunter, in miniature - single quotes on a String, and a missing semicolon.",
             "skills": [
               "tell compile, run-time and logic errors apart"
             ]

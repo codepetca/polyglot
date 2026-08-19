@@ -445,8 +445,17 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     codehsCode: "4.7",
     title: "Exceptions",
     objectives: ["Demonstrate an understanding of syntax errors, compiler errors, run-time errors, and logic errors", "Identify arithmetic exceptions", "Use comments to identify errors and explain what caused it", "Utilize exceptions to find and fix bugs in programs"],
-    teaches: ["syntax errors", "compiler errors", "run-time errors", "logic errors", "ArithmeticException"],
+    // CONFIRMED: 4.7.2 asks students to NAME the exception, so the names are
+    // examinable content, not background.
+    teaches: ["compile errors", "run-time errors", "logic errors", "ArithmeticException", "IndexOutOfBoundsException"],
     exercises: ["Arithmetic Exception", "Index Out Of Bounds Exception", "Bug Hunter"],
+    exerciseSpecs: [
+      { codehsCode: "4.7.5", name: "Bug Hunter", requires: "A ConsoleProgram seeded with deliberate errors to find and fix: a String assigned with SINGLE quotes, a missing semicolon, and a call with its arguments in the wrong order." },
+    ],
+    cfu: [
+      "whether `int x = 3` with no semicolon is a run-time error, compile error, both or neither - it is a COMPILE error, so nothing runs",
+      "which exception `\"hello\".charAt(10)` throws - IndexOutOfBoundsException",
+    ],
   },
   {
     code: "3.8",
