@@ -1,0 +1,1230 @@
+{
+  "source": "https://codehs.com/course/apcsamocha/lessons",
+  "harvestedAt": "2026-08-19",
+  "note": "Objectives only. Exercise specs and quiz questions are login-gated - see lib/curriculum/codehs.ts.",
+  "units": [
+    {
+      "name": "Introduction to Programming in Java with Karel the Dog",
+      "publicUnit": 1,
+      "courseUnit": 2,
+      "lessons": [
+        {
+          "publicCode": "1.1",
+          "courseCode": "2.1",
+          "title": "Introduction to Programming With Karel",
+          "objectives": [
+            "Write their first Karel program by typing out all of the Karel commands with proper syntax",
+            "Explain how giving commands to a computer is like giving commands to a dog"
+          ]
+        },
+        {
+          "publicCode": "1.2",
+          "courseCode": "2.2",
+          "title": "More Basic Karel",
+          "objectives": [
+            "Identify the direction that Karel is facing",
+            "Predict what direction Karel will be facing after executing a series of commands",
+            "Identify a location in Karel's world using Street, Avenue terminology"
+          ]
+        },
+        {
+          "publicCode": "1.3",
+          "courseCode": "2.3",
+          "title": "Java Programs and the Run Method",
+          "objectives": [
+            "Explain the purpose of the Run Method",
+            "Explain the first thing that happens in your program when you click the Run button.",
+            "Write a fully-formed Java program by including a class and a run method."
+          ]
+        },
+        {
+          "publicCode": "1.4",
+          "courseCode": "2.4",
+          "title": "Karel Can't Turn Right",
+          "objectives": [
+            "Define a method, and successfully implement methods in their code.",
+            "Teach Karel a new command by creating a turnRight() method"
+          ]
+        },
+        {
+          "publicCode": "1.5",
+          "courseCode": "2.5",
+          "title": "Methods in Karel",
+          "objectives": [
+            "Create methods to teach Karel new commands",
+            "Explain the difference between defining and calling a method",
+            "Utilize these methods to write higher level Karel programs that go beyond the basic toolbox of commands that Karel starts with"
+          ]
+        },
+        {
+          "publicCode": "1.6",
+          "courseCode": "2.6",
+          "title": "Top Down Design and Decomposition in Karel",
+          "objectives": [
+            "Break a large problem down into smaller, simpler problems",
+            "Write methods that solve the simpler problems, and use them as building blocks to solve the larger problem",
+            "Compare programs and identify good vs poor decomposition"
+          ]
+        },
+        {
+          "publicCode": "1.7",
+          "courseCode": "2.7",
+          "title": "Commenting Your Code",
+          "objectives": [
+            "Explain the preconditions and postconditions of a method",
+            "Create clear and readable comments in their code that help the reader understand the code",
+            "Explain the purpose of comments"
+          ]
+        },
+        {
+          "publicCode": "1.8",
+          "courseCode": "2.8",
+          "title": "Super Karel",
+          "objectives": [
+            "Write programs that use SuperKarel instead of Karel",
+            "Utilize the new toolbox of commands that SuperKarel provides over Karel",
+            "Read documentation to understand how to use a library (SuperKarel is an example of this)"
+          ]
+        },
+        {
+          "publicCode": "1.9",
+          "courseCode": "2.9",
+          "title": "For Loops",
+          "objectives": [
+            "Create for loops to repeat code a fixed number of times",
+            "Explain when a for loop should be a used",
+            "Utilize for loops to write programs that would be difficult / impossible without loops"
+          ]
+        },
+        {
+          "publicCode": "1.10",
+          "courseCode": "2.10",
+          "title": "While Loops in Karel",
+          "objectives": [
+            "Explain the purpose of a while loop",
+            "Create while loops to repeat code while a condition is true",
+            "Utilize while loops to solve new types of problems",
+            "Test their solutions on different Karel worlds"
+          ]
+        },
+        {
+          "publicCode": "1.11",
+          "courseCode": "2.11",
+          "title": "If Statements",
+          "objectives": [
+            "Use conditions to gather information about Karel's world (is the front clear, is Karel facing north, etc)",
+            "Create if statements that only execute code if a certain condition is true"
+          ]
+        },
+        {
+          "publicCode": "1.12",
+          "courseCode": "2.12",
+          "title": "If/Else Statements",
+          "objectives": [
+            "Explain the purpose of an If/Else statement",
+            "Create If/Else statements to solve new types of problems",
+            "Identify when an If/Else statement is appropriate to be used"
+          ]
+        },
+        {
+          "publicCode": "1.13",
+          "courseCode": "2.13",
+          "title": "Control Structures Example",
+          "objectives": [
+            "Identify the different control structures they can use to modify the flow of control through a program",
+            "Combine control structures to solve complicated problems",
+            "Choose the proper control structure for a given problem"
+          ]
+        },
+        {
+          "publicCode": "1.14",
+          "courseCode": "2.14",
+          "title": "More Karel Examples and Testing",
+          "objectives": [
+            "Debug common errors in code",
+            "Use control structures to create general solutions that work on all Karel worlds"
+          ]
+        },
+        {
+          "publicCode": "1.15",
+          "courseCode": "2.15",
+          "title": "How to Indent Your Code",
+          "objectives": [
+            "Explain why it is important to indent code",
+            "Identify proper indentation",
+            "Modify a program to have proper indentation",
+            "Write programs with proper indentation"
+          ]
+        },
+        {
+          "publicCode": "1.16",
+          "courseCode": "2.16",
+          "title": "Karel Challenges",
+          "objectives": [
+            "Define a problem in their own words and plan out a solution to the problem",
+            "Break a large problem down into smaller pieces and solve each of the pieces, then use these solutions as building blocks to solve the larger problem",
+            "Utilize the proper control structures to create general solutions that solve multiple Karel worlds",
+            "Write clear and readable code using control structures, methods, decomposition, and comments"
+          ]
+        },
+        {
+          "publicCode": "1.17",
+          "courseCode": "2.17",
+          "title": "Introduction to Programming in Java Quiz",
+          "objectives": [
+            "Prove their knowledge of control structures, functions, decomposition, and comments through a multiple choice quiz"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Basic Java",
+      "publicUnit": 2,
+      "courseUnit": 3,
+      "lessons": [
+        {
+          "publicCode": "2.1",
+          "courseCode": "3.1",
+          "title": "Printing in Java",
+          "objectives": [
+            "Call system class methods to generate output to the console",
+            "Recognize the difference between display behavior of System.out.print and System.out.println",
+            "Create string literals"
+          ]
+        },
+        {
+          "publicCode": "2.2",
+          "courseCode": "3.2",
+          "title": "Variables and Types",
+          "objectives": [
+            "Understand and explain the purpose of variables in Java",
+            "Declare, assign, and initialize variables of different data types",
+            "Identify and correct errors related to variable declarations and assignments",
+            "Apply variables in simple Java programs to store and manipulate data"
+          ]
+        },
+        {
+          "publicCode": "2.3",
+          "courseCode": "3.3",
+          "title": "User Input",
+          "objectives": [
+            "Capture and use user input in Java programs",
+            "Understand the different types of user input and when to use each",
+            "Apply user input to create personalized and creative content",
+            "Implement user input commands to solve problems and complete tasks"
+          ]
+        },
+        {
+          "publicCode": "2.4",
+          "courseCode": "3.4",
+          "title": "Arithmetic Expressions",
+          "objectives": [
+            "Use Java to perform arithmetic operations and evaluate expressions",
+            "Understand the significance of data types in arithmetic computations",
+            "Identify and correct errors related to floating-point arithmetic and integer overflow",
+            "Write programs to solve arithmetic expressions and simple computational problems"
+          ]
+        },
+        {
+          "publicCode": "2.5",
+          "courseCode": "3.5",
+          "title": "Casting",
+          "objectives": [
+            "Understand and apply type casting in Java",
+            "Differentiate between casting from int to double and vice versa",
+            "Utilize type casting to solve mathematical problems in Java",
+            "Analyze the effects of casting on arithmetic operations"
+          ]
+        },
+        {
+          "publicCode": "2.6",
+          "courseCode": "3.6",
+          "title": "Booleans",
+          "objectives": [
+            "Define and create Boolean variables in Java",
+            "Understand and apply Boolean expressions in conditional statements",
+            "Utilize Boolean logic to control the flow of a program",
+            "Analyze how Boolean logic is used in real-world decision-making processes"
+          ]
+        },
+        {
+          "publicCode": "2.7",
+          "courseCode": "3.7",
+          "title": "Logical Operators",
+          "objectives": [
+            "Define and use logical operators in Java",
+            "Combine multiple conditions using &&, ||, and ! to create compound Boolean expressions",
+            "Analyze and debug logical statements to ensure correct program behavior",
+            "Apply logical operators to real-world scenarios and problem-solving tasks"
+          ]
+        },
+        {
+          "publicCode": "2.8",
+          "courseCode": "3.8",
+          "title": "Comparison Operators",
+          "objectives": [
+            "Define and use comparison operators in Java",
+            "Write conditional statements that evaluate expressions using comparison operators",
+            "Apply comparison operators to solve real-world problems and scenarios"
+          ]
+        },
+        {
+          "publicCode": "2.9",
+          "courseCode": "3.9",
+          "title": "For Loops",
+          "objectives": [
+            "Understand and write basic *for loops* in Java",
+            "Modify loop parameters to control the start, end, and increment of the loop",
+            "Apply *for loops* to perform tasks such as counting, summing, and iterating over ranges",
+            "Debug and analyze *for loop* code to ensure it meets the intended functionality"
+          ]
+        },
+        {
+          "publicCode": "2.10",
+          "courseCode": "3.10",
+          "title": "While Loops",
+          "objectives": [
+            "Understand the structure and function of *while loops* in Java",
+            "Write and debug *while loops* to perform repetitive tasks based on a condition",
+            "Identify and avoid common pitfalls, such as infinite loops",
+            "Compare and contrast *while loops* with *for loops* in terms of efficiency and use cases"
+          ]
+        },
+        {
+          "publicCode": "2.11",
+          "courseCode": "3.11",
+          "title": "If Statements",
+          "objectives": [
+            "Understand and use if statements to control program flow",
+            "Implement nested if statements to solve complex problems",
+            "Use the modulus operator and string methods in conditional expressions"
+          ]
+        },
+        {
+          "publicCode": "2.12",
+          "courseCode": "3.12",
+          "title": "Loop-and-a-Half",
+          "objectives": [
+            "Understand and implement the loop-and-a-half structure in Java",
+            "Compare the efficiency of loop-and-a-half versus traditional while loops",
+            "Apply the loop-and-a-half concept to solve practical programming problems"
+          ]
+        },
+        {
+          "publicCode": "2.13",
+          "courseCode": "3.13",
+          "title": "Short-Circuit Evaluation",
+          "objectives": [
+            "Understand the concept of short circuit evaluation in logical operations",
+            "Apply short circuit evaluation to optimize code performance and prevent crashes",
+            "Debug and modify existing code to include short circuit evaluation"
+          ]
+        },
+        {
+          "publicCode": "2.14",
+          "courseCode": "3.14",
+          "title": "De Morgan's Laws",
+          "objectives": [
+            "Understand and explain De Morgan's Laws",
+            "Apply De Morgan's Laws to simplify complex Boolean expressions",
+            "Compare equivalent Boolean expressions using De Morgan's Laws"
+          ]
+        },
+        {
+          "publicCode": "2.15",
+          "courseCode": "3.15",
+          "title": "Strings",
+          "objectives": [
+            "Create and manipulate String variables in Java",
+            "Compare Strings using the .equals() method",
+            "Apply String operations to solve programming problems"
+          ]
+        },
+        {
+          "publicCode": "2.16",
+          "courseCode": "3.16",
+          "title": "Basic Java Quiz",
+          "objectives": [
+            "Demonstrate understanding of basic Java concepts through a quiz",
+            "Apply logical reasoning to solve programming problems",
+            "Identify areas of strength and areas needing improvement in their understanding of Java"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Methods",
+      "publicUnit": 3,
+      "courseUnit": 4,
+      "lessons": [
+        {
+          "publicCode": "3.1",
+          "courseCode": "4.1",
+          "title": "Java Methods",
+          "objectives": [
+            "Explain the purpose of methods",
+            "Create their own methods",
+            "Utilize methods to solve simple problems"
+          ]
+        },
+        {
+          "publicCode": "3.2",
+          "courseCode": "4.2",
+          "title": "Methods and Parameters",
+          "objectives": [
+            "Explore code examples that include methods and parameters",
+            "Write methods that take parameters as inputs",
+            "Apply knowledge of methods and parameters to solve coding exercises"
+          ]
+        },
+        {
+          "publicCode": "3.3",
+          "courseCode": "4.3",
+          "title": "Methods and Return Values",
+          "objectives": [
+            "Explain the purpose of returning a value from a method",
+            "Create methods that return values",
+            "Create programs that call methods with return values and store the result for later use",
+            "Practice creating methods to perform specific calculations",
+            "Apply method concepts to solve coding exercises"
+          ]
+        },
+        {
+          "publicCode": "3.4",
+          "courseCode": "4.4",
+          "title": "Javadocs and More Methods",
+          "objectives": [
+            "Demonstrate an understanding of the purpose and syntax of Javadoc comments",
+            "Analyze a given program for proper documentation",
+            "Compare and contrast programs with good documentation against programs with poor documentation",
+            "Write methods that perform specific calculations and return values",
+            "Use Javadoc comments to document methods"
+          ]
+        },
+        {
+          "publicCode": "3.5",
+          "courseCode": "4.5",
+          "title": "Strings Methods",
+          "objectives": [
+            "Read documentation for how to use the methods of the String class",
+            "Either in the DOCS tab in the CodeHS editor, or elsewhere online",
+            "Call methods on String objects to get information about the string, such as length or characters at given indices",
+            "Utilize String methods to create programs that manipulate strings in different ways"
+          ]
+        },
+        {
+          "publicCode": "3.6",
+          "courseCode": "4.6",
+          "title": "Strings and Characters",
+          "objectives": [
+            "Demonstrate an understanding of the differences between Strings and characters",
+            "Examine how characters can be treated as numbers through their ASCII values",
+            "Practice converting between char values and int values",
+            "Print out special characters like quotes and new lines using escape sequence chars (such as",
+            "Utilize Character class methods"
+          ]
+        },
+        {
+          "publicCode": "3.7",
+          "courseCode": "4.7",
+          "title": "Exceptions",
+          "objectives": [
+            "Demonstrate an understanding of syntax errors, compiler errors, run-time errors, and logic errors",
+            "Identify arithmetic exceptions",
+            "Use comments to identify errors and explain what caused it",
+            "Utilize exceptions to find and fix bugs in programs"
+          ]
+        },
+        {
+          "publicCode": "3.8",
+          "courseCode": "4.8",
+          "title": "String Processing",
+          "objectives": [
+            "Create methods that perform advanced manipulations on Strings and characters",
+            "Develop pseudocode algorithms for solutions before writing the actual Java code",
+            "Debug their code",
+            "Practice the common algorithm for String manipulation, including:",
+            "Looping through each character of the String",
+            "Performing specific actions based on each character",
+            "Building a result String by appending processed characters to an initially empty String",
+            "Returning the final result String"
+          ]
+        },
+        {
+          "publicCode": "3.9",
+          "courseCode": "4.9",
+          "title": "Methods Quiz",
+          "objectives": [
+            "Demonstrate an understanding of the concepts covered in the *Methods Unit* through a multiple choice quiz"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Classes and Object-Oriented Programming",
+      "publicUnit": 4,
+      "courseUnit": 5,
+      "lessons": [
+        {
+          "publicCode": "4.1",
+          "courseCode": "5.1",
+          "title": "Introduction to Classes and Objects",
+          "objectives": [
+            "Describe the relationship between classes and objects",
+            "Create programs that create (instantiate) multiple objects from a given class",
+            "Create programs that call methods on an object and print out the result"
+          ]
+        },
+        {
+          "publicCode": "4.2",
+          "courseCode": "5.2",
+          "title": "Classes vs. Objects",
+          "objectives": [
+            "Describe the relationship between classes, objects, and instances",
+            "An object is something that has both state and behavior. An object is an instance of a class",
+            "A class is a template for creating objects. Objects are instantiated from classes",
+            "Objects and instances generally refer to the same thing",
+            "Identify if a given thing is an object or a class",
+            "Create multiple objects of a given class",
+            "Call methods on an object to access the object's state and behavior"
+          ]
+        },
+        {
+          "publicCode": "4.3",
+          "courseCode": "5.3",
+          "title": "Using a Class as a Client",
+          "objectives": [
+            "Describe what it means to be a client of a class",
+            "Explain the benefit of being able to use the functionality of a class without ever having to look at the source code for the class.",
+            "Read documentation for a class to determine what methods are available to use",
+            "Create programs that use other classes as a client to solve a specific problem"
+          ]
+        },
+        {
+          "publicCode": "4.4",
+          "courseCode": "5.4",
+          "title": "Writing Classes",
+          "objectives": [
+            "Create their own class",
+            "Create a constructor for a class",
+            "Determine what instance variables a class should have and create them",
+            "Create a toString method for a class so that it can be printed out",
+            "Create a program that uses their own class as a client"
+          ]
+        },
+        {
+          "publicCode": "4.5",
+          "courseCode": "5.5",
+          "title": "Writing Classes and Instance Methods",
+          "objectives": [
+            "Create their own classes",
+            "Create instance methods for their classes",
+            "Create objects of their class, and call instance methods on those objects (instances)",
+            "Describe the difference between instance variables and instance methods"
+          ]
+        },
+        {
+          "publicCode": "4.6",
+          "courseCode": "5.6",
+          "title": "Getter and Setter Methods",
+          "objectives": [
+            "Describe what a getter method is",
+            "Describe what a setter method is",
+            "Explain the difference between getter and setter methods",
+            "Explain the purpose of getter and setter methods",
+            "Create getter and setter methods for their classes",
+            "Call getter and setter methods on an object to access the object's private instance variables"
+          ]
+        },
+        {
+          "publicCode": "4.7",
+          "courseCode": "5.7",
+          "title": "Class Methods and Class Variables",
+          "objectives": [
+            "Explain the difference between *instance* methods and *class* methods",
+            "Utilize class methods in a program that is a client of a class",
+            "Utilize class variables in a program that is a client of a class",
+            "Write their own static class methods on their classes",
+            "Write their own static class variables on their classes",
+            "Identify a class variable / method vs an instance variable / method",
+            "Explain when class variables / methods would be appropriate instead of instance variables / methods"
+          ]
+        },
+        {
+          "publicCode": "4.8",
+          "courseCode": "5.8",
+          "title": "Wrapper Classes",
+          "objectives": [
+            "Create Integer and Double objects for wrapper classes",
+            "Call Integer and Double methods for wrapper classes"
+          ]
+        },
+        {
+          "publicCode": "4.9",
+          "courseCode": "5.9",
+          "title": "Method Overloading",
+          "objectives": [
+            "Describe what method overloading is",
+            "Explain the purpose of method overloading",
+            "Create classes that overload methods"
+          ]
+        },
+        {
+          "publicCode": "4.10",
+          "courseCode": "5.10",
+          "title": "Local Variables and Scope",
+          "objectives": [
+            "Identify the scope of a variable",
+            "Identify which variables are in scope at a given point in a program",
+            "Compare two different variables and determine which has a more specific scope"
+          ]
+        },
+        {
+          "publicCode": "4.11",
+          "courseCode": "5.11",
+          "title": "Key Terms for Classes",
+          "objectives": [
+            "Define all the Object Oriented vocabulary terms in this lesson",
+            "Use the this keyword to solve variable shadowing problems"
+          ]
+        },
+        {
+          "publicCode": "4.12",
+          "courseCode": "5.12",
+          "title": "Objects vs Primitives",
+          "objectives": [
+            "Explain the differences between primitive and object data types",
+            "Properly compare variables using the correct methods",
+            "Explain the difference between passing a primitive vs an object to a method",
+            "Explain why null pointer exceptions occur and how to avoid them"
+          ]
+        },
+        {
+          "publicCode": "4.13",
+          "courseCode": "5.13",
+          "title": "Inheritance",
+          "objectives": [
+            "Describe the differences between a Is A and a Has A relationship.",
+            "Explain how class hierarchy helps to reuse code.",
+            "Create subclasses",
+            "Explain that the Object class is the top of the Java hierarchy",
+            "Demonstrate how a subclass makes a call to the superclass constructor"
+          ]
+        },
+        {
+          "publicCode": "4.14",
+          "courseCode": "5.14",
+          "title": "Class Design and Abstract Classes",
+          "objectives": [
+            "Explain what an abstract class is and why we use them",
+            "Implement abstract classes and subclasses",
+            "Explain design considerations for larger programs"
+          ]
+        },
+        {
+          "publicCode": "4.15",
+          "courseCode": "5.15",
+          "title": "Polymorphism",
+          "objectives": []
+        },
+        {
+          "publicCode": "4.16",
+          "courseCode": "5.16",
+          "title": "Object Superclass",
+          "objectives": [
+            "Explain Object class methods through inheritance",
+            "Utilize the Object class through inheritance",
+            "Describe methods of the Object superclass that are commonly overridden"
+          ]
+        },
+        {
+          "publicCode": "4.17",
+          "courseCode": "5.17",
+          "title": "Interfaces",
+          "objectives": [
+            "Implement interfaces from the Java library",
+            "Create and implement their own interfaces",
+            "Compare and contrast abstract classes and interfaces"
+          ]
+        },
+        {
+          "publicCode": "4.18",
+          "courseCode": "5.18",
+          "title": "Classes and Object-Oriented Programming Quiz",
+          "objectives": [
+            "Demonstrate their knowledge of Classes and Object-Oriented Programming through a multiple-choice quiz"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Data Structures",
+      "publicUnit": 5,
+      "courseUnit": 6,
+      "lessons": [
+        {
+          "publicCode": "5.1",
+          "courseCode": "6.1",
+          "title": "What are Data Structures?",
+          "objectives": [
+            "Explain the difference between an Array, an Array List, a 2D Array, and a Hash Map.",
+            "Choose the correct  Data Structure for a given purpose",
+            "Understand how Data Structures fit into their programs"
+          ]
+        },
+        {
+          "publicCode": "5.2",
+          "courseCode": "6.2",
+          "title": "Introduction to Arrays",
+          "objectives": [
+            "Initialize an Array of various types",
+            "Access items in the list with indexes",
+            "Change the value of a list item using indexes",
+            "Find out the length of any array"
+          ]
+        },
+        {
+          "publicCode": "5.3",
+          "courseCode": "6.3",
+          "title": "Using Arrays",
+          "objectives": [
+            "Create arrays of various types, including objects.",
+            "Traverse arrays using a for loop",
+            "Explain what happens when a program tries to access an array index that doesn't exist",
+            "Explain how different arrays can point to the same value and the implication of this.",
+            "Apply arrays to real-world examples."
+          ]
+        },
+        {
+          "publicCode": "5.4",
+          "courseCode": "6.4",
+          "title": "Enhanced For Loops",
+          "objectives": [
+            "Traverse the elements in a 1D array object using an enhanced for loop"
+          ]
+        },
+        {
+          "publicCode": "5.5",
+          "courseCode": "6.5",
+          "title": "ArrayList Methods",
+          "objectives": [
+            "Create an ArrayList",
+            "Add to and access ArrayList elements",
+            "Traverse an ArrayList",
+            "Use basic ArrayList methods"
+          ]
+        },
+        {
+          "publicCode": "5.6",
+          "courseCode": "6.6",
+          "title": "Arrays vs ArrayLists",
+          "objectives": [
+            "Compare and contrast Arrays and ArrayLists.",
+            "Explain when to use ArrayLists versus Arrays.",
+            "Explain how ArrayList functionality can be built off an Array structure."
+          ]
+        },
+        {
+          "publicCode": "5.7",
+          "courseCode": "6.7",
+          "title": "Additional Loop Examples",
+          "objectives": [
+            "Represent iterative processes using a for loop",
+            "Traverse ArraysLists using a for or while loop",
+            "Access elements in an ArrayList using iteration statements",
+            "Remove elements in an ArrayList"
+          ]
+        },
+        {
+          "publicCode": "5.8",
+          "courseCode": "6.8",
+          "title": "The List Interface",
+          "objectives": [
+            "Explain what the List interface is.",
+            "Explain why we would use the List interface as a formal parameter",
+            "Explain why we would use the List interface to define a List variable."
+          ]
+        },
+        {
+          "publicCode": "5.9",
+          "courseCode": "6.9",
+          "title": "2D Arrays (Matrices or Grids)",
+          "objectives": [
+            "Explain how 2D arrays are created by making an array of an array",
+            "Represent collections of related primitive or object reference data using two-dimensional (2D) array objects.",
+            "Traverse 2D arrays using nested loop statements."
+          ]
+        },
+        {
+          "publicCode": "5.10",
+          "courseCode": "6.10",
+          "title": "Traversing 2D Arrays",
+          "objectives": [
+            "Traverse 2D arrays using nested for loops",
+            "Traverse 2D arrays using nested enhanced for loops"
+          ]
+        },
+        {
+          "publicCode": "5.11",
+          "courseCode": "6.11",
+          "title": "HashMaps",
+          "objectives": [
+            "Explain what a HashMap is and when it should be used versus other data structures.",
+            "Create, modify, and retrieve values from a HashMap.",
+            "Loop through all values of a HashMap using an enhanced for loop."
+          ]
+        },
+        {
+          "publicCode": "5.12",
+          "courseCode": "6.12",
+          "title": "Binary",
+          "objectives": [
+            "Convert by hand from binary, octal, and hexadecimal to decimal",
+            "Explain how to convert from any number system to decimal",
+            "Write basic computer programs to convert numbers to decimal"
+          ]
+        },
+        {
+          "publicCode": "5.13",
+          "courseCode": "6.13",
+          "title": "Ethical Issues Around Data Collection",
+          "objectives": [
+            "Explain the risks to privacy from collecting and storing personal data on computer systems",
+            "Explain the role that programmers have considering safeguarding personal privacy",
+            "Explain the beneficial and harmful impacts that computer use and the creation of programs have on personal security"
+          ]
+        },
+        {
+          "publicCode": "5.14",
+          "courseCode": "6.14",
+          "title": "Data Structures Quiz",
+          "objectives": [
+            "Demonstrate their knowledge of data structures in Java"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Blackjack",
+      "publicUnit": 6,
+      "courseUnit": 7,
+      "lessons": [
+        {
+          "publicCode": "6.1",
+          "courseCode": "7.1",
+          "title": "Writing BlackJack",
+          "objectives": [
+            "Understand the importance of top-down design",
+            "explain the process of creating a large scale project.",
+            "Extend another user's code to make it their own."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Battleship",
+      "publicUnit": 7,
+      "courseUnit": 8,
+      "lessons": [
+        {
+          "publicCode": "7.1",
+          "courseCode": "8.1",
+          "title": "Battleship",
+          "objectives": [
+            "Use top-down design to create a significant project",
+            "Strengthen skills with 2D arrays and classes."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Algorithms and Recursion",
+      "publicUnit": 8,
+      "courseUnit": 9,
+      "lessons": [
+        {
+          "publicCode": "8.1",
+          "courseCode": "9.1",
+          "title": "What is an Algorithm?",
+          "objectives": [
+            "Define and provide examples of algorithms in programs and in their daily lives."
+          ]
+        },
+        {
+          "publicCode": "8.2",
+          "courseCode": "9.2",
+          "title": "Linear Search",
+          "objectives": [
+            "Define and program a Linear Search",
+            "Use Linear Search to solve programmatic problems"
+          ]
+        },
+        {
+          "publicCode": "8.3",
+          "courseCode": "9.3",
+          "title": "Binary Search",
+          "objectives": [
+            "Define and use Binary Search.",
+            "Articulate the differences between Binary and Linear Search."
+          ]
+        },
+        {
+          "publicCode": "8.4",
+          "courseCode": "9.4",
+          "title": "Selection Sort",
+          "objectives": [
+            "Define and use the Selection Sort method",
+            "Understand the strengths and limitations of Selection Sort"
+          ]
+        },
+        {
+          "publicCode": "8.5",
+          "courseCode": "9.5",
+          "title": "Insertion Sort",
+          "objectives": [
+            "Define and use the Insertion Sort method",
+            "Understand the strengths and limitations of Insertion Sort"
+          ]
+        },
+        {
+          "publicCode": "8.6",
+          "courseCode": "9.6",
+          "title": "Advanced: Recursion",
+          "objectives": [
+            "Define and use recursion methods in their programs.",
+            "Explain the key components of a recursive method."
+          ]
+        },
+        {
+          "publicCode": "8.7",
+          "courseCode": "9.7",
+          "title": "Mergesort",
+          "objectives": [
+            "Define and use Merge sort.",
+            "Articulate the strengths and weaknesses of Merge sort, and how it compares to other sort methods."
+          ]
+        },
+        {
+          "publicCode": "8.8",
+          "courseCode": "9.8",
+          "title": "Informal Code Analysis",
+          "objectives": [
+            "Compute statement execution counts of iterative statements",
+            "Compute informal run-time comparison of iterative statements"
+          ]
+        },
+        {
+          "publicCode": "8.9",
+          "courseCode": "9.9",
+          "title": "Algorithms and Recursion Quiz",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "AP Test Practice",
+      "publicUnit": 9,
+      "courseUnit": 10,
+      "lessons": [
+        {
+          "publicCode": "9.1",
+          "courseCode": "10.1",
+          "title": "AP Practice Test 1",
+          "objectives": [
+            "Explain the format of the AP Computer Science A exam",
+            "Identify course topics that they have a strong understanding of",
+            "Identify course topics that they need to review"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Final Project",
+      "publicUnit": 10,
+      "courseUnit": 11,
+      "lessons": [
+        {
+          "publicCode": "10.1",
+          "courseCode": "11.1",
+          "title": "Final Project",
+          "objectives": []
+        },
+        {
+          "publicCode": "10.2",
+          "courseCode": "11.2",
+          "title": "AP Java Completed",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Project: Pokemon Simulation",
+      "publicUnit": 11,
+      "courseUnit": 12,
+      "lessons": [
+        {
+          "publicCode": "11.1",
+          "courseCode": "12.1",
+          "title": "Pokemon Simulation",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Project: Mad Libs",
+      "publicUnit": 12,
+      "courseUnit": 13,
+      "lessons": [
+        {
+          "publicCode": "12.1",
+          "courseCode": "13.1",
+          "title": "Mad Libs",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Java Outside of CodeHS",
+      "publicUnit": 13,
+      "courseUnit": 14,
+      "lessons": [
+        {
+          "publicCode": "13.1",
+          "courseCode": "14.1",
+          "title": "Java Outside of CodeHS",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Project: Quiz Creation",
+      "publicUnit": 14,
+      "courseUnit": 15,
+      "lessons": [
+        {
+          "publicCode": "14.1",
+          "courseCode": "15.1",
+          "title": "Quiz Creation",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Elevens",
+      "publicUnit": 15,
+      "courseUnit": 16,
+      "lessons": [
+        {
+          "publicCode": "15.1",
+          "courseCode": "16.1",
+          "title": "Elevens",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Magpie",
+      "publicUnit": 16,
+      "courseUnit": 17,
+      "lessons": [
+        {
+          "publicCode": "16.1",
+          "courseCode": "17.1",
+          "title": "Magpie Lab",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Picture Lab",
+      "publicUnit": 17,
+      "courseUnit": 18,
+      "lessons": [
+        {
+          "publicCode": "17.1",
+          "courseCode": "18.1",
+          "title": "Picture Lab",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Consumer Review Lab",
+      "publicUnit": 18,
+      "courseUnit": 19,
+      "lessons": [
+        {
+          "publicCode": "18.1",
+          "courseCode": "19.1",
+          "title": "Introduction",
+          "objectives": []
+        },
+        {
+          "publicCode": "18.2",
+          "courseCode": "19.2",
+          "title": "Sentiment Value and Star Ratings",
+          "objectives": []
+        },
+        {
+          "publicCode": "18.3",
+          "courseCode": "19.3",
+          "title": "Autogenerated Review",
+          "objectives": []
+        },
+        {
+          "publicCode": "18.4",
+          "courseCode": "19.4",
+          "title": "Create a Negative or Positive Review",
+          "objectives": []
+        },
+        {
+          "publicCode": "18.5",
+          "courseCode": "19.5",
+          "title": "Open Ended Activity!",
+          "objectives": []
+        }
+      ]
+    },
+    {
+      "name": "Celebrity Lab",
+      "publicUnit": 19,
+      "courseUnit": 20,
+      "lessons": [
+        {
+          "publicCode": "19.1",
+          "courseCode": "20.1",
+          "title": "Activity 1: Introduction to Celebrity",
+          "objectives": [
+            "Play Celebrity in small groups",
+            "Brainstorm different design options for creating a computer version of the game Celebrity"
+          ]
+        },
+        {
+          "publicCode": "19.2",
+          "courseCode": "20.2",
+          "title": "Activity 2: The Celebrity Class: A Simple Version",
+          "objectives": [
+            "Identify variables and methods needed in the Celebrity class",
+            "Create instance variables, accessor and mutator methods"
+          ]
+        },
+        {
+          "publicCode": "19.3",
+          "courseCode": "20.3",
+          "title": "Activity 3: Putting it All Together",
+          "objectives": [
+            "Implement instance variables and methods to handle game setup and functionality",
+            "Validate user input"
+          ]
+        },
+        {
+          "publicCode": "19.4",
+          "courseCode": "20.4",
+          "title": "Activity 4: Extending the Celebrity Class",
+          "objectives": [
+            "Create a subclass",
+            "Update the existing Celebrity game and GUI"
+          ]
+        },
+        {
+          "publicCode": "19.5",
+          "courseCode": "20.5",
+          "title": "Activity 5: Open Ended Activity",
+          "objectives": [
+            "Create at least one subclass of a superclass",
+            "Override at least one method from a superclass",
+            "Create a program with a main method",
+            "Utilize polymorphism"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Steganography Lab",
+      "publicUnit": 20,
+      "courseUnit": 21,
+      "lessons": [
+        {
+          "publicCode": "20.1",
+          "courseCode": "21.1",
+          "title": "Activity 1: Exploring Color",
+          "objectives": [
+            "Manipulate color values through bit operations",
+            "Apply bit manipulation to image processing",
+            "Analyze how changes in color values affect the visual representation of an image and evaluate the significance of these changes"
+          ]
+        },
+        {
+          "publicCode": "20.2",
+          "courseCode": "21.2",
+          "title": "Activity 2: Hiding and Revealing a Picture",
+          "objectives": [
+            "Manipulate color values through bit operations",
+            "Apply bit manipulation to image processing",
+            "Write methods to hide and reveal images"
+          ]
+        },
+        {
+          "publicCode": "20.3",
+          "courseCode": "21.3",
+          "title": "Activity 3: Identifying a Hidden Picture",
+          "objectives": [
+            "Write methods to reveal differences in images",
+            "Identify hidden images"
+          ]
+        },
+        {
+          "publicCode": "20.4",
+          "courseCode": "21.4",
+          "title": "Activity 4: Hiding and Revealing a Text Message",
+          "objectives": [
+            "Create a method to encode strings into integers and back",
+            "Analyze the needs and limitations of hiding text messages in images"
+          ]
+        },
+        {
+          "publicCode": "20.5",
+          "courseCode": "21.5",
+          "title": "Activity 5: Open Ended Project",
+          "objectives": [
+            "Create a program with a main method",
+            "Create at least one new method that is called from main (can be part of another class, such as Steganography) that takes at least one parameter",
+            "Traverse elements in a 2D array or do parallel traversals of multiple data structures",
+            "Modify some elements in a data structure based on the identified purpose"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Java Level 1 Certification Practice",
+      "publicUnit": 21,
+      "courseUnit": 22,
+      "lessons": [
+        {
+          "publicCode": "21.1",
+          "courseCode": "22.1",
+          "title": "Practice #1: Java Fundamentals",
+          "objectives": []
+        },
+        {
+          "publicCode": "21.2",
+          "courseCode": "22.2",
+          "title": "Practice #2: Data Types and Lists",
+          "objectives": []
+        },
+        {
+          "publicCode": "21.3",
+          "courseCode": "22.3",
+          "title": "Practice #3: Implementing Flow Control",
+          "objectives": []
+        },
+        {
+          "publicCode": "21.4",
+          "courseCode": "22.4",
+          "title": "Practice #4: OOP and Other Advanced Topics",
+          "objectives": []
+        }
+      ]
+    }
+  ]
+}
