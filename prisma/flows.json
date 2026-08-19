@@ -3590,119 +3590,174 @@
         "v": 1,
         "steps": [
           {
-            "id": "f212_1",
+            "id": "h_task",
+            "kind": "teach",
+            "instruction": "Today you build the number guessing game.",
+            "points": [
+              {
+                "label": "the game",
+                "text": "It picks a secret number, you guess, it says \"Try again!\" until you get it."
+              },
+              {
+                "label": "why this one",
+                "text": "It is the coding question on your final exam, and it is CodeHS exercise 3.12.4."
+              },
+              {
+                "label": "what is new",
+                "text": "One statement: break. Everything else you already have."
+              }
+            ]
+          },
+          {
+            "id": "h_twice",
+            "kind": "teach",
+            "instruction": "Here it is with a plain while loop. It works.",
             "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
-            "kind": "teach",
             "stdin": "4\n6",
             "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
+            "highlight": [
+              0,
+              3
+            ],
             "points": [
               {
-                "text": "The output is right. Nothing here is broken.",
-                "label": "it works"
+                "label": "line 1",
+                "text": "Reads a guess before the loop, because while checks its condition first and needs something to check."
               },
               {
-                "text": "The readInt line appears TWICE — once before the loop, once inside it.",
-                "label": "but look"
+                "label": "line 4",
+                "text": "Reads the next guess inside the loop."
               },
               {
-                "text": "The condition is checked before the first pass, so a guess has to exist already. That is what forces the extra readInt above the loop.",
-                "label": "while (guess != 6)"
-              },
-              {
-                "text": "The same question exists in two places. Reword one and forget the other, and the program asks two different things.",
-                "label": "readInt written twice"
+                "label": "the same question twice",
+                "text": "readInt(\"Enter your guess: \") is written on both lines. Change the wording in one and forget the other, and the game asks two different things."
               }
-            ],
-            "instruction": "Here is the problem this lesson solves."
+            ]
           },
           {
-            "id": "f212_3",
+            "id": "h_cmp",
+            "kind": "compare",
+            "instruction": "Same game, same output. One asks once.",
+            "sides": [
+              {
+                "label": "plain while - asks twice",
+                "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
+                "stdin": "4\n6",
+                "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!"
+              },
+              {
+                "label": "loop-and-a-half - asks once",
+                "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+                "stdin": "4\n6",
+                "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!"
+              }
+            ],
+            "points": [
+              {
+                "label": "left",
+                "text": "readInt appears on two lines, above the loop and inside it."
+              },
+              {
+                "label": "right",
+                "text": "readInt appears once. The check moved into the middle of the loop."
+              }
+            ],
+            "skills": [
+              "write a while (true) loop that asks once and checks once"
+            ]
+          },
+          {
+            "id": "h_break",
+            "kind": "teach",
+            "instruction": "while (true) never stops on its own. break is the exit.",
             "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "kind": "teach",
             "stdin": "4\n6",
             "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
+            "highlight": [
+              0,
+              2,
+              3,
+              4
+            ],
             "points": [
               {
-                "text": "A condition that is always true, so the loop never stops on its own.",
-                "label": "while (true)"
+                "label": "while (true)",
+                "text": "The condition is always true, so the loop will not end by itself."
               },
               {
-                "text": "Jumps straight out of the loop, immediately, ignoring everything below it.",
-                "label": "break;"
+                "label": "break;",
+                "text": "Leaves the loop immediately, skipping everything below it in the block."
               },
               {
-                "text": "readInt now appears exactly once. That is the whole point.",
-                "label": "asked once"
+                "label": "ask, check, act",
+                "text": "Read the guess, break out if it is right, otherwise print \"Try again!\" and go round again."
               },
               {
-                "text": "On the last pass only the top half runs — you ask, you check, you leave before \"Try again!\".",
-                "label": "the \"half\""
+                "label": "the half",
+                "text": "On the winning pass only the top half runs. That is where the name comes from."
               }
-            ],
-            "instruction": "Loop forever, and break out of the middle."
+            ]
           },
           {
-            "id": "f212_5",
-            "why": "When i reaches 3 the break runs before the println, and the loop ends entirely — it does not skip one and carry on.",
-            "code": "for (int i = 1; i <= 5; i++) {\n  if (i == 3) {\n    break;\n  }\n  System.out.println(i);\n}",
+            "id": "h_predict",
             "kind": "predict",
+            "instruction": "break works in any loop. What prints?",
+            "code": "for (int i = 1; i <= 5; i++) {\n  if (i == 3) {\n    break;\n  }\n  System.out.println(i);\n}",
             "opts": [
               "1\n2",
               "1\n2\n3",
               "1\n2\n4\n5",
               "1\n2\n3\n4\n5"
             ],
-            "skills": [
-              "use break to leave a loop from the middle"
-            ],
             "correct": 0,
-            "instruction": "break works in any loop. What prints?"
-          },
-          {
-            "id": "f212_6",
-            "why": "while (true) is never false, so nothing else can stop it. Take the break away and it runs forever.",
-            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "kind": "spot",
-            "stdin": "6",
+            "why": "At i = 3 the break runs before the println, and the whole loop ends. It does not skip one and carry on.",
             "skills": [
               "use break to leave a loop from the middle"
-            ],
-            "correct": 3,
-            "instruction": "Tap the only line that can end this loop."
+            ]
           },
           {
-            "id": "f212_7",
-            "code": "int total = 0;\nwhile (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    break;\n  }\n  total = total + n;\n}\nSystem.out.println(total);",
+            "id": "h_spot",
+            "kind": "spot",
+            "instruction": "Tap the only line that can end this loop.",
+            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
+            "stdin": "6",
+            "correct": 3,
+            "why": "while (true) is never false, so nothing else can stop it. Delete that line and the game runs forever.",
+            "skills": [
+              "use break to leave a loop from the middle"
+            ]
+          },
+          {
+            "id": "h_sentinel",
             "kind": "teach",
+            "instruction": "A sentinel is a value that means \"stop\".",
+            "code": "int total = 0;\nwhile (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    break;\n  }\n  total = total + n;\n}\nSystem.out.println(total);",
             "stdin": "5\n7\n0",
             "output": "Number (0 to stop): 5\nNumber (0 to stop): 7\nNumber (0 to stop): 0\n12",
             "points": [
               {
-                "text": "Here it is 0 — a value the user types to say they are finished.",
-                "label": "sentinel"
+                "label": "0",
+                "text": "The sentinel here. Typing it ends the loop instead of adding to the total."
               },
               {
-                "text": "The prompt tells them what it is. A secret sentinel is a broken program.",
-                "label": "say so"
+                "label": "\"Number (0 to stop): \"",
+                "text": "The prompt says what the sentinel is. A secret one is a broken program."
               },
               {
-                "text": "The break happens before the adding, so the 0 never joins the total. 5 + 7 = 12.",
-                "label": "not counted"
+                "label": "12",
+                "text": "5 + 7. The 0 breaks before the addition, so it never joins the total."
               },
               {
-                "text": "Pick something that cannot be real data — 0 marks here, -1 for a temperature.",
-                "label": "choosing one"
+                "label": "choosing one",
+                "text": "Pick a value that cannot be real data. 0 marks works; 0 degrees does not."
               }
-            ],
-            "instruction": "A sentinel is a value that means \"stop\"."
+            ]
           },
           {
-            "id": "f212_8",
-            "code": "while (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    ⟦1⟧\n  }\n  System.out.println(n);\n}",
-            "hint": "You want out of the loop entirely, not on to the next turn.",
+            "id": "h_fill",
             "kind": "fill",
-            "after": "break leaves the loop. That is the one statement this whole lesson rests on.",
-            "stdin": "5\n0",
+            "instruction": "Fill in the statement that leaves the loop.",
+            "code": "while (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    ⟦1⟧\n  }\n  System.out.println(n);\n}",
             "blanks": [
               {
                 "chips": [
@@ -3713,25 +3768,83 @@
                 "answer": 0
               }
             ],
+            "stdin": "5\n0",
+            "target": "Number (0 to stop): 5\n5\nNumber (0 to stop): 0",
+            "hint": "You want out of the loop entirely, not on to the next pass.",
+            "after": "break leaves the loop. continue would jump to the next pass and ask again forever.",
             "skills": [
               "use break to leave a loop from the middle"
-            ],
-            "target": "Number (0 to stop): 5\n5\nNumber (0 to stop): 0",
-            "instruction": "Fill in the statement that leaves the loop."
+            ]
           },
           {
-            "id": "f212_9",
-            "code": "int secretNumber = 6;\n// greet, then keep asking until they get it\n",
-            "hint": "Two greeting lines first. Then while (true): ask, break if correct, otherwise print \"Try again!\". \"Correct!\" goes after the loop.",
-            "kind": "write",
-            "after": "That is CodeHS exercise 3.12.4, Guess the Number — and the program your final exam asks for.",
-            "stdin": "4\n3\n6",
+            "id": "h_sharp",
+            "kind": "teach",
+            "instruction": "while (true) { ask; if (done) break; act; }",
+            "points": [
+              {
+                "label": "while (true)",
+                "text": "A loop with no exit condition of its own."
+              },
+              {
+                "label": "break;",
+                "text": "The statement that ends a loop early. It ends the loop, not just the pass."
+              },
+              {
+                "label": "the shape",
+                "text": "Ask at the top, check in the middle, act at the bottom. The check is what makes it a loop-and-a-half."
+              },
+              {
+                "label": "when to use it",
+                "text": "Whenever the thing you test has to be read first. Otherwise a plain while is simpler."
+              }
+            ]
+          },
+          {
+            "id": "h_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "while (true) {\n  int n = readInt(\"n? \");\n  if (n == 0) {\n    break;\n  }\n}",
+            "questions": [
+              {
+                "prompt": "Which statement can we use inside a loop to end it?",
+                "opts": [
+                  "break;",
+                  "System.out.println;",
+                  "SENTINEL;",
+                  "else"
+                ],
+                "correct": 0,
+                "why": "break exits the loop immediately. The others are not exit statements."
+              },
+              {
+                "prompt": "Which is the correct loop-and-a-half structure?",
+                "opts": [
+                  "while(true)\n{\n    // code\n    if(condition)\n    {\n        break;\n    }\n    // code\n}",
+                  "while(condition)\n{\n    // code\n}",
+                  "for(int i = 0; i <= 1.5; i++)\n{\n    // code\n}",
+                  "for(int i = 0; i < 2; i++)\n{\n    // code\n    break;\n    // code\n}"
+                ],
+                "correct": 0,
+                "why": "An always-true loop with the exit test in the middle. The second is an ordinary while; the fourth breaks on the first pass every time."
+              }
+            ],
             "skills": [
               "write a while (true) loop that asks once and checks once"
-            ],
+            ]
+          },
+          {
+            "id": "h_write",
+            "kind": "write",
+            "instruction": "Last one: the guessing game. The secret is 6.",
+            "code": "int secretNumber = 6;\n// greet, then keep asking until they get it\n",
+            "stdin": "4\n3\n6",
             "target": "I'm thinking of a number between 1 and 10.\nSee if you can guess the number!\nEnter your guess: 4\nTry again!\nEnter your guess: 3\nTry again!\nEnter your guess: 6\nCorrect!",
             "solution": "int secretNumber = 6;\nSystem.out.println(\"I'm thinking of a number between 1 and 10.\");\nSystem.out.println(\"See if you can guess the number!\");\nwhile (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == secretNumber) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "instruction": "Your turn: the number guessing game. The secret is 6."
+            "hint": "Two greeting lines, then while (true): read the guess, break if it equals secretNumber, otherwise print \"Try again!\". \"Correct!\" goes after the loop.",
+            "after": "That is CodeHS exercise 3.12.4, and the program your final exam asks for. Lesson done.",
+            "skills": [
+              "write a while (true) loop that asks once and checks once"
+            ]
           }
         ]
       }
