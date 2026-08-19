@@ -13,7 +13,7 @@
 // otherwise it falls back to the public Compiler Explorer lanes.
 import { readFileSync, writeFileSync } from "node:fs";
 import { validateFlow, type Flow, type FlowStep } from "../lib/curriculum/flow";
-import { wrap } from "../lib/java/wrapper";
+import { wrapAs, type WrapMode } from "../lib/java/wrapper";
 
 const PISTON_URL = process.env.PISTON_URL || "";
 const PISTON_TOKEN = process.env.PISTON_TOKEN || "";
@@ -22,8 +22,8 @@ const norm = (s: string) => (s || "").replace(/\r\n/g, "\n").trimEnd();
 
 type Run = { compiled: boolean; stdout: string; error: string };
 
-async function runJava(code: string, stdin = ""): Promise<Run> {
-  const { source } = wrap(code);
+async function runJava(code: string, stdin = "", mode: WrapMode = "beginner"): Promise<Run> {
+  const { source } = wrapAs(code, mode);
   let lastErr = "";
 
   // Self-hosted runner first when configured. It can be down — it was, the day
@@ -83,18 +83,18 @@ async function checkStep(s: FlowStep): Promise<string[]> {
   const fails: string[] = [];
   const at = `${s.id} (${s.kind})`;
   const expect = async (code: string, stdin: string, want: string, what: string) => {
-    const r = await runJava(code, stdin);
+    const r = await runJava(code, stdin, s.wrap || "beginner");
     if (!r.compiled || r.error) fails.push(`${at}: ${what} does not run clean — ${(r.error || "").split("\n")[0].slice(0, 110)}`);
     else if (norm(r.stdout) !== norm(want)) fails.push(`${at}: ${what} prints ${JSON.stringify(norm(r.stdout))}, step claims ${JSON.stringify(norm(want))}`);
   };
   switch (s.kind) {
     case "teach": if (s.code && s.output !== undefined) await expect(s.code, s.stdin || "", s.output, "shown output"); break;
-    case "run": { const r = await runJava(s.code!, s.stdin || ""); if (!r.compiled || r.error) fails.push(`${at}: does not run clean — ${(r.error || "").split("\n")[0].slice(0, 110)}`); break; }
+    case "run": { const r = await runJava(s.code!, s.stdin || "", s.wrap || "beginner"); if (!r.compiled || r.error) fails.push(`${at}: does not run clean — ${(r.error || "").split("\n")[0].slice(0, 110)}`); break; }
     case "tweak": await expect(s.code!, s.stdin || "", s.target!, "starting output"); break;
     case "ask": { const stdin = (s.fields || []).map((f) => f.sample).join("\n");
-      const r = await runJava(s.code!, stdin); if (!r.compiled || r.error) fails.push(`${at}: does not run with the sample answers — ${(r.error || "").split("\n")[0].slice(0, 110)}`); break; }
+      const r = await runJava(s.code!, stdin, s.wrap || "beginner"); if (!r.compiled || r.error) fails.push(`${at}: does not run with the sample answers — ${(r.error || "").split("\n")[0].slice(0, 110)}`); break; }
     case "predict": { const want = s.opts![s.correct!];
-      if (/error|crash/i.test(want)) { const r = await runJava(s.code!, s.stdin || ""); if (r.compiled && !r.error) fails.push(`${at}: claims an error but it runs fine`); }
+      if (/error|crash/i.test(want)) { const r = await runJava(s.code!, s.stdin || "", s.wrap || "beginner"); if (r.compiled && !r.error) fails.push(`${at}: claims an error but it runs fine`); }
       else await expect(s.code!, s.stdin || "", want, "the correct option"); break; }
     case "fix": case "write": await expect(s.solution!, s.stdin || "", s.target!, "solution"); break;
     case "arrange": await expect((s.lines || []).join("\n"), s.stdin || "", s.target!, "ordered lines"); break;

@@ -67,6 +67,10 @@ export type FlowStep = {
   // note: "highlight certain lines of code (that are newly introduced) and
   // explain what they do below."
   highlight?: number[];
+  // Which wrapper the snippet needs. "beginner" (default) puts the code inside
+  // main(); "methods" puts it at class level so the student can DEFINE methods,
+  // which Java forbids inside another method. Unit 4 onward needs "methods".
+  wrap?: "beginner" | "methods";
   // compare: two snippets shown SIDE BY SIDE with their outputs.
   //
   // Reviewer's first example was print vs println. Explaining a difference in
@@ -235,7 +239,7 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
 // ─── Client stripping (the answer-key invariant) ─────────────────────────────
 
 export function stripStepForClient(s: FlowStep): Record<string, unknown> {
-  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight };
+  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight, wrap: s.wrap };
   switch (s.kind) {
     case "predict": return { ...base, opts: s.opts };
     case "spot": return base;

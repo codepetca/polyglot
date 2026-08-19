@@ -16,9 +16,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ compiled: false, stdout: "", error: "Slow down — max 20 runs per minute." });
   }
 
-  const { code, stdin, wrap, lessonCode } = await req.json();
+  const { code, stdin, wrap, wrapMode, lessonCode } = await req.json();
   if (typeof code !== "string") return NextResponse.json({ error: "code required" }, { status: 400 });
-  const result = await runJava(code, stdin || "", { wrapBeginner: wrap !== false });
+  const result = await runJava(code, stdin || "", {
+    wrapBeginner: wrap !== false,
+    // "methods" puts the snippet at class level so a student can define methods.
+    mode: wrapMode === "methods" ? "methods" : "beginner",
+  });
   // Analytics substrate (best-effort): did their code compile/run? Learners only.
   if (me.role === "STUDENT") logEvent({ type: EVENT.CODE_RUN, userId: me.id, classId: me.classId, lessonCode: lessonCode ?? null, compiled: (result as any)?.compiled ?? null });
   return NextResponse.json(result);

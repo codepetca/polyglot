@@ -1,5 +1,5 @@
 import "server-only";
-import { wrap } from "./wrapper";
+import { wrapAs, type WrapMode } from "./wrapper";
 
 // Java execution, with failover.
 //
@@ -92,9 +92,9 @@ class LaneDown extends Error {}
 export async function runJava(
   code: string,
   stdin = "",
-  opts: { wrapBeginner?: boolean } = {}
+  opts: { wrapBeginner?: boolean; mode?: WrapMode } = {}
 ): Promise<RunResult> {
-  const { source, offset } = opts.wrapBeginner ? wrap(code) : { source: code, offset: 0 };
+  const { source, offset } = opts.wrapBeginner ? wrapAs(code, opts.mode || "beginner") : { source: code, offset: 0 };
   const all = lanes();
   // Healthy lanes first, but still fall back to cooling-down ones rather than
   // give up — a 60s cooldown shouldn't hard-fail a student if it's recovered.

@@ -26,6 +26,7 @@ type Step = {
   target?: string;
   stdin?: string;
   highlight?: number[];
+  wrap?: "beginner" | "methods";
   sides?: { label: string; code: string; output: string }[];
   // ask: one field per read call. `sample` is stripped server-side, so the
   // browser only ever sees the label the student is answering.
@@ -269,6 +270,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           wrap: true,
           lessonCode,
           stdin: step.kind === "ask" ? typed.join("\n") : step.stdin || "",
+          wrapMode: step.wrap || "beginner",
         }),
       }).then((x) => x.json());
     } catch {

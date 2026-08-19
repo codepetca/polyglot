@@ -35,3 +35,37 @@ export const FOOTER = `
 export function wrap(code: string): { source: string; offset: number } {
   return { source: HEADER + code + FOOTER, offset: HEADER.split("\n").length - 1 };
 }
+
+// ─── Methods mode (Unit 4 onward) ────────────────────────────────────────────
+//
+// Java has no nested methods, so a student cannot DEFINE a method inside the
+// body of main(). The beginner wrapper puts their code there, which makes the
+// entire Methods unit unwritable — the first lesson that says "write your own
+// method" would not compile.
+//
+// So this mode places the student's code at CLASS level instead, and calls
+// run() on an instance. That is exactly CodeHS's shape: a run() method plus
+// whatever other instance methods they write. The readers stay static so they
+// are callable from any of them.
+export const HEADER_METHODS = `import java.util.Scanner;
+class Main {
+    static Scanner __sc = new Scanner(System.in);
+    static String __rd(String p){ System.out.print(p); String v = __sc.nextLine(); System.out.println(v); return v; }
+    static String readLine(String p){ return __rd(p); }
+    static int readInt(String p){ return Integer.parseInt(__rd(p).trim()); }
+    static double readDouble(String p){ return Double.parseDouble(__rd(p).trim()); }
+    static boolean readBoolean(String p){ return Boolean.parseBoolean(__rd(p).trim()); }
+    public static void main(String[] args) { new Main().run(); }
+`;
+
+export const FOOTER_METHODS = `
+}`;
+
+export type WrapMode = "beginner" | "methods";
+
+/** Wrap a student snippet, and report how many lines were added above it. */
+export function wrapAs(code: string, mode: WrapMode = "beginner"): { source: string; offset: number } {
+  const head = mode === "methods" ? HEADER_METHODS : HEADER;
+  const foot = mode === "methods" ? FOOTER_METHODS : FOOTER;
+  return { source: head + code + foot, offset: head.split("\n").length - 1 };
+}
