@@ -535,6 +535,9 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 .flowdots .d { width: 9px; height: 9px; border-radius: 99px; background: var(--line); transition: all .25s; padding: 0; border: none; appearance: none; }
 .flowdots .d:not(:disabled) { cursor: pointer; }
 .flowdots .d:not(:disabled):hover { transform: scale(1.5); }
+.harness { margin-top: 12px; }
+.harness .flowcode { font-size: 13px; opacity: .85; }
+
 /* compare: two snippets side by side, so the difference is seen not described */
 .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
 @media (max-width: 720px) { .cmp { grid-template-columns: 1fr; } }

@@ -27,6 +27,7 @@ type Step = {
   stdin?: string;
   highlight?: number[];
   wrap?: "beginner" | "methods";
+  harness?: string;
   sides?: { label: string; code: string; output: string }[];
   // ask: one field per read call. `sample` is stripped server-side, so the
   // browser only ever sees the label the student is answering.
@@ -250,7 +251,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
     }).then((r) => r.json());
 
   // ── runnable kinds ──
-  const assembled = step.kind === "arrange" ? picked.join("\n") : code;
+  // The harness wraps the student's method in a run() that calls it, so what
+  // gets compiled is the platform's calls around their answer.
+  const written = step.kind === "arrange" ? picked.join("\n") : code;
+  const assembled = step.harness ? `${step.harness}\n\n${written}` : written;
   async function run() {
     onAttempt(step.id);
     setBusy(true);
@@ -433,6 +437,15 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           <pre className="flowcode ro">{step.code}</pre>
         )
       ) : null}
+
+      {/* The calls the platform will make around their method. Read-only, and
+          shown because the signature they must write is visible in it. */}
+      {step.harness && (
+        <div className="harness">
+          <div className="lbl">WE WILL CALL IT LIKE THIS</div>
+          <pre className="flowcode ro">{step.harness}</pre>
+        </div>
+      )}
 
       {/* ── ask: the student types the input themselves ──
           The whole point of an input lesson is that YOU supply the value. A

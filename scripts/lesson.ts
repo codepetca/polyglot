@@ -96,7 +96,7 @@ async function checkStep(s: FlowStep): Promise<string[]> {
     case "predict": { const want = s.opts![s.correct!];
       if (/error|crash/i.test(want)) { const r = await runJava(s.code!, s.stdin || "", s.wrap || "beginner"); if (r.compiled && !r.error) fails.push(`${at}: claims an error but it runs fine`); }
       else await expect(s.code!, s.stdin || "", want, "the correct option"); break; }
-    case "fix": case "write": await expect(s.solution!, s.stdin || "", s.target!, "solution"); break;
+    case "fix": case "write": await expect(s.harness ? `${s.harness}\n\n${s.solution}` : s.solution!, s.stdin || "", s.target!, "solution"); break;
     case "arrange": await expect((s.lines || []).join("\n"), s.stdin || "", s.target!, "ordered lines"); break;
     case "table": {
       if (!s.exprs?.length) break;

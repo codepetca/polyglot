@@ -125,7 +125,8 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           break;
         }
         case "fix": case "write": {
-          const r = await runJava(s.solution!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const withHarness = s.harness ? `${s.harness}\n\n${s.solution}` : s.solution!;
+          const r = await runJava(withHarness, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: solution gives ${JSON.stringify(norm(r.stdout || r.error))} ≠ target ${JSON.stringify(norm(s.target!))}`);
           else results.push(`${name}: ✓ solution reaches target`);
           if (s.kind === "fix" && s.code) {

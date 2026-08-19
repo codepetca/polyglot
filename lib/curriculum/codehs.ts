@@ -377,8 +377,10 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "Java Methods",
     objectives: ["Explain the purpose of methods", "Create their own methods", "Utilize methods to solve simple problems"],
     teaches: ["defining a method", "calling a method", "void methods"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Print Line Break", "Print Karel"],
+    cfu: [
+      "why we use methods — break the program into parts, avoid repeating code, and make it readable (the answer is 'all of the above')",
+    ],
   },
   {
     code: "3.2",
@@ -386,8 +388,13 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "Methods and Parameters",
     objectives: ["Explore code examples that include methods and parameters", "Write methods that take parameters as inputs", "Apply knowledge of methods and parameters to solve coding exercises"],
     teaches: ["parameters", "arguments", "methods with multiple parameters"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Line Breaks with Parameters", "Sum", "Product", "Add10", "Countdown From", "Repeating Message"],
+    exerciseSpecs: [
+      { codehsCode: "4.2.4", name: "Sum", requires: "Example: private void sum(int a, int b) prints a + b; run() calls sum(2, 2) and sum(10, 400). NOTE CodeHS writes helper methods as `private`, not `public`." },
+    ],
+    cfu: [
+      "what parameters are — the formal names given to the data passed into a method (not the return value, not what it prints)",
+    ],
   },
   {
     code: "3.3",
@@ -395,8 +402,10 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "Methods and Return Values",
     objectives: ["Explain the purpose of returning a value from a method", "Create methods that return values", "Create programs that call methods with return values and store the result for later use", "Practice creating methods to perform specific calculations", "Apply method concepts to solve coding exercises"],
     teaches: ["return values", "the return keyword", "non-void return types", "storing a returned value"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Return Value", "Double Number", "Square", "Average"],
+    exerciseSpecs: [
+      { codehsCode: "4.3.4", name: "Double Number", requires: "UNIT-TESTED, not output-matched. The student is given only `public int doubleNumber(int x)` and must return 2 * x. CodeHS runs test cases against the method; there is no println and no ConsoleProgram." },
+    ],
   },
   {
     code: "3.4",
@@ -404,8 +413,7 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "Javadocs and More Methods",
     objectives: ["Demonstrate an understanding of the purpose and syntax of Javadoc comments", "Analyze a given program for proper documentation", "Compare and contrast programs with good documentation against programs with poor documentation", "Write methods that perform specific calculations and return values", "Use Javadoc comments to document methods"],
     teaches: ["Javadoc comments", "/** */", "@param", "@return"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Javadoc Sum", "Is in Range", "Sum Range", "Is Divisible", "Fahrenheit to Celsius"],
   },
   {
     code: "3.5",
@@ -413,8 +421,7 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "Strings Methods",
     objectives: ["Read documentation for how to use the methods of the String class", "Either in the DOCS tab in the CodeHS editor, or elsewhere online", "Call methods on String objects to get information about the string, such as length or characters at given indices", "Utilize String methods to create programs that manipulate strings in different ways"],
     teaches: [".length()", ".substring()", ".indexOf()", ".charAt()", ".toUpperCase()", ".toLowerCase()", "looping through a String"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Looping Over a String", "Yelling", "Porky Pig", "Triple String", "Full Name", "Repeating String"],
   },
   {
     code: "3.6",
@@ -422,8 +429,7 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "Strings and Characters",
     objectives: ["Demonstrate an understanding of the differences between Strings and characters", "Examine how characters can be treated as numbers through their ASCII values", "Practice converting between char values and int values", "Print out special characters like quotes and new lines using escape sequence chars (such as", "Utilize Character class methods"],
     teaches: ["char vs String", "ASCII values", "casting char to int", "escape sequences \\\\n \\\\\" \\\\\\\\", "Character class methods"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Chars are Numbers", "Escape Sequences", "Character Methods", "Is it an Integer?"],
   },
   {
     code: "3.7",
@@ -431,8 +437,7 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "Exceptions",
     objectives: ["Demonstrate an understanding of syntax errors, compiler errors, run-time errors, and logic errors", "Identify arithmetic exceptions", "Use comments to identify errors and explain what caused it", "Utilize exceptions to find and fix bugs in programs"],
     teaches: ["syntax errors", "compiler errors", "run-time errors", "logic errors", "ArithmeticException"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Arithmetic Exception", "Index Out Of Bounds Exception", "Bug Hunter"],
   },
   {
     code: "3.8",
@@ -440,8 +445,7 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     title: "String Processing",
     objectives: ["Create methods that perform advanced manipulations on Strings and characters", "Develop pseudocode algorithms for solutions before writing the actual Java code", "Debug their code", "Practice the common algorithm for String manipulation, including:", "Looping through each character of the String", "Performing specific actions based on each character", "Building a result String by appending processed characters to an initially empty String", "Returning the final result String"],
     teaches: ["building a result String", "looping over characters", "pseudocode before code"],
-    exercises: [],
-    unverified: true,
+    exercises: ["Finding Palindromes", "String Concatenation", "Fix the Sum String", "Convert To Uppercase", "Double Vowels", "All Same Letter", "AltCase", "Do the Brackets Match?", "Teen Talk", "Fixing Grammar", "Password Checker", "Replace Letter"],
   },
   {
     code: "3.9",

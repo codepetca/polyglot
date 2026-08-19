@@ -5442,15 +5442,16 @@
             "id": "r_write",
             "kind": "write",
             "wrap": "methods",
-            "instruction": "Your turn: a method that returns the total gold after a find.",
-            "code": "public void run() {\n  int after = addGold(50, 12);\n  System.out.println(\"You now have \" + after + \" gold.\");\n}\n\n// define addGold(int current, int found) below\n",
-            "target": "You now have 62 gold.",
-            "solution": "public void run() {\n  int after = addGold(50, 12);\n  System.out.println(\"You now have \" + after + \" gold.\");\n}\n\npublic int addGold(int current, int found) {\n  return current + found;\n}",
-            "hint": "public int addGold(int current, int found) with return current + found;",
-            "after": "run() got the number back and used it in a sentence. That is what returning is for.",
+            "instruction": "Your turn: write a method that doubles a number.",
+            "code": "// write doubleNumber(int x): returns double the number\n",
+            "target": "10\n-6\n0",
+            "solution": "public int doubleNumber(int x) {\n  return 2 * x;\n}",
+            "hint": "public int doubleNumber(int x) with return 2 * x; — no println, the harness prints for you.",
+            "after": "That is CodeHS exercise 4.3.4, Double Number. Note it was tested by CALLING it, not by what it printed.",
             "skills": [
               "write a method that returns a value"
-            ]
+            ],
+            "harness": "public void run() {\n  System.out.println(doubleNumber(5));\n  System.out.println(doubleNumber(-3));\n  System.out.println(doubleNumber(0));\n}"
           }
         ]
       }
