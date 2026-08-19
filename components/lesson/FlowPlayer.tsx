@@ -25,6 +25,7 @@ type Step = {
   code?: string;
   target?: string;
   stdin?: string;
+  highlight?: number[];
   // ask: one field per read call. `sample` is stripped server-side, so the
   // browser only ever sees the label the student is answering.
   fields?: { label: string; placeholder?: string; holds?: string }[];
@@ -414,7 +415,20 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       ) : editable ? (
         <CodeBox value={code} onChange={(v) => { setCode(v); setWon(false); }} />
       ) : step.code ? (
-        <pre className="flowcode ro">{step.code}</pre>
+        // Tint the lines that are NEW on this step, so a program that grows
+        // across a lesson shows what just arrived rather than re-presenting
+        // itself whole each time.
+        (step.highlight || []).length ? (
+          <pre className="flowcode ro">
+            {step.code.split("\n").map((ln, li) => (
+              <span key={li} className={(step.highlight || []).includes(li) ? "cl new" : "cl"}>
+                {ln || " "}
+              </span>
+            ))}
+          </pre>
+        ) : (
+          <pre className="flowcode ro">{step.code}</pre>
+        )
       ) : null}
 
       {/* ── ask: the student types the input themselves ──

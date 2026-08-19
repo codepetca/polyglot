@@ -340,6 +340,10 @@
                 "label": "no quotes on name",
                 "text": "With quotes, \"name\" would print the word. Without them, Java goes and gets what is inside the box."
               }
+            ],
+            "highlight": [
+              0,
+              2
             ]
           },
           {
@@ -377,6 +381,10 @@
                 "label": "two boxes, two lines",
                 "text": "Each new variable adds one more line to the card."
               }
+            ],
+            "highlight": [
+              1,
+              4
             ]
           },
           {
@@ -402,6 +410,9 @@
                 "label": "int level = 8;",
                 "text": "Writing that second line WITH the type would be an error: you cannot make the same box twice."
               }
+            ],
+            "highlight": [
+              4
             ]
           },
           {
@@ -444,6 +455,10 @@
                 "label": "double h = 3;",
                 "text": "Allowed. A double can hold a whole number perfectly well; it just displays it as 3.0."
               }
+            ],
+            "highlight": [
+              2,
+              6
             ]
           },
           {
@@ -478,6 +493,10 @@
                 "label": "char vs String",
                 "text": "A rank is always exactly one letter, so char states that precisely. A name could be any length, so it stays a String."
               }
+            ],
+            "highlight": [
+              3,
+              8
             ]
           },
           {
@@ -499,6 +518,10 @@
                 "label": "five facts, five types",
                 "text": "Every type was chosen because of what it had to hold, not because a list said so."
               }
+            ],
+            "highlight": [
+              4,
+              10
             ]
           },
           {
@@ -773,6 +796,9 @@
                 "label": "\"Welcome, \" + name",
                 "text": "name is used further down, so the greeting is different for every player. That is the entire point."
               }
+            ],
+            "highlight": [
+              0
             ]
           },
           {
@@ -1455,6 +1481,9 @@
                 "label": "35.0",
                 "text": "A double, so it shows a decimal point. Turning that into a plain 35 is coming."
               }
+            ],
+            "highlight": [
+              2
             ]
           },
           {
@@ -2335,6 +2364,9 @@
                 "label": ">= not >",
                 "text": "\"At least 5\" includes 5 itself. Using > would shut the door on a player who is exactly level 5."
               }
+            ],
+            "highlight": [
+              3
             ]
           },
           {
@@ -2639,6 +2671,10 @@
                 "label": "{ }",
                 "text": "Everything inside the braces is what gets repeated. Here that is one println."
               }
+            ],
+            "highlight": [
+              0,
+              2
             ]
           },
           {

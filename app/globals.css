@@ -535,6 +535,10 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 .flowdots .d { width: 9px; height: 9px; border-radius: 99px; background: var(--line); transition: all .25s; padding: 0; border: none; appearance: none; }
 .flowdots .d:not(:disabled) { cursor: pointer; }
 .flowdots .d:not(:disabled):hover { transform: scale(1.5); }
+/* a code line inside a read-only snippet; `.new` marks what this step added */
+.flowcode .cl { display: block; padding: 0 6px; margin: 0 -6px; border-radius: 3px; }
+.flowcode .cl.new { background: rgba(122, 166, 122, .20); box-shadow: inset 2px 0 0 var(--accent); }
+
 /* table: a truth table the student completes — the rows must read as a grid,
    because the pattern across them is the thing being taught */
 .flowtable { margin-top: 14px; overflow-x: auto; }

@@ -61,6 +61,12 @@ export type FlowStep = {
   fields?: { label: string; sample: string; placeholder?: string; holds?: string }[];
   // teach: the output to display without making the student run it.
   output?: string;
+  // Zero-based line numbers in `code` that are NEW on this step. The player
+  // tints them, so a growing program shows what just arrived instead of
+  // re-presenting the whole thing as an undifferentiated block. Reviewer's
+  // note: "highlight certain lines of code (that are newly introduced) and
+  // explain what they do below."
+  highlight?: number[];
   opts?: string[];
   correct?: number;
   questions?: { prompt: string; opts: string[]; correct: number; why?: string }[];
@@ -110,6 +116,11 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
     if (!s.id || ids.has(s.id)) errors.push(`${at}: missing or duplicate id`);
     ids.add(s.id);
     if (!s.instruction) errors.push(`${at}: missing instruction`);
+    for (const h of s.highlight || []) {
+      const lines = (s.code || "").split("\n").length;
+      if (!s.code) errors.push(`${at}: highlight needs code`);
+      else if (h < 0 || h >= lines) errors.push(`${at}: highlight line ${h} is outside the ${lines}-line snippet`);
+    }
     switch (s.kind) {
       case "run": if (!s.code) errors.push(`${at}: needs code`); break;
       case "tweak": if (!s.code || s.target === undefined) errors.push(`${at}: needs code + target (the ORIGINAL output)`); break;
@@ -194,7 +205,7 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
 // ─── Client stripping (the answer-key invariant) ─────────────────────────────
 
 export function stripStepForClient(s: FlowStep): Record<string, unknown> {
-  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin };
+  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight };
   switch (s.kind) {
     case "predict": return { ...base, opts: s.opts };
     case "spot": return base;
