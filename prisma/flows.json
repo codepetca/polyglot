@@ -3291,150 +3291,259 @@
         "v": 1,
         "steps": [
           {
-            "id": "f211_1",
-            "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
+            "id": "i_task",
             "kind": "teach",
-            "output": "adult\ndone",
+            "instruction": "You have been printing \"Door opens: true\". A game opens the door.",
             "points": [
               {
-                "text": "The condition goes in round brackets. It has to be something true-or-false — exactly what you built last lesson.",
-                "label": "if (…)"
+                "label": "Door opens: true",
+                "text": "Everything so far ends by printing a boolean. The program computes an answer and does nothing with it."
               },
               {
-                "text": "Everything inside { } runs only when the condition is true.",
-                "label": "the braces"
+                "label": "what a game does",
+                "text": "Runs different lines depending on that answer. Open the door, or say it is locked."
               },
               {
-                "text": "Outside the braces, so it prints either way. Indentation is for you; the braces are what Java reads.",
-                "label": "\"done\""
-              },
-              {
-                "text": "There is no ; after the round brackets. Putting one there is a classic bug.",
-                "label": "no semicolon"
+                "label": "if",
+                "text": "The statement that finally acts on a true or false instead of showing it."
               }
-            ],
-            "instruction": "An if statement runs a block only when something is true."
+            ]
           },
           {
-            "id": "f211_3",
-            "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
-            "hint": "The condition is age >= 18. Pick an age that makes it false.",
-            "kind": "fix",
-            "after": "False condition, block skipped — and the line after it still runs.",
+            "id": "i_if",
+            "kind": "teach",
+            "instruction": "if runs a block only when the condition is true.",
+            "code": "boolean hasKey = true;\nint level = 7;\nboolean strongEnough = level >= 5;\nif (hasKey && strongEnough) {\n  System.out.println(\"The door swings open.\");\n}\nSystem.out.println(\"You walk on.\");",
+            "output": "The door swings open.\nYou walk on.",
+            "highlight": [
+              3,
+              4,
+              5
+            ],
+            "points": [
+              {
+                "label": "if (hasKey && strongEnough)",
+                "text": "The condition is the same boolean you built in 3.8. Nothing new about it."
+              },
+              {
+                "label": "the braces",
+                "text": "Only the lines inside { } are skipped when the condition is false."
+              },
+              {
+                "label": "\"You walk on.\"",
+                "text": "Outside the braces, so it prints either way."
+              },
+              {
+                "label": "no semicolon",
+                "text": "There is no ; after the round brackets. Adding one detaches the block and it always runs."
+              }
+            ]
+          },
+          {
+            "id": "i_cmp",
+            "kind": "compare",
+            "instruction": "Reporting the answer, or acting on it.",
+            "sides": [
+              {
+                "label": "print the boolean",
+                "code": "boolean canOpen = true;\nSystem.out.println(\"Door opens: \" + canOpen);",
+                "output": "Door opens: true"
+              },
+              {
+                "label": "act on it",
+                "code": "boolean canOpen = true;\nif (canOpen) {\n  System.out.println(\"The door swings open.\");\n}",
+                "output": "The door swings open."
+              }
+            ],
+            "points": [
+              {
+                "label": "left",
+                "text": "Always prints one line, whatever the answer is."
+              },
+              {
+                "label": "right",
+                "text": "Prints that line only when canOpen is true. Otherwise nothing."
+              }
+            ],
             "skills": [
               "run a block of code only when a condition is true"
-            ],
-            "target": "done",
-            "instruction": "Change the age so \"adult\" does NOT print.",
-            "solution": "int age = 15;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");"
+            ]
           },
           {
-            "id": "f211_4",
-            "code": "int n = -5;\nif (n > 0) {\n  System.out.println(\"positive\");\n} else {\n  System.out.println(\"not positive\");\n}",
+            "id": "i_tweak",
+            "kind": "fix",
+            "instruction": "Send in a level 3 player. The door should not open.",
+            "code": "boolean hasKey = true;\nint level = 7;\nboolean strongEnough = level >= 5;\nif (hasKey && strongEnough) {\n  System.out.println(\"The door swings open.\");\n}\nSystem.out.println(\"You walk on.\");",
+            "target": "You walk on.",
+            "solution": "boolean hasKey = true;\nint level = 3;\nboolean strongEnough = level >= 5;\nif (hasKey && strongEnough) {\n  System.out.println(\"The door swings open.\");\n}\nSystem.out.println(\"You walk on.\");",
+            "hint": "Change the level. The condition works the rest out.",
+            "after": "The block was skipped entirely, and the line after it still ran.",
+            "skills": [
+              "run a block of code only when a condition is true"
+            ]
+          },
+          {
+            "id": "i_else",
             "kind": "teach",
-            "output": "not positive",
+            "instruction": "else covers the other case.",
+            "code": "int hp = -5;\nif (hp > 0) {\n  System.out.println(\"Still standing.\");\n} else {\n  System.out.println(\"You collapse.\");\n}",
+            "output": "You collapse.",
+            "highlight": [
+              3,
+              4,
+              5
+            ],
             "points": [
               {
-                "text": "Runs when the condition was false. No condition of its own.",
-                "label": "else"
+                "label": "else",
+                "text": "Runs when the condition was false. It has no condition of its own."
               },
               {
-                "text": "Exactly one of the two blocks runs. Never both, never neither.",
-                "label": "one or the other"
+                "label": "exactly one",
+                "text": "One block runs, never both and never neither."
               },
               {
-                "text": "else sits on the closing brace of the if.",
-                "label": "} else {"
+                "label": "} else {",
+                "text": "else sits on the closing brace of the if."
               }
-            ],
-            "instruction": "else covers the other case."
+            ]
           },
           {
-            "id": "f211_5",
-            "why": "0 is not greater than 0, so the condition is false and else runs. Zero catches people out constantly.",
-            "code": "int n = 0;\nif (n > 0) {\n  System.out.println(\"positive\");\n} else {\n  System.out.println(\"not positive\");\n}",
+            "id": "i_zero",
             "kind": "predict",
+            "instruction": "hp is exactly 0. What prints?",
+            "code": "int hp = 0;\nif (hp > 0) {\n  System.out.println(\"Still standing.\");\n} else {\n  System.out.println(\"You collapse.\");\n}",
             "opts": [
-              "not positive",
-              "positive",
+              "You collapse.",
+              "Still standing.",
               "both",
               "(nothing)"
             ],
+            "correct": 0,
+            "why": "0 > 0 is false, so else runs. Zero is where > and >= disagree, and where most off-by-one bugs live.",
             "skills": [
               "use else to handle the other case"
-            ],
-            "correct": 0,
-            "instruction": "n is 0 this time. What prints?"
+            ]
           },
           {
-            "id": "f211_6",
-            "code": "int n = 7;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "id": "i_mod",
             "kind": "teach",
+            "instruction": "A remainder makes a good condition.",
+            "code": "int n = 7;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
             "output": "odd",
             "points": [
               {
-                "text": "The remainder after dividing by 2 — from the arithmetic lesson. It is 0 or 1.",
-                "label": "n % 2"
+                "label": "n % 2",
+                "text": "The remainder after dividing by 2. It is 0 or 1, nothing else."
               },
               {
-                "text": "Asks whether that remainder is zero. Remainder 0 means it divided evenly.",
-                "label": "== 0"
+                "label": "n % 2 == 0",
+                "text": "Remainder zero means it divided evenly, so n is even."
               },
               {
-                "text": "n % 2 == 0 is THE way to test for even. Worth memorising.",
-                "label": "together"
-              },
-              {
-                "text": "7 % 2 is 1, not 0, so the condition is false and else runs.",
-                "label": "7"
+                "label": "7 % 2 is 1",
+                "text": "Not 0, so the condition is false and else runs."
               }
-            ],
-            "instruction": "The remainder tells you if a number is even."
+            ]
           },
           {
-            "id": "f211_7",
-            "code": "int n = 8;\nif (n % 2 == 1) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
-            "hint": "What remainder does an even number leave when you divide by 2?",
+            "id": "i_fix",
             "kind": "fix",
-            "after": "Remainder 0 is even, remainder 1 is odd. The condition was testing the wrong one.",
-            "skills": [
-              "use the remainder operator inside a condition"
-            ],
+            "instruction": "8 is even, but this says odd. Fix the condition.",
+            "code": "int n = 8;\nif (n % 2 == 1) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
             "target": "even",
             "solution": "int n = 8;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
-            "instruction": "8 is even, but this says odd. Fix it."
+            "hint": "What remainder does an even number leave when divided by 2?",
+            "after": "Remainder 0 is even, remainder 1 is odd. It was testing the wrong one.",
+            "skills": [
+              "use the remainder operator inside a condition"
+            ]
           },
           {
-            "id": "f211_8",
-            "code": "int score = 75;\nif (score >= 90) {\n  System.out.println(\"A\");\n} else if (score >= 80) {\n  System.out.println(\"B\");\n} else {\n  System.out.println(\"C\");\n}",
+            "id": "i_chain",
             "kind": "teach",
+            "instruction": "else if checks the next thing only if the last one failed.",
+            "code": "int score = 75;\nif (score >= 90) {\n  System.out.println(\"A\");\n} else if (score >= 80) {\n  System.out.println(\"B\");\n} else {\n  System.out.println(\"C\");\n}",
             "output": "C",
+            "highlight": [
+              4
+            ],
             "points": [
               {
-                "text": "Java checks each condition in order and stops at the first true one.",
-                "label": "top to bottom"
+                "label": "top to bottom",
+                "text": "Java stops at the first condition that is true."
               },
               {
-                "text": "Once one matches, none of the others are even looked at.",
-                "label": "the rest are skipped"
+                "label": "75",
+                "text": "Not >= 90, not >= 80, so it falls through to else."
               },
               {
-                "text": "The final else catches everything that matched nothing.",
-                "label": "else last"
-              },
-              {
-                "text": "Not >= 90, not >= 80, so it falls through to else.",
-                "label": "75"
+                "label": "order matters",
+                "text": "Put >= 80 first and every score above 90 would print B."
               }
-            ],
-            "instruction": "else if lets you check several things in order."
+            ]
           },
           {
-            "id": "f211_9",
-            "code": "int a = 12;\nint b = 5;\nint min = a;\nif (b ⟦1⟧ min) {\n  min = b;\n}\nSystem.out.println(min);",
-            "hint": "Replace min only when b is SMALLER than what is already there.",
+            "id": "i_sharp",
+            "kind": "teach",
+            "instruction": "if (condition) { }, then optionally else.",
+            "points": [
+              {
+                "label": "if (…) { }",
+                "text": "Round brackets around a boolean, braces around the lines to run."
+              },
+              {
+                "label": "else",
+                "text": "Optional. No condition, no brackets."
+              },
+              {
+                "label": "else if (…)",
+                "text": "As many as you like, checked in order, first match wins."
+              },
+              {
+                "label": "if (x) ;",
+                "text": "A semicolon there ends the if immediately, so the block below always runs. Silent and common."
+              }
+            ]
+          },
+          {
+            "id": "i_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "int n = 5;\nif (n > 0) {\n  System.out.println(\"positive\");\n}",
+            "questions": [
+              {
+                "prompt": "Why do we use if statements in Java?",
+                "opts": [
+                  "To do something only if a condition is true",
+                  "To repeat something a fixed number of times",
+                  "To do something while a condition is true",
+                  "To break out of some block of code"
+                ],
+                "correct": 0,
+                "why": "An if runs a block once, or not at all. Repeating while something is true is a while loop."
+              },
+              {
+                "prompt": "Which if statement is written properly?",
+                "opts": [
+                  "if(condition)\n{\n    // code\n}",
+                  "if (condition):\n    // code",
+                  "if condition\n{\n    // code\n}",
+                  "if condition\n[\n    // code\n]"
+                ],
+                "correct": 0,
+                "why": "Round brackets around the condition and braces around the block. Java uses neither a colon nor square brackets."
+              }
+            ],
+            "skills": [
+              "run a block of code only when a condition is true"
+            ]
+          },
+          {
+            "id": "i_fill",
             "kind": "fill",
-            "after": "Assume the first is smallest, then replace it if you find better. That scales to any number of values.",
+            "instruction": "Keep the smaller of the two.",
+            "code": "int a = 12;\nint b = 5;\nint min = a;\nif (b ⟦1⟧ min) {\n  min = b;\n}\nSystem.out.println(min);",
             "blanks": [
               {
                 "chips": [
@@ -3445,25 +3554,26 @@
                 "answer": 0
               }
             ],
+            "target": "5",
+            "hint": "Replace min only when b is smaller than what is already there.",
+            "after": "Assume the first is smallest, then replace it if you find better. That scales to any number of values.",
             "skills": [
               "run a block of code only when a condition is true"
-            ],
-            "target": "5",
-            "instruction": "Fill it in so min ends up holding the smaller number."
+            ]
           },
           {
-            "id": "f211_10",
-            "code": "// read three ints, then print the smallest\n",
-            "hint": "Start with min = a, then use two ifs to replace it if b or c is smaller. Prompts are \"Enter first number: \" and so on.",
+            "id": "i_write",
             "kind": "write",
-            "after": "That is CodeHS exercise 3.11.5, Find the Minimum.",
+            "instruction": "Last one: read three numbers and print the smallest.",
+            "code": "// read three ints, then print the smallest\n",
             "stdin": "10\n15\n20",
-            "skills": [
-              "run a block of code only when a condition is true"
-            ],
             "target": "Enter first number: 10\nEnter second number: 15\nEnter third number: 20\n10",
             "solution": "int a = readInt(\"Enter first number: \");\nint b = readInt(\"Enter second number: \");\nint c = readInt(\"Enter third number: \");\nint min = a;\nif (b < min) {\n  min = b;\n}\nif (c < min) {\n  min = c;\n}\nSystem.out.println(min);",
-            "instruction": "Your turn: read three numbers and print the smallest."
+            "hint": "Start with min = a, then two ifs replacing it if b or c is smaller. Prompts are \"Enter first number: \", \"Enter second number: \", \"Enter third number: \".",
+            "after": "That is CodeHS exercise 3.11.5, Find the Minimum. Lesson done.",
+            "skills": [
+              "run a block of code only when a condition is true"
+            ]
           }
         ]
       }
