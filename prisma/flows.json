@@ -58,13 +58,6 @@
             ]
           },
           {
-            "id": "p_run1",
-            "kind": "run",
-            "instruction": "Run it. There is your title.",
-            "code": "System.out.println(\"*** DUNGEON QUEST ***\");",
-            "after": "One command, one line on screen."
-          },
-          {
             "id": "p_tweak",
             "kind": "tweak",
             "instruction": "Rename the game to anything you like.",
@@ -98,16 +91,6 @@
             ]
           },
           {
-            "id": "p_run2",
-            "kind": "run",
-            "instruction": "Run it. The screen is taking shape.",
-            "code": "System.out.println(\"*** DUNGEON QUEST ***\");\nSystem.out.println(\"  1. New game\");\nSystem.out.println(\"  2. Quit\");",
-            "after": "Order matters — they print in the order you wrote them.",
-            "skills": [
-              "stack several printed lines to build a screen"
-            ]
-          },
-          {
             "id": "p_blank",
             "kind": "teach",
             "instruction": "A gap under the title makes it readable.",
@@ -120,7 +103,7 @@
               },
               {
                 "label": "\"\"",
-                "text": "Empty quotes hold zero characters, so println prints nothing at all — and the ln still ends the line. That is exactly what a blank line is."
+                "text": "Zero characters printed, and the line still ends. That is a blank line."
               },
               {
                 "label": "title, gap, menu",
@@ -141,7 +124,7 @@
               },
               {
                 "label": "Choose 1-2: 2",
-                "text": "With print, the player types on the same line as the question, so it reads as one sentence. With println their answer would drop to the line below."
+                "text": "print keeps the answer on the question line. println would drop it below."
               },
               {
                 "label": "the space",
@@ -318,7 +301,7 @@
               },
               {
                 "label": "name, level, health",
-                "text": "Each is a different KIND of value. A name is text, a level is a whole number, health can be half a heart. Java has to be told which is which."
+                "text": "Text, a whole number, and a half. Three different types."
               },
               {
                 "label": "a variable",
@@ -358,13 +341,6 @@
                 "text": "With quotes, \"name\" would print the word. Without them, Java goes and gets what is inside the box."
               }
             ]
-          },
-          {
-            "id": "v_str_run",
-            "kind": "run",
-            "instruction": "Run it. That is the first line of the card.",
-            "code": "String name = \"Ada\";\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);",
-            "after": "One box made, one line printed."
           },
           {
             "id": "v_str_tweak",
@@ -523,16 +499,6 @@
                 "label": "five facts, five types",
                 "text": "Every type was chosen because of what it had to hold, not because a list said so."
               }
-            ]
-          },
-          {
-            "id": "v_run_all",
-            "kind": "run",
-            "instruction": "Run the finished card.",
-            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nboolean online = true;\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);\nSystem.out.println(\"Rank:   \" + rank);\nSystem.out.println(\"Online: \" + online);",
-            "after": "You built that from one line. Five boxes, five kinds of value.",
-            "skills": [
-              "choose between int, double, char, boolean and String for a given value"
             ]
           },
           {
@@ -889,7 +855,7 @@
               },
               {
                 "label": "level + 1",
-                "text": "Because level is a real number, you can do maths on it. If you had used readLine you would have the TEXT \"7\", and \"7\" + 1 glues instead of adding."
+                "text": "level is a number, so this adds. readLine gives \"7\", and \"7\" + 1 glues into \"71\"."
               },
               {
                 "label": "readDouble / readBoolean",
@@ -1142,13 +1108,6 @@
             ]
           },
           {
-            "id": "m_run1",
-            "kind": "run",
-            "instruction": "Run it.",
-            "code": "int gold = 50;\nint found = 12;\nSystem.out.println(gold + found);\nSystem.out.println(gold - found);\nSystem.out.println(gold * 2);",
-            "after": "Three sums, three answers."
-          },
-          {
             "id": "m_order",
             "kind": "teach",
             "instruction": "Buying two potions and a sword — order matters.",
@@ -1165,7 +1124,7 @@
               },
               {
                 "label": "2 * 3 + 10",
-                "text": "Java multiplies first: 2 * 3 is 6. Then it adds: 6 + 10 is 16. It never works out 2 * 13."
+                "text": "2 * 3 = 6, then 6 + 10 = 16. Not 2 * 13."
               },
               {
                 "label": "( )",
@@ -1203,7 +1162,7 @@
               },
               {
                 "label": "int / int",
-                "text": "When both sides are whole numbers Java has to give a whole number back, so the .4 is discarded — discarded, not rounded. 19 / 5 also gives 3."
+                "text": "Two ints give an int. 3.4 loses the .4 — chopped, not rounded."
               },
               {
                 "label": "3 coins each",
@@ -1211,7 +1170,7 @@
               },
               {
                 "label": "2 coins unaccounted for",
-                "text": "Java dropped them and said nothing. The next step is how you get them back."
+                "text": "Java dropped them silently. % gets them back."
               }
             ]
           },
@@ -1249,7 +1208,7 @@
               },
               {
                 "label": "/ and %",
-                "text": "/ gives 3 — how many each player gets. % gives 2 — how many stay in the pot. 3 x 5 + 2 = 17, so between them they account for every coin."
+                "text": "17 / 5 = 3 each. 17 % 5 = 2 left. 3 x 5 + 2 = 17."
               },
               {
                 "label": "% 2",
@@ -1440,7 +1399,7 @@
               },
               {
                 "label": "7 / 20 * 100 gives 0",
-                "text": "Written the obvious way, Java prints 0. Not 35, not 0.35 — zero, because 7 / 20 is worked out as two ints before the 100 is ever reached."
+                "text": "Java prints 0, not 35."
               },
               {
                 "label": "(double) and (int)",
@@ -1457,28 +1416,21 @@
             "points": [
               {
                 "label": "7 / 20 first",
-                "text": "Division happens before multiplication? No — they are equal, so it runs left to right. 7 / 20 goes first."
+                "text": "Equal precedence, so left to right. The division goes first."
               },
               {
                 "label": "both are ints",
-                "text": "From last lesson: two whole numbers give a whole answer. 7 / 20 is 0.35, so Java gives 0."
+                "text": "7 / 20 = 0.35. As ints, that is 0."
               },
               {
                 "label": "then 0 * 100",
-                "text": "Zero times anything is zero. The answer was already destroyed before the 100 arrived."
+                "text": "0 * 100 = 0. The answer was already lost."
               },
               {
                 "label": "Java is not broken",
-                "text": "It did exactly what int division always does. The code is correct and the answer is still useless."
+                "text": "This is what int division always does."
               }
             ]
-          },
-          {
-            "id": "c_run0",
-            "kind": "run",
-            "instruction": "Run it and see the 0 for yourself.",
-            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println(xp / needed * 100);",
-            "after": "A correct program giving a useless answer. Now we fix it."
           },
           {
             "id": "c_cast",
@@ -1493,26 +1445,16 @@
               },
               {
                 "label": "7.0 / 20",
-                "text": "With a decimal on one side, Java keeps the decimal: 0.35 instead of 0."
+                "text": "7.0 / 20 = 0.35. One decimal keeps the decimal."
               },
               {
                 "label": "(double) xp",
-                "text": "Only one value needs casting. Java converts the other automatically."
+                "text": "Cast one side. Java converts the other."
               },
               {
                 "label": "35.0",
                 "text": "A double, so it shows a decimal point. Turning that into a plain 35 is coming."
               }
-            ]
-          },
-          {
-            "id": "c_run1",
-            "kind": "run",
-            "instruction": "Run the fixed version.",
-            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println((double) xp / needed * 100);",
-            "after": "One word changed. The answer went from useless to right.",
-            "skills": [
-              "use (double) so whole-number division keeps its decimal"
             ]
           },
           {
@@ -1543,7 +1485,7 @@
               },
               {
                 "label": "(double) (7 / 20)",
-                "text": "7 / 20 runs first as two ints and gives 0. Casting 0 to a double gives 0.0. The fraction was destroyed before the cast existed."
+                "text": "7 / 20 = 0 first. (double) 0 = 0.0. Too late."
               },
               {
                 "label": "(double) x",
@@ -1568,7 +1510,7 @@
               },
               {
                 "label": "35.9 gives 35",
-                "text": "Everything after the decimal point is thrown away. 35.999 also gives 35."
+                "text": "Chops the decimal. 35.999 also gives 35."
               },
               {
                 "label": "even 35.999",
@@ -1593,7 +1535,7 @@
               },
               {
                 "label": "37.4 + 0.5 is 37.9",
-                "text": "Which chops to 37. The nudge is too small to reach 38, which is correct."
+                "text": "Chops to 37. Correct."
               },
               {
                 "label": "exactly .5 goes up",
@@ -1770,7 +1712,7 @@
               },
               {
                 "label": "doorLocked",
-                "text": "From lesson 3.11 onwards, a program decides what to do next by looking at a value like this one. Booleans are what those decisions are made of."
+                "text": "From 3.11, every decision starts from a value like this."
               }
             ]
           },
@@ -1798,13 +1740,6 @@
                 "text": "Naming it like a yes/no question makes the code read like English."
               }
             ]
-          },
-          {
-            "id": "o_run1",
-            "kind": "run",
-            "instruction": "Run it.",
-            "code": "boolean alive = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);",
-            "after": "One fact, on the panel."
           },
           {
             "id": "o_tweak",
@@ -1926,17 +1861,6 @@
                 "label": "box matches reader",
                 "text": "readBoolean gives a boolean, so it goes in a boolean. Same rule as always."
               }
-            ]
-          },
-          {
-            "id": "o_run2",
-            "kind": "run",
-            "instruction": "Run it. We'll answer true.",
-            "code": "boolean hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Has key:    \" + hasKey);",
-            "stdin": "true",
-            "after": "The panel now reports what actually happened in the game.",
-            "skills": [
-              "read a true/false answer from the user"
             ]
           },
           {
@@ -2090,20 +2014,13 @@
               },
               {
                 "label": "the brackets",
-                "text": "( ) around the expression keep it separate from the text being joined with +. Without them Java would try to add a boolean to a String in the wrong order."
+                "text": "Needed — + would otherwise glue before the && runs."
               },
               {
                 "label": "one false is enough",
                 "text": "Set either fact to false and the door stays shut. && has no tolerance."
               }
             ]
-          },
-          {
-            "id": "g_run1",
-            "kind": "run",
-            "instruction": "Run it. Both facts are true, so the door opens.",
-            "code": "boolean hasKey = true;\nboolean strongEnough = true;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
-            "after": "One answer, built from two facts."
           },
           {
             "id": "g_tweak",
@@ -2421,13 +2338,6 @@
             ]
           },
           {
-            "id": "q_run",
-            "kind": "run",
-            "instruction": "Run it. Level 7 against a requirement of 5.",
-            "code": "int level = 7;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
-            "after": "The program decided strongEnough for itself."
-          },
-          {
             "id": "q_tweak",
             "kind": "fix",
             "instruction": "Send in a level 3 player. The door should shut.",
@@ -2732,13 +2642,6 @@
             ]
           },
           {
-            "id": "r_run",
-            "kind": "run",
-            "instruction": "Run it. Same five lines, one println.",
-            "code": "for (int floor = 1; floor <= 5; floor++) {\n  System.out.println(\"Floor \" + floor);\n}",
-            "after": "One line of code produced five lines of output."
-          },
-          {
             "id": "r_tweak",
             "kind": "fix",
             "instruction": "The dungeon just grew. Make it print 8 floors.",
@@ -3040,16 +2943,6 @@
             "instruction": "A while loop repeats for as long as something stays true."
           },
           {
-            "id": "f210_1",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "kind": "run",
-            "after": "It repeated until the condition stopped being true — no counting required up front.",
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "instruction": "This one keeps going until told to stop. Run it."
-          },
-          {
             "id": "f210_2",
             "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
             "hint": "Only the first line decides how much you start with.",
@@ -3235,13 +3128,6 @@
               }
             ],
             "instruction": "An if statement runs a block only when something is true."
-          },
-          {
-            "id": "f211_2",
-            "code": "int age = 20;\nif (age >= 18) {\n  System.out.println(\"adult\");\n}\nSystem.out.println(\"done\");",
-            "kind": "run",
-            "after": "The condition was true, so the block ran.",
-            "instruction": "Run it."
           },
           {
             "id": "f211_3",
@@ -3434,14 +3320,6 @@
             "instruction": "Here is the problem this lesson solves."
           },
           {
-            "id": "f212_2",
-            "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
-            "kind": "run",
-            "after": "Correct output, duplicated line. Now the better way.",
-            "stdin": "4\n6",
-            "instruction": "Run it. We'll guess 4, then 6."
-          },
-          {
             "id": "f212_3",
             "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
             "kind": "teach",
@@ -3466,17 +3344,6 @@
               }
             ],
             "instruction": "Loop forever, and break out of the middle."
-          },
-          {
-            "id": "f212_4",
-            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "kind": "run",
-            "after": "This shape has a name: the loop-and-a-half.",
-            "stdin": "4\n6",
-            "skills": [
-              "write a while (true) loop that asks once and checks once"
-            ],
-            "instruction": "Same answers, same output — one copy of the question."
           },
           {
             "id": "f212_5",
@@ -3610,13 +3477,6 @@
             "instruction": "&& stops the moment it finds a false."
           },
           {
-            "id": "f213_2",
-            "code": "int n = 0;\nboolean ok = (n != 0) && (10 / n > 1);\nSystem.out.println(ok);",
-            "kind": "run",
-            "after": "The guard on the left protected the division on the right.",
-            "instruction": "Run it. A divide by zero that never divides."
-          },
-          {
             "id": "f213_3",
             "why": "|| only needs one true and it found one immediately on the left, so the 5 / 0 is never evaluated. No crash.",
             "code": "System.out.println(true || (5 / 0 == 0));",
@@ -3653,13 +3513,6 @@
               }
             ],
             "instruction": "|| stops the moment it finds a true."
-          },
-          {
-            "id": "f213_5",
-            "code": "int n = 0;\nboolean safe = (n == 0) || (10 / n > 1);\nSystem.out.println(safe);",
-            "kind": "run",
-            "after": "Same protection, opposite operator.",
-            "instruction": "Run it."
           },
           {
             "id": "f213_6",
@@ -3795,13 +3648,6 @@
               }
             ],
             "instruction": "\"Not both\" is the same as \"one of them is missing\"."
-          },
-          {
-            "id": "f214_2",
-            "code": "boolean oldEnough = true;\nboolean tallEnough = false;\nSystem.out.println(!(oldEnough && tallEnough));\nSystem.out.println(!oldEnough || !tallEnough);",
-            "kind": "run",
-            "after": "Only one of the two requirements failed, and that is enough to be turned away.",
-            "instruction": "Run it. Both lines, one answer."
           },
           {
             "id": "f214_3",
@@ -3950,13 +3796,6 @@
             "instruction": "A String is a run of characters, in double quotes."
           },
           {
-            "id": "f215_2",
-            "code": "String name = \"Ada\";\nSystem.out.println(name);\nSystem.out.println(name + \" Lovelace\");",
-            "kind": "run",
-            "after": "Text in, text out.",
-            "instruction": "Run it."
-          },
-          {
             "id": "f215_3",
             "code": "String typed = readLine(\"Type cat: \");\nString other = \"cat\";\nSystem.out.println(typed == other);\nSystem.out.println(typed.equals(other));",
             "kind": "teach",
@@ -3981,17 +3820,6 @@
               }
             ],
             "instruction": "To compare text, use .equals() — not ==."
-          },
-          {
-            "id": "f215_4",
-            "code": "String typed = readLine(\"Type cat: \");\nString other = \"cat\";\nSystem.out.println(typed == other);\nSystem.out.println(typed.equals(other));",
-            "kind": "run",
-            "after": "Same letters, different answer. That is why .equals() exists.",
-            "stdin": "cat",
-            "skills": [
-              "explain why == is the wrong way to compare text"
-            ],
-            "instruction": "Run it and watch == get it wrong."
           },
           {
             "id": "f215_5",
