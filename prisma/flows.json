@@ -5454,6 +5454,939 @@
           }
         ]
       }
+    },
+    {
+      "code": "3.4",
+      "title": "Javadocs and More Methods",
+      "objectives": [
+        "write a Javadoc comment for a method",
+        "use @param and @return correctly"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "j_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "You have written damage(4). In a month, what does the 4 mean?",
+            "code": "public void run() {\n  System.out.println(damage(4));\n}\n\npublic int damage(int hits) {\n  return hits * 3;\n}",
+            "output": "12",
+            "highlight": [
+              4
+            ],
+            "points": [
+              {
+                "label": "damage(4)",
+                "text": "Four what? Hits, seconds, enemies? The name does not say."
+              },
+              {
+                "label": "the return",
+                "text": "12 what? Hit points, gold, percent?"
+              },
+              {
+                "label": "reading the body",
+                "text": "You can work it out from hits * 3, but only by reading the whole method. That does not scale."
+              }
+            ]
+          },
+          {
+            "id": "j_doc",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A Javadoc comment answers those questions above the method.",
+            "code": "public void run() {\n  System.out.println(damage(4));\n}\n\n/**\n * Works out the damage a run of hits does.\n * @param hits how many times you connected\n * @return the total damage dealt\n */\npublic int damage(int hits) {\n  return hits * 3;\n}",
+            "output": "12",
+            "highlight": [
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "points": [
+              {
+                "label": "/** ... */",
+                "text": "Starts with slash-star-star. An ordinary comment starts /* — the extra star is what makes it a Javadoc."
+              },
+              {
+                "label": "the first line",
+                "text": "One sentence saying what the method does."
+              },
+              {
+                "label": "@param hits",
+                "text": "Names one parameter and says what it means."
+              },
+              {
+                "label": "@return",
+                "text": "Says what comes back. A void method has no @return."
+              }
+            ]
+          },
+          {
+            "id": "j_cmp",
+            "kind": "compare",
+            "instruction": "Same program. One of them you can use without reading.",
+            "sides": [
+              {
+                "label": "undocumented",
+                "code": "public void run() {\n  System.out.println(damage(4));\n}\n\npublic int damage(int hits) {\n  return hits * 3;\n}",
+                "output": "12"
+              },
+              {
+                "label": "documented",
+                "code": "public void run() {\n  System.out.println(damage(4));\n}\n\n/**\n * Works out the damage a run of hits does.\n * @param hits how many times you connected\n * @return the total damage dealt\n */\npublic int damage(int hits) {\n  return hits * 3;\n}",
+                "output": "12"
+              }
+            ],
+            "points": [
+              {
+                "label": "undocumented",
+                "text": "To call it safely you must read the body first."
+              },
+              {
+                "label": "documented",
+                "text": "The header tells you what to pass and what you get. The body is an implementation detail."
+              }
+            ],
+            "skills": [
+              "write a Javadoc comment for a method"
+            ]
+          },
+          {
+            "id": "j_sharp",
+            "kind": "teach",
+            "instruction": "/** description @param name what it is @return what comes back */",
+            "points": [
+              {
+                "label": "/**",
+                "text": "Two stars to open. It goes directly above the method it describes."
+              },
+              {
+                "label": "@param",
+                "text": "One line per parameter, naming it first."
+              },
+              {
+                "label": "@return",
+                "text": "One line, only if the method returns something."
+              },
+              {
+                "label": "it is a comment",
+                "text": "Java ignores it when running. It exists for the person reading your code."
+              }
+            ]
+          },
+          {
+            "id": "j_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Which tag describes what comes back?",
+            "code": "/**\n * Doubles a number.\n * @param n the number to double\n * ⟦1⟧ twice the number\n */\npublic int twice(int n) {\n  return n * 2;\n}\n\npublic void run() {\n  System.out.println(twice(6));\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "@return",
+                  "@param",
+                  "@output"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "12",
+            "hint": "It describes the value the method hands back.",
+            "after": "@param goes in, @return comes out. @output is not a Javadoc tag.",
+            "skills": [
+              "write a Javadoc comment for a method"
+            ]
+          },
+          {
+            "id": "j_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "/**\n * Adds two numbers.\n * @param a the first\n * @param b the second\n * @return their sum\n */\npublic int add(int a, int b) {\n  return a + b;\n}",
+            "questions": [
+              {
+                "prompt": "What does a Javadoc comment start with?",
+                "opts": [
+                  "/**",
+                  "//",
+                  "/*",
+                  "#"
+                ],
+                "correct": 0,
+                "why": "Two stars. A single star is an ordinary block comment, and // is a line comment."
+              },
+              {
+                "prompt": "A void method needs which tag?",
+                "opts": [
+                  "@param only, if it takes parameters",
+                  "@return only",
+                  "both @param and @return",
+                  "neither"
+                ],
+                "correct": 0,
+                "why": "void hands nothing back, so there is nothing for @return to describe. Parameters still get documented."
+              }
+            ],
+            "skills": [
+              "write a Javadoc comment for a method"
+            ]
+          },
+          {
+            "id": "j_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: document this method properly.",
+            "code": "public void run() {\n  System.out.println(heal(20, 15));\n}\n\n// write a Javadoc above heal, then leave the method as it is\npublic int heal(int current, int amount) {\n  return current + amount;\n}",
+            "target": "35",
+            "solution": "public void run() {\n  System.out.println(heal(20, 15));\n}\n\n/**\n * Heals the player.\n * @param current the current hit points\n * @param amount how much to heal\n * @return the new hit point total\n */\npublic int heal(int current, int amount) {\n  return current + amount;\n}",
+            "hint": "Open with /**, one sentence, then @param current, @param amount, then @return.",
+            "after": "The comment changes nothing about the output. It changes whether anyone can use your method.",
+            "skills": [
+              "write a Javadoc comment for a method"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "3.5",
+      "title": "Strings Methods",
+      "objectives": [
+        "use String methods to inspect text",
+        "count positions from zero"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "s_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The player typed a name. You need its initial, and its length.",
+            "points": [
+              {
+                "label": "\"Ada Lovelace\"",
+                "text": "A String is not just something to print. You can ask it questions."
+              },
+              {
+                "label": "the initial",
+                "text": "The first character, for a save-slot icon."
+              },
+              {
+                "label": "the length",
+                "text": "To check the name fits on the card."
+              },
+              {
+                "label": "built in",
+                "text": "Java gives Strings methods for all of this. You call them ON the String."
+              }
+            ]
+          },
+          {
+            "id": "s_tour",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Five String methods, one name.",
+            "code": "public void run() {\n  String name = \"Ada Lovelace\";\n  System.out.println(name.length());\n  System.out.println(name.toUpperCase());\n  System.out.println(name.charAt(0));\n  System.out.println(name.substring(0, 3));\n  System.out.println(name.indexOf(\"Love\"));\n}",
+            "output": "12\nADA LOVELACE\nA\nAda\n4",
+            "points": [
+              {
+                "label": "name.length()",
+                "text": "12 - every character including the space."
+              },
+              {
+                "label": "name.toUpperCase()",
+                "text": "A new String in capitals. name itself is unchanged."
+              },
+              {
+                "label": "name.charAt(0)",
+                "text": "The character at position 0. Counting starts at 0, so this is the A."
+              },
+              {
+                "label": "name.substring(0, 3)",
+                "text": "From position 0 up to but NOT including 3, giving \"Ada\"."
+              },
+              {
+                "label": "name.indexOf(\"Love\")",
+                "text": "The position where \"Love\" starts, which is 4. It is -1 if not found."
+              }
+            ]
+          },
+          {
+            "id": "s_zero",
+            "kind": "teach",
+            "instruction": "Positions start at 0.",
+            "points": [
+              {
+                "label": "\"Ada\"",
+                "text": "A is at 0, d is at 1, a is at 2."
+              },
+              {
+                "label": "charAt(0)",
+                "text": "The FIRST character. charAt(1) is the second."
+              },
+              {
+                "label": "length() is 3",
+                "text": "But the last position is 2. length is a count; positions are 0-based."
+              },
+              {
+                "label": "charAt(3)",
+                "text": "Crashes. There is no character at position 3 in a 3-character String."
+              }
+            ]
+          },
+          {
+            "id": "s_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  String word = \"dungeon\";\n  System.out.println(word.charAt(1));\n}",
+            "opts": [
+              "u",
+              "d",
+              "n",
+              "1"
+            ],
+            "correct": 0,
+            "why": "Position 0 is d, position 1 is u. Counting from zero is the single most common String mistake.",
+            "skills": [
+              "use String methods to inspect text"
+            ]
+          },
+          {
+            "id": "s_sub",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "substring(start, end) stops BEFORE end.",
+            "code": "public void run() {\n  String word = \"dungeon\";\n  System.out.println(word.substring(0, 3));\n  System.out.println(word.substring(3));\n}",
+            "output": "dun\ngeon",
+            "points": [
+              {
+                "label": "substring(0, 3)",
+                "text": "Positions 0, 1, 2 - giving \"dun\". Position 3 is left out."
+              },
+              {
+                "label": "substring(3)",
+                "text": "One argument means \"from here to the end\", giving \"geon\"."
+              },
+              {
+                "label": "why exclusive",
+                "text": "end - start is the length you get. 3 - 0 is 3 characters."
+              }
+            ]
+          },
+          {
+            "id": "s_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Get just the first three letters.",
+            "code": "public void run() {\n  String word = \"treasure\";\n  System.out.println(word.substring(0, ⟦1⟧));\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "3",
+                  "2",
+                  "4"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "tre",
+            "hint": "The end position is not included, so it equals how many characters you want.",
+            "after": "substring(0, 3) gives 3 characters. The second number is where to stop, not the last one to keep.",
+            "skills": [
+              "use String methods to inspect text"
+            ]
+          },
+          {
+            "id": "s_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "String s = \"hello\";",
+            "questions": [
+              {
+                "prompt": "What is \"hello\".length()?",
+                "opts": [
+                  "5",
+                  "4",
+                  "6",
+                  "h"
+                ],
+                "correct": 0,
+                "why": "length() counts characters, and there are five. The last position is 4."
+              },
+              {
+                "prompt": "What is \"hello\".charAt(0)?",
+                "opts": [
+                  "h",
+                  "e",
+                  "o",
+                  "1"
+                ],
+                "correct": 0,
+                "why": "Positions start at 0, so charAt(0) is the first character."
+              }
+            ],
+            "skills": [
+              "use String methods to inspect text"
+            ]
+          },
+          {
+            "id": "s_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: print the initial and the length of a name.",
+            "code": "public void run() {\n  String name = \"Grace Hopper\";\n  // print the first character, then the length\n}",
+            "target": "G\n12",
+            "solution": "public void run() {\n  String name = \"Grace Hopper\";\n  System.out.println(name.charAt(0));\n  System.out.println(name.length());\n}",
+            "hint": "name.charAt(0) for the initial, name.length() for the count.",
+            "after": "You asked a String two questions and it answered both.",
+            "skills": [
+              "use String methods to inspect text"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "3.6",
+      "title": "Strings and Characters",
+      "objectives": [
+        "loop through the characters of a String",
+        "tell a char apart from a String"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "c_task",
+            "kind": "teach",
+            "instruction": "You can get one character. Now get every character.",
+            "points": [
+              {
+                "label": "charAt(0)",
+                "text": "One character, at a position you name."
+              },
+              {
+                "label": "every character",
+                "text": "Position 0, then 1, then 2... which is a counter going up. You have written that loop already."
+              },
+              {
+                "label": "the pair",
+                "text": "length() says where to stop, charAt(i) fetches each one."
+              }
+            ]
+          },
+          {
+            "id": "c_loop",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A for loop plus charAt walks the whole String.",
+            "code": "public void run() {\n  String word = \"gold\";\n  for (int i = 0; i < word.length(); i++) {\n    System.out.println(word.charAt(i));\n  }\n}",
+            "output": "g\no\nl\nd",
+            "highlight": [
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "i < word.length()",
+                "text": "Stops at 4, so i takes 0, 1, 2, 3 - exactly the valid positions."
+              },
+              {
+                "label": "word.charAt(i)",
+                "text": "Fetches the character at whatever i currently is."
+              },
+              {
+                "label": "i <= word.length()",
+                "text": "Would crash on the last pass. There is no character at position 4."
+              }
+            ]
+          },
+          {
+            "id": "c_char",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "charAt gives a char, not a String.",
+            "code": "public void run() {\n  String word = \"gold\";\n  char first = word.charAt(0);\n  System.out.println(first);\n  System.out.println(first == 'g');\n}",
+            "output": "g\ntrue",
+            "points": [
+              {
+                "label": "char first",
+                "text": "charAt returns a char, so it goes in a char box - the type from 3.2."
+              },
+              {
+                "label": "'g'",
+                "text": "Single quotes for a char. \"g\" with double quotes is a String and will not compare."
+              },
+              {
+                "label": "first == 'g'",
+                "text": "char comparison uses ==, unlike Strings which need .equals()."
+              }
+            ]
+          },
+          {
+            "id": "c_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  String s = \"abc\";\n  for (int i = 0; i < s.length(); i++) {\n    System.out.print(s.charAt(i));\n  }\n}",
+            "opts": [
+              "abc",
+              "a\nb\nc",
+              "cba",
+              "abc "
+            ],
+            "correct": 0,
+            "why": "print keeps them on one line, and the loop visits positions 0, 1, 2 in order.",
+            "skills": [
+              "loop through the characters of a String"
+            ]
+          },
+          {
+            "id": "c_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Stop at the right place.",
+            "code": "public void run() {\n  String word = \"map\";\n  for (int i = 0; i ⟦1⟧ word.length(); i++) {\n    System.out.print(word.charAt(i));\n  }\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "<",
+                  "<=",
+                  "=="
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "map",
+            "hint": "The last valid position is length() - 1.",
+            "after": "<= would ask for position 3 in a 3-character String and crash.",
+            "skills": [
+              "loop through the characters of a String"
+            ]
+          },
+          {
+            "id": "c_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "String s = \"cat\";\nchar c = s.charAt(1);",
+            "questions": [
+              {
+                "prompt": "What type does charAt return?",
+                "opts": [
+                  "char",
+                  "String",
+                  "int",
+                  "boolean"
+                ],
+                "correct": 0,
+                "why": "A single character, which is the char type - written in single quotes."
+              },
+              {
+                "prompt": "How do you compare two chars?",
+                "opts": [
+                  "==",
+                  ".equals()",
+                  ".compare()",
+                  "="
+                ],
+                "correct": 0,
+                "why": "char is a primitive, so == works. .equals() is for Strings."
+              }
+            ],
+            "skills": [
+              "loop through the characters of a String"
+            ]
+          },
+          {
+            "id": "c_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: print each character of \"sword\" on its own line.",
+            "code": "public void run() {\n  String word = \"sword\";\n  // loop through and print each character\n}",
+            "target": "s\nw\no\nr\nd",
+            "solution": "public void run() {\n  String word = \"sword\";\n  for (int i = 0; i < word.length(); i++) {\n    System.out.println(word.charAt(i));\n  }\n}",
+            "hint": "for (int i = 0; i < word.length(); i++) then println(word.charAt(i)).",
+            "after": "length() to stop, charAt(i) to fetch. That pair walks any String.",
+            "skills": [
+              "loop through the characters of a String"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "3.7",
+      "title": "Exceptions",
+      "objectives": [
+        "tell compile, run-time and logic errors apart",
+        "guard code that could crash"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "e_task",
+            "kind": "teach",
+            "instruction": "Three ways a program goes wrong, and only one of them is loud.",
+            "points": [
+              {
+                "label": "it will not compile",
+                "text": "A missing semicolon or a misspelt name. Java refuses to run it at all."
+              },
+              {
+                "label": "it crashes while running",
+                "text": "It compiles fine, then dies partway - dividing by zero, or asking for character 9 of a 4-letter word."
+              },
+              {
+                "label": "it runs and is wrong",
+                "text": "No error at all. It just prints the wrong number, and only you can catch it."
+              },
+              {
+                "label": "which is worst",
+                "text": "The last one. The other two tell you where to look."
+              }
+            ]
+          },
+          {
+            "id": "e_compile",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A compile error stops it before it starts.",
+            "code": "public void run() {\n  int hp = 20\n  System.out.println(hp);\n}",
+            "points": [
+              {
+                "label": "the missing semicolon",
+                "text": "Line 2 does not end. Java cannot tell where the statement stops."
+              },
+              {
+                "label": "no output at all",
+                "text": "Not one line runs. There is nothing to run until it compiles."
+              },
+              {
+                "label": "reading the error",
+                "text": "It names a line number. Look at that line and the one above it."
+              }
+            ]
+          },
+          {
+            "id": "e_runtime",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A run-time error compiles, then dies partway.",
+            "code": "public void run() {\n  System.out.println(\"before\");\n  int hits = 0;\n  System.out.println(10 / hits);\n  System.out.println(\"after\");\n}",
+            "points": [
+              {
+                "label": "\"before\" prints",
+                "text": "The program really does start. The first line works."
+              },
+              {
+                "label": "10 / hits",
+                "text": "hits is 0, and integer division by zero throws ArithmeticException."
+              },
+              {
+                "label": "\"after\" never prints",
+                "text": "The crash stops everything from that point."
+              },
+              {
+                "label": "the fix",
+                "text": "Guard it with hits != 0 && - short-circuiting, from 3.13."
+              }
+            ]
+          },
+          {
+            "id": "e_logic",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A logic error is silent. It just gives the wrong answer.",
+            "code": "public void run() {\n  int a = 8;\n  int b = 2;\n  System.out.println(average(a, b));\n}\n\npublic int average(int x, int y) {\n  return x + y / 2;\n}",
+            "output": "9",
+            "points": [
+              {
+                "label": "expected 5",
+                "text": "The average of 8 and 2 is 5. This prints 9."
+              },
+              {
+                "label": "x + y / 2",
+                "text": "Division happens before addition, so it is 8 + 1, not (8 + 2) / 2."
+              },
+              {
+                "label": "no error",
+                "text": "It compiled, it ran, it printed a number. Nothing warned you."
+              },
+              {
+                "label": "the fix",
+                "text": "Brackets: (x + y) / 2."
+              }
+            ]
+          },
+          {
+            "id": "e_bucket",
+            "kind": "bucket",
+            "instruction": "Which kind of error is each one?",
+            "buckets": [
+              "will not compile",
+              "crashes while running",
+              "runs but wrong"
+            ],
+            "items": [
+              {
+                "text": "missing semicolon",
+                "bucket": 0
+              },
+              {
+                "text": "dividing by zero",
+                "bucket": 1
+              },
+              {
+                "text": "charAt(9) on a 4-letter word",
+                "bucket": 1
+              },
+              {
+                "text": "x + y / 2 instead of (x + y) / 2",
+                "bucket": 2
+              },
+              {
+                "text": "misspelling a variable name",
+                "bucket": 0
+              },
+              {
+                "text": "a loop that runs one time too few",
+                "bucket": 2
+              }
+            ],
+            "why": "Compile errors are caught before running. Run-time errors stop it partway. Logic errors finish and lie to you.",
+            "skills": [
+              "tell compile, run-time and logic errors apart"
+            ]
+          },
+          {
+            "id": "e_fix",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "This averages wrongly. Fix it.",
+            "code": "public void run() {\n  System.out.println(average(8, 2));\n}\n\npublic int average(int x, int y) {\n  return x + y / 2;\n}",
+            "target": "5",
+            "solution": "public void run() {\n  System.out.println(average(8, 2));\n}\n\npublic int average(int x, int y) {\n  return (x + y) / 2;\n}",
+            "hint": "Division runs before addition. Force the addition first.",
+            "after": "A logic error nothing could have warned you about. Only checking the answer finds these.",
+            "skills": [
+              "tell compile, run-time and logic errors apart"
+            ]
+          },
+          {
+            "id": "e_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "int hits = 0;\nSystem.out.println(10 / hits);",
+            "questions": [
+              {
+                "prompt": "What kind of error is dividing by zero in Java?",
+                "opts": [
+                  "A run-time error",
+                  "A compile error",
+                  "A logic error",
+                  "Not an error"
+                ],
+                "correct": 0,
+                "why": "It compiles perfectly. The program starts, reaches that line, and throws ArithmeticException."
+              },
+              {
+                "prompt": "Which error type gives NO message at all?",
+                "opts": [
+                  "A logic error",
+                  "A compile error",
+                  "A run-time error",
+                  "They all give messages"
+                ],
+                "correct": 0,
+                "why": "A logic error runs to completion. The output is simply wrong, and only checking it reveals the problem."
+              }
+            ],
+            "skills": [
+              "tell compile, run-time and logic errors apart"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "3.8",
+      "title": "String Processing",
+      "objectives": [
+        "build up a String inside a loop",
+        "plan the steps before writing the code"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "x_task",
+            "kind": "teach",
+            "instruction": "Turn \"Ada Lovelace\" into a save-slot tag: AL.",
+            "points": [
+              {
+                "label": "the input",
+                "text": "A full name, any length, with a space somewhere in the middle."
+              },
+              {
+                "label": "the output",
+                "text": "One String made of the letters that follow the start and the space."
+              },
+              {
+                "label": "the shape",
+                "text": "Look at every character; some of them get added to an answer you are building."
+              },
+              {
+                "label": "plan first",
+                "text": "Say the steps in English before writing Java. Start empty, walk the name, add what qualifies."
+              }
+            ]
+          },
+          {
+            "id": "x_build",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Start with an empty String and add to it as you go.",
+            "code": "public void run() {\n  String word = \"gold\";\n  String backwards = \"\";\n  for (int i = word.length() - 1; i >= 0; i--) {\n    backwards = backwards + word.charAt(i);\n  }\n  System.out.println(backwards);\n}",
+            "output": "dlog",
+            "highlight": [
+              2,
+              4
+            ],
+            "points": [
+              {
+                "label": "String backwards = \"\"",
+                "text": "Empty, not null. There is nothing in it yet but it exists and can be added to."
+              },
+              {
+                "label": "backwards = backwards + ...",
+                "text": "Take what you have, add one character, put it back. The same shape as total = total + n."
+              },
+              {
+                "label": "i = length() - 1; i >= 0; i--",
+                "text": "Walks the positions backwards, so characters arrive in reverse."
+              },
+              {
+                "label": "\"dlog\"",
+                "text": "The accumulator grew one character per pass: d, dl, dlo, dlog."
+              }
+            ]
+          },
+          {
+            "id": "x_empty",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The empty start matters.",
+            "code": "public void run() {\n  String out = \"\";\n  out = out + \"a\";\n  out = out + \"b\";\n  System.out.println(out);\n  System.out.println(out.length());\n}",
+            "output": "ab\n2",
+            "points": [
+              {
+                "label": "\"\"",
+                "text": "A String of zero characters. length() is 0."
+              },
+              {
+                "label": "after two adds",
+                "text": "\"ab\", length 2. Each add makes a new String and reassigns it."
+              },
+              {
+                "label": "why not start with a letter",
+                "text": "Anything you start with ends up in the answer. \"\" is the only safe start."
+              }
+            ]
+          },
+          {
+            "id": "x_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  String s = \"abc\";\n  String out = \"\";\n  for (int i = 0; i < s.length(); i++) {\n    out = s.charAt(i) + out;\n  }\n  System.out.println(out);\n}",
+            "opts": [
+              "cba",
+              "abc",
+              "aabbcc",
+              "ccbbaa"
+            ],
+            "correct": 0,
+            "why": "Each character is put in FRONT of what is already there, so the result comes out reversed even though the loop runs forwards.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Collect only the capital letters.",
+            "code": "public void run() {\n  String name = \"Ada Lovelace\";\n  String tag = ⟦1⟧;\n  for (int i = 0; i < name.length(); i++) {\n    char c = name.charAt(i);\n    if (c >= 'A' && c <= 'Z') {\n      tag = tag + c;\n    }\n  }\n  System.out.println(tag);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "\"\"",
+                  "\" \"",
+                  "\"AL\""
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "AL",
+            "hint": "Whatever you start with stays in the answer.",
+            "after": "Starting with \" \" would have printed \" AL\", and starting with \"AL\" would have printed \"ALAL\".",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "String out = \"\";\nout = out + \"x\";",
+            "questions": [
+              {
+                "prompt": "Why start an accumulator String at \"\"?",
+                "opts": [
+                  "So nothing unwanted appears in the result",
+                  "Because Java requires it",
+                  "To make the loop faster",
+                  "So length() works"
+                ],
+                "correct": 0,
+                "why": "Every character you start with survives to the end. Empty is the only start that adds nothing."
+              },
+              {
+                "prompt": "What does out = out + c; do?",
+                "opts": [
+                  "Makes a new String with c on the end and stores it in out",
+                  "Changes the existing String in place",
+                  "Prints c",
+                  "Removes c from out"
+                ],
+                "correct": 0,
+                "why": "Strings cannot be changed in place. Each += builds a new String and reassigns the variable."
+              }
+            ],
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: build the initials of \"Grace Hopper\".",
+            "code": "public void run() {\n  String name = \"Grace Hopper\";\n  // build a String of just the capital letters, then print it\n}",
+            "target": "GH",
+            "solution": "public void run() {\n  String name = \"Grace Hopper\";\n  String tag = \"\";\n  for (int i = 0; i < name.length(); i++) {\n    char c = name.charAt(i);\n    if (c >= 'A' && c <= 'Z') {\n      tag = tag + c;\n    }\n  }\n  System.out.println(tag);\n}",
+            "hint": "Start tag at \"\", loop with charAt(i), and add the character when it is between 'A' and 'Z'.",
+            "after": "Start empty, walk the String, add what qualifies. That pattern solves most String problems.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
