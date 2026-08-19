@@ -26,6 +26,7 @@ type Step = {
   target?: string;
   stdin?: string;
   highlight?: number[];
+  sides?: { label: string; code: string; output: string }[];
   // ask: one field per read call. `sample` is stripped server-side, so the
   // browser only ever sees the label the student is answering.
   fields?: { label: string; placeholder?: string; holds?: string }[];
@@ -700,6 +701,19 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         <div className="flowopts">
           {(step.options || []).map((o, j) => (
             <button key={j} className="optbtn" onClick={() => onGoto(o.goto)}>{o.label}</button>
+          ))}
+        </div>
+      )}
+
+      {step.kind === "compare" && (
+        <div className="cmp">
+          {(step.sides || []).map((sd, si) => (
+            <div className="cmpside" key={si}>
+              <div className="cmplabel">{sd.label}</div>
+              <pre className="flowcode ro">{sd.code}</pre>
+              <div className="lbl">PRINTS</div>
+              <pre className="cmpout">{sd.output}</pre>
+            </div>
           ))}
         </div>
       )}

@@ -91,6 +91,36 @@
             ]
           },
           {
+            "id": "p_cmp",
+            "kind": "compare",
+            "instruction": "print and println differ by one thing: the line ending.",
+            "sides": [
+              {
+                "label": "print",
+                "code": "System.out.print(\"Hi\");\nSystem.out.print(\"Bye\");",
+                "output": "HiBye"
+              },
+              {
+                "label": "println",
+                "code": "System.out.println(\"Hi\");\nSystem.out.println(\"Bye\");",
+                "output": "Hi\nBye"
+              }
+            ],
+            "points": [
+              {
+                "label": "print",
+                "text": "Leaves the line open, so Bye continues on it."
+              },
+              {
+                "label": "println",
+                "text": "Ends the line, so Bye starts a new one."
+              }
+            ],
+            "skills": [
+              "keep the cursor on the same line with System.out.print"
+            ]
+          },
+          {
             "id": "p_blank",
             "kind": "teach",
             "instruction": "A gap under the title makes it readable.",
@@ -1609,6 +1639,36 @@
                 "label": "(double) (9 / 2) is 4.0",
                 "text": "The brackets divide first as ints — 4 — and then convert. Same symbols, different answer."
               }
+            ]
+          },
+          {
+            "id": "c_cmp",
+            "kind": "compare",
+            "instruction": "One decimal point changes the answer.",
+            "sides": [
+              {
+                "label": "both ints",
+                "code": "System.out.println(7 / 2);",
+                "output": "3"
+              },
+              {
+                "label": "one double",
+                "code": "System.out.println(7.0 / 2);",
+                "output": "3.5"
+              }
+            ],
+            "points": [
+              {
+                "label": "7 / 2",
+                "text": "Two ints, so the answer must be an int. 3.5 becomes 3."
+              },
+              {
+                "label": "7.0 / 2",
+                "text": "One side is a decimal, so the answer keeps its decimal."
+              }
+            ],
+            "skills": [
+              "use (double) so whole-number division keeps its decimal"
             ]
           },
           {
@@ -3856,6 +3916,38 @@
               }
             ],
             "instruction": "To compare text, use .equals() — not ==."
+          },
+          {
+            "id": "s_cmp",
+            "kind": "compare",
+            "instruction": "Same two words. Different question.",
+            "sides": [
+              {
+                "label": "==",
+                "code": "String typed = readLine(\"Type cat: \");\nSystem.out.println(typed == \"cat\");",
+                "stdin": "cat",
+                "output": "Type cat: cat\nfalse"
+              },
+              {
+                "label": ".equals()",
+                "code": "String typed = readLine(\"Type cat: \");\nSystem.out.println(typed.equals(\"cat\"));",
+                "stdin": "cat",
+                "output": "Type cat: cat\ntrue"
+              }
+            ],
+            "points": [
+              {
+                "label": "==",
+                "text": "Asks whether they are the same object. They are not."
+              },
+              {
+                "label": ".equals()",
+                "text": "Asks whether the characters match. They do."
+              }
+            ],
+            "skills": [
+              "compare Strings with .equals()"
+            ]
           },
           {
             "id": "f215_5",

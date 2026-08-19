@@ -32,7 +32,7 @@
 
 export type FlowStep = {
   id: string;
-  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "explain" | "branch";
+  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch";
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -67,6 +67,15 @@ export type FlowStep = {
   // note: "highlight certain lines of code (that are newly introduced) and
   // explain what they do below."
   highlight?: number[];
+  // compare: two snippets shown SIDE BY SIDE with their outputs.
+  //
+  // Reviewer's first example was print vs println. Explaining a difference in
+  // prose makes the student hold both versions in their head; showing them
+  // adjacent makes the difference the thing they see first. Same pattern for
+  // 7 / 2 vs 7.0 / 2 and == vs .equals().
+  //
+  // Each side's output is compiler-checked, exactly like a teach step.
+  sides?: { label: string; code: string; output: string; stdin?: string }[];
   opts?: string[];
   correct?: number;
   questions?: { prompt: string; opts: string[]; correct: number; why?: string }[];
@@ -128,6 +137,14 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
         if (!s.code && !(s.points || []).length) errors.push(`${at}: needs code and/or points[]`);
         break;
       case "note": break;
+      case "compare":
+        if (!s.sides || s.sides.length < 2) errors.push(`${at}: needs 2+ sides`);
+        (s.sides || []).forEach((sd, i) => {
+          if (!sd.label) errors.push(`${at}: side ${i + 1} needs a label`);
+          if (!sd.code) errors.push(`${at}: side ${i + 1} needs code`);
+          if (sd.output === undefined) errors.push(`${at}: side ${i + 1} needs the output it claims`);
+        });
+        break;
       case "ask":
         if (!s.code) errors.push(`${at}: needs code`);
         if (!s.fields?.length) errors.push(`${at}: needs fields[] — one per read call, in order`);
@@ -226,6 +243,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       return { ...base, lefts, rights };
     }
     case "teach": return { ...base, points: s.points, output: s.output };
+    case "compare": return { ...base, sides: s.sides, points: s.points };
     // Blank out every cell the student is meant to work out; the answers stay
     // on the server like every other answer key.
     case "table": {

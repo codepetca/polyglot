@@ -34,6 +34,18 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
     const name = `${s.id} (${s.kind})`;
     try {
       switch (s.kind) {
+        case "compare": {
+          // Both halves of a comparison are claims about Java. Check both, or
+          // the side-by-side teaches a difference that may not exist.
+          let bad = 0;
+          for (const [i, sd] of (s.sides || []).entries()) {
+            const r = await runJava(sd.code, sd.stdin || "", { wrapBeginner: true });
+            if (!r.compiled || r.error) { failures.push(`${name}: side ${i + 1} (${sd.label}) does not run: ${(r.error || "").slice(0, 80)}`); bad++; }
+            else if (norm(r.stdout) !== norm(sd.output)) { failures.push(`${name}: side ${i + 1} (${sd.label}) prints ${JSON.stringify(norm(r.stdout))}, step claims ${JSON.stringify(norm(sd.output))}`); bad++; }
+          }
+          if (!bad) results.push(`${name}: ✓ both sides verified`);
+          break;
+        }
         case "teach": {
           // A teach step may claim "this is what it prints". That claim must be
           // machine-checked like any other, or the no-lying guarantee has a hole.
