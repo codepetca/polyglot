@@ -125,6 +125,19 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
     if (!s.id || ids.has(s.id)) errors.push(`${at}: missing or duplicate id`);
     ids.add(s.id);
     if (!s.instruction) errors.push(`${at}: missing instruction`);
+    // Non-ASCII inside anything that reaches the Java compiler comes back
+    // mangled — an em dash in a string literal prints as "?". Caught once by
+    // the output gate; rejected here so it cannot recur. The fill-blank markers
+    // are stripped before compiling, so they are exempt.
+    const javaFacing: [string, string | undefined][] = [
+      ["code", s.code], ["target", s.target], ["output", s.output], ["solution", s.solution],
+      ...(s.sides || []).flatMap((sd, i) => [[`sides[${i}].code`, sd.code], [`sides[${i}].output`, sd.output]] as [string, string][]),
+    ];
+    for (const [field, val] of javaFacing) {
+      if (typeof val !== "string") continue;
+      const m = val.replace(/[\u27E6\u27E7]/g, "").match(/[^\x00-\x7F]/);
+      if (m) errors.push(`${at}: ${field} contains non-ASCII "${m[0]}" — it will print as "?". Use plain ASCII in anything Java compiles.`);
+    }
     for (const h of s.highlight || []) {
       const lines = (s.code || "").split("\n").length;
       if (!s.code) errors.push(`${at}: highlight needs code`);

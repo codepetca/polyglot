@@ -2976,7 +2976,7 @@
             "id": "r_d3",
             "kind": "write",
             "instruction": "Print the odd numbers from 1 to 9.",
-            "code": "// print 1, 3, 5, 7, 9 — one per line\n",
+            "code": "// print 1, 3, 5, 7, 9 - one per line\n",
             "target": "1\n3\n5\n7\n9",
             "solution": "for (int i = 1; i <= 9; i += 2) {\n  System.out.println(i);\n}",
             "hint": "Start at 1 and step by 2.",
@@ -3007,184 +3007,274 @@
       "title": "While Loops",
       "objectives": [
         "decide when a while loop fits better than a for loop",
-        "trace a while loop's variable until its condition fails",
+        "trace a while loop until its condition fails",
         "recognise why a while loop never stops"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "f210_t1",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
+            "id": "w_task",
             "kind": "teach",
-            "output": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
+            "instruction": "Last lesson the dungeon had 5 floors. A boss fight has no number.",
             "points": [
               {
-                "text": "The condition is checked before every turn, exactly like a for loop.",
-                "label": "while (fuel > 0)"
+                "label": "5 floors",
+                "text": "You knew the count before starting, so a for loop fitted."
               },
               {
-                "text": "Something inside MUST move the condition towards false, or it never stops.",
-                "label": "fuel--"
+                "label": "a boss",
+                "text": "You swing until its HP reaches 0. How many hits that takes depends on the damage rolls."
               },
               {
-                "text": "Outside the braces, so it runs once, after the loop finishes.",
-                "label": "\"empty\""
-              },
-              {
-                "text": "There is no built-in counter. You make the variable yourself, before the loop.",
-                "label": "no counter"
+                "label": "what is needed",
+                "text": "A loop that repeats while something stays true, instead of counting to a number."
               }
-            ],
-            "instruction": "A while loop repeats for as long as something stays true."
+            ]
           },
           {
-            "id": "f210_2",
-            "code": "int fuel = 3;\nwhile (fuel > 0) {\n  System.out.println(\"fuel: \" + fuel);\n  fuel--;\n}\nSystem.out.println(\"empty\");",
-            "hint": "Only the first line decides how much you start with.",
-            "kind": "tweak",
-            "after": "You never told it how many times to loop — it worked that out from the condition.",
-            "target": "fuel: 3\nfuel: 2\nfuel: 1\nempty",
-            "instruction": "Start with more fuel. Run it."
-          },
-          {
-            "id": "f210_t2",
+            "id": "w_while",
             "kind": "teach",
+            "instruction": "while repeats for as long as its condition holds.",
+            "code": "int bossHp = 30;\nint hits = 0;\nwhile (bossHp > 0) {\n  bossHp = bossHp - 7;\n  hits = hits + 1;\n  System.out.println(\"Hit \" + hits + \": boss at \" + bossHp);\n}\nSystem.out.println(\"Boss down in \" + hits + \" hits.\");",
+            "output": "Hit 1: boss at 23\nHit 2: boss at 16\nHit 3: boss at 9\nHit 4: boss at 2\nHit 5: boss at -5\nBoss down in 5 hits.",
+            "highlight": [
+              2,
+              3
+            ],
             "points": [
               {
-                "text": "Use it when you know how many times up front: 10 rows, 100 numbers, 1000 greetings.",
-                "label": "for"
+                "label": "while (bossHp > 0)",
+                "text": "Checked before every swing. True means swing again."
               },
               {
-                "text": "Use it when you do not: keep going until the user says stop, until the total is big enough, until the fuel runs out.",
-                "label": "while"
+                "label": "bossHp = bossHp - 7",
+                "text": "Each pass takes 7 off. This is what eventually makes the condition false."
               },
               {
-                "text": "Anything a for loop does, a while loop can do too. Pick whichever says what you mean more clearly.",
-                "label": "either works"
+                "label": "boss at -5",
+                "text": "The last hit overshoots. The loop stops at the next check, not the instant HP hits 0."
               },
               {
-                "text": "A condition that is never false. It runs forever unless something inside stops it.",
-                "label": "while (true)"
+                "label": "5 hits",
+                "text": "Never written down anywhere. The loop worked it out."
               }
-            ],
-            "instruction": "for or while? It depends on whether you know the count."
+            ]
           },
           {
-            "id": "f210_3",
-            "why": "The condition is checked BEFORE the first pass. 10 < 5 is already false, so the body never runs even once.",
-            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
+            "id": "w_cmp",
+            "kind": "compare",
+            "instruction": "Known count, or unknown count.",
+            "sides": [
+              {
+                "label": "for - you know the count",
+                "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"Hit \" + i);\n}",
+                "output": "Hit 1\nHit 2\nHit 3"
+              },
+              {
+                "label": "while - you do not",
+                "code": "int hp = 20;\nwhile (hp > 0) {\n  hp = hp - 7;\n  System.out.println(\"hp \" + hp);\n}",
+                "output": "hp 13\nhp 6\nhp -1"
+              }
+            ],
+            "points": [
+              {
+                "label": "for",
+                "text": "Three passes because you asked for three."
+              },
+              {
+                "label": "while",
+                "text": "Three passes because that is when hp ran out. You did not choose it."
+              }
+            ],
+            "skills": [
+              "decide when a while loop fits better than a for loop"
+            ]
+          },
+          {
+            "id": "w_fix",
+            "kind": "fix",
+            "instruction": "This boss has 50 HP. Make the fight run to the end.",
+            "code": "int bossHp = 50;\nint hits = 0;\nwhile (bossHp > 0) {\n  bossHp = bossHp - 7;\n  hits = hits + 1;\n  System.out.println(\"Hit \" + hits + \": boss at \" + bossHp);\n}\nSystem.out.println(\"Boss down in \" + hits + \" hits.\");",
+            "target": "Hit 1: boss at 43\nHit 2: boss at 36\nHit 3: boss at 29\nHit 4: boss at 22\nHit 5: boss at 15\nHit 6: boss at 8\nHit 7: boss at 1\nHit 8: boss at -6\nBoss down in 8 hits.",
+            "solution": "int bossHp = 50;\nint hits = 0;\nwhile (bossHp > 0) {\n  bossHp = bossHp - 7;\n  hits = hits + 1;\n  System.out.println(\"Hit \" + hits + \": boss at \" + bossHp);\n}\nSystem.out.println(\"Boss down in \" + hits + \" hits.\");",
+            "hint": "Nothing is broken - run it and read how many hits a 50 HP boss takes.",
+            "after": "Same loop, different number of passes. You changed the data, not the logic.",
+            "skills": [
+              "trace a while loop until its condition fails"
+            ]
+          },
+          {
+            "id": "w_forever",
+            "kind": "teach",
+            "instruction": "Take away the line that changes bossHp and it never ends.",
+            "code": "int bossHp = 30;\nwhile (bossHp > 0) {\n  System.out.println(\"Hit! boss at \" + bossHp);\n}",
+            "highlight": [
+              2
+            ],
+            "points": [
+              {
+                "label": "no subtraction",
+                "text": "bossHp stays 30 forever, so bossHp > 0 is true forever."
+              },
+              {
+                "label": "what happens",
+                "text": "The same line prints until something kills the program. No output is shown here because there is no end to show."
+              },
+              {
+                "label": "the rule",
+                "text": "Something inside the loop must move the condition towards false."
+              }
+            ]
+          },
+          {
+            "id": "w_spot",
+            "kind": "spot",
+            "instruction": "Tap the line that should be changing count.",
+            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
+            "correct": 2,
+            "why": "The body prints count but never changes it, so count <= 3 stays true forever. It needs count++ here.",
+            "skills": [
+              "recognise why a while loop never stops"
+            ]
+          },
+          {
+            "id": "w_predict",
             "kind": "predict",
+            "instruction": "n starts at 10. What prints?",
+            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
             "opts": [
               "done",
               "inside\ndone",
               "inside",
-              "(an error)"
-            ],
-            "skills": [
-              "trace a while loop's variable until its condition fails"
+              "(nothing)"
             ],
             "correct": 0,
-            "instruction": "What prints?"
+            "why": "The condition is checked BEFORE the first pass. 10 < 5 is false, so the body never runs once.",
+            "skills": [
+              "trace a while loop until its condition fails"
+            ]
           },
           {
-            "id": "f210_4",
-            "code": "int total = 0;\nint i = 1;\nwhile (i <= 3) {\n  total = total + i;\n  i++;\n}",
+            "id": "w_down",
+            "kind": "teach",
+            "instruction": "A while loop can count down as easily as up.",
+            "code": "int i = 5;\nwhile (i >= 1) {\n  System.out.println(i);\n  i--;\n}\nSystem.out.println(\"Go!\");",
+            "output": "5\n4\n3\n2\n1\nGo!",
+            "points": [
+              {
+                "label": "i--",
+                "text": "Takes 1 off each pass, so i falls 5, 4, 3, 2, 1."
+              },
+              {
+                "label": "i >= 1",
+                "text": "At i = 0 this is false and the loop stops, so 0 never prints."
+              },
+              {
+                "label": "you write it",
+                "text": "Unlike a for loop, the start and the change are separate lines you place yourself."
+              }
+            ]
+          },
+          {
+            "id": "w_sharp",
+            "kind": "teach",
+            "instruction": "for when you know the count. while when you do not.",
+            "points": [
+              {
+                "label": "while (condition) { }",
+                "text": "Checked before every pass, including the first. A false condition means zero passes."
+              },
+              {
+                "label": "the counter",
+                "text": "You declare it before the loop and change it inside. Nothing is automatic."
+              },
+              {
+                "label": "while (true)",
+                "text": "Never false on its own. It runs forever unless something inside stops it."
+              },
+              {
+                "label": "either works",
+                "text": "Anything a for loop does a while loop can do. Pick the one that states your intent."
+              }
+            ]
+          },
+          {
+            "id": "w_mcq",
             "kind": "trace",
-            "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
+            "instruction": "Two the test always asks.",
+            "code": "int i = 0;\nwhile (i < 3) {\n  i++;\n}",
             "questions": [
               {
-                "why": "0 + 1.",
+                "prompt": "Why do we use while loops in Java?",
                 "opts": [
-                  "1",
-                  "0",
-                  "3"
+                  "To repeat some code while a condition is true",
+                  "To repeat something a fixed number of times",
+                  "To do something if a condition is true",
+                  "To break out of some block of code"
                 ],
-                "prompt": "after the first pass, total = ?",
-                "correct": 0
+                "correct": 0,
+                "why": "A while loop is the shape for \"keep going until this stops being true\". A fixed count is a for loop."
               },
               {
-                "why": "1 + 2.",
+                "prompt": "What will while(true) { System.out.println(\"Hello\"); } do?",
                 "opts": [
-                  "3",
-                  "2",
-                  "4"
+                  "Print Hello in an infinite loop",
+                  "Print Hello one time",
+                  "Print Hello until the program receives user input",
+                  "Nothing"
                 ],
-                "prompt": "after the second pass, total = ?",
-                "correct": 0
-              },
-              {
-                "why": "1 + 2 + 3. It stops once i reaches 4, because 4 <= 3 is false.",
-                "opts": [
-                  "6",
-                  "3",
-                  "10"
-                ],
-                "prompt": "when the loop finally stops, total = ?",
-                "correct": 0
+                "correct": 0,
+                "why": "true is never false, and nothing inside stops it, so it prints forever."
               }
             ],
-            "instruction": "Follow total."
-          },
-          {
-            "id": "f210_5",
-            "why": "Nothing inside the loop ever changes count, so count <= 3 stays true forever. A while loop will not update your variable for you — you must do it in the body.",
-            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
-            "kind": "spot",
             "skills": [
               "recognise why a while loop never stops"
-            ],
-            "correct": 2,
-            "instruction": "This never stops. Tap the line that should be changing count."
+            ]
           },
           {
-            "id": "f210_6",
-            "code": "int i = 1;\nwhile (i < 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
-            "hint": "With i < 3 starting at 1, which values does i actually take before it quits?",
-            "kind": "fix",
-            "after": "Same off-by-one trap as for-loops — the condition decides the last value that still counts.",
+            "id": "w_fill",
+            "kind": "fill",
+            "instruction": "Make the countdown stop at 1.",
+            "code": "int i = 5;\nwhile (i ⟦1⟧ 1) {\n  System.out.println(i);\n  i⟦2⟧;\n}",
+            "blanks": [
+              {
+                "chips": [
+                  ">=",
+                  "<=",
+                  "=="
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "--",
+                  "++",
+                  "+= 2"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "5\n4\n3\n2\n1",
+            "hint": "It must keep going while i is still at least 1, and i has to fall.",
+            "after": "Condition and change work as a pair. Get one wrong and it either stops early or never stops.",
             "skills": [
-              "trace a while loop's variable until its condition fails"
-            ],
-            "target": "pass 1\npass 2\npass 3",
-            "solution": "int i = 1;\nwhile (i <= 3) {\n  System.out.println(\"pass \" + i);\n  i++;\n}",
-            "instruction": "It stops one step too early. Fix it."
+              "trace a while loop until its condition fails"
+            ]
           },
           {
-            "id": "f210_7",
-            "hint": "Declare it, test it, print it, shrink it, close it.",
-            "kind": "arrange",
-            "after": "A for-loop would be awkward here — you don't know up front how many halvings it takes. That's when while wins.",
-            "lines": [
-              "int n = 20;",
-              "while (n > 1) {",
-              "  System.out.print(n + \" \");",
-              "  n = n / 2;",
-              "}"
-            ],
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ],
-            "target": "20 10 5 2",
-            "distractors": [
-              "  n = n * 2;"
-            ],
-            "instruction": "Tap the lines in order to halve 20 down past 1."
-          },
-          {
-            "id": "f210_8",
-            "code": "// your code here\n",
-            "hint": "Same shape as the trace step — a running total, a counter, and remember to change the counter.",
+            "id": "w_write",
             "kind": "write",
-            "after": "You wrote a loop that decides its own length. That's the whole idea of while.",
+            "instruction": "Last one: keep asking for the temperature until the taffy is ready.",
+            "code": "System.out.println(\"Starting Taffy Timer...\");\n// keep reading the temperature until it reaches 270\n",
+            "stdin": "40\n100\n300",
+            "target": "Starting Taffy Timer...\nEnter the temperature: 40\nThe mixture isn't ready yet.\nEnter the temperature: 100\nThe mixture isn't ready yet.\nEnter the temperature: 300\nYour taffy is ready for the next step!",
+            "solution": "System.out.println(\"Starting Taffy Timer...\");\nint temp = readInt(\"Enter the temperature: \");\nwhile (temp < 270) {\n  System.out.println(\"The mixture isn't ready yet.\");\n  temp = readInt(\"Enter the temperature: \");\n}\nSystem.out.println(\"Your taffy is ready for the next step!\");",
+            "hint": "Read once before the loop, then while (temp < 270) print \"The mixture isn't ready yet.\" and read again. Prompt is \"Enter the temperature: \".",
+            "after": "That is CodeHS exercise 3.10.4, Making Taffy. Lesson done.",
             "skills": [
               "decide when a while loop fits better than a for loop"
-            ],
-            "target": "15",
-            "solution": "int total = 0;\nint i = 1;\nwhile (i <= 5) {\n  total = total + i;\n  i++;\n}\nSystem.out.println(total);",
-            "instruction": "Use a while loop to add 1 through 5 and print the total."
+            ]
           }
         ]
       }
