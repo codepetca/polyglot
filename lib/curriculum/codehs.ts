@@ -414,6 +414,9 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     objectives: ["Demonstrate an understanding of the purpose and syntax of Javadoc comments", "Analyze a given program for proper documentation", "Compare and contrast programs with good documentation against programs with poor documentation", "Write methods that perform specific calculations and return values", "Use Javadoc comments to document methods"],
     teaches: ["Javadoc comments", "/** */", "@param", "@return"],
     exercises: ["Javadoc Sum", "Is in Range", "Sum Range", "Is Divisible", "Fahrenheit to Celsius"],
+    exerciseSpecs: [
+      { codehsCode: "4.4.4", name: "Is in Range", requires: "UNIT-TESTED. Signature is fixed: public boolean inRange(int num, int min, int max). Returns true when num is between min and max INCLUSIVE. The starter already contains an empty Javadoc block for the student to fill in." },
+    ],
   },
   {
     code: "3.5",
@@ -422,6 +425,9 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     objectives: ["Read documentation for how to use the methods of the String class", "Either in the DOCS tab in the CodeHS editor, or elsewhere online", "Call methods on String objects to get information about the string, such as length or characters at given indices", "Utilize String methods to create programs that manipulate strings in different ways"],
     teaches: [".length()", ".substring()", ".indexOf()", ".charAt()", ".toUpperCase()", ".toLowerCase()", "looping through a String"],
     exercises: ["Looping Over a String", "Yelling", "Porky Pig", "Triple String", "Full Name", "Repeating String"],
+    exerciseSpecs: [
+      { codehsCode: "4.5.4", name: "Yelling", requires: "UNIT-TESTED. Signature is fixed: public String yell(String statement). Returns the text in capitals — yell(\"hello\") returns \"HELLO\". CodeHS hints at .toUpperCase()." },
+    ],
   },
   {
     code: "3.6",

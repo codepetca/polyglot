@@ -5637,15 +5637,16 @@
             "id": "j_write",
             "kind": "write",
             "wrap": "methods",
-            "instruction": "Your turn: document this method properly.",
-            "code": "public void run() {\n  System.out.println(heal(20, 15));\n}\n\n// write a Javadoc above heal, then leave the method as it is\npublic int heal(int current, int amount) {\n  return current + amount;\n}",
-            "target": "35",
-            "solution": "public void run() {\n  System.out.println(heal(20, 15));\n}\n\n/**\n * Heals the player.\n * @param current the current hit points\n * @param amount how much to heal\n * @return the new hit point total\n */\npublic int heal(int current, int amount) {\n  return current + amount;\n}",
-            "hint": "Open with /**, one sentence, then @param current, @param amount, then @return.",
-            "after": "The comment changes nothing about the output. It changes whether anyone can use your method.",
+            "instruction": "Your turn: write inRange, with a Javadoc above it.",
+            "code": "/**\n * Fill this in with a Javadoc style comment.\n */\npublic boolean inRange(int num, int min, int max)\n{\n    \n}\n",
+            "target": "true\ntrue\ntrue\nfalse",
+            "solution": "/**\n * Says whether a number falls inside a range.\n * @param num the number to test\n * @param min the lowest allowed value\n * @param max the highest allowed value\n * @return true if num is between min and max inclusive\n */\npublic boolean inRange(int num, int min, int max)\n{\n    return num >= min && num <= max;\n}",
+            "hint": "Inclusive means the ends count, so use >= and <=. Join the two checks with &&.",
+            "after": "That is CodeHS exercise 4.4.4, Is in Range. Both 1 and 10 count because the range is inclusive.",
             "skills": [
               "write a Javadoc comment for a method"
-            ]
+            ],
+            "harness": "public void run() {\n  System.out.println(inRange(5, 1, 10));\n  System.out.println(inRange(1, 1, 10));\n  System.out.println(inRange(10, 1, 10));\n  System.out.println(inRange(0, 1, 10));\n}"
           }
         ]
       }
@@ -5837,15 +5838,16 @@
             "id": "s_write",
             "kind": "write",
             "wrap": "methods",
-            "instruction": "Your turn: print the initial and the length of a name.",
-            "code": "public void run() {\n  String name = \"Grace Hopper\";\n  // print the first character, then the length\n}",
-            "target": "G\n12",
-            "solution": "public void run() {\n  String name = \"Grace Hopper\";\n  System.out.println(name.charAt(0));\n  System.out.println(name.length());\n}",
-            "hint": "name.charAt(0) for the initial, name.length() for the count.",
-            "after": "You asked a String two questions and it answered both.",
+            "instruction": "Your turn: write yell, which shouts any text back.",
+            "code": "// write yell(String statement): returns the text in capitals\n",
+            "target": "HELLO\nWATCH OUT",
+            "solution": "public String yell(String statement) {\n  return statement.toUpperCase();\n}",
+            "hint": "public String yell(String statement) and return statement.toUpperCase();",
+            "after": "That is CodeHS exercise 4.5.4, Yelling. yell(\"hello\") returns \"HELLO\".",
             "skills": [
               "use String methods to inspect text"
-            ]
+            ],
+            "harness": "public void run() {\n  System.out.println(yell(\"hello\"));\n  System.out.println(yell(\"watch out\"));\n}"
           }
         ]
       }
