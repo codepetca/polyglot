@@ -3861,135 +3861,199 @@
         "v": 1,
         "steps": [
           {
-            "id": "f213_1",
-            "code": "int n = 0;\nboolean ok = (n != 0) && (10 / n > 1);\nSystem.out.println(ok);",
+            "id": "z_task",
             "kind": "teach",
-            "output": "false",
+            "instruction": "Average damage is total / hits. You missed every swing, so hits is 0.",
             "points": [
               {
-                "text": "n is 0. Dividing by zero crashes a Java program instantly.",
-                "label": "10 / n"
+                "label": "totalDamage / hits",
+                "text": "The obvious way to get an average."
               },
               {
-                "text": "(n != 0) is false, and false && anything is false — so Java never looks at the right side.",
-                "label": "but it did not"
+                "label": "hits = 0",
+                "text": "Dividing an int by zero does not give 0 or infinity. It crashes the program on the spot."
               },
               {
-                "text": "That is the name: stopping early because the answer is already decided.",
-                "label": "short-circuit"
-              },
-              {
-                "text": "It is not an optimisation you can ignore. It is what keeps the division from ever happening.",
-                "label": "you rely on this"
+                "label": "what is needed",
+                "text": "A way to check hits before the division is allowed to happen."
               }
-            ],
-            "instruction": "&& stops the moment it finds a false."
+            ]
           },
           {
-            "id": "f213_3",
-            "why": "|| only needs one true and it found one immediately on the left, so the 5 / 0 is never evaluated. No crash.",
-            "code": "System.out.println(true || (5 / 0 == 0));",
+            "id": "z_and",
+            "kind": "teach",
+            "instruction": "&& stops at the first false, so the division never runs.",
+            "code": "int totalDamage = 0;\nint hits = 0;\nboolean wasStrong = (hits != 0) && (totalDamage / hits > 5);\nSystem.out.println(\"Strong fight? \" + wasStrong);",
+            "output": "Strong fight? false",
+            "highlight": [
+              2
+            ],
+            "points": [
+              {
+                "label": "(hits != 0)",
+                "text": "False, because hits is 0."
+              },
+              {
+                "label": "&&",
+                "text": "Once one side is false the answer is false whatever the other side says, so Java stops there."
+              },
+              {
+                "label": "no crash",
+                "text": "totalDamage / hits is never evaluated. The guard on the left protected it."
+              },
+              {
+                "label": "not an optimisation",
+                "text": "This is the only reason the program survives. You are relying on it."
+              }
+            ]
+          },
+          {
+            "id": "z_table",
+            "kind": "table",
+            "instruction": "Row 1 only works because of short-circuiting.",
+            "columns": [
+              "hits",
+              "hits != 0",
+              "(hits != 0) && (100 / hits > 5)"
+            ],
+            "fillFrom": 1,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "exprs": [
+              "hits != 0",
+              "(hits != 0) && (100 / hits > 5)"
+            ],
+            "rows": [
+              [
+                "0",
+                "false",
+                "false"
+              ],
+              [
+                "10",
+                "true",
+                "true"
+              ],
+              [
+                "30",
+                "true",
+                "false"
+              ]
+            ],
+            "why": "With hits = 0 the left side is false, so Java never divides. Take the guard away and that row crashes instead of printing false.",
+            "skills": [
+              "explain why the right-hand side of && or || is sometimes skipped"
+            ]
+          },
+          {
+            "id": "z_or",
+            "kind": "teach",
+            "instruction": "|| stops at the first true, for the same reason.",
+            "code": "int hits = 0;\nboolean skipReport = (hits == 0) || (100 / hits > 5);\nSystem.out.println(\"Skip the report? \" + skipReport);",
+            "output": "Skip the report? true",
+            "highlight": [
+              1
+            ],
+            "points": [
+              {
+                "label": "(hits == 0)",
+                "text": "True, because hits is 0."
+              },
+              {
+                "label": "||",
+                "text": "Once one side is true the answer is true, so Java stops and 100 / hits never runs."
+              },
+              {
+                "label": "mirror image",
+                "text": "&& gives up on the first false. || gives up on the first true."
+              }
+            ]
+          },
+          {
+            "id": "z_predict",
             "kind": "predict",
+            "instruction": "5 / 0 would crash. Does this?",
+            "code": "System.out.println(true || (5 / 0 == 0));",
             "opts": [
               "true",
               "(a crash)",
               "false",
               "0"
             ],
+            "correct": 0,
+            "why": "|| found true on the left, so the right side is never evaluated and the division never happens.",
             "skills": [
               "explain why the right-hand side of && or || is sometimes skipped"
-            ],
-            "correct": 0,
-            "instruction": "5 / 0 would crash. Does this?"
+            ]
           },
           {
-            "id": "f213_4",
-            "code": "int n = 0;\nboolean safe = (n == 0) || (10 / n > 1);\nSystem.out.println(safe);",
-            "kind": "teach",
-            "output": "true",
-            "points": [
-              {
-                "text": "&& gives up on the first false. || gives up on the first true.",
-                "label": "mirror image"
-              },
-              {
-                "text": "This is true, so || already knows the whole thing is true.",
-                "label": "(n == 0)"
-              },
-              {
-                "text": "The division on the right never runs, for the same reason as before.",
-                "label": "skipped again"
-              }
-            ],
-            "instruction": "|| stops the moment it finds a true."
-          },
-          {
-            "id": "f213_6",
-            "kind": "teach",
-            "points": [
-              {
-                "text": "Java always evaluates the left side first. Always.",
-                "label": "left to right"
-              },
-              {
-                "text": "The check that makes the other side safe has to come first.",
-                "label": "guard on the left"
-              },
-              {
-                "text": "(10 / n > 1) && (n != 0) crashes when n is 0 — the division runs before anything checks it.",
-                "label": "swap them and it breaks"
-              },
-              {
-                "text": "The guard has to be on the left. Swap the two sides and the division runs before anything checks n, and the program crashes.",
-                "label": "(n != 0) && (10 / n > 1)"
-              }
-            ],
-            "instruction": "Which side you put things on is now a real decision."
-          },
-          {
-            "id": "f213_7",
-            "code": "// X is some expression that would crash",
+            "id": "z_trace",
             "kind": "trace",
-            "skills": [
-              "work out which side of an expression actually runs"
-            ],
+            "instruction": "Does the right-hand side get evaluated?",
+            "code": "// X is an expression that would crash",
             "questions": [
               {
-                "why": "false && anything is false. Java stops.",
-                "opts": [
-                  "no",
-                  "yes"
-                ],
                 "prompt": "false && X",
-                "correct": 0
-              },
-              {
-                "why": "true || anything is true. Java stops.",
                 "opts": [
                   "no",
                   "yes"
                 ],
-                "prompt": "true || X",
-                "correct": 0
+                "correct": 0,
+                "why": "false && anything is false. Java stops."
               },
               {
-                "why": "true tells && nothing yet — the answer still depends on X, so X runs. This one is not protected.",
+                "prompt": "true || X",
+                "opts": [
+                  "no",
+                  "yes"
+                ],
+                "correct": 0,
+                "why": "true || anything is true. Java stops."
+              },
+              {
+                "prompt": "true && X",
                 "opts": [
                   "yes",
                   "no"
                 ],
-                "prompt": "true && X",
-                "correct": 0
+                "correct": 0,
+                "why": "true tells && nothing yet, so X must run. This one is NOT protected."
               }
             ],
-            "instruction": "Does the right-hand side get evaluated?"
+            "skills": [
+              "work out which side of an expression actually runs"
+            ]
           },
           {
-            "id": "f213_8",
-            "code": "int n = 0;\nboolean ok = (n != 0) ⟦1⟧ (10 / n > 1);\nSystem.out.println(ok);",
-            "hint": "You need the false on the left to STOP everything. Which operator gives up on a false?",
+            "id": "z_order",
+            "kind": "teach",
+            "instruction": "The guard has to be on the left.",
+            "points": [
+              {
+                "label": "left to right",
+                "text": "Java always evaluates the left side first."
+              },
+              {
+                "label": "(hits != 0) && (100 / hits > 5)",
+                "text": "Safe. The check runs before the division."
+              },
+              {
+                "label": "(100 / hits > 5) && (hits != 0)",
+                "text": "Crashes when hits is 0. The division runs before anything checks it."
+              },
+              {
+                "label": "so",
+                "text": "With short-circuiting, the order of your conditions decides whether the program works."
+              }
+            ]
+          },
+          {
+            "id": "z_fill",
             "kind": "fill",
-            "after": "With || the left being false is not enough to decide, so the division runs — and crashes. Try it if you want to see.",
+            "instruction": "Pick the operator that keeps this safe.",
+            "code": "int hits = 0;\nboolean ok = (hits != 0) ⟦1⟧ (100 / hits > 5);\nSystem.out.println(ok);",
             "blanks": [
               {
                 "chips": [
@@ -3999,25 +4063,78 @@
                 "answer": 0
               }
             ],
+            "target": "false",
+            "hint": "You need the false on the left to stop everything. Which operator gives up on a false?",
+            "after": "With || the false on the left is not enough to decide, so the division runs and crashes.",
             "skills": [
               "put a guard on the left so the right side is safe"
-            ],
-            "target": "false",
-            "instruction": "Pick the operator that keeps this safe."
+            ]
           },
           {
-            "id": "f213_9",
-            "code": "int dividend = readInt(\"Enter the dividend: \");\nint divisor = readInt(\"Enter the divisor: \");\n// guard the division, then print the verdict\n",
-            "hint": "Put divisor != 0 first, then &&, then the divisibility test. Messages are \"X is divisible by Y!\" and \"X is not divisible by Y\".",
-            "kind": "write",
-            "after": "That is CodeHS exercise 3.13.4, Divisibility — the guard is the whole exercise.",
-            "stdin": "10\n0",
-            "skills": [
-              "put a guard on the left so the right side is safe"
+            "id": "z_sharp",
+            "kind": "teach",
+            "instruction": "&& stops on false. || stops on true.",
+            "points": [
+              {
+                "label": "false && X",
+                "text": "X is skipped. The answer is already false."
+              },
+              {
+                "label": "true || X",
+                "text": "X is skipped. The answer is already true."
+              },
+              {
+                "label": "true && X",
+                "text": "X runs. The answer still depends on it."
+              },
+              {
+                "label": "false || X",
+                "text": "X runs, for the same reason."
+              }
+            ]
+          },
+          {
+            "id": "z_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "boolean a = true;",
+            "questions": [
+              {
+                "prompt": "In boolean b = true || (5 / 0 == 0); is 5 / 0 evaluated?",
+                "opts": [
+                  "No",
+                  "Yes"
+                ],
+                "correct": 0,
+                "why": "|| already has a true on the left, so it stops. The division never happens and there is no crash."
+              },
+              {
+                "prompt": "In boolean b = true && (5 / 0 == 0); is 5 / 0 evaluated?",
+                "opts": [
+                  "Yes",
+                  "No"
+                ],
+                "correct": 0,
+                "why": "A true on the left of && decides nothing, so Java must evaluate the right side — and that one does crash."
+              }
             ],
+            "skills": [
+              "work out which side of an expression actually runs"
+            ]
+          },
+          {
+            "id": "z_write",
+            "kind": "write",
+            "instruction": "Last one: say whether one number divides evenly, without crashing on 0.",
+            "code": "int dividend = readInt(\"Enter the dividend: \");\nint divisor = readInt(\"Enter the divisor: \");\n// guard the division, then print the verdict\n",
+            "stdin": "10\n0",
             "target": "Enter the dividend: 10\nEnter the divisor: 0\n10 is not divisible by 0",
             "solution": "int dividend = readInt(\"Enter the dividend: \");\nint divisor = readInt(\"Enter the divisor: \");\nif (divisor != 0 && dividend / divisor == (double) dividend / divisor) {\n  System.out.println(dividend + \" is divisible by \" + divisor + \"!\");\n} else {\n  System.out.println(dividend + \" is not divisible by \" + divisor);\n}",
-            "instruction": "Your turn: say whether one number divides evenly into another — without crashing on 0."
+            "hint": "Put divisor != 0 first, then &&, then the divisibility test. Messages are \"X is divisible by Y!\" and \"X is not divisible by Y\".",
+            "after": "That is CodeHS exercise 3.13.4, Divisibility. The guard is the whole exercise.",
+            "skills": [
+              "put a guard on the left so the right side is safe"
+            ]
           }
         ]
       }
@@ -4034,112 +4151,254 @@
         "v": 1,
         "steps": [
           {
-            "id": "f214_1",
-            "code": "boolean oldEnough = true;\nboolean tallEnough = false;\nSystem.out.println(!(oldEnough && tallEnough));\nSystem.out.println(!oldEnough || !tallEnough);",
+            "id": "d_task",
             "kind": "teach",
-            "output": "true\ntrue",
+            "instruction": "You can enter with a key AND enough strength. When are you turned away?",
             "points": [
               {
-                "text": "Two different-looking lines, one answer. That is the point of the law.",
-                "label": "same answer"
+                "label": "hasKey && strongEnough",
+                "text": "The condition for getting in. You wrote it in 3.7."
               },
               {
-                "text": "Move the ! onto each part, and flip && into ||.",
-                "label": "the recipe"
+                "label": "!(hasKey && strongEnough)",
+                "text": "The opposite: turned away. Correct, but it reads as a double negative."
               },
               {
-                "text": "\"Not (old enough AND tall enough)\" means \"too young OR too short\".",
-                "label": "in English"
-              },
-              {
-                "text": "The operator MUST change. !a && !b would mean something else entirely.",
-                "label": "watch the flip"
+                "label": "the other way",
+                "text": "\"No key, OR not strong enough.\" Same rule, no outer !. Turning one into the other is what this lesson is."
               }
-            ],
-            "instruction": "\"Not both\" is the same as \"one of them is missing\"."
+            ]
           },
           {
-            "id": "f214_3",
-            "why": "The ! goes onto both parts and the && flips to ||. Keeping the && is the mistake almost everyone makes first.",
-            "code": "// A and B are booleans",
-            "kind": "predict",
-            "opts": [
-              "!A || !B",
-              "!A && !B",
-              "!A || B",
-              "A && !B"
+            "id": "d_and",
+            "kind": "teach",
+            "instruction": "not (A and B) is the same as (not A) or (not B).",
+            "code": "boolean hasKey = true;\nboolean strongEnough = false;\nboolean cannotEnter = !hasKey || !strongEnough;\nSystem.out.println(\"Turned away? \" + cannotEnter);",
+            "output": "Turned away? true",
+            "highlight": [
+              2
             ],
+            "points": [
+              {
+                "label": "!hasKey || !strongEnough",
+                "text": "The ! moves onto each part, and the && flips to ||."
+              },
+              {
+                "label": "in English",
+                "text": "\"Not both\" is the same as \"at least one is missing\"."
+              },
+              {
+                "label": "true",
+                "text": "strongEnough is false, so !strongEnough is true, so the || is true. Turned away."
+              },
+              {
+                "label": "the operator must flip",
+                "text": "!hasKey && !strongEnough means something else - it would need BOTH to be missing."
+              }
+            ]
+          },
+          {
+            "id": "d_table_and",
+            "kind": "table",
+            "instruction": "Both columns, every combination. They match.",
+            "columns": [
+              "a",
+              "b",
+              "!(a && b)",
+              "!a || !b"
+            ],
+            "fillFrom": 2,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "exprs": [
+              "!(a && b)",
+              "!a || !b"
+            ],
+            "rows": [
+              [
+                "true",
+                "true",
+                "false",
+                "false"
+              ],
+              [
+                "true",
+                "false",
+                "true",
+                "true"
+              ],
+              [
+                "false",
+                "true",
+                "true",
+                "true"
+              ],
+              [
+                "false",
+                "false",
+                "true",
+                "true"
+              ]
+            ],
+            "why": "Four rows, two columns, identical every time. That is what \"equivalent\" means - not similar, the same in every case.",
             "skills": [
               "rewrite !(a && b) without the outer not"
-            ],
-            "correct": 0,
-            "instruction": "Which one equals !(A && B)?"
+            ]
           },
           {
-            "id": "f214_4",
-            "code": "boolean canSwim = false;\nboolean hasLifeJacket = false;\nSystem.out.println(!(canSwim || hasLifeJacket));\nSystem.out.println(!canSwim && !hasLifeJacket);",
+            "id": "d_or",
             "kind": "teach",
-            "output": "true\ntrue",
+            "instruction": "not (A or B) is the same as (not A) and (not B).",
+            "code": "boolean canSwim = false;\nboolean hasJacket = false;\nboolean stayOut = !canSwim && !hasJacket;\nSystem.out.println(\"Stay out of the pool? \" + stayOut);",
+            "output": "Stay out of the pool? true",
+            "highlight": [
+              2
+            ],
             "points": [
               {
-                "text": "! onto each part, and flip the operator — this time || becomes &&.",
-                "label": "same recipe"
+                "label": "!canSwim && !hasJacket",
+                "text": "Same recipe: ! onto each part, and this time || flips to &&."
               },
               {
-                "text": "\"Not (can swim OR has a jacket)\" means \"cannot swim AND has no jacket\".",
-                "label": "in English"
+                "label": "in English",
+                "text": "\"Neither\" is the same as \"not this AND not that\"."
               },
               {
-                "text": "Not-AND becomes OR. Not-OR becomes AND. The operator always flips.",
-                "label": "both laws"
+                "label": "both laws",
+                "text": "not-AND becomes OR. not-OR becomes AND. The operator always flips."
               }
-            ],
-            "instruction": "\"Neither\" is the same as \"not this AND not that\"."
+            ]
           },
           {
-            "id": "f214_5",
-            "code": "boolean a = true;\nboolean b = false;",
-            "kind": "trace",
+            "id": "d_table_or",
+            "kind": "table",
+            "instruction": "Same check for the other law.",
+            "columns": [
+              "a",
+              "b",
+              "!(a || b)",
+              "!a && !b"
+            ],
+            "fillFrom": 2,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "exprs": [
+              "!(a || b)",
+              "!a && !b"
+            ],
+            "rows": [
+              [
+                "true",
+                "true",
+                "false",
+                "false"
+              ],
+              [
+                "true",
+                "false",
+                "false",
+                "false"
+              ],
+              [
+                "false",
+                "true",
+                "false",
+                "false"
+              ],
+              [
+                "false",
+                "false",
+                "true",
+                "true"
+              ]
+            ],
+            "why": "Identical again. Only when both are false is \"neither\" true.",
+            "skills": [
+              "rewrite !(a || b) without the outer not"
+            ]
+          },
+          {
+            "id": "d_predict",
+            "kind": "predict",
+            "instruction": "a is true, b is false. What prints?",
+            "code": "boolean a = true;\nboolean b = false;\nSystem.out.println(!a || !b);",
+            "opts": [
+              "true",
+              "false",
+              "(an error)",
+              "nothing"
+            ],
+            "correct": 0,
+            "why": "!a is false, !b is true. false || true is true - which matches !(a && b), since a && b is false.",
             "skills": [
               "check that two boolean expressions mean the same thing"
-            ],
-            "questions": [
-              {
-                "why": "a && b is false, and !false is true.",
-                "opts": [
-                  "true",
-                  "false"
-                ],
-                "prompt": "!(a && b)",
-                "correct": 0
-              },
-              {
-                "why": "!a is false, !b is true. false || true is true. Same answer.",
-                "opts": [
-                  "true",
-                  "false"
-                ],
-                "prompt": "!a || !b",
-                "correct": 0
-              },
-              {
-                "why": "a || b is true, and !true is false.",
-                "opts": [
-                  "false",
-                  "true"
-                ],
-                "prompt": "!(a || b)",
-                "correct": 0
-              }
-            ],
-            "instruction": "Check the laws with a = true, b = false."
+            ]
           },
           {
-            "id": "f214_6",
-            "code": "boolean a = true;\nboolean b = false;\nSystem.out.println(!a ⟦1⟧ !b);",
-            "hint": "The && has to flip.",
+            "id": "d_sharp",
+            "kind": "teach",
+            "instruction": "Move the ! inwards, flip the operator.",
+            "points": [
+              {
+                "label": "!(A && B)",
+                "text": "becomes !A || !B"
+              },
+              {
+                "label": "!(A || B)",
+                "text": "becomes !A && !B"
+              },
+              {
+                "label": "the flip",
+                "text": "&& turns into ||, and || turns into &&. Forgetting this is the whole mistake."
+              },
+              {
+                "label": "why bother",
+                "text": "!(a && b) is a double negative to read. The flipped form usually says what you mean."
+              }
+            ]
+          },
+          {
+            "id": "d_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "boolean A = true;\nboolean B = false;",
+            "questions": [
+              {
+                "prompt": "Which is equivalent to !(A && B)?",
+                "opts": [
+                  "!A || !B",
+                  "!A && !B",
+                  "!A || B",
+                  "A && !B"
+                ],
+                "correct": 0,
+                "why": "The ! goes onto both parts and the && flips to ||. Keeping the && is the usual mistake."
+              },
+              {
+                "prompt": "Which is equivalent to !(A || B)?",
+                "opts": [
+                  "!A && !B",
+                  "!A || !B",
+                  "!A || B",
+                  "A && B"
+                ],
+                "correct": 0,
+                "why": "Same recipe the other way: ! onto both parts, and the || flips to &&."
+              }
+            ],
+            "skills": [
+              "check that two boolean expressions mean the same thing"
+            ]
+          },
+          {
+            "id": "d_fill",
             "kind": "fill",
-            "after": "Not-AND becomes OR. Every time.",
+            "instruction": "Rewrite !(a && b) without the outer brackets.",
+            "code": "boolean a = true;\nboolean b = false;\nSystem.out.println(!a ⟦1⟧ !b);",
             "blanks": [
               {
                 "chips": [
@@ -4149,25 +4408,26 @@
                 "answer": 0
               }
             ],
+            "target": "true",
+            "hint": "The && has to flip.",
+            "after": "not-AND becomes OR. Every time.",
             "skills": [
               "rewrite !(a && b) without the outer not"
-            ],
-            "target": "true",
-            "instruction": "Rewrite !(a && b) without the outer brackets."
+            ]
           },
           {
-            "id": "f214_7",
-            "code": "int age = readInt(\"Enter your age: \");\nint height = readInt(\"Enter your height in inches: \");\nboolean oldEnough = age >= 12;\nboolean tallEnough = height >= 48;\n// write cannotRide WITHOUT an outer !( ), then print it\n",
-            "hint": "!(oldEnough && tallEnough) converted is !oldEnough || !tallEnough.",
+            "id": "d_write",
             "kind": "write",
-            "after": "That is CodeHS exercise 3.14.5, Amusement Park.",
+            "instruction": "Last one: who gets turned away from the ride - in De Morgan form.",
+            "code": "int age = readInt(\"Enter your age: \");\nint height = readInt(\"Enter your height in inches: \");\nboolean oldEnough = age >= 12;\nboolean tallEnough = height >= 48;\n// write cannotRide WITHOUT an outer !( ), then print it\n",
             "stdin": "10\n50",
-            "skills": [
-              "rewrite !(a && b) without the outer not"
-            ],
             "target": "Enter your age: 10\nEnter your height in inches: 50\ntrue",
             "solution": "int age = readInt(\"Enter your age: \");\nint height = readInt(\"Enter your height in inches: \");\nboolean oldEnough = age >= 12;\nboolean tallEnough = height >= 48;\nboolean cannotRide = !oldEnough || !tallEnough;\nSystem.out.println(cannotRide);",
-            "instruction": "Your turn: work out whether someone is turned away from the ride — in De Morgan form."
+            "hint": "!(oldEnough && tallEnough) converted is !oldEnough || !tallEnough.",
+            "after": "That is CodeHS exercise 3.14.5, Amusement Park. Lesson done.",
+            "skills": [
+              "rewrite !(a && b) without the outer not"
+            ]
           }
         ]
       }
@@ -4176,82 +4436,75 @@
       "code": "2.15",
       "title": "Strings",
       "objectives": [
-        "join Strings together with +",
         "compare Strings with .equals()",
-        "explain why == is the wrong way to compare text"
+        "explain why == is the wrong way to compare text",
+        "join Strings together with +"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "f215_1",
-            "code": "String name = \"Ada\";\nSystem.out.println(name);\nSystem.out.println(name + \" Lovelace\");",
+            "id": "t_task",
             "kind": "teach",
-            "output": "Ada\nAda Lovelace",
+            "instruction": "A gate that opens only if the player types the magic word.",
             "points": [
               {
-                "text": "Capital S. It is the odd one out among the types — the rest are lowercase.",
-                "label": "String"
+                "label": "the check",
+                "text": "Read what they typed, compare it with \"mellon\", open or refuse."
               },
               {
-                "text": "Always. Single quotes make a char, which holds exactly one character.",
-                "label": "double quotes"
+                "label": "what you know",
+                "text": "readLine gives a String, and if acts on true or false. Both already yours."
               },
               {
-                "text": "Joins Strings end to end. It adds no space, so put your own inside the quotes.",
-                "label": "+"
+                "label": "the catch",
+                "text": "Comparing two Strings with == does not do what you expect. That is this lesson."
               }
-            ],
-            "instruction": "A String is a run of characters, in double quotes."
+            ]
           },
           {
-            "id": "f215_3",
-            "code": "String typed = readLine(\"Type cat: \");\nString other = \"cat\";\nSystem.out.println(typed == other);\nSystem.out.println(typed.equals(other));",
+            "id": "t_str",
             "kind": "teach",
-            "stdin": "cat",
-            "output": "Type cat: cat\nfalse\ntrue",
+            "instruction": "A String is a run of characters in double quotes.",
+            "code": "String word = \"mellon\";\nSystem.out.println(word);\nSystem.out.println(\"word\");",
+            "output": "mellon\nword",
             "points": [
               {
-                "text": "The user typed exactly \"cat\", and == still said false.",
-                "label": "look at that"
+                "label": "String",
+                "text": "Capital S. Holds text of any length."
               },
               {
-                "text": "For Strings it asks \"are these the same object in memory?\", which is almost never what you mean.",
-                "label": "=="
+                "label": "println(word)",
+                "text": "No quotes, so Java prints what is inside the box: mellon."
               },
               {
-                "text": "Asks \"are these the same characters?\" — the actual question. It said true.",
-                "label": ".equals()"
-              },
-              {
-                "text": "Text is compared with .equals(). Numbers and booleans still use ==.",
-                "label": ".equals() vs =="
+                "label": "println(\"word\")",
+                "text": "With quotes, so it prints the four letters w-o-r-d."
               }
-            ],
-            "instruction": "To compare text, use .equals() — not ==."
+            ]
           },
           {
-            "id": "s_cmp",
+            "id": "t_cmp",
             "kind": "compare",
             "instruction": "Same two words. Different question.",
             "sides": [
               {
                 "label": "==",
-                "code": "String typed = readLine(\"Type cat: \");\nSystem.out.println(typed == \"cat\");",
-                "stdin": "cat",
-                "output": "Type cat: cat\nfalse"
+                "code": "String typed = readLine(\"Type mellon: \");\nSystem.out.println(typed == \"mellon\");",
+                "stdin": "mellon",
+                "output": "Type mellon: mellon\nfalse"
               },
               {
                 "label": ".equals()",
-                "code": "String typed = readLine(\"Type cat: \");\nSystem.out.println(typed.equals(\"cat\"));",
-                "stdin": "cat",
-                "output": "Type cat: cat\ntrue"
+                "code": "String typed = readLine(\"Type mellon: \");\nSystem.out.println(typed.equals(\"mellon\"));",
+                "stdin": "mellon",
+                "output": "Type mellon: mellon\ntrue"
               }
             ],
             "points": [
               {
                 "label": "==",
-                "text": "Asks whether they are the same object. They are not."
+                "text": "Asks whether they are the same object in memory. The typed one is not."
               },
               {
                 "label": ".equals()",
@@ -4263,50 +4516,141 @@
             ]
           },
           {
-            "id": "f215_5",
-            "why": "Java quietly reuses identical text written directly in the code, so both names point at the same one and == says true. It looks like == works — and that is exactly the trap. The moment the text comes from the user it says false. Use .equals() and you never have to think about this.",
-            "code": "String a = \"cat\";\nString b = \"cat\";\nSystem.out.println(a == b);",
+            "id": "t_why",
+            "kind": "teach",
+            "instruction": "== compares identity. .equals() compares characters.",
+            "points": [
+              {
+                "label": "==",
+                "text": "For numbers and booleans this is what you want. For Strings it asks the wrong question."
+              },
+              {
+                "label": ".equals()",
+                "text": "Checks the text itself, character by character. Always use this for Strings."
+              },
+              {
+                "label": "typed.equals(\"mellon\")",
+                "text": "The variable goes in front, the thing you compare against goes in the brackets."
+              }
+            ]
+          },
+          {
+            "id": "t_trap",
             "kind": "predict",
+            "instruction": "No user input this time. What prints?",
+            "code": "String a = \"cat\";\nString b = \"cat\";\nSystem.out.println(a == b);",
             "opts": [
               "true",
               "false",
               "(an error)",
               "cat"
             ],
+            "correct": 0,
+            "why": "Java reuses identical text written directly in the code, so both names point at the same object and == says true. It looks like == works, which is exactly the trap - the moment the text comes from a user it says false. Use .equals() and you never have to think about it.",
             "skills": [
               "explain why == is the wrong way to compare text"
-            ],
-            "correct": 0,
-            "instruction": "No user input this time. What prints?"
+            ]
           },
           {
-            "id": "f215_6",
-            "code": "String first = \"pepper\";\nString second = \"mint\";\nString third = \"peppermint\";\nSystem.out.println((first + second).equals(third));",
+            "id": "t_gate",
+            "kind": "ask",
+            "instruction": "Try the gate. Type mellon, then run it again with something else.",
+            "code": "String password = readLine(\"Speak the magic word: \");\nif (password.equals(\"mellon\")) {\n  System.out.println(\"The gate opens.\");\n} else {\n  System.out.println(\"The gate stays shut.\");\n}",
+            "fields": [
+              {
+                "label": "Speak the magic word:",
+                "sample": "mellon",
+                "placeholder": "try mellon, or anything",
+                "holds": "password"
+              }
+            ],
+            "after": ".equals() compared the characters you typed against \"mellon\".",
+            "skills": [
+              "compare Strings with .equals()"
+            ]
+          },
+          {
+            "id": "t_join",
             "kind": "teach",
+            "instruction": "Join first, then compare the whole thing.",
+            "code": "String first = \"pepper\";\nString second = \"mint\";\nString third = \"peppermint\";\nSystem.out.println((first + second).equals(third));",
             "output": "true",
             "points": [
               {
-                "text": "The brackets make the joining happen first, giving one String: \"peppermint\".",
-                "label": "(first + second)"
+                "label": "(first + second)",
+                "text": "The brackets join them into one String, \"peppermint\", before anything is compared."
               },
               {
-                "text": "Then that whole thing is compared with third.",
-                "label": ".equals(third)"
+                "label": ".equals(third)",
+                "text": "That whole String is then compared with third."
               },
               {
-                "text": "Without them .equals would attach to second alone and ask the wrong question.",
-                "label": "why brackets"
+                "label": "without the brackets",
+                "text": ".equals would attach to second alone and ask a different question."
               }
-            ],
-            "instruction": "You can join first, then compare."
+            ]
           },
           {
-            "id": "f215_7",
-            "code": "String typed = readLine(\"Type cat: \");\nSystem.out.println(typed⟦1⟧);",
-            "hint": "The text came from the user, so == will say false.",
+            "id": "t_sharp",
+            "kind": "teach",
+            "instruction": "Text is compared with .equals(). Numbers still use ==.",
+            "points": [
+              {
+                "label": "String",
+                "text": "A sequence of characters. Not a single character - that is char."
+              },
+              {
+                "label": "a.equals(b)",
+                "text": "True when the characters match. The correct way to compare text."
+              },
+              {
+                "label": "a == b",
+                "text": "True only when they are the same object. Unreliable for text."
+              },
+              {
+                "label": "int x == 5",
+                "text": "Still fine. == is only a problem for Strings."
+              }
+            ]
+          },
+          {
+            "id": "t_mcq",
+            "kind": "trace",
+            "instruction": "Two the test always asks.",
+            "code": "String s = \"hello\";",
+            "questions": [
+              {
+                "prompt": "What is a String type in Java?",
+                "opts": [
+                  "A sequence of characters",
+                  "A single character",
+                  "A sequence of integers",
+                  "An extremely large integer value"
+                ],
+                "correct": 0,
+                "why": "Any amount of text. A single character is char, written in single quotes."
+              },
+              {
+                "prompt": "What is the proper way to compare String values in Java?",
+                "opts": [
+                  "The .equals() String method",
+                  "The == operator",
+                  "The = operator",
+                  "The | operator"
+                ],
+                "correct": 0,
+                "why": ".equals() compares the characters. == compares object identity, and = assigns."
+              }
+            ],
+            "skills": [
+              "compare Strings with .equals()"
+            ]
+          },
+          {
+            "id": "t_fill",
             "kind": "fill",
-            "after": ".equals() compares the characters. That is the only comparison you can trust for text.",
-            "stdin": "cat",
+            "instruction": "Fill in the right way to compare.",
+            "code": "String typed = readLine(\"Type cat: \");\nSystem.out.println(typed⟦1⟧);",
             "blanks": [
               {
                 "chips": [
@@ -4316,25 +4660,27 @@
                 "answer": 0
               }
             ],
+            "stdin": "cat",
+            "target": "Type cat: cat\ntrue",
+            "hint": "The text came from the user, so == will say false.",
+            "after": ".equals() is the only comparison you can trust for text.",
             "skills": [
               "compare Strings with .equals()"
-            ],
-            "target": "Type cat: cat\ntrue",
-            "instruction": "Fill in the right way to compare."
+            ]
           },
           {
-            "id": "f215_8",
-            "code": "// read three strings, then compare first + second with third\n",
-            "hint": "Prompts are \"First string? \" and so on. Message is like \"pepper + mint is equal to peppermint!\".",
+            "id": "t_write",
             "kind": "write",
-            "after": "That is CodeHS exercise 3.15.4, Three Strings — the last exercise in the unit.",
+            "instruction": "Last one: do the first two strings joined make the third?",
+            "code": "// read three strings, then compare first + second with third\n",
             "stdin": "pepper\nmint\npeppermint",
-            "skills": [
-              "compare Strings with .equals()"
-            ],
             "target": "First string? pepper\nSecond string? mint\nThird string? peppermint\npepper + mint is equal to peppermint!",
             "solution": "String first = readLine(\"First string? \");\nString second = readLine(\"Second string? \");\nString third = readLine(\"Third string? \");\nif ((first + second).equals(third)) {\n  System.out.println(first + \" + \" + second + \" is equal to \" + third + \"!\");\n} else {\n  System.out.println(first + \" + \" + second + \" is not equal to \" + third + \"!\");\n}",
-            "instruction": "Your turn: ask for three strings, and say whether the first two joined make the third."
+            "hint": "Prompts are \"First string? \", \"Second string? \", \"Third string? \". Then compare (first + second).equals(third) and print either \"X + Y is equal to Z!\" or \"X + Y is not equal to Z!\".",
+            "after": "That is CodeHS exercise 3.15.4, Three Strings - the last exercise in the unit. Lesson done.",
+            "skills": [
+              "compare Strings with .equals()"
+            ]
           }
         ]
       }
