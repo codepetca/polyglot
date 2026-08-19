@@ -6364,7 +6364,7 @@
       "title": "String Processing",
       "objectives": [
         "build up a String inside a loop",
-        "plan the steps before writing the code"
+        "loop over characters and decide something about all of them"
       ],
       "flow": {
         "v": 1,
@@ -6486,6 +6486,21 @@
             ]
           },
           {
+            "id": "x_upper",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Convert To Uppercase: shout a String back, one character at a time.",
+            "harness": "public void run() {\n  System.out.println(toUpper(\"dungeon\"));\n  System.out.println(toUpper(\"Ada\"));\n}",
+            "code": "public String toUpper(String str)\n{\n    \n}\n",
+            "target": "DUNGEON\nADA",
+            "solution": "public String toUpper(String str)\n{\n    String result = \"\";\n    for (int i = 0; i < str.length(); i++) {\n      result = result + Character.toUpperCase(str.charAt(i));\n    }\n    return result;\n}",
+            "hint": "Start result at \"\". Loop the characters, add Character.toUpperCase(str.charAt(i)) each time, then return result.",
+            "after": "CodeHS exercise 4.8.6, Convert To Uppercase. Same empty-start pattern as the initials.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
             "id": "x_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -6519,6 +6534,21 @@
             ]
           },
           {
+            "id": "x_same",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "All Same Letter: is every character the same one?",
+            "harness": "public void run() {\n  System.out.println(allSameLetter(\"aaa\"));\n  System.out.println(allSameLetter(\"aab\"));\n  System.out.println(allSameLetter(\"z\"));\n}",
+            "code": "public boolean allSameLetter(String str)\n{\n    \n}\n",
+            "target": "true\nfalse\ntrue",
+            "solution": "public boolean allSameLetter(String str)\n{\n    for (int i = 0; i < str.length(); i++) {\n      if (str.charAt(i) != str.charAt(0)) {\n        return false;\n      }\n    }\n    return true;\n}",
+            "hint": "Compare every character with the first one. The moment one differs, return false. Reaching the end means true.",
+            "after": "CodeHS exercise 4.8.8, All Same Letter. Same shape as Is it an Integer? - false early, true at the end.",
+            "skills": [
+              "loop over characters and decide something about all of them"
+            ]
+          },
+          {
             "id": "x_write",
             "kind": "write",
             "wrap": "methods",
@@ -6528,6 +6558,21 @@
             "solution": "public void run() {\n  String name = \"Grace Hopper\";\n  String tag = \"\";\n  for (int i = 0; i < name.length(); i++) {\n    char c = name.charAt(i);\n    if (c >= 'A' && c <= 'Z') {\n      tag = tag + c;\n    }\n  }\n  System.out.println(tag);\n}",
             "hint": "Start tag at \"\", loop with charAt(i), and add the character when it is between 'A' and 'Z'.",
             "after": "Start empty, walk the String, add what qualifies. That pattern solves most String problems.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_pal",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Finding Palindromes: does it read the same backwards?",
+            "harness": "public void run() {\n  System.out.println(isPalindrome(\"racecar\"));\n  System.out.println(isPalindrome(\"dungeon\"));\n  System.out.println(isPalindrome(\"aa\"));\n}",
+            "code": "public boolean isPalindrome(String str)\n{\n    \n}\n",
+            "target": "true\nfalse\ntrue",
+            "solution": "public boolean isPalindrome(String str)\n{\n    String backwards = \"\";\n    for (int i = str.length() - 1; i >= 0; i--) {\n      backwards = backwards + str.charAt(i);\n    }\n    return backwards.equals(str);\n}",
+            "hint": "Build the String backwards by looping from length() - 1 down to 0, then compare with .equals() - not ==.",
+            "after": "CodeHS exercise 4.8.3, Finding Palindromes. It uses a countdown loop, String building, and .equals() from 3.15 all at once.",
             "skills": [
               "build up a String inside a loop"
             ]

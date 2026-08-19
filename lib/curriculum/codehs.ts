@@ -464,6 +464,15 @@ export const CODEHS_METHODS: CodeHSLesson[] = [
     objectives: ["Create methods that perform advanced manipulations on Strings and characters", "Develop pseudocode algorithms for solutions before writing the actual Java code", "Debug their code", "Practice the common algorithm for String manipulation, including:", "Looping through each character of the String", "Performing specific actions based on each character", "Building a result String by appending processed characters to an initially empty String", "Returning the final result String"],
     teaches: ["building a result String", "looping over characters", "pseudocode before code"],
     exercises: ["Finding Palindromes", "String Concatenation", "Fix the Sum String", "Convert To Uppercase", "Double Vowels", "All Same Letter", "AltCase", "Do the Brackets Match?", "Teen Talk", "Fixing Grammar", "Password Checker", "Replace Letter"],
+    // APPROXIMATE. These three are built from the standard reading of each
+    // exercise NAME, not from the spec — 4.8's item pages are login-gated and
+    // have not been opened. The concepts are right; the exact signatures and
+    // edge cases (empty String? case sensitivity?) are unconfirmed.
+    exerciseSpecs: [
+      { codehsCode: "4.8.3", name: "Finding Palindromes", requires: "APPROXIMATE: boolean, true when the text reads the same backwards. Ours builds the reverse and compares with .equals()." },
+      { codehsCode: "4.8.6", name: "Convert To Uppercase", requires: "APPROXIMATE: returns the text in capitals, built character by character with Character.toUpperCase rather than calling .toUpperCase() on the whole String." },
+      { codehsCode: "4.8.8", name: "All Same Letter", requires: "APPROXIMATE: boolean, true when every character equals the first." },
+    ],
   },
   {
     code: "3.9",
