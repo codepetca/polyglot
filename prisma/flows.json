@@ -6579,6 +6579,256 @@
           }
         ]
       }
+    },
+    {
+      "code": "4.1",
+      "title": "Introduction to Classes and Objects",
+      "objectives": [
+        "create an object from a class",
+        "call a method on an object"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "o_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Two monsters already need four loose variables.",
+            "code": "public void run() {\n  String goblinName = \"Goblin\";\n  int goblinHp = 20;\n  String trollName = \"Troll\";\n  int trollHp = 45;\n  System.out.println(goblinName + \" roars!\");\n  System.out.println(trollName + \" roars!\");\n}",
+            "output": "Goblin roars!\nTroll roars!",
+            "highlight": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "points": [
+              {
+                "label": "four variables",
+                "text": "goblinName, goblinHp, trollName, trollHp. A third monster makes six."
+              },
+              {
+                "label": "nothing ties them",
+                "text": "Java has no idea goblinName and goblinHp belong to the same creature. You just named them carefully."
+              },
+              {
+                "label": "the roar is copied",
+                "text": "The sentence is written twice, once per monster."
+              },
+              {
+                "label": "what we want",
+                "text": "One thing that holds a name AND its hp AND knows how to roar."
+              }
+            ]
+          },
+          {
+            "id": "o_class",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A class is the blueprint. An object is one thing built from it.",
+            "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  goblin.roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "output": "Goblin roars!",
+            "highlight": [
+              1,
+              2
+            ],
+            "points": [
+              {
+                "label": "class Monster",
+                "text": "The blueprint. It says every monster has a name and hp, and knows how to roar."
+              },
+              {
+                "label": "new Monster(\"Goblin\", 20)",
+                "text": "Builds ONE monster from that blueprint, with those values."
+              },
+              {
+                "label": "Monster goblin =",
+                "text": "The variable holds that object. Its type is Monster, the class name."
+              },
+              {
+                "label": "goblin.roar()",
+                "text": "Asks that object to do something. The dot means \"belonging to this object\"."
+              }
+            ]
+          },
+          {
+            "id": "o_cmp",
+            "kind": "compare",
+            "instruction": "Same two monsters. One version keeps them together.",
+            "sides": [
+              {
+                "label": "loose variables",
+                "code": "public void run() {\n  String goblinName = \"Goblin\";\n  int goblinHp = 20;\n  String trollName = \"Troll\";\n  int trollHp = 45;\n  System.out.println(goblinName + \" roars!\");\n  System.out.println(trollName + \" roars!\");\n}",
+                "output": "Goblin roars!\nTroll roars!"
+              },
+              {
+                "label": "objects",
+                "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  Monster troll = new Monster(\"Troll\", 45);\n  goblin.roar();\n  troll.roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+                "output": "Goblin roars!\nTroll roars!"
+              }
+            ],
+            "points": [
+              {
+                "label": "loose variables",
+                "text": "Four variables and a copied sentence. A third monster adds two more variables and another copy."
+              },
+              {
+                "label": "objects",
+                "text": "Two objects, one blueprint. A third monster is one more line."
+              }
+            ],
+            "skills": [
+              "create an object from a class"
+            ]
+          },
+          {
+            "id": "o_many",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Each new makes a separate object with its own values.",
+            "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  Monster troll = new Monster(\"Troll\", 45);\n  goblin.roar();\n  troll.roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "output": "Goblin roars!\nTroll roars!",
+            "highlight": [
+              1,
+              2
+            ],
+            "points": [
+              {
+                "label": "two news",
+                "text": "Two objects. goblin and troll are different things built from the same blueprint."
+              },
+              {
+                "label": "their own name",
+                "text": "Each object keeps its own name and hp. Changing one does not touch the other."
+              },
+              {
+                "label": "one roar method",
+                "text": "Written once in the class, used by both. That is the copied sentence gone."
+              }
+            ]
+          },
+          {
+            "id": "o_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  Monster troll = new Monster(\"Troll\", 45);\n  System.out.println(goblin.getHp() + troll.getHp());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "opts": [
+              "65",
+              "20",
+              "45",
+              "2045"
+            ],
+            "correct": 0,
+            "why": "getHp() hands back each object's own number, 20 and 45, and + adds them because both are ints.",
+            "skills": [
+              "call a method on an object"
+            ]
+          },
+          {
+            "id": "o_dot",
+            "kind": "teach",
+            "instruction": "object.method() asks that object to do something.",
+            "points": [
+              {
+                "label": "goblin.roar()",
+                "text": "Runs roar() for the goblin, using the goblin's name."
+              },
+              {
+                "label": "troll.roar()",
+                "text": "Same method, different object, different output."
+              },
+              {
+                "label": "goblin.getHp()",
+                "text": "Hands back that object's hp. It returns a value, so you can print or add it."
+              },
+              {
+                "label": "the dot",
+                "text": "Reads as \"belonging to\". Without an object in front, Java does not know whose name to use."
+              }
+            ]
+          },
+          {
+            "id": "o_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Build one more monster and make it roar.",
+            "code": "public void run() {\n  Monster ogre = ⟦1⟧ Monster(\"Ogre\", 30);\n  ogre⟦2⟧roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "new",
+                  "make",
+                  "create"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  ".",
+                  "->",
+                  "::"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "Ogre roars!",
+            "hint": "new builds the object. A dot reaches into it.",
+            "after": "new to build, dot to ask. Those two do most of the work in this unit.",
+            "skills": [
+              "create an object from a class"
+            ]
+          },
+          {
+            "id": "o_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "Monster goblin = new Monster(\"Goblin\", 20);",
+            "questions": [
+              {
+                "prompt": "What is the relationship between a class and an object?",
+                "opts": [
+                  "A class is a blueprint; an object is one thing built from it",
+                  "They are the same thing",
+                  "An object is a blueprint; a class is built from it",
+                  "A class is a variable"
+                ],
+                "correct": 0,
+                "why": "One class can produce any number of objects, each with its own values. The class itself holds no values."
+              },
+              {
+                "prompt": "In goblin.roar(), what does the dot mean?",
+                "opts": [
+                  "roar() belongs to the goblin object",
+                  "roar is a variable",
+                  "goblin is a method",
+                  "it divides them"
+                ],
+                "correct": 0,
+                "why": "The dot reaches into a specific object and asks it to run one of its methods."
+              }
+            ],
+            "skills": [
+              "call a method on an object"
+            ]
+          },
+          {
+            "id": "o_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: make two monsters, roar both, then print their combined hp.",
+            "code": "public void run() {\n  // make a Bat with 8 hp and a Dragon with 200 hp\n  // roar both, then print the two hp values added together\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "target": "Bat roars!\nDragon roars!\n208",
+            "solution": "public void run() {\n  Monster bat = new Monster(\"Bat\", 8);\n  Monster dragon = new Monster(\"Dragon\", 200);\n  bat.roar();\n  dragon.roar();\n  System.out.println(bat.getHp() + dragon.getHp());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "hint": "Two new Monster(...) lines, then bat.roar(); dragon.roar(); then println(bat.getHp() + dragon.getHp());",
+            "after": "You used a class someone else wrote without changing a line of it. Writing your own comes in 5.4.",
+            "skills": [
+              "create an object from a class"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
