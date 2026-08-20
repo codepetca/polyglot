@@ -141,16 +141,8 @@
                 "text": "Prints and STAYS on the line. The cursor waits right after the text."
               },
               {
-                "label": "Choose 1-2: 2",
-                "text": "print keeps the answer on the question line. println would drop it below."
-              },
-              {
                 "label": "the space",
                 "text": "The space after the colon is inside the quotes, so the answer will not touch the question mark."
-              },
-              {
-                "label": "print vs println",
-                "text": "Identical commands apart from one thing: println ends the line, print leaves it open."
               }
             ]
           },
@@ -188,10 +180,6 @@
             "code": "System.out.println(\"one\");\nSystem.out.print(\"two\");\nSystem.out.println(\"three\");",
             "output": "one\ntwothree",
             "points": [
-              {
-                "label": "System.out.println",
-                "text": "Capital S, then out, then println all in lowercase. printLine, System.println and bare print do not exist."
-              },
               {
                 "label": "println",
                 "text": "Prints, then ENDS the line."
