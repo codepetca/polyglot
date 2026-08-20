@@ -6829,6 +6829,380 @@
           }
         ]
       }
+    },
+    {
+      "code": "4.2",
+      "title": "Classes vs. Objects",
+      "objectives": [
+        "tell a class apart from an object",
+        "call methods that change an object's state"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "v_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Every object holds two things: what it IS, and what it can DO.",
+            "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  System.out.println(goblin.getName() + \" has \" + goblin.getHp() + \" hp\");\n  goblin.roar();\n  goblin.takeDamage(5);\n  System.out.println(goblin.getName() + \" has \" + goblin.getHp() + \" hp\");\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "output": "Goblin has 20 hp\nGoblin roars!\nGoblin has 15 hp",
+            "highlight": [
+              2,
+              3,
+              4
+            ],
+            "points": [
+              {
+                "label": "state",
+                "text": "name and hp. The values this particular monster is carrying right now."
+              },
+              {
+                "label": "behaviour",
+                "text": "roar() and takeDamage(). The things it knows how to do."
+              },
+              {
+                "label": "20 then 15",
+                "text": "takeDamage changed the state. Same object, different values."
+              },
+              {
+                "label": "an object",
+                "text": "is exactly those two things bundled together, which loose variables never were."
+              }
+            ]
+          },
+          {
+            "id": "v_bucket",
+            "kind": "bucket",
+            "instruction": "Class or object?",
+            "buckets": [
+              "class",
+              "object"
+            ],
+            "items": [
+              {
+                "text": "Monster",
+                "bucket": 0
+              },
+              {
+                "text": "new Monster(\"Goblin\", 20)",
+                "bucket": 1
+              },
+              {
+                "text": "the blueprint",
+                "bucket": 0
+              },
+              {
+                "text": "goblin",
+                "bucket": 1
+              },
+              {
+                "text": "String",
+                "bucket": 0
+              },
+              {
+                "text": "\"Ada\"",
+                "bucket": 1
+              }
+            ],
+            "why": "A class is the template and there is one of it. An object is a thing built from it, and there can be any number.",
+            "skills": [
+              "tell a class apart from an object"
+            ]
+          },
+          {
+            "id": "v_inst",
+            "kind": "teach",
+            "instruction": "\"Instance\" is just another word for object.",
+            "points": [
+              {
+                "label": "class Monster",
+                "text": "The template. Written once."
+              },
+              {
+                "label": "goblin",
+                "text": "An object. Also called an instance of Monster. The two words mean the same thing."
+              },
+              {
+                "label": "\"instantiate\"",
+                "text": "The verb for building one: new Monster(...) instantiates the class."
+              },
+              {
+                "label": "why two words",
+                "text": "Exam questions use both. Nothing more to it than that."
+              }
+            ]
+          },
+          {
+            "id": "v_match",
+            "kind": "match",
+            "instruction": "Match each word to what it means.",
+            "pairs": [
+              [
+                "class",
+                "the template a thing is built from"
+              ],
+              [
+                "object",
+                "one thing built from a template"
+              ],
+              [
+                "instance",
+                "another word for object"
+              ],
+              [
+                "state",
+                "the values an object is holding"
+              ],
+              [
+                "behaviour",
+                "the methods an object can run"
+              ]
+            ],
+            "why": "Class is the template; object and instance both mean one thing made from it; state and behaviour are the two halves it carries.",
+            "skills": [
+              "tell a class apart from an object"
+            ]
+          },
+          {
+            "id": "v_own",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Each object keeps its own state.",
+            "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  Monster troll = new Monster(\"Troll\", 45);\n  goblin.takeDamage(5);\n  System.out.println(goblin.getHp());\n  System.out.println(troll.getHp());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "output": "15\n45",
+            "highlight": [
+              3
+            ],
+            "points": [
+              {
+                "label": "goblin.takeDamage(5)",
+                "text": "Only the goblin was hit. Its hp fell from 20 to 15."
+              },
+              {
+                "label": "troll.getHp()",
+                "text": "Still 45. The troll was never touched."
+              },
+              {
+                "label": "one class",
+                "text": "Both were built from Monster, and both have their own separate name and hp."
+              },
+              {
+                "label": "the method is shared",
+                "text": "takeDamage exists once, in the class. Which object it changes depends on the dot."
+              }
+            ]
+          },
+          {
+            "id": "v_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "The goblin is hit twice. What prints?",
+            "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  goblin.takeDamage(5);\n  goblin.takeDamage(3);\n  System.out.println(goblin.getHp());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "opts": [
+              "12",
+              "15",
+              "17",
+              "20"
+            ],
+            "correct": 0,
+            "why": "Each call changes the same object's hp: 20 - 5 is 15, then 15 - 3 is 12. The changes accumulate because it is one object.",
+            "skills": [
+              "call methods that change an object's state"
+            ]
+          },
+          {
+            "id": "v_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "Monster goblin = new Monster(\"Goblin\", 20);",
+            "questions": [
+              {
+                "prompt": "An object has both...",
+                "opts": [
+                  "state and behaviour",
+                  "a class and a method",
+                  "a name and a number",
+                  "input and output"
+                ],
+                "correct": 0,
+                "why": "State is the values it holds; behaviour is the methods it can run. That pairing is the definition."
+              },
+              {
+                "prompt": "Which is a class, and which is an object?",
+                "opts": [
+                  "Monster is the class, goblin is the object",
+                  "goblin is the class, Monster is the object",
+                  "both are classes",
+                  "both are objects"
+                ],
+                "correct": 0,
+                "why": "Monster is the template. goblin is one thing built from it."
+              }
+            ],
+            "skills": [
+              "tell a class apart from an object"
+            ]
+          },
+          {
+            "id": "v_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: hit one of two monsters and show both are separate.",
+            "code": "public void run() {\n  // make a Bat with 8 hp and a Dragon with 200 hp\n  // hit the bat for 3, then print both hp values\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "target": "5\n200",
+            "solution": "public void run() {\n  Monster bat = new Monster(\"Bat\", 8);\n  Monster dragon = new Monster(\"Dragon\", 200);\n  bat.takeDamage(3);\n  System.out.println(bat.getHp());\n  System.out.println(dragon.getHp());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "hint": "Two new Monster lines, then bat.takeDamage(3);, then print bat.getHp() and dragon.getHp().",
+            "after": "The dragon is untouched at 200. Separate objects, separate state.",
+            "skills": [
+              "call methods that change an object's state"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "4.3",
+      "title": "Using a Class as a Client",
+      "objectives": [
+        "use a class from its documentation alone"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "y_task",
+            "kind": "teach",
+            "instruction": "You have never written the Monster class. You did not need to.",
+            "points": [
+              {
+                "label": "a client",
+                "text": "Code that USES a class without being the class. That is what your run() has been all along."
+              },
+              {
+                "label": "why it matters",
+                "text": "You can use String, Scanner and Math without reading a line of their source. Same idea, smaller class."
+              },
+              {
+                "label": "what you need",
+                "text": "Not the code - just the list of methods, what they take, and what they give back."
+              },
+              {
+                "label": "where that lives",
+                "text": "In the Javadoc, which is why 4.4 spent a lesson on writing them."
+              }
+            ]
+          },
+          {
+            "id": "y_docs",
+            "kind": "teach",
+            "instruction": "This is all a client is given.",
+            "code": "/**\n * A monster in the dungeon.\n *\n * Monster(String name, int hp)  - build one\n * void   roar()                 - print its roar\n * void   takeDamage(int amount) - lower its hp\n * int    getHp()                - its current hp\n * String getName()              - its name\n */\npublic void run() {\n  Monster ogre = new Monster(\"Ogre\", 30);\n  ogre.roar();\n  System.out.println(ogre.getHp());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "wrap": "methods",
+            "output": "Ogre roars!\n30",
+            "highlight": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "points": [
+              {
+                "label": "the comment block",
+                "text": "Five lines telling you everything you can do with a Monster."
+              },
+              {
+                "label": "Monster(String, int)",
+                "text": "The constructor: what to pass to new."
+              },
+              {
+                "label": "int getHp()",
+                "text": "int on the left means it hands back a number, so it can go in a println."
+              },
+              {
+                "label": "void roar()",
+                "text": "void means nothing comes back. Calling it in a println would not compile."
+              }
+            ]
+          },
+          {
+            "id": "y_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "From the docs above: which method gives you a number to print?",
+            "code": "public void run() {\n  Monster ogre = new Monster(\"Ogre\", 30);\n  System.out.println(ogre.⟦1⟧);\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "getHp()",
+                  "roar()",
+                  "takeDamage(5)"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "30",
+            "hint": "println needs a value. Which of the three returns one rather than void?",
+            "after": "roar() and takeDamage() are void - they do something. getHp() answers something.",
+            "skills": [
+              "use a class from its documentation alone"
+            ]
+          },
+          {
+            "id": "y_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "// int getHp()\n// void roar()",
+            "questions": [
+              {
+                "prompt": "What does it mean to be a client of a class?",
+                "opts": [
+                  "To use the class without writing or changing it",
+                  "To write the class",
+                  "To copy the class into your file",
+                  "To inherit from the class"
+                ],
+                "correct": 0,
+                "why": "A client calls the methods. Someone else owns the implementation."
+              },
+              {
+                "prompt": "Why can you use a class without reading its source?",
+                "opts": [
+                  "The documentation says what each method takes and returns",
+                  "Java hides it for security",
+                  "The source does not exist",
+                  "You cannot"
+                ],
+                "correct": 0,
+                "why": "The method list is the contract. How it works inside is not your problem, and can change without breaking you."
+              }
+            ],
+            "skills": [
+              "use a class from its documentation alone"
+            ]
+          },
+          {
+            "id": "y_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: use the documented methods only.",
+            "harness": "/**\n * A monster in the dungeon.\n *\n * Monster(String name, int hp)  - build one\n * void   roar()                 - print its roar\n * void   takeDamage(int amount) - lower its hp\n * int    getHp()                - its current hp\n * String getName()              - its name\n */\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "code": "public void run() {\n  // build a Slime with 12 hp, roar, hit it for 4, print its hp\n}",
+            "target": "Slime roars!\n8",
+            "solution": "public void run() {\n  Monster slime = new Monster(\"Slime\", 12);\n  slime.roar();\n  slime.takeDamage(4);\n  System.out.println(slime.getHp());\n}",
+            "hint": "new Monster(\"Slime\", 12), then .roar(), then .takeDamage(4), then println(.getHp()).",
+            "after": "You wrote that from a five-line comment. You still have not read the class.",
+            "skills": [
+              "use a class from its documentation alone"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

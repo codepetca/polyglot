@@ -62,6 +62,56 @@ Four phases, in order:
 - Explain with real numbers: "the .4 is discarded — discarded, not rounded.
   19 / 5 also gives 3."
 
+
+## Design checklist — run this BEFORE writing a step
+
+Everything below came from the owner or a reviewer looking at real lessons and
+saying what was wrong. It is not style preference; each line is a fix for
+something that shipped badly.
+
+**Plan first.** Write the four phases out before authoring anything: what the
+task is, which concepts it forces, what the SHARPEN questions are, what the
+DRILL exercises are. If you cannot name the task in one sentence, you do not
+have a lesson yet.
+
+**Structure**
+- TASK -> BUILD -> SHARPEN -> DRILL. No engineered failure: introducing the task
+  is motivation enough. Never set the student up to stumble.
+- Never more than 2 teach steps in a row, except a lesson opening (task + first
+  concept).
+- Never more than 2 graded steps in a row during BUILD. DRILL may be consecutive
+  — that is the point of it.
+- End on CodeHS's real exercise where the spec is known.
+
+**Writing**
+- Be terse. "7 / 20 = 0.35. As an integer, this is 0, so Java prints 0" — not a
+  paragraph building up to it. Average point text is ~75 characters.
+- Instructions (what to DO) may be longer. Descriptions of code must not be.
+- A point `label` is a thing you POINT AT: `7.0 / 2`, `readInt`, `int x = 5;`.
+  Never `so`, `but`, `why`, `the rule`, `the catch`. If it is not concrete it
+  does not earn a highlight.
+- Headings state the fact: "17 coins between 5 players. Java says 3, not 3.4."
+  Not "this is the one that catches everybody."
+- One new idea per screen.
+
+**Show, do not describe**
+- `compare` when a DIFFERENCE is the lesson (print vs println, == vs .equals).
+- `table` when the PATTERN ACROSS ROWS is the lesson (&& truth table, De
+  Morgan's equivalence).
+- `highlight` the lines a step just added, so a growing program shows what is
+  new instead of asking the student to diff it by eye.
+- `ask` whenever INPUT is the thing being taught — the student types real values.
+- Cut any `run` step that re-runs code a teach step already showed with its
+  output. Clicking Run must reveal something.
+
+**Correctness**
+- Every claim about Java is compiler-checked. `npx tsx scripts/lesson.ts verify`.
+- Respect `notYetTaught(code)`. Not one symbol the course has not reached.
+- ASCII only in anything Java compiles — an em dash prints as `?`.
+- `tweak.target` is the ORIGINAL output. For one specific result use `fix`.
+- Unit-tested exercises use `harness`, so a correct method passes even without a
+  println.
+
 ## Step kinds
 
 `lib/curriculum/flow.ts` is the canonical spec. The ones worth knowing:
