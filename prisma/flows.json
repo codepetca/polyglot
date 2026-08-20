@@ -7203,6 +7203,967 @@
           }
         ]
       }
+    },
+    {
+      "code": "4.4",
+      "title": "Writing Classes",
+      "objectives": [
+        "write a class with private instance variables and a constructor",
+        "write a toString so the object can be printed"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "w_task",
+            "kind": "teach",
+            "instruction": "You have used Monster for three lessons. Now build your own.",
+            "points": [
+              {
+                "label": "Treasure",
+                "text": "A chest item with a name and a value in gold."
+              },
+              {
+                "label": "what it needs",
+                "text": "Somewhere to keep those two values, and a way to build one."
+              },
+              {
+                "label": "the client is written",
+                "text": "run() already makes a Crown worth 120 and prints it. Your job is the class it needs."
+              }
+            ]
+          },
+          {
+            "id": "w_shape",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A class has fields, then a constructor.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "output": "Crown (120 gold)",
+            "highlight": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12
+            ],
+            "points": [
+              {
+                "label": "private String name;",
+                "text": "An instance variable. Every Treasure gets its own copy of this."
+              },
+              {
+                "label": "private",
+                "text": "Only code inside Treasure can touch it. The client cannot reach in."
+              },
+              {
+                "label": "public Treasure(String name, int value)",
+                "text": "The constructor. Same name as the class, and no return type at all."
+              },
+              {
+                "label": "this.name = name;",
+                "text": "this.name is the field; name is the parameter. Without this. you would assign the parameter to itself."
+              }
+            ]
+          },
+          {
+            "id": "w_tostring",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "println(object) calls toString().",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "output": "Crown (120 gold)",
+            "highlight": [
+              9,
+              10,
+              11
+            ],
+            "points": [
+              {
+                "label": "public String toString()",
+                "text": "Spelled exactly like that. Java looks for this name."
+              },
+              {
+                "label": "System.out.println(crown)",
+                "text": "No .toString() written anywhere, and yet it runs. println asks the object for its String."
+              },
+              {
+                "label": "without it",
+                "text": "You would get Treasure@1b6d3586 - the class name and a memory address."
+              }
+            ]
+          },
+          {
+            "id": "w_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Two treasures, one class. What prints?",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  Treasure ring = new Treasure(\"Ring\", 45);\n  System.out.println(crown);\n  System.out.println(ring);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "opts": [
+              "Crown (120 gold)\nRing (45 gold)",
+              "Crown (120 gold)\nCrown (120 gold)",
+              "Treasure\nTreasure",
+              "(an error)"
+            ],
+            "correct": 0,
+            "why": "Each object holds its own name and value, and toString uses whichever object it was called on.",
+            "skills": [
+              "write a class with private instance variables and a constructor"
+            ]
+          },
+          {
+            "id": "w_fix",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "The constructor forgot something. Fix it.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    name = name;\n    value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "target": "Crown (120 gold)",
+            "solution": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "hint": "name = name assigns the parameter to itself. The field needs this. in front.",
+            "after": "Without this., the fields stay null and 0 - which is why it printed \"null (0 gold)\".",
+            "skills": [
+              "write a class with private instance variables and a constructor"
+            ]
+          },
+          {
+            "id": "w_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "public Treasure(String name, int value) {\n  this.name = name;\n}",
+            "questions": [
+              {
+                "prompt": "What is different about a constructor?",
+                "opts": [
+                  "It has the class name and no return type",
+                  "It must return void",
+                  "It must be private",
+                  "It can only take one parameter"
+                ],
+                "correct": 0,
+                "why": "Same name as the class, and no type before the name - not even void."
+              },
+              {
+                "prompt": "Why write toString()?",
+                "opts": [
+                  "So printing the object shows something readable",
+                  "So the object can be created",
+                  "So fields become public",
+                  "It is required by Java"
+                ],
+                "correct": 0,
+                "why": "println looks for toString(). Without one you get the class name and a memory address."
+              }
+            ],
+            "skills": [
+              "write a toString so the object can be printed"
+            ]
+          },
+          {
+            "id": "w_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: write the Potion class the client needs.",
+            "harness": "public void run() {\n  Potion small = new Potion(\"Small Potion\", 20);\n  Potion large = new Potion(\"Large Potion\", 75);\n  System.out.println(small);\n  System.out.println(large);\n}",
+            "code": "// write class Potion with a private name and healing, a constructor,\n// and a toString returning e.g. \"Small Potion heals 20\"\n",
+            "target": "Small Potion heals 20\nLarge Potion heals 75",
+            "solution": "class Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
+            "hint": "Two private fields, a constructor using this., and public String toString() returning name + \" heals \" + healing.",
+            "after": "You wrote a class and the client used it unchanged. That is both sides of 5.3 now.",
+            "skills": [
+              "write a class with private instance variables and a constructor"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "4.5",
+      "title": "Writing Classes and Instance Methods",
+      "objectives": [
+        "write instance methods that use and change the fields",
+        "tell an instance variable apart from an instance method"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "i_task",
+            "kind": "teach",
+            "instruction": "Treasure can be printed. It cannot do anything.",
+            "points": [
+              {
+                "label": "what it has",
+                "text": "name and value. Instance variables - its state."
+              },
+              {
+                "label": "what it does",
+                "text": "Nothing yet, apart from describe itself."
+              },
+              {
+                "label": "what we want",
+                "text": "polish() to raise its value, and isRare() to answer a question about it."
+              }
+            ]
+          },
+          {
+            "id": "i_meth",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "An instance method can use the fields directly.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 95);\n  System.out.println(crown);\n  crown.polish();\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "output": "Crown (95 gold)\nCrown (105 gold)",
+            "highlight": [
+              3
+            ],
+            "points": [
+              {
+                "label": "public void polish()",
+                "text": "An instance method. No static, so it belongs to one object."
+              },
+              {
+                "label": "value = value + 10;",
+                "text": "No dot, no parameter. Inside the class, the fields are just there."
+              },
+              {
+                "label": "crown.polish()",
+                "text": "Runs it for the crown, so the crown's value changes and nothing else does."
+              },
+              {
+                "label": "95 then 105",
+                "text": "The same object printed twice, with a changed field in between."
+              }
+            ]
+          },
+          {
+            "id": "i_cmp",
+            "kind": "compare",
+            "instruction": "Data only, or data that can act.",
+            "sides": [
+              {
+                "label": "client does the work",
+                "code": "public void run() {\n  int value = 95;\n  value = value + 10;\n  System.out.println(\"Crown (\" + value + \" gold)\");\n}",
+                "output": "Crown (105 gold)"
+              },
+              {
+                "label": "object does the work",
+                "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 95);\n  crown.polish();\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+                "output": "Crown (105 gold)"
+              }
+            ],
+            "points": [
+              {
+                "label": "client does the work",
+                "text": "Every client must know that polishing means +10. Change the rule and you change every client."
+              },
+              {
+                "label": "object does the work",
+                "text": "The rule lives in the class. Clients just ask."
+              }
+            ],
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "i_ret",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "An instance method can answer a question too.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  Treasure ring = new Treasure(\"Ring\", 45);\n  System.out.println(crown.isRare());\n  System.out.println(ring.isRare());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "output": "true\nfalse",
+            "highlight": [
+              3,
+              4
+            ],
+            "points": [
+              {
+                "label": "public boolean isRare()",
+                "text": "Returns a value, so it can go in a println or an if."
+              },
+              {
+                "label": "return value > 100;",
+                "text": "Uses the object's own value. The crown is 120, the ring is 45."
+              },
+              {
+                "label": "same method, two answers",
+                "text": "Which object you call it on decides the result."
+              }
+            ]
+          },
+          {
+            "id": "i_bucket",
+            "kind": "bucket",
+            "instruction": "Instance variable, or instance method?",
+            "buckets": [
+              "instance variable",
+              "instance method"
+            ],
+            "items": [
+              {
+                "text": "private int value;",
+                "bucket": 0
+              },
+              {
+                "text": "public void polish()",
+                "bucket": 1
+              },
+              {
+                "text": "private String name;",
+                "bucket": 0
+              },
+              {
+                "text": "public boolean isRare()",
+                "bucket": 1
+              },
+              {
+                "text": "what the object HAS",
+                "bucket": 0
+              },
+              {
+                "text": "what the object DOES",
+                "bucket": 1
+              }
+            ],
+            "why": "Variables hold state and have a type and a name. Methods have brackets and a body.",
+            "skills": [
+              "tell an instance variable apart from an instance method"
+            ]
+          },
+          {
+            "id": "i_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "public void polish() {\n  value = value + 10;\n}",
+            "questions": [
+              {
+                "prompt": "Why does polish() not need value as a parameter?",
+                "opts": [
+                  "It is a field of the same object, so it is already in scope",
+                  "Java passes it automatically",
+                  "It is static",
+                  "It does"
+                ],
+                "correct": 0,
+                "why": "An instance method runs on one object and can see that object's fields by name."
+              },
+              {
+                "prompt": "What is the difference between an instance variable and an instance method?",
+                "opts": [
+                  "A variable is what the object has; a method is what it does",
+                  "Nothing",
+                  "A variable is private; a method is public",
+                  "A method is faster"
+                ],
+                "correct": 0,
+                "why": "State versus behaviour - the same pair from 5.2."
+              }
+            ],
+            "skills": [
+              "tell an instance variable apart from an instance method"
+            ]
+          },
+          {
+            "id": "i_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: give Potion a drink() and a isStrong().",
+            "harness": "public void run() {\n  Potion p = new Potion(\"Elixir\", 60);\n  System.out.println(p.isStrong());\n  p.drink();\n  System.out.println(p.isStrong());\n}",
+            "code": "// class Potion: private name and healing, a constructor,\n// drink() halves healing, isStrong() returns healing > 50\n",
+            "target": "true\nfalse",
+            "solution": "class Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public void drink() {\n    healing = healing / 2;\n  }\n\n  public boolean isStrong() {\n    return healing > 50;\n  }\n}",
+            "hint": "drink() sets healing = healing / 2. isStrong() returns healing > 50. Neither takes a parameter.",
+            "after": "60 is strong; after drinking it is 30, which is not. One object, changing state.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "4.6",
+      "title": "Getter and Setter Methods",
+      "objectives": [
+        "write a getter that hands a private field out",
+        "write a setter that controls what goes in"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "g_task",
+            "kind": "teach",
+            "instruction": "The fields are private. The client cannot read them.",
+            "points": [
+              {
+                "label": "private int value;",
+                "text": "Only Treasure can touch it. That is what private means."
+              },
+              {
+                "label": "crown.value",
+                "text": "Will not compile from run(). The client is locked out."
+              },
+              {
+                "label": "but it needs the number",
+                "text": "To add up a haul, or compare two treasures."
+              },
+              {
+                "label": "the way in",
+                "text": "A method inside the class that hands the value out. That is all a getter is."
+              }
+            ]
+          },
+          {
+            "id": "g_get",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A getter returns a private field.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getName());\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
+            "output": "Crown\n120",
+            "highlight": [
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "public int getValue()",
+                "text": "public so the client can call it; int because that is what it hands back."
+              },
+              {
+                "label": "return value;",
+                "text": "The whole body. A getter does nothing else."
+              },
+              {
+                "label": "the name",
+                "text": "getSomething is a convention, not a rule. Everyone follows it, so follow it."
+              },
+              {
+                "label": "read-only",
+                "text": "The client can now SEE value but still cannot change it."
+              }
+            ]
+          },
+          {
+            "id": "g_set",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A setter controls what is allowed in.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  crown.setValue(200);\n  System.out.println(crown.getValue());\n  crown.setValue(-50);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
+            "output": "200\n200",
+            "highlight": [
+              2,
+              4
+            ],
+            "points": [
+              {
+                "label": "setValue(200)",
+                "text": "Accepted. value becomes 200."
+              },
+              {
+                "label": "setValue(-50)",
+                "text": "Refused. A treasure cannot be worth minus fifty, so the setter ignores it."
+              },
+              {
+                "label": "still 200",
+                "text": "The second print proves the bad value never got in."
+              },
+              {
+                "label": "if (newValue >= 0)",
+                "text": "This is the whole point of a setter. A public field could not have refused."
+              }
+            ]
+          },
+          {
+            "id": "g_cmp",
+            "kind": "compare",
+            "instruction": "A public field cannot say no.",
+            "sides": [
+              {
+                "label": "public field",
+                "code": "public void run() {\n  Loot l = new Loot();\n  l.value = -50;\n  System.out.println(l.value);\n}\n\nclass Loot {\n  public int value = 100;\n}",
+                "output": "-50"
+              },
+              {
+                "label": "private + setter",
+                "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 100);\n  crown.setValue(-50);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
+                "output": "100"
+              }
+            ],
+            "points": [
+              {
+                "label": "public field",
+                "text": "Anyone can put anything in it, including nonsense."
+              },
+              {
+                "label": "private + setter",
+                "text": "The class decides what counts as a legal value, and keeps deciding forever."
+              }
+            ],
+            "skills": [
+              "write a setter that controls what goes in"
+            ]
+          },
+          {
+            "id": "g_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "public int getValue() { return value; }\npublic void setValue(int v) { value = v; }",
+            "questions": [
+              {
+                "prompt": "What is the difference between a getter and a setter?",
+                "opts": [
+                  "A getter returns a field; a setter changes one",
+                  "A getter is private; a setter is public",
+                  "A getter is faster",
+                  "There is none"
+                ],
+                "correct": 0,
+                "why": "Getter reads and returns. Setter takes a value in and writes it. Hence the return type on one and the parameter on the other."
+              },
+              {
+                "prompt": "Why keep fields private and use methods instead?",
+                "opts": [
+                  "The class can then control what values are allowed",
+                  "It runs faster",
+                  "Java requires it",
+                  "It saves memory"
+                ],
+                "correct": 0,
+                "why": "A public field accepts anything. A setter can check first, and can keep checking as the rules change."
+              }
+            ],
+            "skills": [
+              "write a getter that hands a private field out"
+            ]
+          },
+          {
+            "id": "g_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Complete the getter.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public ⟦1⟧ getValue() {\n    ⟦2⟧ value;\n  }\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "int",
+                  "void",
+                  "String"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "return",
+                  "print",
+                  "get"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "120",
+            "hint": "It hands back the number, so the type is int and the keyword is return.",
+            "after": "A getter is a return type, a name, and one return line.",
+            "skills": [
+              "write a getter that hands a private field out"
+            ]
+          },
+          {
+            "id": "g_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: getters and a guarded setter for Potion.",
+            "harness": "public void run() {\n  Potion p = new Potion(\"Elixir\", 60);\n  System.out.println(p.getName());\n  p.setHealing(80);\n  System.out.println(p.getHealing());\n  p.setHealing(-10);\n  System.out.println(p.getHealing());\n}",
+            "code": "// class Potion: private name and healing, a constructor,\n// getName(), getHealing(), and setHealing() that ignores negatives\n",
+            "target": "Elixir\n80\n80",
+            "solution": "class Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getHealing() {\n    return healing;\n  }\n\n  public void setHealing(int newHealing) {\n    if (newHealing >= 0) {\n      healing = newHealing;\n    }\n  }\n}",
+            "hint": "Two getters returning the fields, and setHealing wrapping the assignment in if (newHealing >= 0).",
+            "after": "The -10 was refused, so it still prints 80. That refusal is the reason setters exist.",
+            "skills": [
+              "write a setter that controls what goes in"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "4.7",
+      "title": "Class Methods and Class Variables",
+      "objectives": [
+        "tell a class member apart from an instance member",
+        "write a static variable and a static method"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "s_task",
+            "kind": "teach",
+            "instruction": "How many treasures have been made? No single treasure knows.",
+            "points": [
+              {
+                "label": "each object knows itself",
+                "text": "The crown knows it is a crown. It has no idea the ring exists."
+              },
+              {
+                "label": "the count",
+                "text": "Belongs to all of them at once, or to none of them. It is a fact about the CLASS."
+              },
+              {
+                "label": "static",
+                "text": "The word for \"belongs to the class, not to any one object\"."
+              }
+            ]
+          },
+          {
+            "id": "s_var",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A static variable is shared by every object.",
+            "code": "public void run() {\n  new Treasure(\"Crown\");\n  new Treasure(\"Ring\");\n  new Treasure(\"Cup\");\n  System.out.println(Treasure.getCount());\n}\n\nclass Treasure {\n  private static int count = 0;\n  private String name;\n\n  public Treasure(String name) {\n    this.name = name;\n    count = count + 1;\n  }\n\n  public static int getCount() {\n    return count;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "output": "3",
+            "highlight": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "points": [
+              {
+                "label": "private static int count = 0;",
+                "text": "ONE count for the whole class, not one per object."
+              },
+              {
+                "label": "count = count + 1;",
+                "text": "In the constructor, so it rises every time any Treasure is built."
+              },
+              {
+                "label": "Treasure.getCount()",
+                "text": "Called on the CLASS NAME, not on an object. There is no single object that owns it."
+              },
+              {
+                "label": "3",
+                "text": "Three objects were built, and none of them individually knows that."
+              }
+            ]
+          },
+          {
+            "id": "s_table",
+            "kind": "table",
+            "instruction": "Which name goes in front?",
+            "columns": [
+              "member",
+              "called on"
+            ],
+            "fillFrom": 1,
+            "chips": [
+              "the class",
+              "an object"
+            ],
+            "rows": [
+              [
+                "static int getCount()",
+                "the class"
+              ],
+              [
+                "String getName()",
+                "an object"
+              ],
+              [
+                "static int count",
+                "the class"
+              ],
+              [
+                "String name",
+                "an object"
+              ]
+            ],
+            "why": "static means it belongs to the class, so you write Treasure.getCount(). Everything else belongs to one object, so you write crown.getName().",
+            "skills": [
+              "tell a class member apart from an instance member"
+            ]
+          },
+          {
+            "id": "s_known",
+            "kind": "teach",
+            "instruction": "You have been calling class methods since 3.1.",
+            "points": [
+              {
+                "label": "Math.max(3, 7)",
+                "text": "Called on the class Math. There is no Math object anywhere."
+              },
+              {
+                "label": "Integer.parseInt(\"42\")",
+                "text": "Same shape. The class does the work."
+              },
+              {
+                "label": "Character.isDigit(c)",
+                "text": "From 4.6. You used a class method without noticing."
+              },
+              {
+                "label": "the pattern",
+                "text": "ClassName.method() means static. object.method() means instance."
+              }
+            ]
+          },
+          {
+            "id": "s_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Two objects, one shared counter. What prints?",
+            "code": "public void run() {\n  Treasure a = new Treasure(\"Crown\");\n  System.out.println(Treasure.getCount());\n  Treasure b = new Treasure(\"Ring\");\n  System.out.println(Treasure.getCount());\n}\n\nclass Treasure {\n  private static int count = 0;\n  private String name;\n\n  public Treasure(String name) {\n    this.name = name;\n    count = count + 1;\n  }\n\n  public static int getCount() {\n    return count;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "opts": [
+              "1\n2",
+              "1\n1",
+              "2\n2",
+              "0\n0"
+            ],
+            "correct": 0,
+            "why": "The counter is not reset per object. Building the second Treasure raises the same shared count from 1 to 2.",
+            "skills": [
+              "write a static variable and a static method"
+            ]
+          },
+          {
+            "id": "s_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "private static int count = 0;\npublic static int getCount() { return count; }",
+            "questions": [
+              {
+                "prompt": "What does static mean?",
+                "opts": [
+                  "It belongs to the class, not to any one object",
+                  "It cannot be changed",
+                  "It is private",
+                  "It runs first"
+                ],
+                "correct": 0,
+                "why": "One copy shared by everything, reached through the class name."
+              },
+              {
+                "prompt": "When is a class variable the right choice?",
+                "opts": [
+                  "When the value is about all objects at once, like a count",
+                  "Always",
+                  "When the value is private",
+                  "When there is only one object"
+                ],
+                "correct": 0,
+                "why": "A count of how many exist cannot belong to any single one of them."
+              }
+            ],
+            "skills": [
+              "tell a class member apart from an instance member"
+            ]
+          },
+          {
+            "id": "s_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: count how many Potions get brewed.",
+            "harness": "public void run() {\n  new Potion(\"Small\");\n  new Potion(\"Large\");\n  System.out.println(Potion.getBrewed());\n}",
+            "code": "// class Potion: a private static count, a constructor that raises it,\n// and a public static getBrewed() returning it\n",
+            "target": "2",
+            "solution": "class Potion {\n  private static int brewed = 0;\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n    brewed = brewed + 1;\n  }\n\n  public static int getBrewed() {\n    return brewed;\n  }\n}",
+            "hint": "private static int brewed = 0; raise it in the constructor; public static int getBrewed() returns it.",
+            "after": "Called as Potion.getBrewed() - on the class, because no single potion owns the total.",
+            "skills": [
+              "write a static variable and a static method"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "4.8",
+      "title": "Wrapper Classes",
+      "objectives": [
+        "tell a primitive apart from its wrapper class",
+        "use Integer and Double class methods"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "n_task",
+            "kind": "teach",
+            "instruction": "int is not an object. Sometimes that is a problem.",
+            "points": [
+              {
+                "label": "int hp = 20;",
+                "text": "A primitive. It holds a number and nothing else - no methods, no dot."
+              },
+              {
+                "label": "hp.something()",
+                "text": "Will not compile. There is nothing to reach into."
+              },
+              {
+                "label": "Integer",
+                "text": "The object version of int. Same number, but it is a real object with methods."
+              },
+              {
+                "label": "why it exists",
+                "text": "Some parts of Java only accept objects. You will meet one in the next unit."
+              }
+            ]
+          },
+          {
+            "id": "n_make",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Integer and Double wrap a primitive in an object.",
+            "code": "public void run() {\n  int plain = 20;\n  Integer wrapped = 20;\n  Double dw = 2.5;\n  System.out.println(plain);\n  System.out.println(wrapped);\n  System.out.println(dw);\n}",
+            "output": "20\n20\n2.5",
+            "highlight": [
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "Integer wrapped = 20;",
+                "text": "Capital I. Java boxes the 20 into an Integer object automatically."
+              },
+              {
+                "label": "Double dw = 2.5;",
+                "text": "Capital D, for doubles. Same idea."
+              },
+              {
+                "label": "they print the same",
+                "text": "20 either way. The difference is what you can DO with it, not what it shows."
+              },
+              {
+                "label": "capital letters",
+                "text": "int and double are primitives; Integer and Double are classes. The capital is the tell."
+              }
+            ]
+          },
+          {
+            "id": "n_cmp",
+            "kind": "compare",
+            "instruction": "The same number, with and without methods.",
+            "sides": [
+              {
+                "label": "int - a value",
+                "code": "public void run() {\n  int n = 20;\n  System.out.println(n + 5);\n}",
+                "output": "25"
+              },
+              {
+                "label": "Integer - an object",
+                "code": "public void run() {\n  Integer n = 20;\n  System.out.println(n + 5);\n  System.out.println(n.equals(20));\n  System.out.println(Integer.MAX_VALUE);\n}",
+                "output": "25\ntrue\n2147483647"
+              }
+            ],
+            "points": [
+              {
+                "label": "int - a value",
+                "text": "Arithmetic works, and that is all it can do."
+              },
+              {
+                "label": "Integer - an object",
+                "text": "Arithmetic still works, AND it has methods like .equals(), plus class constants like MAX_VALUE."
+              }
+            ],
+            "skills": [
+              "tell a primitive apart from its wrapper class"
+            ]
+          },
+          {
+            "id": "n_meth",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The wrapper classes carry useful class methods.",
+            "code": "public void run() {\n  System.out.println(Integer.parseInt(\"42\") + 1);\n  System.out.println(Double.parseDouble(\"2.5\") * 2);\n  System.out.println(Integer.MAX_VALUE);\n}",
+            "output": "43\n5.0\n2147483647",
+            "points": [
+              {
+                "label": "Integer.parseInt(\"42\")",
+                "text": "Turns the TEXT \"42\" into the number 42, so + 1 gives 43 rather than \"421\"."
+              },
+              {
+                "label": "Double.parseDouble(\"2.5\")",
+                "text": "The same for decimals."
+              },
+              {
+                "label": "Integer.MAX_VALUE",
+                "text": "The largest int Java can hold. This is the integer overflow from 3.4, given a name."
+              },
+              {
+                "label": "called on the class",
+                "text": "Integer.parseInt, not someInteger.parseInt - these are static, from 5.7."
+              }
+            ]
+          },
+          {
+            "id": "n_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  System.out.println(Integer.parseInt(\"7\") + Integer.parseInt(\"3\"));\n  System.out.println(\"7\" + \"3\");\n}",
+            "opts": [
+              "10\n73",
+              "73\n73",
+              "10\n10",
+              "(an error)"
+            ],
+            "correct": 0,
+            "why": "parseInt turns the text into real numbers, so + adds them to 10. Left as Strings, + glues them into \"73\".",
+            "skills": [
+              "use Integer and Double class methods"
+            ]
+          },
+          {
+            "id": "n_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "Integer wrapped = 20;\nint plain = 20;",
+            "questions": [
+              {
+                "prompt": "What is the difference between int and Integer?",
+                "opts": [
+                  "int is a primitive value; Integer is an object with methods",
+                  "Integer holds bigger numbers",
+                  "int is faster to type",
+                  "There is none"
+                ],
+                "correct": 0,
+                "why": "They hold the same number. Integer is a class, so it has methods and can go where an object is required."
+              },
+              {
+                "prompt": "What does Integer.parseInt(\"42\") give you?",
+                "opts": [
+                  "the int 42",
+                  "the String \"42\"",
+                  "an error",
+                  "42.0"
+                ],
+                "correct": 0,
+                "why": "It converts text to a number, which is what lets you do arithmetic with it."
+              }
+            ],
+            "skills": [
+              "tell a primitive apart from its wrapper class"
+            ]
+          },
+          {
+            "id": "n_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: add two numbers that arrived as text.",
+            "code": "public void run() {\n  String a = \"18\";\n  String b = \"24\";\n  // print their sum as a number, not glued together\n}",
+            "target": "42",
+            "solution": "public void run() {\n  String a = \"18\";\n  String b = \"24\";\n  System.out.println(Integer.parseInt(a) + Integer.parseInt(b));\n}",
+            "hint": "Integer.parseInt on each one before adding, or you will print 1824.",
+            "after": "1824 is what you get without parseInt. Converting first is the whole job.",
+            "skills": [
+              "use Integer and Double class methods"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
