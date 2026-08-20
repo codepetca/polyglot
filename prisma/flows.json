@@ -555,31 +555,6 @@
             ]
           },
           {
-            "id": "v_sharp",
-            "kind": "teach",
-            "instruction": "Four parts, one order: type, name, =, value.",
-            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nboolean online = true;\nSystem.out.println(name + \" \" + level + \" \" + health + \" \" + rank + \" \" + online);",
-            "output": "Ada 7 2.5 A true",
-            "points": [
-              {
-                "label": "four parts",
-                "text": "Every declaration is: TYPE, NAME, =, VALUE. In that order, ending in a semicolon."
-              },
-              {
-                "label": "declare once",
-                "text": "The type appears only the first time. After that, just name = value."
-              },
-              {
-                "label": "capitals matter",
-                "text": "level and Level are two different boxes. Java will not guess what you meant."
-              },
-              {
-                "label": "quotes decide the type",
-                "text": "\"A\" is a String. 'A' is a char. A is a variable name. Same letter, three meanings."
-              }
-            ]
-          },
-          {
             "id": "v_bucket",
             "kind": "bucket",
             "instruction": "Which type holds each value?",
@@ -619,6 +594,31 @@
             "why": "Whole number → int. Decimal → double. One character in single quotes → char. Text in double quotes → String. true/false → boolean.",
             "skills": [
               "choose between int, double, char, boolean and String for a given value"
+            ]
+          },
+          {
+            "id": "v_sharp",
+            "kind": "teach",
+            "instruction": "Four parts, one order: type, name, =, value.",
+            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nboolean online = true;\nSystem.out.println(name + \" \" + level + \" \" + health + \" \" + rank + \" \" + online);",
+            "output": "Ada 7 2.5 A true",
+            "points": [
+              {
+                "label": "four parts",
+                "text": "Every declaration is: TYPE, NAME, =, VALUE. In that order, ending in a semicolon."
+              },
+              {
+                "label": "declare once",
+                "text": "The type appears only the first time. After that, just name = value."
+              },
+              {
+                "label": "capitals matter",
+                "text": "level and Level are two different boxes. Java will not guess what you meant."
+              },
+              {
+                "label": "quotes decide the type",
+                "text": "\"A\" is a String. 'A' is a char. A is a variable name. Same letter, three meanings."
+              }
             ]
           },
           {
@@ -3122,8 +3122,8 @@
                 "text": "The same line prints until something kills the program. No output is shown here because there is no end to show."
               },
               {
-                "label": "the rule",
-                "text": "Something inside the loop must move the condition towards false."
+                "label": "bossHp = bossHp - 7",
+                "text": "Put that line back and the loop ends. Something inside must move the condition towards false."
               }
             ]
           },
@@ -3966,7 +3966,7 @@
                 "text": "Once one side is true the answer is true, so Java stops and 100 / hits never runs."
               },
               {
-                "label": "mirror image",
+                "label": "&& vs ||",
                 "text": "&& gives up on the first false. || gives up on the first true."
               }
             ]
@@ -4044,8 +4044,8 @@
                 "text": "Crashes when hits is 0. The division runs before anything checks it."
               },
               {
-                "label": "so",
-                "text": "With short-circuiting, the order of your conditions decides whether the program works."
+                "label": "(hits != 0) first",
+                "text": "Which side you put first decides whether the program works."
               }
             ]
           },
@@ -4184,8 +4184,8 @@
                 "text": "The ! moves onto each part, and the && flips to ||."
               },
               {
-                "label": "in English",
-                "text": "\"Not both\" is the same as \"at least one is missing\"."
+                "label": "\"not both\"",
+                "text": "is the same as \"at least one is missing\"."
               },
               {
                 "label": "true",
@@ -4262,8 +4262,8 @@
                 "text": "Same recipe: ! onto each part, and this time || flips to &&."
               },
               {
-                "label": "in English",
-                "text": "\"Neither\" is the same as \"not this AND not that\"."
+                "label": "\"neither\"",
+                "text": "is the same as \"not this AND not that\"."
               },
               {
                 "label": "both laws",
@@ -4356,8 +4356,8 @@
                 "text": "&& turns into ||, and || turns into &&. Forgetting this is the whole mistake."
               },
               {
-                "label": "why bother",
-                "text": "!(a && b) is a double negative to read. The flipped form usually says what you mean."
+                "label": "!(a && b)",
+                "text": "A double negative to read. The flipped form usually says what you mean."
               }
             ]
           },
@@ -4457,7 +4457,7 @@
                 "text": "readLine gives a String, and if acts on true or false. Both already yours."
               },
               {
-                "label": "the catch",
+                "label": "==",
                 "text": "Comparing two Strings with == does not do what you expect. That is this lesson."
               }
             ]
@@ -5226,8 +5226,8 @@
                 "text": "The method puts 12 on the screen and that is all it does."
               },
               {
-                "label": "the problem",
-                "text": "run() never receives the 12. It cannot add it to anything or compare it."
+                "label": "run() never sees the 12",
+                "text": "It cannot add it to anything or compare it."
               },
               {
                 "label": "what we want",
@@ -5877,7 +5877,7 @@
                 "text": "Position 0, then 1, then 2... which is a counter going up. You have written that loop already."
               },
               {
-                "label": "the pair",
+                "label": "length() and charAt(i)",
                 "text": "length() says where to stop, charAt(i) fetches each one."
               }
             ]
@@ -6174,8 +6174,8 @@
                 "text": "The crash stops everything from that point."
               },
               {
-                "label": "the fix",
-                "text": "Guard it with hits != 0 && - short-circuiting, from 3.13."
+                "label": "hits != 0 &&",
+                "text": "Guard it with short-circuiting, from 3.13."
               }
             ]
           },
@@ -6290,8 +6290,8 @@
                 "text": "It compiled, it ran, it printed a number. Nothing warned you."
               },
               {
-                "label": "the fix",
-                "text": "Brackets: (x + y) / 2."
+                "label": "(x + y) / 2",
+                "text": "Brackets force the addition to happen first."
               }
             ]
           },
