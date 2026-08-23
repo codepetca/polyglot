@@ -10574,6 +10574,24 @@
             ]
           },
           {
+            "id": "d_peekq",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "One variable, three values. What prints?",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  System.out.println(hp.length);\n  System.out.println(hp[0]);\n}",
+            "opts": [
+              "3\n20",
+              "3\n0",
+              "2\n20",
+              "20\n3"
+            ],
+            "correct": 0,
+            "why": "length is how many it holds - 3. Positions start at 0, so hp[0] is the first one, 20. Neither of those questions could even be asked of hp1, hp2, hp3.",
+            "skills": [
+              "name the four data structures and what each is for"
+            ]
+          },
+          {
             "id": "d_write",
             "kind": "write",
             "wrap": "methods",
@@ -10993,6 +11011,24 @@
             "target": "30",
             "hint": "The last valid index is length - 1, so the loop must stop BEFORE length.",
             "after": "<= would try a[3] and throw ArrayIndexOutOfBoundsException.",
+            "skills": [
+              "traverse an array with a for loop"
+            ]
+          },
+          {
+            "id": "u_aliasq",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "a is never assigned to after line 2. What prints?",
+            "code": "public void run() {\n  int[] a = {1, 2, 3};\n  int[] b = a;\n  b[0] = 99;\n  System.out.println(a[0]);\n}",
+            "opts": [
+              "1",
+              "99",
+              "0",
+              "An error"
+            ],
+            "correct": 1,
+            "why": "int[] b = a does not copy anything. Both names refer to the SAME array, so writing through b is writing through a. To get a real copy you have to make a new array and move the values across yourself.",
             "skills": [
               "traverse an array with a for loop"
             ]
@@ -12360,6 +12396,20 @@
             ]
           },
           {
+            "id": "g_swap",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "This wants the 6, and asks for it backwards.",
+            "code": "public void run() {\n  int[][] g = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  System.out.println(g[2][1]);\n}",
+            "target": "6",
+            "solution": "public void run() {\n  int[][] g = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  System.out.println(g[1][2]);\n}",
+            "hint": "The 6 is in the second row, third column. Which number does Java want first?",
+            "after": "Row first, then column. There is no row 2 here - only rows 0 and 1 - so the backwards version asks for a row that does not exist and crashes.",
+            "skills": [
+              "make a 2D array and read it by row and column"
+            ]
+          },
+          {
             "id": "g_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -12598,6 +12648,20 @@
             ]
           },
           {
+            "id": "n_place",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Every number lands on its own line. It should be one line per row.",
+            "code": "public void run() {\n  int[][] grid = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  for (int r = 0; r < grid.length; r++) {\n    for (int c = 0; c < grid[r].length; c++) {\n      System.out.print(grid[r][c]);\n      System.out.println();\n    }\n  }\n}",
+            "target": "123\n456",
+            "solution": "public void run() {\n  int[][] grid = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  for (int r = 0; r < grid.length; r++) {\n    for (int c = 0; c < grid[r].length; c++) {\n      System.out.print(grid[r][c]);\n    }\n    System.out.println();\n  }\n}",
+            "hint": "Ending the line is something you do once per ROW, not once per square.",
+            "after": "Inside the inner loop it runs six times. Between the two loops it runs twice - once as each row finishes. Which loop a statement sits in decides how often it happens.",
+            "skills": [
+              "traverse a 2D array with nested loops"
+            ]
+          },
+          {
             "id": "n_write",
             "kind": "write",
             "wrap": "methods",
@@ -12814,6 +12878,20 @@
             "after": "get would return null on the first \"red\", and null + 1 crashes. getOrDefault starts it at 0.",
             "skills": [
               "store and look up pairs in a HashMap"
+            ]
+          },
+          {
+            "id": "h_unbox",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Ben is not in the map. This compiles and then dies.",
+            "code": "public void run() {\n  HashMap<String, Integer> scores = new HashMap<String, Integer>();\n  scores.put(\"Ana\", 90);\n  int score = scores.get(\"Ben\");\n  System.out.println(score);\n}",
+            "target": "0",
+            "solution": "public void run() {\n  HashMap<String, Integer> scores = new HashMap<String, Integer>();\n  scores.put(\"Ana\", 90);\n  int score = scores.getOrDefault(\"Ben\", 0);\n  System.out.println(score);\n}",
+            "hint": "get hands back nothing at all for a missing key, and an int has no way to hold nothing.",
+            "after": "Unpacking that into an int is what crashes - the map itself was fine. getOrDefault supplies a real number instead, so there is always something to unpack.",
+            "skills": [
+              "handle a key that is not present"
             ]
           },
           {
@@ -13253,6 +13331,41 @@
                 "why": "That is exactly the combination re-identification attacks use."
               }
             ],
+            "skills": [
+              "judge whether a data practice needs consent"
+            ]
+          },
+          {
+            "id": "e_min",
+            "kind": "bucket",
+            "instruction": "The step counter shows steps per day, and nothing else. Which fields does it need to KEEP?",
+            "buckets": [
+              "Needs to keep",
+              "Does not need to keep"
+            ],
+            "items": [
+              {
+                "text": "How many steps you took each day",
+                "bucket": 0
+              },
+              {
+                "text": "Which account the steps belong to",
+                "bucket": 0
+              },
+              {
+                "text": "Your exact GPS path for every walk",
+                "bucket": 1
+              },
+              {
+                "text": "The wifi networks your phone saw on the way",
+                "bucket": 1
+              },
+              {
+                "text": "The time of every single step, kept for two years",
+                "bucket": 1
+              }
+            ],
+            "why": "Distance can be measured and then thrown away - the daily total is what the feature shows. Data minimisation is this exact question asked field by field, and what you never keep cannot leak.",
             "skills": [
               "judge whether a data practice needs consent"
             ]
