@@ -10962,6 +10962,1000 @@
           }
         ]
       }
+    },
+    {
+      "code": "5.6",
+      "title": "Arrays vs ArrayLists",
+      "objectives": [
+        "choose between an array and an ArrayList",
+        "say how an ArrayList is built on an array"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "c_task",
+            "kind": "teach",
+            "instruction": "Two collections. The party roster, and the loot bag.",
+            "points": [
+              {
+                "label": "the party",
+                "text": "Four heroes, decided at the start and never changing. An array fits."
+              },
+              {
+                "label": "the loot bag",
+                "text": "Empty at first, grows all game, and things get dropped. An ArrayList fits."
+              },
+              {
+                "label": "the question",
+                "text": "Not which is better. Which matches what the data does."
+              }
+            ]
+          },
+          {
+            "id": "c_cmp",
+            "kind": "compare",
+            "instruction": "The same three items, both ways.",
+            "sides": [
+              {
+                "label": "array",
+                "code": "public void run() {\n  String[] party = {\"Ada\", \"Grace\", \"Alan\"};\n  System.out.println(party[1]);\n  System.out.println(party.length);\n  party[1] = \"Barbara\";\n  System.out.println(party[1]);\n}",
+                "output": "Grace\n3\nBarbara"
+              },
+              {
+                "label": "ArrayList",
+                "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  loot.add(\"Cup\");\n  System.out.println(loot.get(1));\n  System.out.println(loot.size());\n  loot.set(1, \"Tiara\");\n  System.out.println(loot.get(1));\n}",
+                "output": "Ring\n3\nTiara"
+              }
+            ],
+            "points": [
+              {
+                "label": "array",
+                "text": "Square brackets, .length, and a size fixed forever at creation."
+              },
+              {
+                "label": "ArrayList",
+                "text": "get/set/size, and add and remove change the size as you go."
+              }
+            ],
+            "skills": [
+              "choose between an array and an ArrayList"
+            ]
+          },
+          {
+            "id": "c_table",
+            "kind": "table",
+            "instruction": "Which one can do it?",
+            "columns": [
+              "can it...",
+              "array",
+              "ArrayList"
+            ],
+            "fillFrom": 1,
+            "chips": [
+              "yes",
+              "no"
+            ],
+            "rows": [
+              [
+                "change size after creation",
+                "no",
+                "yes"
+              ],
+              [
+                "hold primitives like int directly",
+                "yes",
+                "no"
+              ],
+              [
+                "use square brackets",
+                "yes",
+                "no"
+              ],
+              [
+                "be written as a literal {1, 2, 3}",
+                "yes",
+                "no"
+              ]
+            ],
+            "why": "An array is a fixed block with bracket syntax and can hold int directly. An ArrayList grows, uses methods, and stores objects — an int goes in as an Integer, from 5.8.",
+            "skills": [
+              "choose between an array and an ArrayList"
+            ]
+          },
+          {
+            "id": "c_built",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "An ArrayList is an array underneath.",
+            "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  System.out.println(loot.size());\n}",
+            "output": "2",
+            "points": [
+              {
+                "label": "an array plus a count",
+                "text": "It keeps an ordinary array, plus a count of how many slots are actually used."
+              },
+              {
+                "label": "add",
+                "text": "Writes into the next free slot and raises the count."
+              },
+              {
+                "label": "running out",
+                "text": "When the array is full it makes a BIGGER one and copies everything across. That is how it \"grows\"."
+              }
+            ]
+          },
+          {
+            "id": "c_int",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "An ArrayList cannot hold int. It holds Integer.",
+            "code": "public void run() {\n  ArrayList<Integer> scores = new ArrayList<Integer>();\n  scores.add(10);\n  scores.add(20);\n  int first = scores.get(0);\n  System.out.println(first + scores.get(1));\n}",
+            "output": "30",
+            "highlight": [
+              1
+            ],
+            "points": [
+              {
+                "label": "ArrayList<Integer>",
+                "text": "Capital I. ArrayList<int> will not compile - it stores objects only."
+              },
+              {
+                "label": "scores.add(10)",
+                "text": "Java boxes the 10 into an Integer for you, from 5.8."
+              },
+              {
+                "label": "int first = scores.get(0)",
+                "text": "And unboxes it back on the way out."
+              },
+              {
+                "label": "int[] scores",
+                "text": "An array holds the ints directly, with no boxing at all."
+              }
+            ]
+          },
+          {
+            "id": "c_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "int[] a = new int[3];\nArrayList<Integer> b = new ArrayList<Integer>();",
+            "questions": [
+              {
+                "prompt": "When should you choose an array over an ArrayList?",
+                "opts": [
+                  "When the number of items is known and fixed",
+                  "Always",
+                  "When storing text",
+                  "When looping"
+                ],
+                "correct": 0,
+                "why": "A fixed count means an array is simpler and cheaper. An unknown or changing count means an ArrayList."
+              },
+              {
+                "prompt": "Why can an ArrayList not hold int directly?",
+                "opts": [
+                  "It stores objects, so ints are boxed into Integer",
+                  "Ints are too big",
+                  "It can",
+                  "Only arrays hold numbers"
+                ],
+                "correct": 0,
+                "why": "ArrayList<int> does not compile. ArrayList<Integer> does, and Java boxes and unboxes automatically."
+              }
+            ],
+            "skills": [
+              "say how an ArrayList is built on an array"
+            ]
+          },
+          {
+            "id": "c_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: pick the right one and total it.",
+            "code": "public void run() {\n  // the party never changes: Ada, Grace, Alan\n  // print how many there are, then the second one\n}",
+            "target": "3\nGrace",
+            "solution": "public void run() {\n  String[] party = {\"Ada\", \"Grace\", \"Alan\"};\n  System.out.println(party.length);\n  System.out.println(party[1]);\n}",
+            "hint": "The count is fixed and known, so an array literal is the simpler fit.",
+            "after": "A fixed roster is exactly what an array is for. Reaching for an ArrayList here buys nothing.",
+            "skills": [
+              "choose between an array and an ArrayList"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.7",
+      "title": "Additional Loop Examples",
+      "objectives": [
+        "traverse an ArrayList with an indexed loop",
+        "remove items safely while looping"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "t_task",
+            "kind": "teach",
+            "instruction": "Drop every fallen member from the party list.",
+            "points": [
+              {
+                "label": "the list",
+                "text": "An ArrayList of hp values, some of them 0."
+              },
+              {
+                "label": "the job",
+                "text": "Remove every 0, leaving the survivors."
+              },
+              {
+                "label": "removing while looping",
+                "text": "Removing while looping forwards skips items, and this is where it bites."
+              }
+            ]
+          },
+          {
+            "id": "t_index",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The indexed loop over a list uses size() and get().",
+            "code": "public void run() {\n  ArrayList<Integer> hp = new ArrayList<Integer>();\n  hp.add(20);\n  hp.add(0);\n  hp.add(8);\n  for (int i = 0; i < hp.size(); i++) {\n    System.out.println(hp.get(i));\n  }\n}",
+            "output": "20\n0\n8",
+            "highlight": [
+              5,
+              6
+            ],
+            "points": [
+              {
+                "label": "i < hp.size()",
+                "text": "size() where an array used .length."
+              },
+              {
+                "label": "hp.get(i)",
+                "text": "get(i) where an array used [i]."
+              },
+              {
+                "label": "same shape",
+                "text": "The loop from 3.9 is unchanged. Only the two spellings differ."
+              },
+              {
+                "label": "when you need it",
+                "text": "The enhanced for is nicer for reading, but it gives no index and cannot remove."
+              }
+            ]
+          },
+          {
+            "id": "t_trap",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Removing forwards skips the next item.",
+            "code": "public void run() {\n  ArrayList<Integer> hp = new ArrayList<Integer>();\n  hp.add(0);\n  hp.add(0);\n  hp.add(8);\n  for (int i = 0; i < hp.size(); i++) {\n    if (hp.get(i) == 0) {\n      hp.remove(i);\n    }\n  }\n  System.out.println(hp.size());\n  System.out.println(hp.get(0));\n}",
+            "output": "2\n0",
+            "highlight": [
+              7
+            ],
+            "points": [
+              {
+                "label": "two zeros in a row",
+                "text": "Removing index 0 shifts the second zero DOWN into index 0."
+              },
+              {
+                "label": "i++ then runs",
+                "text": "So i becomes 1, and the zero now sitting at 0 is never looked at."
+              },
+              {
+                "label": "size is 2, not 1",
+                "text": "One zero survived. The loop believed it had checked everything."
+              },
+              {
+                "label": "no error",
+                "text": "This is a logic error from 4.7 - it runs happily and gives the wrong answer."
+              }
+            ]
+          },
+          {
+            "id": "t_fix",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Loop backwards and the shifting stops mattering.",
+            "code": "public void run() {\n  ArrayList<Integer> hp = new ArrayList<Integer>();\n  hp.add(0);\n  hp.add(0);\n  hp.add(8);\n  for (int i = hp.size() - 1; i >= 0; i--) {\n    if (hp.get(i) == 0) {\n      hp.remove(i);\n    }\n  }\n  System.out.println(hp.size());\n  System.out.println(hp.get(0));\n}",
+            "output": "1\n8",
+            "highlight": [
+              5
+            ],
+            "points": [
+              {
+                "label": "i = hp.size() - 1",
+                "text": "Start at the last index and count down."
+              },
+              {
+                "label": "why it works",
+                "text": "Removing shifts only the items AFTER i, and those have already been checked."
+              },
+              {
+                "label": "size is 1",
+                "text": "Both zeros gone. Only the 8 remains."
+              },
+              {
+                "label": "remove backwards",
+                "text": "Removing inside a loop: go backwards."
+              }
+            ]
+          },
+          {
+            "id": "t_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Forwards removal again. What size prints?",
+            "code": "public void run() {\n  ArrayList<String> a = new ArrayList<String>();\n  a.add(\"x\");\n  a.add(\"x\");\n  for (int i = 0; i < a.size(); i++) {\n    a.remove(i);\n  }\n  System.out.println(a.size());\n}",
+            "opts": [
+              "1",
+              "0",
+              "2",
+              "(a crash)"
+            ],
+            "correct": 0,
+            "why": "Removing index 0 shifts the second x down to 0, then i becomes 1 which is no longer less than size 1. One survives.",
+            "skills": [
+              "remove items safely while looping"
+            ]
+          },
+          {
+            "id": "t_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "for (int i = 0; i < list.size(); i++) { }",
+            "questions": [
+              {
+                "prompt": "What replaces .length and [i] when looping an ArrayList?",
+                "opts": [
+                  ".size() and .get(i)",
+                  ".length() and .get(i)",
+                  ".size and [i]",
+                  ".count() and .at(i)"
+                ],
+                "correct": 0,
+                "why": "Arrays use .length and brackets; ArrayLists use size() and get()."
+              },
+              {
+                "prompt": "Why remove items by looping backwards?",
+                "opts": [
+                  "Removing shifts later items down, and those are already checked",
+                  "It is faster",
+                  "Forwards will not compile",
+                  "It uses less memory"
+                ],
+                "correct": 0,
+                "why": "Going forwards, the shift moves an unchecked item into the index you just passed."
+              }
+            ],
+            "skills": [
+              "remove items safely while looping"
+            ]
+          },
+          {
+            "id": "t_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: drop every fallen member and count the survivors.",
+            "code": "public void run() {\n  ArrayList<Integer> hp = new ArrayList<Integer>();\n  hp.add(20);\n  hp.add(0);\n  hp.add(8);\n  hp.add(0);\n  // remove every 0, then print how many are left\n}",
+            "target": "2",
+            "solution": "public void run() {\n  ArrayList<Integer> hp = new ArrayList<Integer>();\n  hp.add(20);\n  hp.add(0);\n  hp.add(8);\n  hp.add(0);\n  for (int i = hp.size() - 1; i >= 0; i--) {\n    if (hp.get(i) == 0) {\n      hp.remove(i);\n    }\n  }\n  System.out.println(hp.size());\n}",
+            "hint": "Start at size() - 1 and count down with i--, removing when the value is 0.",
+            "after": "Forwards would have left one zero behind and printed 3.",
+            "skills": [
+              "remove items safely while looping"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.8",
+      "title": "The List Interface",
+      "objectives": [
+        "declare a variable by the List interface",
+        "accept List as a parameter type"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "l_task",
+            "kind": "teach",
+            "instruction": "A method that prints a list should not care which kind it is.",
+            "points": [
+              {
+                "label": "ArrayList",
+                "text": "One way of being a list. There are others in Java."
+              },
+              {
+                "label": "List",
+                "text": "An interface - the promise from 5.17. It lists add, get, size, remove and the rest."
+              },
+              {
+                "label": "ArrayList implements List",
+                "text": "So every ArrayList already IS a List."
+              }
+            ]
+          },
+          {
+            "id": "l_declare",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Declare by the interface, build with the class.",
+            "code": "public void run() {\n  List<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  System.out.println(loot.size());\n  System.out.println(loot.get(0));\n}",
+            "output": "2\nCrown",
+            "highlight": [
+              1
+            ],
+            "points": [
+              {
+                "label": "List<String> loot",
+                "text": "The variable type is the promise, not the implementation."
+              },
+              {
+                "label": "new ArrayList<String>()",
+                "text": "You still need a real class to build an object. An interface cannot be instantiated."
+              },
+              {
+                "label": "everything else",
+                "text": "add, get and size are unchanged - they are on the interface."
+              },
+              {
+                "label": "swapping implementation",
+                "text": "Swapping to another List implementation later means changing one line, not every line."
+              }
+            ]
+          },
+          {
+            "id": "l_param",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A List parameter accepts any list.",
+            "code": "public void run() {\n  List<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  show(loot);\n}\n\npublic void show(List<String> items) {\n  for (String s : items) {\n    System.out.println(s);\n  }\n}",
+            "output": "Crown\nRing",
+            "highlight": [
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "points": [
+              {
+                "label": "show(List<String> items)",
+                "text": "Takes the interface, so it works with any class that implements List."
+              },
+              {
+                "label": "the same argument as 5.15",
+                "text": "Polymorphism again. There the parent was a class; here it is an interface."
+              },
+              {
+                "label": "ArrayList would work too",
+                "text": "But it would then refuse every other kind of list for no reason."
+              },
+              {
+                "label": "accept the general type",
+                "text": "Accept the most general type that does the job."
+              }
+            ]
+          },
+          {
+            "id": "l_cmp",
+            "kind": "compare",
+            "instruction": "Tied to one class, or open to any list.",
+            "sides": [
+              {
+                "label": "ArrayList parameter",
+                "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  show(loot);\n}\n\npublic void show(ArrayList<String> items) {\n  System.out.println(items.size());\n}",
+                "output": "1"
+              },
+              {
+                "label": "List parameter",
+                "code": "public void run() {\n  List<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  show(loot);\n}\n\npublic void show(List<String> items) {\n  System.out.println(items.size());\n}",
+                "output": "1"
+              }
+            ],
+            "points": [
+              {
+                "label": "ArrayList parameter",
+                "text": "Only ever accepts an ArrayList, even though it uses nothing specific to one."
+              },
+              {
+                "label": "List parameter",
+                "text": "Accepts any List. Identical body, wider reach."
+              }
+            ],
+            "skills": [
+              "accept List as a parameter type"
+            ]
+          },
+          {
+            "id": "l_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "List<String> a = new ArrayList<String>();",
+            "questions": [
+              {
+                "prompt": "Why declare the variable as List rather than ArrayList?",
+                "opts": [
+                  "The code then depends on the promise, not one implementation",
+                  "It is faster",
+                  "ArrayList does not compile",
+                  "It saves memory"
+                ],
+                "correct": 0,
+                "why": "Swapping the implementation later changes only the new on the right of the =."
+              },
+              {
+                "prompt": "Can you write new List<String>()?",
+                "opts": [
+                  "No - an interface cannot be instantiated",
+                  "Yes",
+                  "Only inside a method",
+                  "Only for Strings"
+                ],
+                "correct": 0,
+                "why": "An interface is a list of promised methods with no bodies. Something must implement it."
+              }
+            ],
+            "skills": [
+              "declare a variable by the List interface"
+            ]
+          },
+          {
+            "id": "l_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Declare by the promise, build with the class.",
+            "code": "public void run() {\n  ⟦1⟧<String> loot = new ⟦2⟧<String>();\n  loot.add(\"Crown\");\n  System.out.println(loot.size());\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "List",
+                  "ArrayList",
+                  "Array"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "ArrayList",
+                  "List",
+                  "Array"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "1",
+            "hint": "The interface goes on the left, the real class on the right.",
+            "after": "new List<String>() would not compile. Interfaces have no bodies to run.",
+            "skills": [
+              "declare a variable by the List interface"
+            ]
+          },
+          {
+            "id": "l_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: a method that totals any list of numbers.",
+            "harness": "public void run() {\n  List<Integer> hp = new ArrayList<Integer>();\n  hp.add(20);\n  hp.add(45);\n  hp.add(8);\n  System.out.println(total(hp));\n}",
+            "code": "// write total(List<Integer> nums) returning the sum\n",
+            "target": "73",
+            "solution": "public int total(List<Integer> nums) {\n  int sum = 0;\n  for (int n : nums) {\n    sum = sum + n;\n  }\n  return sum;\n}",
+            "hint": "Take List<Integer>, loop with an enhanced for, add each value to a running total, return it.",
+            "after": "Typed to List, so it would accept any list implementation without a change.",
+            "skills": [
+              "accept List as a parameter type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.9",
+      "title": "2D Arrays (Matrices or Grids)",
+      "objectives": [
+        "make a 2D array and read it by row and column",
+        "find the number of rows and columns"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "g_task",
+            "kind": "teach",
+            "instruction": "The dungeon map is rows AND columns.",
+            "points": [
+              {
+                "label": "a 1D array",
+                "text": "A single row of rooms. Fine for a corridor, useless for a floor plan."
+              },
+              {
+                "label": "a grid",
+                "text": "Needs two numbers to find a square: which row, which column."
+              },
+              {
+                "label": "a 2D array",
+                "text": "An array whose elements are themselves arrays. That is all it is."
+              }
+            ]
+          },
+          {
+            "id": "g_make",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Two sets of brackets, two indexes.",
+            "code": "public void run() {\n  String[][] map = {\n    {\"wall\", \"room\"},\n    {\"room\", \"exit\"}\n  };\n  System.out.println(map[0][1]);\n  System.out.println(map[1][1]);\n}",
+            "output": "room\nexit",
+            "highlight": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "points": [
+              {
+                "label": "String[][]",
+                "text": "Two pairs of brackets: an array of arrays."
+              },
+              {
+                "label": "the inner braces",
+                "text": "Each { } is one row. Two rows here, two columns each."
+              },
+              {
+                "label": "map[0][1]",
+                "text": "Row 0, column 1 - \"room\". Row first, then column, both counting from 0."
+              },
+              {
+                "label": "map[1][1]",
+                "text": "Row 1, column 1 - \"exit\". The bottom right."
+              }
+            ]
+          },
+          {
+            "id": "g_len",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "One length for rows, another for columns.",
+            "code": "public void run() {\n  int[][] grid = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  System.out.println(grid.length);\n  System.out.println(grid[0].length);\n}",
+            "output": "2\n3",
+            "highlight": [
+              5,
+              6
+            ],
+            "points": [
+              {
+                "label": "grid.length",
+                "text": "2 - the number of ROWS, because the outer array holds two inner arrays."
+              },
+              {
+                "label": "grid[0].length",
+                "text": "3 - the number of columns, which is the length of one row."
+              },
+              {
+                "label": "grid[0]",
+                "text": "Is itself an ordinary 1D array. That is why it has its own .length."
+              },
+              {
+                "label": "rows first",
+                "text": "The outer number is always rows. Getting this backwards is the usual bug."
+              }
+            ]
+          },
+          {
+            "id": "g_trace",
+            "kind": "trace",
+            "instruction": "Row first, then column.",
+            "code": "int[][] grid = {\n  {1, 2, 3},\n  {4, 5, 6}\n};",
+            "questions": [
+              {
+                "prompt": "grid[0][0]",
+                "opts": [
+                  "1",
+                  "4",
+                  "2"
+                ],
+                "correct": 0,
+                "why": "First row, first column."
+              },
+              {
+                "prompt": "grid[1][2]",
+                "opts": [
+                  "6",
+                  "3",
+                  "5"
+                ],
+                "correct": 0,
+                "why": "Second row, third column."
+              },
+              {
+                "prompt": "grid.length",
+                "opts": [
+                  "2",
+                  "3",
+                  "6"
+                ],
+                "correct": 0,
+                "why": "Two rows. The columns are grid[0].length, which is 3."
+              }
+            ],
+            "skills": [
+              "find the number of rows and columns"
+            ]
+          },
+          {
+            "id": "g_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  int[][] g = {\n    {1, 2},\n    {3, 4},\n    {5, 6}\n  };\n  System.out.println(g.length + \" \" + g[0].length);\n}",
+            "opts": [
+              "3 2",
+              "2 3",
+              "6 2",
+              "2 6"
+            ],
+            "correct": 0,
+            "why": "Three inner arrays means three rows, and each holds two values, so two columns.",
+            "skills": [
+              "find the number of rows and columns"
+            ]
+          },
+          {
+            "id": "g_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "int[][] grid = new int[4][7];",
+            "questions": [
+              {
+                "prompt": "How many rows and columns does new int[4][7] have?",
+                "opts": [
+                  "4 rows, 7 columns",
+                  "7 rows, 4 columns",
+                  "28 rows",
+                  "4 rows, 4 columns"
+                ],
+                "correct": 0,
+                "why": "The first number is the outer array - the rows. The second is the length of each row."
+              },
+              {
+                "prompt": "What IS a 2D array in Java?",
+                "opts": [
+                  "An array whose elements are arrays",
+                  "A special grid type",
+                  "Two arrays side by side",
+                  "A list of lists"
+                ],
+                "correct": 0,
+                "why": "Which is why grid[0] is itself an array with its own .length."
+              }
+            ],
+            "skills": [
+              "make a 2D array and read it by row and column"
+            ]
+          },
+          {
+            "id": "g_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: build a 2x2 map and read one square.",
+            "code": "public void run() {\n  // make a String[][] with rows {\"wall\",\"room\"} and {\"room\",\"exit\"}\n  // print the bottom-right square, then the number of rows\n}",
+            "target": "exit\n2",
+            "solution": "public void run() {\n  String[][] map = {\n    {\"wall\", \"room\"},\n    {\"room\", \"exit\"}\n  };\n  System.out.println(map[1][1]);\n  System.out.println(map.length);\n}",
+            "hint": "Bottom right is row 1, column 1. Rows are map.length.",
+            "after": "Row then column, both from 0. That order never changes.",
+            "skills": [
+              "make a 2D array and read it by row and column"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.10",
+      "title": "Traversing 2D Arrays",
+      "objectives": [
+        "traverse a 2D array with nested loops",
+        "use nested enhanced for loops on a grid"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "n_task",
+            "kind": "teach",
+            "instruction": "Printing the whole map means visiting every square.",
+            "points": [
+              {
+                "label": "one loop",
+                "text": "Walks one row. It cannot reach the second."
+              },
+              {
+                "label": "a loop inside a loop",
+                "text": "The outer picks a row, the inner walks that row's columns."
+              },
+              {
+                "label": "row 0, then row 1",
+                "text": "Row 0 fully, then row 1 fully. Left to right, top to bottom."
+              }
+            ]
+          },
+          {
+            "id": "n_nest",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Outer loop rows, inner loop columns.",
+            "code": "public void run() {\n  int[][] grid = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  for (int r = 0; r < grid.length; r++) {\n    for (int c = 0; c < grid[r].length; c++) {\n      System.out.print(grid[r][c]);\n    }\n    System.out.println();\n  }\n}",
+            "output": "123\n456",
+            "highlight": [
+              5,
+              6,
+              7,
+              9
+            ],
+            "points": [
+              {
+                "label": "r < grid.length",
+                "text": "The outer loop counts rows: r takes 0 then 1."
+              },
+              {
+                "label": "c < grid[r].length",
+                "text": "The inner counts columns IN THAT ROW. Using grid[r] not grid[0] handles rows of different lengths."
+              },
+              {
+                "label": "grid[r][c]",
+                "text": "Row r, column c. The inner loop runs completely for each single r."
+              },
+              {
+                "label": "println() after",
+                "text": "Outside the inner loop but inside the outer, so it ends each row."
+              }
+            ]
+          },
+          {
+            "id": "n_order",
+            "kind": "teach",
+            "instruction": "The inner loop finishes before the outer moves on.",
+            "points": [
+              {
+                "label": "r = 0",
+                "text": "c runs 0, 1, 2 - printing 1, 2, 3. Then the line ends."
+              },
+              {
+                "label": "r = 1",
+                "text": "c runs 0, 1, 2 again - printing 4, 5, 6."
+              },
+              {
+                "label": "2 x 3 = 6 visits",
+                "text": "2 rows x 3 columns = 6 visits. Nested loops multiply."
+              },
+              {
+                "label": "swapping them",
+                "text": "Looping columns outside and rows inside prints the grid sideways."
+              }
+            ]
+          },
+          {
+            "id": "n_enh",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The enhanced form nests too.",
+            "code": "public void run() {\n  int[][] grid = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  for (int[] row : grid) {\n    for (int n : row) {\n      System.out.print(n);\n    }\n    System.out.println();\n  }\n}",
+            "output": "123\n456",
+            "highlight": [
+              5,
+              6
+            ],
+            "points": [
+              {
+                "label": "for (int[] row : grid)",
+                "text": "Each element of a 2D array IS a 1D array, so the loop variable is int[]."
+              },
+              {
+                "label": "for (int n : row)",
+                "text": "Then an ordinary enhanced for over that row."
+              },
+              {
+                "label": "no indexes at all",
+                "text": "Shorter, and no off-by-one possible."
+              },
+              {
+                "label": "read-only, as in 6.4",
+                "text": "Same as 6.4 - no positions, and you cannot write back into the grid."
+              }
+            ]
+          },
+          {
+            "id": "n_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "How many times does the inner body run?",
+            "code": "public void run() {\n  int[][] g = {\n    {1, 2},\n    {3, 4},\n    {5, 6}\n  };\n  int count = 0;\n  for (int r = 0; r < g.length; r++) {\n    for (int c = 0; c < g[r].length; c++) {\n      count++;\n    }\n  }\n  System.out.println(count);\n}",
+            "opts": [
+              "6",
+              "5",
+              "3",
+              "2"
+            ],
+            "correct": 0,
+            "why": "3 rows times 2 columns. Nested loops multiply rather than add.",
+            "skills": [
+              "traverse a 2D array with nested loops"
+            ]
+          },
+          {
+            "id": "n_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "for (int r = 0; r < grid.length; r++)\n  for (int c = 0; c < grid[r].length; c++)",
+            "questions": [
+              {
+                "prompt": "What does the OUTER loop count?",
+                "opts": [
+                  "Rows",
+                  "Columns",
+                  "Every square",
+                  "Nothing"
+                ],
+                "correct": 0,
+                "why": "grid.length is the number of inner arrays, which are the rows. The inner loop walks one row."
+              },
+              {
+                "prompt": "In for (int[] row : grid), why is the type int[] and not int?",
+                "opts": [
+                  "Each element of a 2D array is itself a 1D array",
+                  "It is a typo",
+                  "2D arrays hold arrays of Strings",
+                  "int would also work"
+                ],
+                "correct": 0,
+                "why": "A 2D array is an array of arrays, so one element is a whole row."
+              }
+            ],
+            "skills": [
+              "traverse a 2D array with nested loops"
+            ]
+          },
+          {
+            "id": "n_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Make the inner loop follow the row it is on.",
+            "code": "public void run() {\n  int[][] g = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  int total = 0;\n  for (int r = 0; r < g.length; r++) {\n    for (int c = 0; c < g[⟦1⟧].length; c++) {\n      total = total + g[r][c];\n    }\n  }\n  System.out.println(total);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "r",
+                  "c",
+                  "0"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "21",
+            "hint": "The inner loop should measure the row it is currently on, not always the first one.",
+            "after": "g[r].length is right even when rows have different lengths. g[0].length only works if they are all equal.",
+            "skills": [
+              "traverse a 2D array with nested loops"
+            ]
+          },
+          {
+            "id": "n_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: total every number in the grid.",
+            "code": "public void run() {\n  int[][] g = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  // add up every value and print the total\n}",
+            "target": "21",
+            "solution": "public void run() {\n  int[][] g = {\n    {1, 2, 3},\n    {4, 5, 6}\n  };\n  int total = 0;\n  for (int[] row : g) {\n    for (int n : row) {\n      total = total + n;\n    }\n  }\n  System.out.println(total);\n}",
+            "hint": "Nested enhanced for: the outer gives each int[] row, the inner gives each int in it.",
+            "after": "1+2+3+4+5+6 is 21, and no index appeared anywhere.",
+            "skills": [
+              "traverse a 2D array with nested loops"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
