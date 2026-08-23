@@ -198,453 +198,331 @@
           {
             "id": "v_task",
             "kind": "teach",
-            "instruction": "We're building a player card.",
+            "instruction": "We are building a player card. We need somewhere to keep the values.",
             "points": [
               {
-                "label": "the card",
-                "text": "Five facts about one player: their name, their level, their health, their rank, and whether they are online."
-              },
-              {
-                "label": "name, level, health",
-                "text": "Text, a whole number, and a half. Three different types."
-              },
-              {
-                "label": "a variable",
-                "text": "A labelled box that holds one fact. You put a value in once, then use the label wherever you need it."
-              },
-              {
-                "label": "one box at a time",
-                "text": "The card grows on screen as each new type arrives, and by the last step you have built all five."
+                "label": "variable",
+                "text": "A box that holds one value."
               }
             ]
           },
           {
-            "id": "v_str",
+            "id": "v_declare",
             "kind": "teach",
-            "instruction": "First fact: the name. Text goes in a String.",
-            "code": "String name = \"Ada\";\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);",
-            "output": "=== PLAYER CARD ===\nName:   Ada",
+            "instruction": "Declaring makes the box.",
+            "code": "int level;",
+            "output": "",
             "points": [
               {
-                "label": "String name",
-                "text": "The type goes in FRONT of the name you choose. That is what creates the box."
-              },
-              {
-                "label": "= \"Ada\"",
-                "text": "The = does not mean \"equals\". It means \"put this in\". The text goes into the box."
-              },
-              {
-                "label": "String",
-                "text": "Capital S. Holds text of any length, in double quotes."
-              },
-              {
-                "label": "the + sign",
-                "text": "Joins text together. \"Name:   \" is spelled out by you; name is fetched from the box. The + glues them into one line."
-              },
-              {
-                "label": "no quotes on name",
-                "text": "With quotes, \"name\" would print the word. Without them, Java goes and gets what is inside the box."
+                "label": "int level;",
+                "text": "Makes a box called level. The type goes first."
               }
-            ],
-            "highlight": [
-              0,
-              2
             ]
           },
           {
-            "id": "v_str_tweak",
-            "kind": "tweak",
-            "instruction": "Put your own name on the card.",
-            "code": "String name = \"Ada\";\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);",
-            "target": "=== PLAYER CARD ===\nName:   Ada",
-            "hint": "Change the text inside the quotes on line 1.",
-            "after": "One edit changed the card. The label on the left stayed put.",
-            "skills": [
-              "declare a variable by putting its type in front of its name"
-            ]
-          },
-          {
-            "id": "v_int",
+            "id": "v_init",
             "kind": "teach",
-            "instruction": "Next fact: the level. Whole numbers go in an int.",
-            "code": "String name = \"Ada\";\nint level = 7;\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);",
-            "output": "=== PLAYER CARD ===\nName:   Ada\nLevel:  7",
+            "instruction": "Initializing makes the box and puts a value in.",
+            "code": "int level = 5;\nSystem.out.println(level);",
+            "output": "5",
             "points": [
               {
-                "label": "int level",
-                "text": "Same shape as before: type, name, =, value."
-              },
-              {
-                "label": "int",
-                "text": "Whole numbers only. 7, 0, -3. No decimal point."
-              },
-              {
-                "label": "no quotes",
-                "text": "7 is a number, so it needs no quotes. \"7\" with quotes would be text."
-              },
-              {
-                "label": "two boxes, two lines",
-                "text": "Each new variable adds one more line to the card."
+                "label": "= 5",
+                "text": "Puts 5 in the box."
               }
-            ],
-            "highlight": [
-              1,
-              4
             ]
           },
           {
             "id": "v_assign",
             "kind": "teach",
-            "instruction": "The player levels up. Changing a box is not the same as making one.",
-            "code": "String name = \"Ada\";\nint level = 7;\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nlevel = 8;\nSystem.out.println(\"Level:  \" + level);",
-            "output": "=== PLAYER CARD ===\nName:   Ada\nLevel:  8",
+            "instruction": "Assigning changes the value. No type this time.",
+            "code": "int level = 5;\nlevel = 0;\nSystem.out.println(level);",
+            "output": "0",
+            "highlight": [
+              1
+            ],
             "points": [
               {
-                "label": "int level = 7;",
-                "text": "Type in FRONT, so this MAKES the box. This is called declaring, and you do it once."
-              },
-              {
-                "label": "level = 8;",
-                "text": "No type. The box already exists, so this only puts a new value in."
-              },
-              {
-                "label": "the 7 is gone",
-                "text": "A box holds one value. Putting 8 in throws the 7 away — it does not add up."
-              },
-              {
-                "label": "int level = 8;",
-                "text": "Writing that second line WITH the type would be an error: you cannot make the same box twice."
+                "label": "level = 0;",
+                "text": "The box already exists. The 5 is gone."
               }
-            ],
-            "highlight": [
-              4
             ]
           },
           {
-            "id": "v_predict",
-            "kind": "predict",
-            "instruction": "What does this print?",
-            "code": "int level = 7;\nlevel = 8;\nSystem.out.println(level);",
-            "opts": [
-              "(an error)",
-              "15",
-              "8",
-              "7"
-            ],
-            "correct": 2,
-            "why": "The second line replaces what is in the box. It does not add — 7 and 8 never meet.",
+            "id": "v_side",
+            "kind": "fix",
+            "instruction": "Fix this so it runs.",
+            "code": "int level;\n5 = level;\nSystem.out.println(level);",
+            "target": "5",
+            "solution": "int level;\nlevel = 5;\nSystem.out.println(level);",
+            "hint": "The box goes on the left. The value goes on the right.",
+            "after": "Always read it as: put the right side into the left side.",
             "skills": [
               "use = to put a value in, and change it later"
+            ]
+          },
+          {
+            "id": "v_int",
+            "kind": "teach",
+            "instruction": "Primitive type: int",
+            "code": "int level = 7;\nSystem.out.println(\"Level:  \" + level);",
+            "output": "Level:  7",
+            "points": [
+              {
+                "label": "int",
+                "text": "Whole numbers. -2, -1, 0, 1, 2, 3."
+              }
             ]
           },
           {
             "id": "v_dbl",
             "kind": "teach",
-            "instruction": "Next fact: health. Half a heart will not fit in an int.",
-            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);",
-            "output": "=== PLAYER CARD ===\nName:   Ada\nLevel:  7\nHealth: 2.5",
+            "instruction": "Primitive type: double",
+            "code": "double health = 2.5;\nSystem.out.println(\"Health: \" + health);",
+            "output": "Health: 2.5",
             "points": [
-              {
-                "label": "2.5",
-                "text": "Health is 2.5 hearts. An int has nowhere to keep the .5, so the value simply will not fit in one."
-              },
               {
                 "label": "double",
-                "text": "Works exactly like int, but it keeps the decimal part."
-              },
-              {
-                "label": "int or double",
-                "text": "int for things you COUNT — levels, lives, coins. double for things you MEASURE — health, height, money."
-              },
-              {
-                "label": "double h = 3;",
-                "text": "Allowed. A double can hold a whole number perfectly well; it just displays it as 3.0."
+                "text": "Numbers with decimals. 6.74, 2.5, 5.0."
               }
-            ],
-            "highlight": [
-              2,
-              6
-            ]
-          },
-          {
-            "id": "v_dbl_fix",
-            "kind": "fix",
-            "instruction": "This one refuses to run. Fix the type.",
-            "code": "int health = 2.5;\nSystem.out.println(\"Health: \" + health);",
-            "target": "Health: 2.5",
-            "solution": "double health = 2.5;\nSystem.out.println(\"Health: \" + health);",
-            "hint": "2.5 has a decimal point. Which type keeps that?",
-            "after": "Java refused rather than quietly losing your .5. That refusal is it protecting you.",
-            "skills": [
-              "choose between int, double, char, boolean and String for a given value"
-            ]
-          },
-          {
-            "id": "v_char",
-            "kind": "teach",
-            "instruction": "Next fact: the rank, a single letter.",
-            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);\nSystem.out.println(\"Rank:   \" + rank);",
-            "output": "=== PLAYER CARD ===\nName:   Ada\nLevel:  7\nHealth: 2.5\nRank:   A",
-            "points": [
-              {
-                "label": "char",
-                "text": "Exactly ONE character. A letter, a digit, a symbol — one."
-              },
-              {
-                "label": "'A'",
-                "text": "SINGLE quotes. 'A' is a char. \"A\" with double quotes would be a String."
-              },
-              {
-                "label": "char vs String",
-                "text": "A rank is always exactly one letter, so char states that precisely. A name could be any length, so it stays a String."
-              }
-            ],
-            "highlight": [
-              3,
-              8
             ]
           },
           {
             "id": "v_bool",
             "kind": "teach",
-            "instruction": "Last fact: are they online? That is a yes or a no.",
-            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nboolean online = true;\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);\nSystem.out.println(\"Rank:   \" + rank);\nSystem.out.println(\"Online: \" + online);",
-            "output": "=== PLAYER CARD ===\nName:   Ada\nLevel:  7\nHealth: 2.5\nRank:   A\nOnline: true",
+            "instruction": "Primitive type: boolean",
+            "code": "boolean online = true;\nSystem.out.println(\"Online: \" + online);",
+            "output": "Online: true",
             "points": [
               {
                 "label": "boolean",
-                "text": "Holds only true or false. Nothing else is allowed in the box."
-              },
-              {
-                "label": "lowercase, no quotes",
-                "text": "true, not True, and not \"true\" — quotes would make it text."
-              },
-              {
-                "label": "five facts, five types",
-                "text": "Every type was chosen because of what it had to hold, not because a list said so."
+                "text": "Only true or false."
               }
-            ],
-            "highlight": [
-              4,
-              10
             ]
           },
           {
-            "id": "v_bucket",
+            "id": "v_char",
+            "kind": "teach",
+            "instruction": "Primitive type: char",
+            "code": "char rank = 'A';\nSystem.out.println(\"Rank:   \" + rank);",
+            "output": "Rank:   A",
+            "points": [
+              {
+                "label": "'A'",
+                "text": "One character. Single quotes."
+              }
+            ]
+          },
+          {
+            "id": "v_types",
             "kind": "bucket",
             "instruction": "Which type holds each value?",
             "buckets": [
               "int",
               "double",
-              "char",
               "boolean",
-              "String"
+              "char"
             ],
             "items": [
               {
-                "text": "42",
+                "text": "7",
                 "bucket": 0
               },
               {
-                "text": "3.14",
+                "text": "-3",
+                "bucket": 0
+              },
+              {
+                "text": "2.5",
                 "bucket": 1
               },
               {
-                "text": "'A'",
+                "text": "5.0",
+                "bucket": 1
+              },
+              {
+                "text": "false",
                 "bucket": 2
               },
               {
-                "text": "\"hello\"",
-                "bucket": 4
-              },
-              {
-                "text": "true",
+                "text": "'A'",
                 "bucket": 3
-              },
-              {
-                "text": "-7",
-                "bucket": 0
               }
             ],
-            "why": "Whole number → int. Decimal → double. One character in single quotes → char. Text in double quotes → String. true/false → boolean.",
+            "why": "5.0 is a double, not an int. The decimal point decides it.",
             "skills": [
               "choose between int, double, char, boolean and String for a given value"
             ]
           },
           {
-            "id": "v_sharp",
+            "id": "v_string",
             "kind": "teach",
-            "instruction": "Four parts, one order: type, name, =, value.",
-            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nboolean online = true;\nSystem.out.println(name + \" \" + level + \" \" + health + \" \" + rank + \" \" + online);",
-            "output": "Ada 7 2.5 A true",
+            "instruction": "String is not a primitive type.",
+            "code": "String name = \"Ada\";\nSystem.out.println(\"Name:   \" + name);",
+            "output": "Name:   Ada",
             "points": [
               {
-                "label": "four parts",
-                "text": "Every declaration is: TYPE, NAME, =, VALUE. In that order, ending in a semicolon."
+                "label": "String",
+                "text": "Capital S. The only type here that starts with one."
               },
               {
-                "label": "declare once",
-                "text": "The type appears only the first time. After that, just name = value."
-              },
-              {
-                "label": "capitals matter",
-                "text": "level and Level are two different boxes. Java will not guess what you meant."
-              },
-              {
-                "label": "quotes decide the type",
-                "text": "\"A\" is a String. 'A' is a char. A is a variable name. Same letter, three meanings."
+                "label": "\" \"",
+                "text": "Text goes in double quotes."
               }
             ]
           },
           {
-            "id": "v_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "int level = 7;\ndouble health = 2.5;\nchar rank = 'A';\nboolean online = true;\nString name = \"Ada\";",
-            "questions": [
+            "id": "v_quotes",
+            "kind": "fix",
+            "instruction": "Fix this so it runs.",
+            "code": "String name = 'Ada';\nSystem.out.println(name);",
+            "target": "Ada",
+            "solution": "String name = \"Ada\";\nSystem.out.println(name);",
+            "hint": "Single quotes hold one character. A String needs double quotes.",
+            "after": "'A' is a char. \"A\" is a String. Same letter, different type.",
+            "skills": [
+              "choose between int, double, char, boolean and String for a given value"
+            ]
+          },
+          {
+            "id": "v_naming",
+            "kind": "teach",
+            "instruction": "Naming rules.",
+            "code": "int playerLevel = 7;\nSystem.out.println(playerLevel);",
+            "output": "7",
+            "points": [
               {
-                "prompt": "Which of these is NOT a type Java has?",
-                "opts": [
-                  "char",
-                  "double",
-                  "boolean",
-                  "apple"
-                ],
-                "correct": 3,
-                "why": "int, double, char and boolean are all built into Java. apple is just a word — Java has never heard of it."
+                "label": "first character",
+                "text": "A letter, $ or _."
               },
               {
-                "prompt": "Which line both MAKES a box and puts a value in?",
-                "opts": [
-                  "int myNumber = 10;",
-                  "char = 'a';",
-                  "myNumber = 100;",
-                  "\"Variable\""
-                ],
-                "correct": 0,
-                "why": "It has all four parts: type, name, =, value. The second only changes an existing box; the third has no name; the fourth is just text."
+                "label": "after that",
+                "text": "Letters, numbers or _."
+              },
+              {
+                "label": "level and Level",
+                "text": "Two different boxes. Capitals matter."
+              },
+              {
+                "label": "playerLevel",
+                "text": "Start lowercase, then capitalise each new word."
+              }
+            ]
+          },
+          {
+            "id": "v_names",
+            "kind": "bucket",
+            "instruction": "Which names does Java allow?",
+            "buckets": [
+              "Allowed",
+              "Not allowed"
+            ],
+            "items": [
+              {
+                "text": "playerLevel",
+                "bucket": 0
+              },
+              {
+                "text": "_score",
+                "bucket": 0
+              },
+              {
+                "text": "health2",
+                "bucket": 0
+              },
+              {
+                "text": "player level",
+                "bucket": 1
+              },
+              {
+                "text": "2ndPlayer",
+                "bucket": 1
+              },
+              {
+                "text": "my-name",
+                "bucket": 1
               }
             ],
+            "why": "No spaces, and never start with a number. A hyphen is a minus sign to Java.",
             "skills": [
               "declare a variable by putting its type in front of its name"
             ]
           },
           {
-            "id": "v_d1",
+            "id": "v_build",
             "kind": "fill",
-            "instruction": "Put the right type in front of each name.",
-            "code": "⟦1⟧ name = \"Ada\";\n⟦2⟧ level = 7;\nSystem.out.println(name);\nSystem.out.println(level);",
+            "instruction": "Give each value the right type.",
+            "code": "⟦1⟧ name = \"Ada\";\n⟦2⟧ level = 7;\n⟦3⟧ health = 2.5;\n⟦4⟧ online = true;\n⟦5⟧ rank = 'A';\nSystem.out.println(name + \" \" + level + \" \" + health + \" \" + online + \" \" + rank);",
             "blanks": [
               {
                 "chips": [
                   "int",
-                  "char",
+                  "String",
+                  "char"
+                ],
+                "answer": 1
+              },
+              {
+                "chips": [
+                  "double",
+                  "int",
                   "String"
                 ],
-                "answer": 2
+                "answer": 1
+              },
+              {
+                "chips": [
+                  "char",
+                  "double",
+                  "int"
+                ],
+                "answer": 1
               },
               {
                 "chips": [
                   "String",
-                  "double",
-                  "int"
-                ],
-                "answer": 2
-              }
-            ],
-            "target": "Ada\n7",
-            "hint": "Text in double quotes, then a whole number.",
-            "after": "Type in front, every time.",
-            "skills": [
-              "declare a variable by putting its type in front of its name"
-            ]
-          },
-          {
-            "id": "v_d2",
-            "kind": "fix",
-            "instruction": "This will not run. Look carefully at the capitals.",
-            "code": "int Level = 7;\nSystem.out.println(\"Level:  \" + level);",
-            "target": "Level:  7",
-            "solution": "int level = 7;\nSystem.out.println(\"Level:  \" + level);",
-            "hint": "Level and level are two different names as far as Java is concerned.",
-            "after": "One capital letter is enough to break it. Java never guesses.",
-            "skills": [
-              "declare a variable by putting its type in front of its name"
-            ]
-          },
-          {
-            "id": "v_d3",
-            "kind": "trace",
-            "instruction": "a = b copies the value. Follow it.",
-            "code": "int a = 1;\nint b = 2;\na = b;\nb = 9;",
-            "questions": [
-              {
-                "prompt": "after line 3, a = ?",
-                "opts": [
-                  "1",
-                  "2",
-                  "9"
-                ],
-                "correct": 1,
-                "why": "a = b copies what is currently in b, which is 2."
-              },
-              {
-                "prompt": "after line 4, a = ?",
-                "opts": [
-                  "1",
-                  "2",
-                  "9"
-                ],
-                "correct": 1,
-                "why": "Still 2. Copying took the value, not the box — changing b later does nothing to a."
-              }
-            ],
-            "skills": [
-              "use = to put a value in, and change it later"
-            ]
-          },
-          {
-            "id": "v_d4",
-            "kind": "fill",
-            "instruction": "Fill in the two missing values so it prints the card below.",
-            "code": "String myName = ⟦1⟧;\nint luckyNumber = ⟦2⟧;\ndouble currentTemperature = 75.3;\nboolean isStudent = true;\nSystem.out.println(myName);\nSystem.out.println(luckyNumber);\nSystem.out.println(currentTemperature);\nSystem.out.println(isStudent);",
-            "blanks": [
-              {
-                "chips": [
-                  "'Karel the Dog'",
-                  "Karel the Dog",
-                  "\"Karel the Dog\""
+                  "int",
+                  "boolean"
                 ],
                 "answer": 2
               },
               {
                 "chips": [
-                  "11",
-                  "11.0",
-                  "\"11\""
+                  "boolean",
+                  "String",
+                  "char"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
-            "target": "Karel the Dog\n11\n75.3\ntrue",
-            "hint": "Text needs double quotes. A whole number needs none.",
-            "after": "That is CodeHS exercise 3.2.5, Answering Questions.",
+            "target": "Ada 7 2.5 true A",
+            "hint": "Look at each value. Quotes, a decimal point, or true and false all give it away.",
+            "after": "The type you pick is decided by the value it has to hold.",
             "skills": [
               "choose between int, double, char, boolean and String for a given value"
             ]
           },
           {
-            "id": "v_d5",
+            "id": "v_card",
             "kind": "write",
-            "instruction": "Last one: store the year in an int, then print the sentence.",
-            "code": "// declare an int called year, then print it\n",
-            "target": "The current year is 2026",
-            "solution": "int year = 2026;\nSystem.out.println(\"The current year is \" + year);",
-            "hint": "Type, name, =, value. Then join text and the box with a +.",
-            "after": "That is CodeHS exercise 3.2.4, Our First Integer. Lesson done.",
+            "instruction": "Print the level line of the card.",
+            "code": "int level = 7;\n// print:  Level:  7\n",
+            "target": "Level:  7",
+            "solution": "int level = 7;\nSystem.out.println(\"Level:  \" + level);",
+            "hint": "Join the text and the box with a + sign. Two spaces after the colon.",
+            "after": "The + joins your text to whatever is in the box.",
             "skills": [
               "declare a variable by putting its type in front of its name"
             ]
+          },
+          {
+            "id": "v_yours",
+            "kind": "tweak",
+            "instruction": "Make the card your own. Change every value.",
+            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nboolean online = true;\nchar rank = 'A';\nSystem.out.println(\"+--------------------+\");\nSystem.out.println(\"  \" + name);\nSystem.out.println(\"  Level:  \" + level);\nSystem.out.println(\"  Health: \" + health);\nSystem.out.println(\"  Rank:   \" + rank);\nSystem.out.println(\"  Online: \" + online);\nSystem.out.println(\"+--------------------+\");",
+            "target": "+--------------------+\n  Ada\n  Level:  7\n  Health: 2.5\n  Rank:   A\n  Online: true\n+--------------------+",
+            "hint": "Change what is on the right of each =. Keep the types as they are.",
+            "after": "Five boxes, five types, one card."
           }
         ]
       }
