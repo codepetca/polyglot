@@ -7154,6 +7154,31 @@
             ]
           },
           {
+            "id": "y_void",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "The docs say roar() is void. This does not compile.",
+            "code": "public void run() {\n  Monster ogre = new Monster(\"Ogre\", 30);\n  System.out.println(ogre.roar());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "target": "Ogre roars!",
+            "solution": "public void run() {\n  Monster ogre = new Monster(\"Ogre\", 30);\n  ogre.roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "hint": "void means nothing comes back, so there is nothing for println to print. roar already prints for itself.",
+            "after": "A void method is a whole statement on its own. Only a method with a type on the left can go inside println.",
+            "skills": [
+              "use a class from its documentation alone"
+            ]
+          },
+          {
+            "id": "y_spot",
+            "kind": "spot",
+            "instruction": "One line asks for something the documentation never offered. Tap it.",
+            "code": "Monster ogre = new Monster(\"Ogre\", 30);\nogre.takeDamage(5);\nogre.setHp(100);\nSystem.out.println(ogre.getName());",
+            "correct": 2,
+            "why": "The docs list roar, takeDamage, getHp and getName. There is no setHp, so hp can only go DOWN through takeDamage. As a client the documentation is all you get - if it is not listed, you cannot call it.",
+            "skills": [
+              "use a class from its documentation alone"
+            ]
+          },
+          {
             "id": "y_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -7534,6 +7559,38 @@
             ]
           },
           {
+            "id": "i_own",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Only one of them gets polished. What prints?",
+            "code": "public void run() {\n  Treasure a = new Treasure(\"Crown\", 95);\n  Treasure b = new Treasure(\"Ring\", 95);\n  a.polish();\n  System.out.println(b);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
+            "opts": [
+              "Ring (95 gold)",
+              "Ring (105 gold)",
+              "Crown (105 gold)",
+              "Crown (95 gold)"
+            ],
+            "correct": 0,
+            "why": "polish() ran on a. Each object has its own value, so the ring never heard about it. That is what \"belongs to one object\" means.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "i_ret_fix",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "isRare works out the answer and then loses it.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.isRare());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public boolean isRare() {\n    value > 100;\n  }\n}",
+            "target": "true",
+            "solution": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.isRare());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n}",
+            "hint": "The comparison happens, but nothing hands the answer back to whoever called it.",
+            "after": "A method with a type on the left MUST return that type. Working the answer out is not the same as giving it back.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
             "id": "i_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -7767,6 +7824,38 @@
             "target": "120",
             "hint": "It hands back the number, so the type is int and the keyword is return.",
             "after": "A getter is a return type, a name, and one return line.",
+            "skills": [
+              "write a getter that hands a private field out"
+            ]
+          },
+          {
+            "id": "g_read",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Reading a value and changing it are not the same thing.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue() + 100);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
+            "opts": [
+              "220\n220",
+              "120\n120",
+              "220\n120",
+              "120\n220"
+            ],
+            "correct": 2,
+            "why": "getValue() hands back a copy of the number. Adding 100 to it makes a new number to print and never touches the field, so the second read is still 120.",
+            "skills": [
+              "write a getter that hands a private field out"
+            ]
+          },
+          {
+            "id": "g_void",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "This getter promises nothing and then tries to return something.",
+            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void getValue() {\n    return value;\n  }\n}",
+            "target": "120",
+            "solution": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public int getValue() {\n    return value;\n  }\n}",
+            "hint": "What does the field hold, and what does the method claim to give back?",
+            "after": "void and return value contradict each other. The type on the left has to match what you hand back.",
             "skills": [
               "write a getter that hands a private field out"
             ]
@@ -8116,6 +8205,47 @@
             ]
           },
           {
+            "id": "n_concat",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Same characters, two very different results.",
+            "code": "public void run() {\n  System.out.println(\"42\" + 1);\n  System.out.println(Integer.parseInt(\"42\") + 1);\n}",
+            "opts": [
+              "43\n43",
+              "421\n43",
+              "421\n421",
+              "43\n421"
+            ],
+            "correct": 1,
+            "why": "\"42\" is text, so + glues 1 onto the end and gives 421. parseInt turns the text into the NUMBER 42 first, so + adds and gives 43. This is why input has to be parsed before you can do arithmetic on it.",
+            "skills": [
+              "use Integer and Double class methods"
+            ]
+          },
+          {
+            "id": "n_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "\"2.5\" has a decimal point. Pick the parser that can cope.",
+            "code": "public void run() {\n  double d = Double.⟦1⟧(\"2.5\");\n  System.out.println(d * 2);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "parseDouble",
+                  "parseInt",
+                  "toString"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "5.0",
+            "hint": "The class you call it on is Double, so the method belongs to Double too.",
+            "after": "Integer.parseInt(\"2.5\") would compile and then crash at run time - \"2.5\" is not a whole number.",
+            "skills": [
+              "use Integer and Double class methods"
+            ]
+          },
+          {
             "id": "n_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -8291,6 +8421,55 @@
             ],
             "correct": 2,
             "why": "One argument, so Java picks Potion(String), which sets healing to 10 itself.",
+            "skills": [
+              "explain how Java chooses which one to run"
+            ]
+          },
+          {
+            "id": "o_bucket",
+            "kind": "bucket",
+            "instruction": "Java tells overloads apart by the parameter list, and nothing else. Sort each pair.",
+            "buckets": [
+              "A valid overload",
+              "Will not compile"
+            ],
+            "items": [
+              {
+                "text": "heal() and heal(int amount)",
+                "bucket": 0
+              },
+              {
+                "text": "heal(int amount) and heal(String spell)",
+                "bucket": 0
+              },
+              {
+                "text": "attack(int a) and attack(int a, int b)",
+                "bucket": 0
+              },
+              {
+                "text": "int heal() and String heal()",
+                "bucket": 1
+              },
+              {
+                "text": "heal(int amount) and heal(int power)",
+                "bucket": 1
+              }
+            ],
+            "why": "Count and types distinguish them. Return type does not - at the call site Java has not got to the return yet. Parameter NAMES do not either; heal(int amount) and heal(int power) are the same method declared twice.",
+            "skills": [
+              "explain how Java chooses which one to run"
+            ]
+          },
+          {
+            "id": "o_none",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Potion has two constructors. This call matches neither.",
+            "code": "public void run() {\n  System.out.println(new Potion());\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
+            "target": "Small heals 10",
+            "solution": "public void run() {\n  System.out.println(new Potion(\"Small\"));\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
+            "hint": "One constructor takes a name, the other a name and a number. Zero arguments is not on the menu.",
+            "after": "Overloading gives you the versions you wrote, not every version imaginable. No match means it will not compile.",
             "skills": [
               "explain how Java chooses which one to run"
             ]
