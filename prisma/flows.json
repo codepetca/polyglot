@@ -6781,6 +6781,20 @@
             ]
           },
           {
+            "id": "o_newkw",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "One word is missing, and without it Java looks for a method.",
+            "code": "public void run() {\n  Monster goblin = Monster(\"Goblin\", 20);\n  goblin.roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "target": "Goblin roars!",
+            "solution": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  goblin.roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
+            "hint": "A constructor is never called on its own. Something has to ask for the object to be built.",
+            "after": "new is what actually makes the object. Without it Java reads Monster(...) as a call to a method named Monster, and there is no such method.",
+            "skills": [
+              "create an object from a class"
+            ]
+          },
+          {
             "id": "o_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -11561,6 +11575,51 @@
             ]
           },
           {
+            "id": "c_intfix",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "An ArrayList cannot hold a primitive.",
+            "code": "public void run() {\n  ArrayList<int> scores = new ArrayList<int>();\n  scores.add(30);\n  System.out.println(scores.get(0));\n}",
+            "target": "30",
+            "solution": "public void run() {\n  ArrayList<Integer> scores = new ArrayList<Integer>();\n  scores.add(30);\n  System.out.println(scores.get(0));\n}",
+            "hint": "It stores objects. int is not one - but it has an object twin with a capital letter.",
+            "after": "Java boxes the 30 into an Integer going in and unboxes it coming out, so you write ordinary ints either side.",
+            "skills": [
+              "choose between an array and an ArrayList"
+            ]
+          },
+          {
+            "id": "c_size",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "One of these counts with a field. The other with a method.",
+            "code": "public void run() {\n  int[] party = {1, 2, 3};\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  System.out.println(party.⟦1⟧);\n  System.out.println(loot.⟦2⟧);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "length",
+                  "size()",
+                  "count"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "size()",
+                  "length",
+                  "count"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "3\n1",
+            "hint": "An array is built into the language and exposes length directly. An ArrayList is a class, so it has to be asked.",
+            "after": "No brackets on length, brackets on size(). Mixing them up is one of the commonest compile errors in this unit.",
+            "skills": [
+              "choose between an array and an ArrayList"
+            ]
+          },
+          {
             "id": "c_write",
             "kind": "write",
             "wrap": "methods",
@@ -11708,6 +11767,40 @@
             ],
             "correct": 2,
             "why": "Removing index 0 shifts the second x down to 0, then i becomes 1 which is no longer less than size 1. One survives.",
+            "skills": [
+              "remove items safely while looping"
+            ]
+          },
+          {
+            "id": "t_spot",
+            "kind": "spot",
+            "instruction": "This is meant to remove every 0 and does not. Tap the line to blame.",
+            "code": "for (int i = 0; i < hp.size(); i++) {\n  if (hp.get(i) == 0) {\n    hp.remove(i);\n  }\n}",
+            "correct": 2,
+            "why": "Removing at i pulls everything after it down one place, and then i++ moves on anyway - so whatever slid into position i is never examined. The loop and the if are both fine. It is removing while going forwards that breaks it.",
+            "skills": [
+              "remove items safely while looping"
+            ]
+          },
+          {
+            "id": "t_back",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Complete the backwards loop.",
+            "code": "public void run() {\n  ArrayList<Integer> hp = new ArrayList<Integer>();\n  hp.add(0);\n  hp.add(0);\n  hp.add(8);\n  for (int i = hp.size() - 1; i >= 0; ⟦1⟧) {\n    if (hp.get(i) == 0) {\n      hp.remove(i);\n    }\n  }\n  System.out.println(hp.size());\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "i--",
+                  "i++",
+                  "i = i - 2"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "1",
+            "hint": "It starts at the last index and has to reach 0.",
+            "after": "Going down, a removal only shifts items you have already passed, so nothing gets skipped. Both zeros go.",
             "skills": [
               "remove items safely while looping"
             ]
@@ -11945,6 +12038,55 @@
             "after": "new List<String>() would not compile. Interfaces have no bodies to run.",
             "skills": [
               "declare a variable by the List interface"
+            ]
+          },
+          {
+            "id": "l_new",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "List is an interface. It cannot be built.",
+            "code": "public void run() {\n  List<String> loot = new List<String>();\n  loot.add(\"Crown\");\n  System.out.println(loot.size());\n}",
+            "target": "1",
+            "solution": "public void run() {\n  List<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  System.out.println(loot.size());\n}",
+            "hint": "An interface says what a list can do, not how. Something real has to do it.",
+            "after": "The left side can stay List - that is the point. Only the right side needs a class that actually implements it.",
+            "skills": [
+              "declare a variable by the List interface"
+            ]
+          },
+          {
+            "id": "l_bucket",
+            "kind": "bucket",
+            "instruction": "ArrayList implements List. Sort each one.",
+            "buckets": [
+              "Compiles",
+              "Will not compile"
+            ],
+            "items": [
+              {
+                "text": "List<String> a = new ArrayList<String>();",
+                "bucket": 0
+              },
+              {
+                "text": "ArrayList<String> b = new ArrayList<String>();",
+                "bucket": 0
+              },
+              {
+                "text": "Passing an ArrayList to show(List<String> items)",
+                "bucket": 0
+              },
+              {
+                "text": "List<String> c = new List<String>();",
+                "bucket": 1
+              },
+              {
+                "text": "Passing a List<String> variable to show(ArrayList<String> items)",
+                "bucket": 1
+              }
+            ],
+            "why": "Every ArrayList is a List, so it fits anywhere a List is asked for. The reverse is not promised - a List might be some other implementation - which is exactly why you declare parameters as List.",
+            "skills": [
+              "accept List as a parameter type"
             ]
           },
           {
