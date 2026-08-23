@@ -9475,6 +9475,55 @@
             ]
           },
           {
+            "id": "a_new",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Monster is abstract. This will not build.",
+            "code": "public void run() {\n  Monster m = new Monster(\"Blob\");\n  m.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}",
+            "target": "Blob splats!",
+            "solution": "public void run() {\n  Monster m = new Slime(\"Blob\");\n  m.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}",
+            "hint": "Monster is the category. Something concrete has to be built instead - and Slime already is one.",
+            "after": "The variable can still be a Monster. It is the new that has to name a real class.",
+            "skills": [
+              "use abstract to stop a class being instantiated"
+            ]
+          },
+          {
+            "id": "a_bucket",
+            "kind": "bucket",
+            "instruction": "Monster is abstract and declares abstract void attack(). Sort each one.",
+            "buckets": [
+              "Allowed",
+              "Will not compile"
+            ],
+            "items": [
+              {
+                "text": "class Slime extends Monster, and Slime defines attack()",
+                "bucket": 0
+              },
+              {
+                "text": "Monster m = new Slime(\"Blob\");",
+                "bucket": 0
+              },
+              {
+                "text": "Monster keeps an ordinary getName() with a body",
+                "bucket": 0
+              },
+              {
+                "text": "Monster m = new Monster(\"thing\");",
+                "bucket": 1
+              },
+              {
+                "text": "class Boss extends Monster, and Boss defines nothing",
+                "bucket": 1
+              }
+            ],
+            "why": "abstract forbids building the category and requires every concrete subclass to fill the gaps. It does not stop the class holding finished methods, and it does not stop a Monster VARIABLE - only a Monster object.",
+            "skills": [
+              "force subclasses to supply a method"
+            ]
+          },
+          {
             "id": "a_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -9921,6 +9970,55 @@
             ]
           },
           {
+            "id": "b_cast",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "equals takes an Object. Object has no name.",
+            "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Object other) {\n    return name.equals(other.name);\n  }\n}",
+            "target": "true",
+            "solution": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.name);\n  }\n}",
+            "hint": "The parameter must be Object to override at all, so you have to promise Java it really is a Potion before reading its fields.",
+            "after": "That is why every equals starts with a cast. The signature has to be wide, the body has to narrow it again.",
+            "skills": [
+              "override toString and equals from Object"
+            ]
+          },
+          {
+            "id": "b_bucket",
+            "kind": "bucket",
+            "instruction": "You write class Coin with no extends. What does it already have?",
+            "buckets": [
+              "Comes free from Object",
+              "Only if you write it"
+            ],
+            "items": [
+              {
+                "text": "toString()",
+                "bucket": 0
+              },
+              {
+                "text": "equals(Object other)",
+                "bucket": 0
+              },
+              {
+                "text": "hashCode()",
+                "bucket": 0
+              },
+              {
+                "text": "getValue()",
+                "bucket": 1
+              },
+              {
+                "text": "a constructor taking (int value)",
+                "bucket": 1
+              }
+            ],
+            "why": "Every class extends Object whether you say so or not, so those three are always there - just with unhelpful default behaviour. Anything specific to Coin is yours to write.",
+            "skills": [
+              "explain what every class inherits automatically"
+            ]
+          },
+          {
             "id": "b_write",
             "kind": "write",
             "wrap": "methods",
@@ -10094,6 +10192,43 @@
             "why": "An abstract class is a partly-built parent, so it can hold state. An interface is only a promise, so a class can make several of them.",
             "skills": [
               "compare an interface with an abstract class"
+            ]
+          },
+          {
+            "id": "f_missing",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Chest promised to be Openable and then did not deliver.",
+            "code": "public void run() {\n  Chest c = new Chest();\n  c.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n}",
+            "target": "The chest creaks open.",
+            "solution": "public void run() {\n  Chest c = new Chest();\n  c.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}",
+            "hint": "implements is a promise. The interface lists what has to exist.",
+            "after": "An interface is checked at compile time. You cannot claim to implement it and skip a method.",
+            "skills": [
+              "write an interface and implement it"
+            ]
+          },
+          {
+            "id": "f_kw",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Openable is an interface. Which keyword?",
+            "code": "public void run() {\n  Door d = new Door();\n  d.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Door ⟦1⟧ Openable {\n  public void open() {\n    System.out.println(\"The door swings open.\");\n  }\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "implements",
+                  "extends",
+                  "uses"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "The door swings open.",
+            "hint": "extends is for a parent class you inherit from. This is a promise to supply methods, not a family.",
+            "after": "A class extends one class and implements as many interfaces as it likes.",
+            "skills": [
+              "write an interface and implement it"
             ]
           },
           {
@@ -10893,6 +11028,55 @@
             ]
           },
           {
+            "id": "e_type",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "loot holds Strings. This does not compile.",
+            "code": "public void run() {\n  String[] loot = {\"Crown\", \"Ring\"};\n  for (int item : loot) {\n    System.out.println(item);\n  }\n}",
+            "target": "Crown\nRing",
+            "solution": "public void run() {\n  String[] loot = {\"Crown\", \"Ring\"};\n  for (String item : loot) {\n    System.out.println(item);\n  }\n}",
+            "hint": "The type in front of the loop variable is the type of ONE element.",
+            "after": "String[] holds Strings, so each item is a String. The type never matches the array, only what is inside it.",
+            "skills": [
+              "traverse an array with an enhanced for loop"
+            ]
+          },
+          {
+            "id": "e_bucket",
+            "kind": "bucket",
+            "instruction": "Which loop does each job need?",
+            "buckets": [
+              "Enhanced for is enough",
+              "You need the indexed for"
+            ],
+            "items": [
+              {
+                "text": "Print every score",
+                "bucket": 0
+              },
+              {
+                "text": "Add up every score",
+                "bucket": 0
+              },
+              {
+                "text": "Set every element to 0",
+                "bucket": 1
+              },
+              {
+                "text": "Print \"slot 3: 42\" with the position shown",
+                "bucket": 1
+              },
+              {
+                "text": "Find the largest value",
+                "bucket": 0
+              }
+            ],
+            "why": "The enhanced for gives you values, not positions, and the value is a copy. The moment you need to know WHERE you are, or to write back into the array, you need the index.",
+            "skills": [
+              "say when the enhanced form does not fit"
+            ]
+          },
+          {
             "id": "e_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -11139,6 +11323,38 @@
             "target": "2",
             "hint": "Three different collections, three different spellings. This one is a method.",
             "after": "array.length, string.length(), list.size(). Worth memorising as a set.",
+            "skills": [
+              "use size, get, add and remove"
+            ]
+          },
+          {
+            "id": "a_rmidx",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "These are numbers, and remove takes a number. Careful.",
+            "code": "public void run() {\n  ArrayList<Integer> xs = new ArrayList<Integer>();\n  xs.add(10);\n  xs.add(20);\n  xs.add(30);\n  xs.remove(1);\n  System.out.println(xs.get(1));\n}",
+            "opts": [
+              "10",
+              "20",
+              "30",
+              "An error"
+            ],
+            "correct": 2,
+            "why": "remove(1) removed the item AT INDEX 1 - the 20 - not the value 1. The list is now [10, 30], so index 1 holds 30. With an ArrayList of numbers this is very easy to get wrong.",
+            "skills": [
+              "use size, get, add and remove"
+            ]
+          },
+          {
+            "id": "a_bound",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "It prints both items and then falls over.",
+            "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  for (int i = 0; i <= loot.size(); i++) {\n    System.out.println(loot.get(i));\n  }\n}",
+            "target": "Crown\nRing",
+            "solution": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  for (int i = 0; i < loot.size(); i++) {\n    System.out.println(loot.get(i));\n  }\n}",
+            "hint": "size() is 2, and the last index is 1. Which comparison stops one short?",
+            "after": "Same off-by-one as an array, with size() in place of length. <= always asks for one item too many.",
             "skills": [
               "use size, get, add and remove"
             ]
