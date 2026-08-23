@@ -69,6 +69,16 @@ function lanes(): Lane[] {
   return out;
 }
 
+// HOW LONG A DEAD LANE MAY COST US. The self-hosted box is tried first, and
+// when it is down it does not refuse the connection — it accepts and then never
+// answers, so the request sits there until it is aborted. At 20s that alone
+// outlived the serverless function, which meant the godbolt fallback below was
+// never reached and a healthy runner looked broken to the student. The first
+// lane now gets a few seconds to prove it is alive; whichever lane actually
+// answers gets the long timeout, because compiling really can take a while.
+const PROBE_MS = Number(process.env.RUNNER_PROBE_MS || 4000);
+const WORK_MS = 20_000;
+
 // Short-lived health memory: a lane that just failed hard is skipped for a
 // while so students don't eat its timeout on every single step.
 const COOLDOWN_MS = 60_000;
@@ -142,7 +152,7 @@ async function runViaGodbolt(source: string, stdin: string, offset: number, comp
           filters: { execute: true },
         },
       }),
-      signal: AbortSignal.timeout(20_000),
+      signal: AbortSignal.timeout(WORK_MS),
     });
   } catch (e) {
     throw new LaneDown(`${compilerId} unreachable: ${(e as Error).message.slice(0, 80)}`);
@@ -189,7 +199,7 @@ async function runViaPiston(source: string, stdin: string, offset: number): Prom
         compile_timeout: 10000,
         run_timeout: 5000,
       }),
-      signal: AbortSignal.timeout(20_000),
+      signal: AbortSignal.timeout(PROBE_MS),
     });
   } catch (e) {
     throw new LaneDown(`piston unreachable: ${(e as Error).message.slice(0, 80)}`);

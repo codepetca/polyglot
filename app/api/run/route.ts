@@ -8,6 +8,11 @@ import { logEvent, EVENT } from "@/lib/events";
 // Auth required — this must not be a public compute
 // endpoint once the app is hosted. `wrap` splices the student's code into the
 // beginner input() template (see lib/java/piston.ts).
+// Room for a dead lane to time out AND the fallback to still run. Without this
+// the platform default cut the request off mid-failover, so a working runner
+// reported as unavailable.
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });

@@ -34,7 +34,10 @@ async function runJava(code: string, stdin = "", mode: WrapMode = "beginner"): P
         method: "POST",
         headers: { "Content-Type": "application/json", ...(PISTON_TOKEN ? { "X-Runner-Token": PISTON_TOKEN } : {}) },
         body: JSON.stringify({ language: "java", version: PISTON_JAVA, files: [{ name: "Main.java", content: source }], stdin, compile_timeout: 10000, run_timeout: 5000 }),
-        signal: AbortSignal.timeout(20_000),
+        // Same 4s budget the app uses: when the self-hosted box is down it
+        // accepts the connection and never answers, so a long timeout just
+        // makes every verify crawl before falling through to godbolt.
+        signal: AbortSignal.timeout(Number(process.env.RUNNER_PROBE_MS || 4000)),
       });
       if (r.ok) {
         const d: any = await r.json();
