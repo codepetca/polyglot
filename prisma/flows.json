@@ -173,9 +173,9 @@
             "code": "System.out.print(\"Load\");\nSystem.out.print(\"ing\");\nSystem.out.println(\"...\");",
             "opts": [
               "Loading...",
+              "(an error)",
               "Load\ning\n...",
-              "Load ing ...",
-              "(an error)"
+              "Load ing ..."
             ],
             "correct": 0,
             "why": "Neither print ends its line, so all three land on one line. Only the final println ends it.",
@@ -227,23 +227,23 @@
               {
                 "prompt": "Which one actually prints in Java?",
                 "opts": [
+                  "System.println(\"Hello Karel\");",
                   "System.out.println(\"Hello Karel\");",
-                  "System.out.printLine(\"Hello Karel\");",
                   "print \"Hello Karel\";",
-                  "System.println(\"Hello Karel\");"
+                  "System.out.printLine(\"Hello Karel\");"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "println is all lowercase, and it has to be System.out in front. The other three do not exist."
               },
               {
                 "prompt": "System.out.println(\"Hello\"); then System.out.println(\"World\"); prints how many lines?",
                 "opts": [
-                  "2",
-                  "1",
                   "0",
+                  "1",
+                  "2",
                   "3"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Each println ends its own line, so the two words land on separate lines."
               }
             ],
@@ -451,12 +451,12 @@
             "instruction": "What does this print?",
             "code": "int level = 7;\nlevel = 8;\nSystem.out.println(level);",
             "opts": [
-              "8",
-              "7",
+              "(an error)",
               "15",
-              "(an error)"
+              "8",
+              "7"
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "The second line replaces what is in the box. It does not add — 7 and 8 never meet.",
             "skills": [
               "use = to put a value in, and change it later"
@@ -630,20 +630,20 @@
               {
                 "prompt": "Which of these is NOT a type Java has?",
                 "opts": [
-                  "apple",
                   "char",
+                  "double",
                   "boolean",
-                  "double"
+                  "apple"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "int, double, char and boolean are all built into Java. apple is just a word — Java has never heard of it."
               },
               {
                 "prompt": "Which line both MAKES a box and puts a value in?",
                 "opts": [
                   "int myNumber = 10;",
-                  "myNumber = 100;",
                   "char = 'a';",
+                  "myNumber = 100;",
                   "\"Variable\""
                 ],
                 "correct": 0,
@@ -662,19 +662,19 @@
             "blanks": [
               {
                 "chips": [
-                  "String",
                   "int",
-                  "char"
+                  "char",
+                  "String"
                 ],
-                "answer": 0
+                "answer": 2
               },
               {
                 "chips": [
-                  "int",
+                  "String",
                   "double",
-                  "String"
+                  "int"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "Ada\n7",
@@ -706,21 +706,21 @@
               {
                 "prompt": "after line 3, a = ?",
                 "opts": [
-                  "2",
                   "1",
+                  "2",
                   "9"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "a = b copies what is currently in b, which is 2."
               },
               {
                 "prompt": "after line 4, a = ?",
                 "opts": [
+                  "1",
                   "2",
-                  "9",
-                  "1"
+                  "9"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "Still 2. Copying took the value, not the box — changing b later does nothing to a."
               }
             ],
@@ -736,17 +736,17 @@
             "blanks": [
               {
                 "chips": [
-                  "\"Karel the Dog\"",
+                  "'Karel the Dog'",
                   "Karel the Dog",
-                  "'Karel the Dog'"
+                  "\"Karel the Dog\""
                 ],
-                "answer": 0
+                "answer": 2
               },
               {
                 "chips": [
                   "11",
-                  "\"11\"",
-                  "11.0"
+                  "11.0",
+                  "\"11\""
                 ],
                 "answer": 0
               }
@@ -1006,12 +1006,12 @@
               {
                 "prompt": "int n = readInt(\"Number \"); then println(n). The player types 10. What appears after the question?",
                 "opts": [
-                  "10",
                   "n",
                   "\"10\"",
-                  "nothing"
+                  "nothing",
+                  "10"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "readInt hands back the number 10 itself, and println prints what is inside n. The variable name is not printed, and there are no quotes because it is a number, not text."
               }
             ],
@@ -1068,17 +1068,17 @@
             "blanks": [
               {
                 "chips": [
-                  "readInt",
+                  "readDouble",
                   "readLine",
-                  "readDouble"
+                  "readInt"
                 ],
-                "answer": 0
+                "answer": 2
               },
               {
                 "chips": [
                   "readDouble",
-                  "readInt",
-                  "readLine"
+                  "readLine",
+                  "readInt"
                 ],
                 "answer": 0
               }
@@ -1194,12 +1194,12 @@
             "instruction": "Brackets added. Now what?",
             "code": "int potion = 3;\nint sword = 10;\nSystem.out.println(2 * (potion + sword));",
             "opts": [
-              "26",
-              "16",
               "23",
+              "16",
+              "26",
               "(an error)"
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "The brackets force potion + sword first: 3 + 10 is 13, then 2 * 13 is 26. Same numbers, different answer.",
             "skills": [
               "evaluate arithmetic expressions using order of operations"
@@ -1236,12 +1236,12 @@
             "instruction": "What does this print?",
             "code": "System.out.println(9 / 2);",
             "opts": [
+              "(an error)",
               "4",
-              "4.5",
               "5",
-              "(an error)"
+              "4.5"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "Two whole numbers, so the answer stays whole. 4.5 chops down to 4 — it never rounds up.",
             "skills": [
               "predict the result of whole-number division"
@@ -1341,23 +1341,23 @@
               {
                 "prompt": "What is 150 % 100?",
                 "opts": [
-                  "50",
-                  "1",
                   "0",
+                  "1",
+                  "50",
                   "150"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "100 goes into 150 once, using 100. 50 is left over."
               },
               {
                 "prompt": "Which of these is NOT a Java arithmetic operator?",
                 "opts": [
-                  "#",
-                  "+",
+                  "/",
                   "-",
-                  "/"
+                  "#",
+                  "+"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Java uses + - * / and %. The # symbol means nothing to it."
               }
             ],
@@ -1373,19 +1373,19 @@
             "blanks": [
               {
                 "chips": [
+                  "*",
                   "/",
-                  "%",
-                  "*"
+                  "%"
                 ],
-                "answer": 0
+                "answer": 1
               },
               {
                 "chips": [
-                  "%",
+                  "-",
                   "/",
-                  "-"
+                  "%"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "3\n2",
@@ -1402,8 +1402,8 @@
             "code": "System.out.println(9 / 2.0);",
             "opts": [
               "4.5",
-              "4",
               "5",
+              "4",
               "(an error)"
             ],
             "correct": 0,
@@ -1523,9 +1523,9 @@
             "code": "int xp = 7;\nint needed = 20;\nSystem.out.println((double) (xp / needed) * 100);",
             "opts": [
               "0.0",
-              "35.0",
               "0",
-              "0.35"
+              "0.35",
+              "35.0"
             ],
             "correct": 0,
             "why": "The brackets make xp / needed happen FIRST, as two ints — that is already 0. Casting 0 gives 0.0. The cast arrived too late to save anything.",
@@ -1681,9 +1681,9 @@
                 "prompt": "What is casting in Java?",
                 "opts": [
                   "Turning a value of one type into another type",
-                  "A way to get user input",
                   "A way to print to the screen",
-                  "What Karel does when she breaks her leg"
+                  "What Karel does when she breaks her leg",
+                  "A way to get user input"
                 ],
                 "correct": 0,
                 "why": "That is the whole idea: the value stays, the type it is treated as changes."
@@ -1691,12 +1691,12 @@
               {
                 "prompt": "What does (int) 9.9 evaluate to?",
                 "opts": [
-                  "9",
-                  "10",
                   "0",
-                  "5"
+                  "5",
+                  "9",
+                  "10"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Casting to int chops everything after the decimal point. It does not round, so 9.9 gives 9, not 10."
               }
             ],
@@ -1712,11 +1712,11 @@
             "blanks": [
               {
                 "chips": [
-                  "+",
                   "-",
+                  "+",
                   "*"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "3",
@@ -1984,23 +1984,23 @@
               {
                 "prompt": "What is a boolean in Java?",
                 "opts": [
-                  "A true or false value",
                   "A single character",
                   "A sequence of characters",
+                  "A true or false value",
                   "A very precise number"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "That is the whole type: two values, true and false."
               },
               {
                 "prompt": "Which of these IS a boolean?",
                 "opts": [
+                  "'F'",
                   "true",
                   "\"true\"",
-                  "'F'",
                   "10.1"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "Bare true is the boolean. \"true\" is a String, 'F' is a char, and 10.1 is a double."
               }
             ],
@@ -2015,9 +2015,9 @@
             "code": "boolean doorLocked = true;\ndoorLocked = false;\nSystem.out.println(doorLocked);",
             "opts": [
               "false",
-              "true",
               "\"false\"",
-              "(an error)"
+              "(an error)",
+              "true"
             ],
             "correct": 0,
             "why": "The second line puts a new value in the box, exactly like any other variable. The true is gone.",
@@ -2265,9 +2265,9 @@
             "code": "System.out.println(true && !false);",
             "opts": [
               "true",
+              "nothing",
               "false",
-              "(an error)",
-              "nothing"
+              "(an error)"
             ],
             "correct": 0,
             "why": "!false is true, so this becomes true && true. Both sides are true, so && gives true.",
@@ -2311,12 +2311,12 @@
               {
                 "prompt": "Which of these is a logical operator?",
                 "opts": [
-                  "!",
+                  "%",
                   "##",
-                  "**",
-                  "%"
+                  "!",
+                  "**"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "! is NOT. The other logical operators are && and ||. % is the remainder operator — arithmetic, not logic — and ## and ** are not Java at all."
               },
               {
@@ -2341,10 +2341,10 @@
             "blanks": [
               {
                 "chips": [
-                  "&&",
-                  "||"
+                  "||",
+                  "&&"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "false",
@@ -2540,12 +2540,12 @@
             "instruction": "The exact expression the quiz asks about.",
             "code": "System.out.println(80 >= 80);",
             "opts": [
-              "true",
-              "false",
               "(an error)",
-              "80"
+              "true",
+              "80",
+              "false"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": ">= is satisfied by being greater OR equal. 80 is equal to 80, so it is true. Only > would be false here.",
             "skills": [
               "choose between ==, !=, <, >, <= and >="
@@ -2609,8 +2609,8 @@
                 "prompt": "Which of the following is NOT a comparison operator?",
                 "opts": [
                   "?",
-                  "<",
                   "==",
+                  "<",
                   ">="
                 ],
                 "correct": 0,
@@ -2620,9 +2620,9 @@
                 "prompt": "What does 80 >= 80 evaluate to?",
                 "opts": [
                   "true",
+                  "This expression will error",
                   "false",
-                  "\"true\"",
-                  "This expression will error"
+                  "\"true\""
                 ],
                 "correct": 0,
                 "why": ">= means greater than OR equal to, and 80 equals 80. The answer is the boolean true — not the text \"true\"."
@@ -2640,12 +2640,12 @@
             "blanks": [
               {
                 "chips": [
-                  ">=",
                   ">",
-                  "==",
-                  "<"
+                  ">=",
+                  "<",
+                  "=="
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "true",
@@ -2829,8 +2829,8 @@
             "code": "for (int i = 0; i < 4; i++) {\n  System.out.println(\"x\");\n}",
             "opts": [
               "x\nx\nx\nx",
-              "x\nx\nx",
               "x\nx\nx\nx\nx",
+              "x\nx\nx",
               "(nothing)"
             ],
             "correct": 0,
@@ -2896,34 +2896,34 @@
               {
                 "prompt": "Why do we use for loops in Java?",
                 "opts": [
-                  "To repeat something a fixed number of times",
                   "To do something if a condition is true",
+                  "To break out of some block of code",
                   "To do something while a condition is true",
-                  "To break out of some block of code"
+                  "To repeat something a fixed number of times"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "A for loop is the shape you reach for when you already know the count. Repeating while something stays true is a while loop, which is the next lesson."
               },
               {
                 "prompt": "Which for loop correctly prints \"hello\" 10 times?",
                 "opts": [
-                  "for(int i = 0; i < 10; i++)",
-                  "for(int i = 10)",
+                  "for(int i = 10; i < 0; i++)",
                   "for(int i = 0; i++; i < 10)",
-                  "for(int i = 10; i < 0; i++)"
+                  "for(int i = 10)",
+                  "for(int i = 0; i < 10; i++)"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Start, condition, change — in that order. The second has no condition, the third has them swapped, and the fourth starts at 10 where 10 < 0 is already false, so it runs zero times."
               },
               {
                 "prompt": "for (int i = 0; i < n; i += 2) — at most how many passes, in terms of n?",
                 "opts": [
-                  "(n + 1) / 2",
                   "n / 2",
+                  "(n + 1) / 2",
                   "(n - 1) / 2",
                   "n"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "i lands on 0, 2, 4 … so it takes every other value below n. For n = 5 that is 0, 2, 4 — three passes, and (5 + 1) / 2 is 3."
               }
             ],
@@ -2939,19 +2939,19 @@
             "blanks": [
               {
                 "chips": [
-                  "2",
+                  "0",
                   "1",
-                  "0"
+                  "2"
                 ],
-                "answer": 0
+                "answer": 2
               },
               {
                 "chips": [
-                  "2",
                   "1",
+                  "2",
                   "3"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "2\n4\n6\n8\n10",
@@ -3144,12 +3144,12 @@
             "instruction": "n starts at 10. What prints?",
             "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
             "opts": [
-              "done",
-              "inside\ndone",
+              "(nothing)",
               "inside",
-              "(nothing)"
+              "inside\ndone",
+              "done"
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "The condition is checked BEFORE the first pass. 10 < 5 is false, so the body never runs once.",
             "skills": [
               "trace a while loop until its condition fails"
@@ -3208,23 +3208,23 @@
               {
                 "prompt": "Why do we use while loops in Java?",
                 "opts": [
-                  "To repeat some code while a condition is true",
                   "To repeat something a fixed number of times",
+                  "To repeat some code while a condition is true",
                   "To do something if a condition is true",
                   "To break out of some block of code"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "A while loop is the shape for \"keep going until this stops being true\". A fixed count is a for loop."
               },
               {
                 "prompt": "What will while(true) { System.out.println(\"Hello\"); } do?",
                 "opts": [
-                  "Print Hello in an infinite loop",
-                  "Print Hello one time",
                   "Print Hello until the program receives user input",
+                  "Print Hello one time",
+                  "Print Hello in an infinite loop",
                   "Nothing"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "true is never false, and nothing inside stops it, so it prints forever."
               }
             ],
@@ -3240,17 +3240,17 @@
             "blanks": [
               {
                 "chips": [
+                  "==",
                   ">=",
-                  "<=",
-                  "=="
+                  "<="
                 ],
-                "answer": 0
+                "answer": 1
               },
               {
                 "chips": [
                   "--",
-                  "++",
-                  "+= 2"
+                  "+= 2",
+                  "++"
                 ],
                 "answer": 0
               }
@@ -3414,12 +3414,12 @@
             "instruction": "hp is exactly 0. What prints?",
             "code": "int hp = 0;\nif (hp > 0) {\n  System.out.println(\"Still standing.\");\n} else {\n  System.out.println(\"You collapse.\");\n}",
             "opts": [
-              "You collapse.",
-              "Still standing.",
               "both",
-              "(nothing)"
+              "You collapse.",
+              "(nothing)",
+              "Still standing."
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "0 > 0 is false, so else runs. Zero is where > and >= disagree, and where most off-by-one bugs live.",
             "skills": [
               "use else to handle the other case"
@@ -3515,23 +3515,23 @@
               {
                 "prompt": "Why do we use if statements in Java?",
                 "opts": [
+                  "To break out of some block of code",
                   "To do something only if a condition is true",
                   "To repeat something a fixed number of times",
-                  "To do something while a condition is true",
-                  "To break out of some block of code"
+                  "To do something while a condition is true"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "An if runs a block once, or not at all. Repeating while something is true is a while loop."
               },
               {
                 "prompt": "Which if statement is written properly?",
                 "opts": [
+                  "if condition\n[\n    // code\n]",
                   "if(condition)\n{\n    // code\n}",
-                  "if (condition):\n    // code",
                   "if condition\n{\n    // code\n}",
-                  "if condition\n[\n    // code\n]"
+                  "if (condition):\n    // code"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "Round brackets around the condition and braces around the block. Java uses neither a colon nor square brackets."
               }
             ],
@@ -3704,12 +3704,12 @@
             "instruction": "break works in any loop. What prints?",
             "code": "for (int i = 1; i <= 5; i++) {\n  if (i == 3) {\n    break;\n  }\n  System.out.println(i);\n}",
             "opts": [
-              "1\n2",
               "1\n2\n3",
               "1\n2\n4\n5",
-              "1\n2\n3\n4\n5"
+              "1\n2\n3\n4\n5",
+              "1\n2"
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "At i = 3 the break runs before the println, and the whole loop ends. It does not skip one and carry on.",
             "skills": [
               "use break to leave a loop from the middle"
@@ -3761,11 +3761,11 @@
             "blanks": [
               {
                 "chips": [
+                  "return;",
                   "break;",
-                  "continue;",
-                  "return;"
+                  "continue;"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "stdin": "5\n0",
@@ -3809,9 +3809,9 @@
                 "prompt": "Which statement can we use inside a loop to end it?",
                 "opts": [
                   "break;",
+                  "else",
                   "System.out.println;",
-                  "SENTINEL;",
-                  "else"
+                  "SENTINEL;"
                 ],
                 "correct": 0,
                 "why": "break exits the loop immediately. The others are not exit statements."
@@ -3819,12 +3819,12 @@
               {
                 "prompt": "Which is the correct loop-and-a-half structure?",
                 "opts": [
-                  "while(true)\n{\n    // code\n    if(condition)\n    {\n        break;\n    }\n    // code\n}",
                   "while(condition)\n{\n    // code\n}",
+                  "while(true)\n{\n    // code\n    if(condition)\n    {\n        break;\n    }\n    // code\n}",
                   "for(int i = 0; i <= 1.5; i++)\n{\n    // code\n}",
                   "for(int i = 0; i < 2; i++)\n{\n    // code\n    break;\n    // code\n}"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "An always-true loop with the exit test in the middle. The second is an ordinary while; the fourth breaks on the first pass every time."
               }
             ],
@@ -3977,12 +3977,12 @@
             "instruction": "5 / 0 would crash. Does this?",
             "code": "System.out.println(true || (5 / 0 == 0));",
             "opts": [
+              "0",
               "true",
-              "(a crash)",
               "false",
-              "0"
+              "(a crash)"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "|| found true on the left, so the right side is never evaluated and the division never happens.",
             "skills": [
               "explain why the right-hand side of && or || is sometimes skipped"
@@ -4015,10 +4015,10 @@
               {
                 "prompt": "true && X",
                 "opts": [
-                  "yes",
-                  "no"
+                  "no",
+                  "yes"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "true tells && nothing yet, so X must run. This one is NOT protected."
               }
             ],
@@ -4057,10 +4057,10 @@
             "blanks": [
               {
                 "chips": [
-                  "&&",
-                  "||"
+                  "||",
+                  "&&"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "false",
@@ -4327,12 +4327,12 @@
             "instruction": "a is true, b is false. What prints?",
             "code": "boolean a = true;\nboolean b = false;\nSystem.out.println(!a || !b);",
             "opts": [
-              "true",
-              "false",
               "(an error)",
+              "false",
+              "true",
               "nothing"
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "!a is false, !b is true. false || true is true - which matches !(a && b), since a && b is false.",
             "skills": [
               "check that two boolean expressions mean the same thing"
@@ -4371,9 +4371,9 @@
                 "prompt": "Which is equivalent to !(A && B)?",
                 "opts": [
                   "!A || !B",
-                  "!A && !B",
                   "!A || B",
-                  "A && !B"
+                  "A && !B",
+                  "!A && !B"
                 ],
                 "correct": 0,
                 "why": "The ! goes onto both parts and the && flips to ||. Keeping the && is the usual mistake."
@@ -4381,12 +4381,12 @@
               {
                 "prompt": "Which is equivalent to !(A || B)?",
                 "opts": [
-                  "!A && !B",
-                  "!A || !B",
                   "!A || B",
-                  "A && B"
+                  "A && B",
+                  "!A && !B",
+                  "!A || !B"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Same recipe the other way: ! onto both parts, and the || flips to &&."
               }
             ],
@@ -4402,10 +4402,10 @@
             "blanks": [
               {
                 "chips": [
-                  "||",
-                  "&&"
+                  "&&",
+                  "||"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "true",
@@ -4540,12 +4540,12 @@
             "instruction": "No user input this time. What prints?",
             "code": "String a = \"cat\";\nString b = \"cat\";\nSystem.out.println(a == b);",
             "opts": [
+              "cat",
               "true",
               "false",
-              "(an error)",
-              "cat"
+              "(an error)"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "Java reuses identical text written directly in the code, so both names point at the same object and == says true. It looks like == works, which is exactly the trap - the moment the text comes from a user it says false. Use .equals() and you never have to think about it.",
             "skills": [
               "explain why == is the wrong way to compare text"
@@ -4622,21 +4622,21 @@
               {
                 "prompt": "What is a String type in Java?",
                 "opts": [
-                  "A sequence of characters",
-                  "A single character",
                   "A sequence of integers",
-                  "An extremely large integer value"
+                  "An extremely large integer value",
+                  "A single character",
+                  "A sequence of characters"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Any amount of text. A single character is char, written in single quotes."
               },
               {
                 "prompt": "What is the proper way to compare String values in Java?",
                 "opts": [
                   "The .equals() String method",
-                  "The == operator",
+                  "The | operator",
                   "The = operator",
-                  "The | operator"
+                  "The == operator"
                 ],
                 "correct": 0,
                 "why": ".equals() compares the characters. == compares object identity, and = assigns."
@@ -4654,10 +4654,10 @@
             "blanks": [
               {
                 "chips": [
-                  ".equals(\"cat\")",
-                  " == \"cat\""
+                  " == \"cat\"",
+                  ".equals(\"cat\")"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "stdin": "cat",
@@ -4829,12 +4829,12 @@
             "instruction": "What does this print?",
             "code": "public void run() {\n  System.out.println(\"A\");\n  shout();\n  System.out.println(\"C\");\n}\n\npublic void shout() {\n  System.out.println(\"B\");\n}",
             "opts": [
+              "B\nA\nC",
               "A\nB\nC",
               "A\nC\nB",
-              "A\nC",
-              "B\nA\nC"
+              "A\nC"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "The call to shout() runs the whole method before the next line of run(). Java goes there, prints B, comes back, then prints C.",
             "skills": [
               "create a method and call it"
@@ -4872,12 +4872,12 @@
               {
                 "prompt": "Why do we write methods?",
                 "opts": [
-                  "To name a block of code and reuse it without repeating it",
-                  "To store a single value",
                   "To repeat something a fixed number of times",
+                  "To store a single value",
+                  "To name a block of code and reuse it without repeating it",
                   "To compare two values"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "A method gives a block a name so it can be run from anywhere, as many times as needed, and changed in one place."
               },
               {
@@ -4905,11 +4905,11 @@
             "blanks": [
               {
                 "chips": [
+                  "String",
                   "void",
-                  "int",
-                  "String"
+                  "int"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "Victory!",
@@ -5067,12 +5067,12 @@
             "instruction": "What does this print?",
             "code": "public void run() {\n  greet(\"Ada\");\n  greet(\"Grace\");\n}\n\npublic void greet(String name) {\n  System.out.println(\"Hello, \" + name);\n}",
             "opts": [
-              "Hello, Ada\nHello, Grace",
-              "Hello, name\nHello, name",
               "Hello, Ada",
-              "Hello, Grace\nHello, Ada"
+              "Hello, Grace\nHello, Ada",
+              "Hello, name\nHello, name",
+              "Hello, Ada\nHello, Grace"
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "name takes the value of each argument in turn, so the method runs twice with different values.",
             "skills": [
               "write a method that takes a parameter"
@@ -5136,23 +5136,23 @@
               {
                 "prompt": "In show(\"hi\", 3), what is \"hi\" called?",
                 "opts": [
-                  "An argument",
                   "A parameter",
                   "A return value",
-                  "A variable type"
+                  "A variable type",
+                  "An argument"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "The value passed at the call is the argument. The name in the definition (String text) is the parameter."
               },
               {
                 "prompt": "Why write one method with a parameter instead of one method per value?",
                 "opts": [
-                  "The logic exists once, so a change happens in one place",
+                  "Java requires it",
                   "It runs faster",
                   "It uses less memory",
-                  "Java requires it"
+                  "The logic exists once, so a change happens in one place"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "The point is maintenance, not speed. Twenty rooms need twenty calls but still only one method to fix."
               }
             ],
@@ -5169,11 +5169,11 @@
             "blanks": [
               {
                 "chips": [
+                  "void",
                   "int",
-                  "String",
-                  "void"
+                  "String"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "Healed 5 HP.",
@@ -5326,12 +5326,12 @@
             "instruction": "What does this print?",
             "code": "public void run() {\n  System.out.println(twice(5));\n}\n\npublic int twice(int n) {\n  return n * 2;\n}",
             "opts": [
-              "10",
               "5",
-              "n * 2",
-              "(nothing)"
+              "10",
+              "(nothing)",
+              "n * 2"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "twice(5) is replaced by the value it returns, 10, and println prints that.",
             "skills": [
               "write a method that returns a value"
@@ -5383,23 +5383,23 @@
               {
                 "prompt": "What does the int in public int square(int n) mean?",
                 "opts": [
-                  "The method hands back a whole number",
                   "The method takes a whole number",
                   "The method prints a whole number",
-                  "The method is called once"
+                  "The method is called once",
+                  "The method hands back a whole number"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "The type before the name is the RETURN type. The type in the brackets is the parameter."
               },
               {
                 "prompt": "Why return a value instead of printing it?",
                 "opts": [
+                  "There is no difference",
                   "So the caller can use the value in further work",
-                  "So it prints faster",
                   "So it uses less memory",
-                  "There is no difference"
+                  "So it prints faster"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "A printed value only reaches the screen. A returned value reaches the caller, which can store it, compare it, or calculate with it."
               }
             ],
@@ -5416,19 +5416,19 @@
             "blanks": [
               {
                 "chips": [
-                  "int",
                   "void",
+                  "int",
                   "String"
                 ],
-                "answer": 0
+                "answer": 1
               },
               {
                 "chips": [
-                  "return",
+                  "give",
                   "print",
-                  "give"
+                  "return"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "5",
@@ -5586,11 +5586,11 @@
             "blanks": [
               {
                 "chips": [
-                  "@return",
+                  "@output",
                   "@param",
-                  "@output"
+                  "@return"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "12",
@@ -5609,23 +5609,23 @@
               {
                 "prompt": "What does a Javadoc comment start with?",
                 "opts": [
-                  "/**",
-                  "//",
                   "/*",
-                  "#"
+                  "#",
+                  "/**",
+                  "//"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Two stars. A single star is an ordinary block comment, and // is a line comment."
               },
               {
                 "prompt": "A void method needs which tag?",
                 "opts": [
+                  "neither",
                   "@param only, if it takes parameters",
                   "@return only",
-                  "both @param and @return",
-                  "neither"
+                  "both @param and @return"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "void hands nothing back, so there is nothing for @return to describe. Parameters still get documented."
               }
             ],
@@ -5787,11 +5787,11 @@
             "blanks": [
               {
                 "chips": [
-                  "3",
                   "2",
+                  "3",
                   "4"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "tre",
@@ -5810,23 +5810,23 @@
               {
                 "prompt": "What is \"hello\".length()?",
                 "opts": [
-                  "5",
+                  "h",
                   "4",
-                  "6",
-                  "h"
+                  "5",
+                  "6"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "length() counts characters, and there are five. The last position is 4."
               },
               {
                 "prompt": "What is \"hello\".charAt(0)?",
                 "opts": [
-                  "h",
                   "e",
-                  "o",
-                  "1"
+                  "1",
+                  "h",
+                  "o"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Positions start at 0, so charAt(0) is the first character."
               }
             ],
@@ -5916,9 +5916,9 @@
             "code": "public void run() {\n  String s = \"abc\";\n  for (int i = 0; i < s.length(); i++) {\n    System.out.print(s.charAt(i));\n  }\n}",
             "opts": [
               "abc",
-              "a\nb\nc",
+              "abc ",
               "cba",
-              "abc "
+              "a\nb\nc"
             ],
             "correct": 0,
             "why": "print keeps them on one line, and the loop visits positions 0, 1, 2 in order.",
@@ -5983,11 +5983,11 @@
             "blanks": [
               {
                 "chips": [
-                  "<",
                   "<=",
-                  "=="
+                  "==",
+                  "<"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "map",
@@ -6058,21 +6058,21 @@
               {
                 "prompt": "What does (int) 'a' give?",
                 "opts": [
+                  "a",
                   "97",
-                  "0",
                   "1",
-                  "a"
+                  "0"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "Casting a char to int gives its ASCII value, and 'a' is 97. 'A' is 65."
               },
               {
                 "prompt": "Which checks whether a char is a digit?",
                 "opts": [
                   "Character.isDigit(c)",
-                  "c.isDigit()",
                   "isDigit(c)",
-                  "c.digit()"
+                  "c.digit()",
+                  "c.isDigit()"
                 ],
                 "correct": 0,
                 "why": "It is a method on the Character CLASS, so the class name goes first."
@@ -6319,9 +6319,9 @@
                 "prompt": "int x = 3 (no semicolon), then int y = 4; then int sum = x + y; — run-time error, compile error, both, or neither?",
                 "opts": [
                   "Compile time error",
-                  "Run time error",
                   "Both",
-                  "Neither"
+                  "Neither",
+                  "Run time error"
                 ],
                 "correct": 0,
                 "why": "Java cannot tell where the first statement ends, so it refuses to build the program. Nothing runs, so there is no run-time error to have."
@@ -6329,12 +6329,12 @@
               {
                 "prompt": "String hello = \"hello\"; char last = hello.charAt(10); — which exception?",
                 "opts": [
-                  "IndexOutOfBoundsException",
-                  "ArithmeticException",
                   "IllegalArgumentException",
-                  "None"
+                  "None",
+                  "IndexOutOfBoundsException",
+                  "ArithmeticException"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "\"hello\" has 5 characters, at positions 0 to 4. Position 10 is outside the String, and that is exactly what this exception means."
               }
             ],
@@ -6451,12 +6451,12 @@
             "instruction": "What does this print?",
             "code": "public void run() {\n  String s = \"abc\";\n  String out = \"\";\n  for (int i = 0; i < s.length(); i++) {\n    out = s.charAt(i) + out;\n  }\n  System.out.println(out);\n}",
             "opts": [
-              "cba",
               "abc",
+              "ccbbaa",
               "aabbcc",
-              "ccbbaa"
+              "cba"
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "Each character is put in FRONT of what is already there, so the result comes out reversed even though the loop runs forwards.",
             "skills": [
               "build up a String inside a loop"
@@ -6509,12 +6509,12 @@
               {
                 "prompt": "Why start an accumulator String at \"\"?",
                 "opts": [
+                  "So length() works",
                   "So nothing unwanted appears in the result",
                   "Because Java requires it",
-                  "To make the loop faster",
-                  "So length() works"
+                  "To make the loop faster"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "Every character you start with survives to the end. Empty is the only start that adds nothing."
               },
               {
@@ -6522,8 +6522,8 @@
                 "opts": [
                   "Makes a new String with c on the end and stores it in out",
                   "Changes the existing String in place",
-                  "Prints c",
-                  "Removes c from out"
+                  "Removes c from out",
+                  "Prints c"
                 ],
                 "correct": 0,
                 "why": "Strings cannot be changed in place. Each += builds a new String and reassigns the variable."
@@ -6715,12 +6715,12 @@
             "instruction": "What does this print?",
             "code": "public void run() {\n  Monster goblin = new Monster(\"Goblin\", 20);\n  Monster troll = new Monster(\"Troll\", 45);\n  System.out.println(goblin.getHp() + troll.getHp());\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public int getHp() {\n    return hp;\n  }\n}",
             "opts": [
-              "65",
               "20",
               "45",
+              "65",
               "2045"
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "getHp() hands back each object's own number, 20 and 45, and + adds them because both are ints.",
             "skills": [
               "call a method on an object"
@@ -6759,18 +6759,18 @@
               {
                 "chips": [
                   "new",
-                  "make",
-                  "create"
+                  "create",
+                  "make"
                 ],
                 "answer": 0
               },
               {
                 "chips": [
+                  "::",
                   ".",
-                  "->",
-                  "::"
+                  "->"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "Ogre roars!",
@@ -6790,9 +6790,9 @@
                 "prompt": "What is the relationship between a class and an object?",
                 "opts": [
                   "A class is a blueprint; an object is one thing built from it",
+                  "A class is a variable",
                   "They are the same thing",
-                  "An object is a blueprint; a class is built from it",
-                  "A class is a variable"
+                  "An object is a blueprint; a class is built from it"
                 ],
                 "correct": 0,
                 "why": "One class can produce any number of objects, each with its own values. The class itself holds no values."
@@ -6800,12 +6800,12 @@
               {
                 "prompt": "In goblin.roar(), what does the dot mean?",
                 "opts": [
-                  "roar() belongs to the goblin object",
                   "roar is a variable",
+                  "roar() belongs to the goblin object",
                   "goblin is a method",
                   "it divides them"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "The dot reaches into a specific object and asks it to run one of its methods."
               }
             ],
@@ -7020,12 +7020,12 @@
               {
                 "prompt": "An object has both...",
                 "opts": [
-                  "state and behaviour",
                   "a class and a method",
+                  "state and behaviour",
                   "a name and a number",
                   "input and output"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "State is the values it holds; behaviour is the methods it can run. That pairing is the definition."
               },
               {
@@ -7139,11 +7139,11 @@
             "blanks": [
               {
                 "chips": [
+                  "takeDamage(5)",
                   "getHp()",
-                  "roar()",
-                  "takeDamage(5)"
+                  "roar()"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "30",
@@ -7162,23 +7162,23 @@
               {
                 "prompt": "What does it mean to be a client of a class?",
                 "opts": [
-                  "To use the class without writing or changing it",
                   "To write the class",
                   "To copy the class into your file",
+                  "To use the class without writing or changing it",
                   "To inherit from the class"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "A client calls the methods. Someone else owns the implementation."
               },
               {
                 "prompt": "Why can you use a class without reading its source?",
                 "opts": [
-                  "The documentation says what each method takes and returns",
-                  "Java hides it for security",
                   "The source does not exist",
+                  "Java hides it for security",
+                  "The documentation says what each method takes and returns",
                   "You cannot"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "The method list is the contract. How it works inside is not your problem, and can change without breaking you."
               }
             ],
@@ -7304,12 +7304,12 @@
             "instruction": "Two treasures, one class. What prints?",
             "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  Treasure ring = new Treasure(\"Ring\", 45);\n  System.out.println(crown);\n  System.out.println(ring);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
             "opts": [
+              "(an error)",
               "Crown (120 gold)\nRing (45 gold)",
-              "Crown (120 gold)\nCrown (120 gold)",
               "Treasure\nTreasure",
-              "(an error)"
+              "Crown (120 gold)\nCrown (120 gold)"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "Each object holds its own name and value, and toString uses whichever object it was called on.",
             "skills": [
               "write a class with private instance variables and a constructor"
@@ -7338,20 +7338,20 @@
               {
                 "prompt": "What is different about a constructor?",
                 "opts": [
-                  "It has the class name and no return type",
-                  "It must return void",
                   "It must be private",
-                  "It can only take one parameter"
+                  "It must return void",
+                  "It can only take one parameter",
+                  "It has the class name and no return type"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Same name as the class, and no type before the name - not even void."
               },
               {
                 "prompt": "Why write toString()?",
                 "opts": [
                   "So printing the object shows something readable",
-                  "So the object can be created",
                   "So fields become public",
+                  "So the object can be created",
                   "It is required by Java"
                 ],
                 "correct": 0,
@@ -7542,23 +7542,23 @@
               {
                 "prompt": "Why does polish() not need value as a parameter?",
                 "opts": [
-                  "It is a field of the same object, so it is already in scope",
-                  "Java passes it automatically",
                   "It is static",
-                  "It does"
+                  "It does",
+                  "It is a field of the same object, so it is already in scope",
+                  "Java passes it automatically"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "An instance method runs on one object and can see that object's fields by name."
               },
               {
                 "prompt": "What is the difference between an instance variable and an instance method?",
                 "opts": [
-                  "A variable is what the object has; a method is what it does",
-                  "Nothing",
                   "A variable is private; a method is public",
-                  "A method is faster"
+                  "Nothing",
+                  "A method is faster",
+                  "A variable is what the object has; a method is what it does"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "State versus behaviour - the same pair from 5.2."
               }
             ],
@@ -7716,23 +7716,23 @@
               {
                 "prompt": "What is the difference between a getter and a setter?",
                 "opts": [
-                  "A getter returns a field; a setter changes one",
-                  "A getter is private; a setter is public",
                   "A getter is faster",
-                  "There is none"
+                  "There is none",
+                  "A getter returns a field; a setter changes one",
+                  "A getter is private; a setter is public"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Getter reads and returns. Setter takes a value in and writes it. Hence the return type on one and the parameter on the other."
               },
               {
                 "prompt": "Why keep fields private and use methods instead?",
                 "opts": [
+                  "It saves memory",
                   "The class can then control what values are allowed",
-                  "It runs faster",
                   "Java requires it",
-                  "It saves memory"
+                  "It runs faster"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "A public field accepts anything. A setter can check first, and can keep checking as the rules change."
               }
             ],
@@ -7749,19 +7749,19 @@
             "blanks": [
               {
                 "chips": [
-                  "int",
                   "void",
+                  "int",
                   "String"
                 ],
-                "answer": 0
+                "answer": 1
               },
               {
                 "chips": [
-                  "return",
                   "print",
+                  "return",
                   "get"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "120",
@@ -7916,12 +7916,12 @@
             "instruction": "Two objects, one shared counter. What prints?",
             "code": "public void run() {\n  Treasure a = new Treasure(\"Crown\");\n  System.out.println(Treasure.getCount());\n  Treasure b = new Treasure(\"Ring\");\n  System.out.println(Treasure.getCount());\n}\n\nclass Treasure {\n  private static int count = 0;\n  private String name;\n\n  public Treasure(String name) {\n    this.name = name;\n    count = count + 1;\n  }\n\n  public static int getCount() {\n    return count;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
             "opts": [
-              "1\n2",
               "1\n1",
+              "1\n2",
               "2\n2",
               "0\n0"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "The counter is not reset per object. Building the second Treasure raises the same shared count from 1 to 2.",
             "skills": [
               "write a static variable and a static method"
@@ -7936,23 +7936,23 @@
               {
                 "prompt": "What does static mean?",
                 "opts": [
-                  "It belongs to the class, not to any one object",
                   "It cannot be changed",
-                  "It is private",
-                  "It runs first"
+                  "It runs first",
+                  "It belongs to the class, not to any one object",
+                  "It is private"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "One copy shared by everything, reached through the class name."
               },
               {
                 "prompt": "When is a class variable the right choice?",
                 "opts": [
-                  "When the value is about all objects at once, like a count",
-                  "Always",
                   "When the value is private",
-                  "When there is only one object"
+                  "When there is only one object",
+                  "Always",
+                  "When the value is about all objects at once, like a count"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "A count of how many exist cannot belong to any single one of them."
               }
             ],
@@ -8105,9 +8105,9 @@
             "code": "public void run() {\n  System.out.println(Integer.parseInt(\"7\") + Integer.parseInt(\"3\"));\n  System.out.println(\"7\" + \"3\");\n}",
             "opts": [
               "10\n73",
-              "73\n73",
               "10\n10",
-              "(an error)"
+              "(an error)",
+              "73\n73"
             ],
             "correct": 0,
             "why": "parseInt turns the text into real numbers, so + adds them to 10. Left as Strings, + glues them into \"73\".",
@@ -8124,23 +8124,23 @@
               {
                 "prompt": "What is the difference between int and Integer?",
                 "opts": [
-                  "int is a primitive value; Integer is an object with methods",
                   "Integer holds bigger numbers",
+                  "int is a primitive value; Integer is an object with methods",
                   "int is faster to type",
                   "There is none"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "They hold the same number. Integer is a class, so it has methods and can go where an object is required."
               },
               {
                 "prompt": "What does Integer.parseInt(\"42\") give you?",
                 "opts": [
-                  "the int 42",
                   "the String \"42\"",
                   "an error",
+                  "the int 42",
                   "42.0"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "It converts text to a number, which is what lets you do arithmetic with it."
               }
             ],
@@ -8284,12 +8284,12 @@
             "instruction": "Which version runs?",
             "code": "public void run() {\n  System.out.println(new Potion(\"Tonic\"));\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
             "opts": [
-              "Tonic heals 10",
-              "Tonic heals 0",
               "(an error)",
-              "Tonic heals 60"
+              "Tonic heals 60",
+              "Tonic heals 10",
+              "Tonic heals 0"
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "One argument, so Java picks Potion(String), which sets healing to 10 itself.",
             "skills": [
               "explain how Java chooses which one to run"
@@ -8304,23 +8304,23 @@
               {
                 "prompt": "What makes two overloaded methods different?",
                 "opts": [
-                  "Their parameter lists",
-                  "Their return types",
                   "Their names",
-                  "Their comments"
+                  "Their parameter lists",
+                  "Their comments",
+                  "Their return types"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "A different number or different types of parameters. The name is deliberately the same."
               },
               {
                 "prompt": "Why overload instead of using two names?",
                 "opts": [
+                  "It uses less memory",
                   "The caller writes what they mean and Java picks the right version",
                   "It runs faster",
-                  "Java requires it",
-                  "It uses less memory"
+                  "Java requires it"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "One name to remember, and the arguments say which situation it is."
               }
             ],
@@ -8458,12 +8458,12 @@
             "instruction": "Where does this go wrong?",
             "code": "public void run() {\n  int x = 5;\n  if (x > 0) {\n    int y = x * 2;\n    System.out.println(y);\n  }\n  System.out.println(x);\n}",
             "opts": [
-              "10\n5",
-              "10\n10",
               "5\n5",
-              "(it does not compile)"
+              "(it does not compile)",
+              "10\n5",
+              "10\n10"
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "y lives only inside the if braces and is printed there. x was declared in run(), so it is still in scope afterwards.",
             "skills": [
               "work out where a variable exists"
@@ -8479,9 +8479,9 @@
                 "prompt": "What is the scope of a variable?",
                 "opts": [
                   "From its declaration to the closing brace of its block",
+                  "Only the line it is on",
                   "The whole program",
-                  "The whole class",
-                  "Only the line it is on"
+                  "The whole class"
                 ],
                 "correct": 0,
                 "why": "The braces it was declared inside decide where it exists."
@@ -8489,12 +8489,12 @@
               {
                 "prompt": "Which has the more specific scope: a variable declared in run(), or one declared inside a loop in run()?",
                 "opts": [
+                  "Neither has scope",
                   "The one inside the loop",
                   "The one in run()",
-                  "They are the same",
-                  "Neither has scope"
+                  "They are the same"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "A smaller enclosing block means a narrower scope. The loop variable dies first."
               }
             ],
@@ -8654,9 +8654,9 @@
             "code": "public void run() {\n  System.out.println(new Potion(\"Tonic\"));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
             "opts": [
               "null",
+              "name",
               "Tonic",
-              "(an error)",
-              "name"
+              "(an error)"
             ],
             "correct": 0,
             "why": "name = name assigns the parameter to itself, so the field is never set. An unset String field is null.",
@@ -8673,23 +8673,23 @@
               {
                 "prompt": "What does this refer to?",
                 "opts": [
-                  "The object the method is currently running on",
-                  "The class",
                   "The parameter",
+                  "The class",
+                  "The object the method is currently running on",
                   "The constructor"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "It is a reference to the particular object, which is how this.name reaches that object's field."
               },
               {
                 "prompt": "Why is this. needed in the constructor but often not elsewhere?",
                 "opts": [
-                  "A parameter of the same name is shadowing the field",
-                  "Constructors are special",
                   "Fields are private",
-                  "It is always needed"
+                  "Constructors are special",
+                  "It is always needed",
+                  "A parameter of the same name is shadowing the field"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Where nothing else is called name, plain name already means the field."
               }
             ],
@@ -8850,12 +8850,12 @@
             "instruction": "What does this print?",
             "code": "public void run() {\n  String a = \"cat\";\n  String b = \"cat\";\n  System.out.println(a.equals(b));\n}",
             "opts": [
-              "true",
               "false",
+              "true",
               "(a crash)",
               "cat"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "equals compares the characters, which match. == would be unreliable here for exactly the reason in the table.",
             "skills": [
               "compare objects with equals and primitives with =="
@@ -8871,9 +8871,9 @@
                 "prompt": "Why does a == b give false?",
                 "opts": [
                   "They are two different objects, and == compares identity",
-                  "Their names differ",
                   "== does not work on objects",
-                  "It gives true"
+                  "It gives true",
+                  "Their names differ"
                 ],
                 "correct": 0,
                 "why": "Two news made two objects. == asks whether the variables point at the same one, and they do not."
@@ -9106,8 +9106,8 @@
             "opts": [
               "Grendel roars!",
               "(it does not compile)",
-              "(nothing)",
-              "Boss roars!"
+              "Boss roars!",
+              "(nothing)"
             ],
             "correct": 0,
             "why": "Boss inherited roar from Monster, so calling it on a Boss runs Monster's version using the Boss's own name.",
@@ -9124,23 +9124,23 @@
               {
                 "prompt": "What does super(name, hp) do?",
                 "opts": [
-                  "Calls the parent class constructor",
-                  "Creates a new object",
+                  "Makes the class static",
                   "Returns to the parent",
-                  "Makes the class static"
+                  "Calls the parent class constructor",
+                  "Creates a new object"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "It builds the inherited half of the object, and must be the first line of the subclass constructor."
               },
               {
                 "prompt": "Which is an IS A relationship?",
                 "opts": [
-                  "A Boss and a Monster",
-                  "A Hero and their sword",
+                  "A class and a file",
                   "A Monster and its hp",
-                  "A class and a file"
+                  "A Hero and their sword",
+                  "A Boss and a Monster"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "A Boss IS A kind of Monster, so it subclasses it. A Hero merely HAS a sword, so the sword is a field."
               }
             ],
@@ -9284,12 +9284,12 @@
             "instruction": "Both are Monsters. What prints?",
             "code": "public void run() {\n  Slime a = new Slime(\"Blob\");\n  Boss c = new Boss(\"Grendel\");\n  a.attack();\n  c.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
             "opts": [
-              "Blob splatters you.\nGrendel unleashes a shockwave.",
-              "Blob does something.\nGrendel does something.",
               "(it does not compile)",
-              "Blob splatters you.\nBlob splatters you."
+              "Blob splatters you.\nBlob splatters you.",
+              "Blob splatters you.\nGrendel unleashes a shockwave.",
+              "Blob does something.\nGrendel does something."
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "Each subclass supplied its own attack(), so each runs its own version. Monster never defined one.",
             "skills": [
               "force subclasses to supply a method"
@@ -9304,23 +9304,23 @@
               {
                 "prompt": "What can you NOT do with an abstract class?",
                 "opts": [
-                  "Create an object of it with new",
-                  "Extend it",
                   "Give it a constructor",
-                  "Give it ordinary methods"
+                  "Give it ordinary methods",
+                  "Extend it",
+                  "Create an object of it with new"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "It exists to be extended. Everything else about it works normally, including constructors called by super()."
               },
               {
                 "prompt": "What must a subclass of an abstract class do?",
                 "opts": [
-                  "Provide a body for every abstract method",
+                  "Nothing special",
                   "Be abstract too",
                   "Have the same name",
-                  "Nothing special"
+                  "Provide a body for every abstract method"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Otherwise it still has a gap, and Java will not let it be built either."
               }
             ],
@@ -9485,12 +9485,12 @@
             "instruction": "Declared Monster, built as Slime. What prints?",
             "code": "public void run() {\n  Monster m = new Slime(\"Ooze\");\n  m.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
             "opts": [
-              "Ooze splatters you.",
-              "Ooze unleashes a shockwave.",
+              "(nothing)",
               "(it does not compile)",
-              "(nothing)"
+              "Ooze unleashes a shockwave.",
+              "Ooze splatters you."
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "The object is a Slime, so Slime's attack() runs. Declaring it as Monster changes nothing about that.",
             "skills": [
               "store a subclass object in a parent-typed variable"
@@ -9506,8 +9506,8 @@
                 "prompt": "Which attack() runs?",
                 "opts": [
                   "Boss's, because the object is a Boss",
-                  "Monster's, because the variable is a Monster",
                   "Neither",
+                  "Monster's, because the variable is a Monster",
                   "Both"
                 ],
                 "correct": 0,
@@ -9517,9 +9517,9 @@
                 "prompt": "Why write a method that takes the parent type?",
                 "opts": [
                   "It then works for every subclass, including ones written later",
+                  "Java requires it",
                   "It runs faster",
-                  "It uses less memory",
-                  "Java requires it"
+                  "It uses less memory"
                 ],
                 "correct": 0,
                 "why": "Adding a new subclass needs no change to any method that already accepts the parent."
@@ -9699,23 +9699,23 @@
               {
                 "prompt": "Which class does every Java class inherit from?",
                 "opts": [
-                  "Object",
+                  "None",
                   "Main",
                   "String",
-                  "None"
+                  "Object"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Automatically, without extends being written. It is why println works on anything."
               },
               {
                 "prompt": "Why does the default equals return false for two identical objects?",
                 "opts": [
+                  "It compares names",
                   "It compares identity, not contents",
                   "It is broken",
-                  "It compares names",
                   "It always returns false"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "Object cannot know which fields matter, so it falls back to whether they are literally the same object."
               }
             ],
@@ -9908,21 +9908,21 @@
               {
                 "prompt": "What is the keyword for using an interface?",
                 "opts": [
+                  "interface",
                   "implements",
-                  "extends",
                   "abstract",
-                  "interface"
+                  "extends"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "A class extends one class and implements any number of interfaces."
               },
               {
                 "prompt": "What can an abstract class do that an interface cannot?",
                 "opts": [
                   "Hold instance variables and a constructor",
-                  "Declare methods with no body",
                   "Be used as a parameter type",
-                  "Be extended"
+                  "Be extended",
+                  "Declare methods with no body"
                 ],
                 "correct": 0,
                 "why": "An abstract class is a partly-built parent with state. An interface is only a list of promised methods."
@@ -10070,23 +10070,23 @@
               {
                 "prompt": "Which structure should you use when you do not know how many items there will be?",
                 "opts": [
-                  "ArrayList",
-                  "array",
+                  "none of them",
                   "2D array",
-                  "none of them"
+                  "ArrayList",
+                  "array"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "An array has a fixed size once created. An ArrayList grows and shrinks as you add and remove."
               },
               {
                 "prompt": "What is a HashMap for?",
                 "opts": [
+                  "Sorting numbers",
                   "Looking a value up by a name instead of a number",
-                  "Storing a grid",
                   "Storing a fixed list",
-                  "Sorting numbers"
+                  "Storing a grid"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "It stores pairs, so you ask for \"gold\" rather than position 3."
               }
             ],
@@ -10240,19 +10240,19 @@
               {
                 "prompt": "hp[0]",
                 "opts": [
+                  "8",
                   "20",
-                  "45",
-                  "8"
+                  "45"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "The first slot. Counting starts at 0."
               },
               {
                 "prompt": "hp[2]",
                 "opts": [
                   "8",
-                  "45",
-                  "20"
+                  "20",
+                  "45"
                 ],
                 "correct": 0,
                 "why": "The third and last, because 3 slots are numbered 0, 1, 2."
@@ -10260,11 +10260,11 @@
               {
                 "prompt": "hp.length",
                 "opts": [
-                  "3",
                   "2",
+                  "3",
                   "8"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "How many slots there are - not the last index, which is 2."
               }
             ],
@@ -10280,9 +10280,9 @@
             "code": "public void run() {\n  int[] a = {5, 10, 15};\n  a[0] = a[2];\n  System.out.println(a[0]);\n}",
             "opts": [
               "15",
+              "(an error)",
               "5",
-              "10",
-              "(an error)"
+              "10"
             ],
             "correct": 0,
             "why": "a[2] is read first (15), then written into slot 0. The right-hand side is worked out before the assignment.",
@@ -10299,23 +10299,23 @@
               {
                 "prompt": "What is the index of the LAST item in an array of length 3?",
                 "opts": [
-                  "2",
-                  "3",
+                  "0",
                   "1",
-                  "0"
+                  "2",
+                  "3"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Indexes start at 0, so a length of 3 means 0, 1, 2. The last index is always length - 1."
               },
               {
                 "prompt": "How do you find how many items an array holds?",
                 "opts": [
-                  "hp.length",
-                  "hp.length()",
+                  "hp.count",
                   "hp.size()",
-                  "hp.count"
+                  "hp.length",
+                  "hp.length()"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "For an array it is a field with no brackets. String uses length() WITH brackets, and ArrayList uses size()."
               }
             ],
@@ -10332,11 +10332,11 @@
             "blanks": [
               {
                 "chips": [
-                  "1",
                   "0",
+                  "1",
                   "2"
                 ],
-                "answer": 0
+                "answer": 1
               }
             ],
             "target": "99",
@@ -10452,12 +10452,12 @@
             "instruction": "How many times does the body run?",
             "code": "public void run() {\n  int[] a = {5, 10, 15, 20};\n  for (int i = 0; i < a.length; i++) {\n    System.out.print(a[i] + \" \");\n  }\n  System.out.println();\n}",
             "opts": [
-              "5 10 15 20 ",
+              "(a crash)",
               "5 10 15 ",
               "10 15 20 ",
-              "(a crash)"
+              "5 10 15 20 "
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "length is 4, so i takes 0 to 3 and every slot prints once.",
             "skills": [
               "traverse an array with a for loop"
@@ -10502,21 +10502,21 @@
               {
                 "prompt": "What happens when a program reads hp[3] here?",
                 "opts": [
-                  "It throws ArrayIndexOutOfBoundsException at run time",
-                  "It returns 0",
                   "It will not compile",
-                  "It returns null"
+                  "It returns null",
+                  "It throws ArrayIndexOutOfBoundsException at run time",
+                  "It returns 0"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Three slots are numbered 0 to 2. Java checks at run time and throws."
               },
               {
                 "prompt": "int[] b = a; then b[0] = 99. What is a[0]?",
                 "opts": [
                   "99",
-                  "the original value",
+                  "null",
                   "0",
-                  "null"
+                  "the original value"
                 ],
                 "correct": 0,
                 "why": "b = a copies the reference, not the contents, so both names see the same array."
@@ -10535,11 +10535,11 @@
             "blanks": [
               {
                 "chips": [
-                  "<",
+                  ">",
                   "<=",
-                  ">"
+                  "<"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "30",
@@ -10684,12 +10684,12 @@
             "instruction": "Does the array change?",
             "code": "public void run() {\n  int[] a = {1, 2, 3};\n  for (int n : a) {\n    n = n * 10;\n  }\n  System.out.println(a[0]);\n}",
             "opts": [
-              "1",
               "10",
               "0",
-              "(an error)"
+              "(an error)",
+              "1"
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "n is a copy of each element. Changing the copy leaves the array untouched, which is why writes need the indexed form.",
             "skills": [
               "say when the enhanced form does not fit"
@@ -10704,21 +10704,21 @@
               {
                 "prompt": "What type goes before the name in for (___ n : hp)?",
                 "opts": [
+                  "void",
                   "The type of ONE element",
                   "The type of the array",
-                  "int, always",
-                  "void"
+                  "int, always"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "The variable holds one element at a time, so for a String[] it is String."
               },
               {
                 "prompt": "When must you use the indexed for instead?",
                 "opts": [
                   "When you need the position, or need to change the array",
-                  "When the array is long",
                   "When the array holds objects",
-                  "Never"
+                  "Never",
+                  "When the array is long"
                 ],
                 "correct": 0,
                 "why": "The enhanced form gives you values, not positions, and its variable is a copy."
@@ -10899,23 +10899,23 @@
               {
                 "prompt": "How do you find how many items an ArrayList holds?",
                 "opts": [
-                  "loot.size()",
                   "loot.length",
-                  "loot.length()",
-                  "loot.count()"
+                  "loot.size()",
+                  "loot.count()",
+                  "loot.length()"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "Arrays use .length with no brackets, Strings use .length(), and ArrayLists use .size()."
               },
               {
                 "prompt": "Why choose an ArrayList over an array?",
                 "opts": [
+                  "It uses less memory",
                   "The number of items can change while the program runs",
                   "It is faster",
-                  "It uses less memory",
                   "It can hold objects"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "An array is fixed at creation. Arrays hold objects perfectly well - that is not the difference."
               }
             ],
@@ -10933,8 +10933,8 @@
               {
                 "chips": [
                   "size()",
-                  "length",
-                  "length()"
+                  "length()",
+                  "length"
                 ],
                 "answer": 0
               }
@@ -11124,8 +11124,8 @@
                 "prompt": "When should you choose an array over an ArrayList?",
                 "opts": [
                   "When the number of items is known and fixed",
-                  "Always",
                   "When storing text",
+                  "Always",
                   "When looping"
                 ],
                 "correct": 0,
@@ -11135,9 +11135,9 @@
                 "prompt": "Why can an ArrayList not hold int directly?",
                 "opts": [
                   "It stores objects, so ints are boxed into Integer",
+                  "Only arrays hold numbers",
                   "Ints are too big",
-                  "It can",
-                  "Only arrays hold numbers"
+                  "It can"
                 ],
                 "correct": 0,
                 "why": "ArrayList<int> does not compile. ArrayList<Integer> does, and Java boxes and unboxes automatically."
@@ -11288,12 +11288,12 @@
             "instruction": "Forwards removal again. What size prints?",
             "code": "public void run() {\n  ArrayList<String> a = new ArrayList<String>();\n  a.add(\"x\");\n  a.add(\"x\");\n  for (int i = 0; i < a.size(); i++) {\n    a.remove(i);\n  }\n  System.out.println(a.size());\n}",
             "opts": [
-              "1",
-              "0",
               "2",
+              "0",
+              "1",
               "(a crash)"
             ],
-            "correct": 0,
+            "correct": 2,
             "why": "Removing index 0 shifts the second x down to 0, then i becomes 1 which is no longer less than size 1. One survives.",
             "skills": [
               "remove items safely while looping"
@@ -11308,23 +11308,23 @@
               {
                 "prompt": "What replaces .length and [i] when looping an ArrayList?",
                 "opts": [
-                  ".size() and .get(i)",
-                  ".length() and .get(i)",
                   ".size and [i]",
+                  ".length() and .get(i)",
+                  ".size() and .get(i)",
                   ".count() and .at(i)"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Arrays use .length and brackets; ArrayLists use size() and get()."
               },
               {
                 "prompt": "Why remove items by looping backwards?",
                 "opts": [
-                  "Removing shifts later items down, and those are already checked",
-                  "It is faster",
+                  "It uses less memory",
                   "Forwards will not compile",
-                  "It uses less memory"
+                  "It is faster",
+                  "Removing shifts later items down, and those are already checked"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Going forwards, the shift moves an unchecked item into the index you just passed."
               }
             ],
@@ -11479,23 +11479,23 @@
               {
                 "prompt": "Why declare the variable as List rather than ArrayList?",
                 "opts": [
-                  "The code then depends on the promise, not one implementation",
+                  "It saves memory",
                   "It is faster",
                   "ArrayList does not compile",
-                  "It saves memory"
+                  "The code then depends on the promise, not one implementation"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "Swapping the implementation later changes only the new on the right of the =."
               },
               {
                 "prompt": "Can you write new List<String>()?",
                 "opts": [
-                  "No - an interface cannot be instantiated",
-                  "Yes",
                   "Only inside a method",
-                  "Only for Strings"
+                  "No - an interface cannot be instantiated",
+                  "Only for Strings",
+                  "Yes"
                 ],
-                "correct": 0,
+                "correct": 1,
                 "why": "An interface is a list of promised methods with no bodies. Something must implement it."
               }
             ],
@@ -11512,19 +11512,19 @@
             "blanks": [
               {
                 "chips": [
-                  "List",
+                  "Array",
                   "ArrayList",
-                  "Array"
+                  "List"
                 ],
-                "answer": 0
+                "answer": 2
               },
               {
                 "chips": [
-                  "ArrayList",
                   "List",
-                  "Array"
+                  "Array",
+                  "ArrayList"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "1",
@@ -11653,8 +11653,8 @@
                 "prompt": "grid[0][0]",
                 "opts": [
                   "1",
-                  "4",
-                  "2"
+                  "2",
+                  "4"
                 ],
                 "correct": 0,
                 "why": "First row, first column."
@@ -11662,11 +11662,11 @@
               {
                 "prompt": "grid[1][2]",
                 "opts": [
-                  "6",
                   "3",
-                  "5"
+                  "5",
+                  "6"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "Second row, third column."
               },
               {
@@ -11691,12 +11691,12 @@
             "instruction": "What does this print?",
             "code": "public void run() {\n  int[][] g = {\n    {1, 2},\n    {3, 4},\n    {5, 6}\n  };\n  System.out.println(g.length + \" \" + g[0].length);\n}",
             "opts": [
-              "3 2",
-              "2 3",
               "6 2",
-              "2 6"
+              "3 2",
+              "2 6",
+              "2 3"
             ],
-            "correct": 0,
+            "correct": 1,
             "why": "Three inner arrays means three rows, and each holds two values, so two columns.",
             "skills": [
               "find the number of rows and columns"
@@ -11711,20 +11711,20 @@
               {
                 "prompt": "How many rows and columns does new int[4][7] have?",
                 "opts": [
-                  "4 rows, 7 columns",
                   "7 rows, 4 columns",
-                  "28 rows",
-                  "4 rows, 4 columns"
+                  "4 rows, 4 columns",
+                  "4 rows, 7 columns",
+                  "28 rows"
                 ],
-                "correct": 0,
+                "correct": 2,
                 "why": "The first number is the outer array - the rows. The second is the length of each row."
               },
               {
                 "prompt": "What IS a 2D array in Java?",
                 "opts": [
                   "An array whose elements are arrays",
-                  "A special grid type",
                   "Two arrays side by side",
+                  "A special grid type",
                   "A list of lists"
                 ],
                 "correct": 0,
@@ -11873,12 +11873,12 @@
             "instruction": "How many times does the inner body run?",
             "code": "public void run() {\n  int[][] g = {\n    {1, 2},\n    {3, 4},\n    {5, 6}\n  };\n  int count = 0;\n  for (int r = 0; r < g.length; r++) {\n    for (int c = 0; c < g[r].length; c++) {\n      count++;\n    }\n  }\n  System.out.println(count);\n}",
             "opts": [
-              "6",
-              "5",
+              "2",
               "3",
-              "2"
+              "5",
+              "6"
             ],
-            "correct": 0,
+            "correct": 3,
             "why": "3 rows times 2 columns. Nested loops multiply rather than add.",
             "skills": [
               "traverse a 2D array with nested loops"
@@ -11894,8 +11894,8 @@
                 "prompt": "What does the OUTER loop count?",
                 "opts": [
                   "Rows",
-                  "Columns",
                   "Every square",
+                  "Columns",
                   "Nothing"
                 ],
                 "correct": 0,
@@ -11904,12 +11904,12 @@
               {
                 "prompt": "In for (int[] row : grid), why is the type int[] and not int?",
                 "opts": [
-                  "Each element of a 2D array is itself a 1D array",
                   "It is a typo",
+                  "int would also work",
                   "2D arrays hold arrays of Strings",
-                  "int would also work"
+                  "Each element of a 2D array is itself a 1D array"
                 ],
-                "correct": 0,
+                "correct": 3,
                 "why": "A 2D array is an array of arrays, so one element is a whole row."
               }
             ],
@@ -11926,11 +11926,11 @@
             "blanks": [
               {
                 "chips": [
-                  "r",
+                  "0",
                   "c",
-                  "0"
+                  "r"
                 ],
-                "answer": 0
+                "answer": 2
               }
             ],
             "target": "21",
@@ -11952,6 +11952,870 @@
             "after": "1+2+3+4+5+6 is 21, and no index appeared anywhere.",
             "skills": [
               "traverse a 2D array with nested loops"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.11",
+      "title": "HashMaps",
+      "objectives": [
+        "store and look up pairs in a HashMap",
+        "handle a key that is not present"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "h_task",
+            "kind": "teach",
+            "instruction": "Two lists that have to stay lined up.",
+            "points": [
+              {
+                "label": "names",
+                "text": "[\"Ana\", \"Ben\", \"Cy\"] - position 0 is Ana."
+              },
+              {
+                "label": "scores",
+                "text": "[90, 75, 60] - position 0 is Ana's score. The link is the index, and nothing enforces it."
+              },
+              {
+                "label": "looking up Ana",
+                "text": "Walk the names until you find her, remember WHERE, then read that slot of the other list."
+              },
+              {
+                "label": "what you actually want",
+                "text": "To look a score up BY THE NAME. Not by a position you had to go hunting for."
+              }
+            ]
+          },
+          {
+            "id": "h_build",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A HashMap stores pairs: a key, and the value it points at.",
+            "code": "public void run() {\n  HashMap<String, Integer> scores = new HashMap<String, Integer>();\n  scores.put(\"Ana\", 90);\n  scores.put(\"Ben\", 75);\n  System.out.println(scores.get(\"Ana\"));\n}",
+            "output": "90",
+            "highlight": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "points": [
+              {
+                "label": "HashMap<String, Integer>",
+                "text": "Two types now: the key type, then the value type. Names point at scores."
+              },
+              {
+                "label": "put(\"Ana\", 90)",
+                "text": "Files 90 under the key \"Ana\". No index anywhere."
+              },
+              {
+                "label": "get(\"Ana\")",
+                "text": "Hands back 90. It does not search - it jumps straight there."
+              },
+              {
+                "label": "Integer, not int",
+                "text": "Same rule as ArrayList. A map holds objects, so int becomes Integer."
+              }
+            ]
+          },
+          {
+            "id": "h_missing",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "A key that was never put returns null.",
+            "code": "public void run() {\n  HashMap<String, Integer> scores = new HashMap<String, Integer>();\n  scores.put(\"Ana\", 90);\n  System.out.println(scores.get(\"Zoe\"));\n  System.out.println(scores.containsKey(\"Zoe\"));\n  System.out.println(scores.getOrDefault(\"Zoe\", 0));\n}",
+            "output": "null\nfalse\n0",
+            "highlight": [
+              4,
+              5,
+              6
+            ],
+            "points": [
+              {
+                "label": "get(\"Zoe\")",
+                "text": "null - not 0. The map does not invent a score for someone it has never heard of."
+              },
+              {
+                "label": "why that bites",
+                "text": "int score = scores.get(\"Zoe\"); crashes. There is no number to unwrap."
+              },
+              {
+                "label": "containsKey",
+                "text": "Asks first, without reading. Gives back true or false."
+              },
+              {
+                "label": "getOrDefault(\"Zoe\", 0)",
+                "text": "Reads, but substitutes 0 when the key is absent. Usually what you meant."
+              }
+            ]
+          },
+          {
+            "id": "h_keys",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Keys are unique, and they are not kept in order.",
+            "code": "public void run() {\n  HashMap<String, Integer> scores = new HashMap<String, Integer>();\n  scores.put(\"Ana\", 90);\n  scores.put(\"Ben\", 75);\n  scores.put(\"Zoe\", 60);\n  scores.put(\"Ana\", 100);\n  for (String name : scores.keySet()) {\n    System.out.println(name + \" \" + scores.get(name));\n  }\n}",
+            "output": "Zoe 60\nAna 100\nBen 75",
+            "highlight": [
+              6,
+              7,
+              8,
+              9
+            ],
+            "points": [
+              {
+                "label": "put(\"Ana\", 100)",
+                "text": "Ana was already a key, so this REPLACES 90. It does not add a second Ana."
+              },
+              {
+                "label": "keySet()",
+                "text": "Every key, which you can run an enhanced for over."
+              },
+              {
+                "label": "Zoe went in last",
+                "text": "and came out first. The map does not keep the order you added things in."
+              },
+              {
+                "label": "so do not rely on it",
+                "text": "If the order matters to you, you wanted a list."
+              }
+            ]
+          },
+          {
+            "id": "h_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What is the size at the end?",
+            "code": "public void run() {\n  HashMap<String, Integer> m = new HashMap<String, Integer>();\n  m.put(\"a\", 1);\n  m.put(\"b\", 2);\n  m.put(\"a\", 3);\n  System.out.println(m.size());\n}",
+            "opts": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "correct": 1,
+            "why": "Putting \"a\" twice overwrote the first value. Two distinct keys, so size is 2.",
+            "skills": [
+              "store and look up pairs in a HashMap"
+            ]
+          },
+          {
+            "id": "h_trace",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "HashMap<String, Integer> ages = new HashMap<String, Integer>();\nages.put(\"Ana\", 15);",
+            "questions": [
+              {
+                "prompt": "What does ages.get(\"Ben\") return?",
+                "opts": [
+                  "It crashes",
+                  "null",
+                  "0",
+                  "-1"
+                ],
+                "correct": 1,
+                "why": "An absent key gives null. It only crashes if you then try to store that null in an int."
+              },
+              {
+                "prompt": "Why HashMap<String, Integer> rather than HashMap<String, int>?",
+                "opts": [
+                  "A map stores objects, and int is not one",
+                  "No reason, both work",
+                  "int keys are not allowed",
+                  "Integer is faster"
+                ],
+                "correct": 0,
+                "why": "Same rule as ArrayList - the collection holds objects, so the wrapper type Integer is used."
+              }
+            ],
+            "skills": [
+              "store and look up pairs in a HashMap"
+            ]
+          },
+          {
+            "id": "h_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Count how many times each word appears.",
+            "code": "public void run() {\n  String[] words = {\"red\", \"blue\", \"red\"};\n  HashMap<String, Integer> count = new HashMap<String, Integer>();\n  for (String w : words) {\n    count.put(w, count.⟦1⟧(w, 0) + 1);\n  }\n  System.out.println(count.get(\"red\"));\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "get",
+                  "containsKey",
+                  "getOrDefault"
+                ],
+                "answer": 2
+              }
+            ],
+            "target": "2",
+            "hint": "The first time a word is seen it is not in the map yet, so reading it must not give back null.",
+            "after": "get would return null on the first \"red\", and null + 1 crashes. getOrDefault starts it at 0.",
+            "skills": [
+              "store and look up pairs in a HashMap"
+            ]
+          },
+          {
+            "id": "h_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: print Ben's score, or 0 if he has none.",
+            "code": "public void run() {\n  HashMap<String, Integer> scores = new HashMap<String, Integer>();\n  scores.put(\"Ana\", 90);\n  // print the score stored under \"Ben\", or 0 if there is not one\n}",
+            "target": "0",
+            "solution": "public void run() {\n  HashMap<String, Integer> scores = new HashMap<String, Integer>();\n  scores.put(\"Ana\", 90);\n  System.out.println(scores.getOrDefault(\"Ben\", 0));\n}",
+            "hint": "One method does both the check and the read.",
+            "after": "Ben was never put, so the default 0 came back instead of null.",
+            "skills": [
+              "store and look up pairs in a HashMap"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.12",
+      "title": "Binary",
+      "objectives": [
+        "convert between binary and decimal",
+        "explain why computers store data in binary"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "b_task",
+            "kind": "teach",
+            "instruction": "A wire is either carrying current or it is not.",
+            "points": [
+              {
+                "label": "two states",
+                "text": "On or off. That is everything the machine physically has."
+              },
+              {
+                "label": "one wire",
+                "text": "Can tell you 0 or 1. Two things."
+              },
+              {
+                "label": "so how do you get 13?",
+                "text": "You use more than one wire, and you give each one a different worth."
+              }
+            ]
+          },
+          {
+            "id": "b_place",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Each position is worth double the one to its right.",
+            "code": "public void run() {\n  // the digits 1 1 0 1, worth 8 4 2 1\n  int value = 1*8 + 1*4 + 0*2 + 1*1;\n  System.out.println(value);\n}",
+            "output": "13",
+            "highlight": [
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "8 4 2 1",
+                "text": "Reading right to left: 1, 2, 4, 8. Doubling every step."
+              },
+              {
+                "label": "1101",
+                "text": "Take the 8, take the 4, skip the 2, take the 1."
+              },
+              {
+                "label": "8 + 4 + 1",
+                "text": "is 13. A binary digit only ever says \"take this one\" or \"skip it\"."
+              },
+              {
+                "label": "decimal does the same",
+                "text": "347 is 3 hundreds, 4 tens, 7 ones. Same idea, ten symbols instead of two."
+              }
+            ]
+          },
+          {
+            "id": "b_java",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Java converts both directions for you.",
+            "code": "public void run() {\n  System.out.println(Integer.parseInt(\"1101\", 2));\n  System.out.println(Integer.toBinaryString(13));\n}",
+            "output": "13\n1101",
+            "highlight": [
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "parseInt(\"1101\", 2)",
+                "text": "Read this text as a number written in base 2. Gives 13."
+              },
+              {
+                "label": "the 2",
+                "text": "The base. parseInt(\"1101\") with no base reads it as one thousand one hundred and one."
+              },
+              {
+                "label": "toBinaryString(13)",
+                "text": "The other direction - the digits Java would need to hold 13."
+              },
+              {
+                "label": "the number never changed",
+                "text": "13 and 1101 are the same amount written two ways. Binary is notation, not a different value."
+              }
+            ]
+          },
+          {
+            "id": "b_range",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Every extra digit doubles what you can hold.",
+            "code": "public void run() {\n  System.out.println(Integer.toBinaryString(255));\n  System.out.println(Integer.toBinaryString(256));\n}",
+            "output": "11111111\n100000000",
+            "highlight": [
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "8 digits, all 1",
+                "text": "128+64+32+16+8+4+2+1 = 255. That is the biggest 8 digits can say."
+              },
+              {
+                "label": "8 digits is a byte",
+                "text": "256 different values, counting from 0 to 255."
+              },
+              {
+                "label": "256 needs a ninth",
+                "text": "Just like 99 to 100 in decimal - you run out and grow a column."
+              },
+              {
+                "label": "why it matters",
+                "text": "A type is a fixed number of digits. That is what makes an int run out."
+              }
+            ]
+          },
+          {
+            "id": "b_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What prints?",
+            "code": "public void run() {\n  System.out.println(Integer.parseInt(\"110\", 2));\n}",
+            "opts": [
+              "3",
+              "6",
+              "12",
+              "110"
+            ],
+            "correct": 1,
+            "why": "Worth 4 2 1. Take the 4, take the 2, skip the 1. 4 + 2 = 6.",
+            "skills": [
+              "convert between binary and decimal"
+            ]
+          },
+          {
+            "id": "b_match",
+            "kind": "match",
+            "instruction": "Match each binary number to its value.",
+            "pairs": [
+              [
+                "1",
+                "1"
+              ],
+              [
+                "10",
+                "2"
+              ],
+              [
+                "100",
+                "4"
+              ],
+              [
+                "101",
+                "5"
+              ],
+              [
+                "1000",
+                "8"
+              ]
+            ],
+            "why": "A single 1 followed by zeros is just that place value. Adding a 1 on the end adds one more.",
+            "skills": [
+              "convert between binary and decimal"
+            ]
+          },
+          {
+            "id": "b_trace",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "Integer.toBinaryString(n)",
+            "questions": [
+              {
+                "prompt": "How many different values can 4 binary digits hold?",
+                "opts": [
+                  "4",
+                  "8",
+                  "15",
+                  "16"
+                ],
+                "correct": 3,
+                "why": "Each digit doubles it: 2, 4, 8, 16. They count from 0 to 15, which is 16 values."
+              },
+              {
+                "prompt": "Why does a computer use binary rather than decimal?",
+                "opts": [
+                  "Decimal needs too much memory",
+                  "Binary is faster to add",
+                  "Hardware has two reliable states, on and off",
+                  "It is a historical accident"
+                ],
+                "correct": 2,
+                "why": "Ten distinguishable voltage levels would be fragile. Two is easy to tell apart, so two symbols it is."
+              }
+            ],
+            "skills": [
+              "convert between binary and decimal"
+            ]
+          },
+          {
+            "id": "b_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Print 10 as binary.",
+            "code": "public void run() {\n  System.out.println(Integer.⟦1⟧(10));\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "valueOf",
+                  "parseInt",
+                  "toBinaryString"
+                ],
+                "answer": 2
+              }
+            ],
+            "target": "1010",
+            "hint": "You have a number and you want the digits. Which direction is that?",
+            "after": "8 + 2 = 10, so take the 8, skip the 4, take the 2, skip the 1.",
+            "skills": [
+              "convert between binary and decimal"
+            ]
+          },
+          {
+            "id": "b_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: print the value of binary 10011.",
+            "code": "public void run() {\n  // print what 10011 is worth as an ordinary number\n}",
+            "target": "19",
+            "solution": "public void run() {\n  System.out.println(Integer.parseInt(\"10011\", 2));\n}",
+            "hint": "Either add up the place values yourself, or let parseInt do it with base 2.",
+            "after": "16 + 2 + 1 = 19.",
+            "skills": [
+              "convert between binary and decimal"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.13",
+      "title": "Ethical Issues Around Data Collection",
+      "objectives": [
+        "judge whether a data practice needs consent",
+        "explain how combining fields reveals more than any one field"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "e_task",
+            "kind": "teach",
+            "instruction": "A step counter needs your steps. Look at what it actually takes.",
+            "points": [
+              {
+                "label": "what it needs",
+                "text": "A step count. That is the whole product."
+              },
+              {
+                "label": "what it takes",
+                "text": "Location every few minutes, so it can measure distance."
+              },
+              {
+                "label": "and keeps",
+                "text": "Timestamps. When you left, when you got back, every day for two years."
+              },
+              {
+                "label": "the gap",
+                "text": "Nothing here is stolen. Every field has a reason. The reasons are not the problem."
+              }
+            ]
+          },
+          {
+            "id": "e_agg",
+            "kind": "teach",
+            "instruction": "One field is boring. Fields together are not.",
+            "points": [
+              {
+                "label": "a location",
+                "text": "A point on a map. Could be anyone."
+              },
+              {
+                "label": "locations at 3am, every night",
+                "text": "Where you sleep. That is your home address."
+              },
+              {
+                "label": "plus 9am on weekdays",
+                "text": "Your school or your workplace."
+              },
+              {
+                "label": "aggregation",
+                "text": "The conclusion was never in any single row. It came from putting rows side by side."
+              }
+            ]
+          },
+          {
+            "id": "e_anon",
+            "kind": "teach",
+            "instruction": "\"We remove your name\" does less than it sounds.",
+            "points": [
+              {
+                "label": "the claim",
+                "text": "The name column is deleted, so the data is anonymous."
+              },
+              {
+                "label": "ZIP code, date of birth, sex",
+                "text": "Three fields nobody thinks twice about. Together they narrow most people down to a single person."
+              },
+              {
+                "label": "re-identification",
+                "text": "Match those three against any public list that does have names, and the name is back."
+              },
+              {
+                "label": "anonymous is relative",
+                "text": "Anonymous is not a property of one table. It depends on every other table that exists."
+              }
+            ]
+          },
+          {
+            "id": "e_bucket",
+            "kind": "bucket",
+            "instruction": "Sort each one.",
+            "buckets": [
+              "Fine as described",
+              "Should be asked first",
+              "Should not happen"
+            ],
+            "items": [
+              {
+                "text": "The step counter stores your steps so you can see last week",
+                "bucket": 0
+              },
+              {
+                "text": "It keeps your location history to measure distance walked",
+                "bucket": 0
+              },
+              {
+                "text": "It sells that location history to an advertiser",
+                "bucket": 2
+              },
+              {
+                "text": "It uses your data to improve its step-counting accuracy",
+                "bucket": 1
+              },
+              {
+                "text": "It shares data with a research hospital, with names removed",
+                "bucket": 1
+              },
+              {
+                "text": "It keeps your full history after you delete your account",
+                "bucket": 2
+              }
+            ],
+            "why": "The line is rarely the data itself. It is whether the use is the one you agreed to, and whether you could say no.",
+            "skills": [
+              "judge whether a data practice needs consent"
+            ]
+          },
+          {
+            "id": "e_match",
+            "kind": "match",
+            "instruction": "Match each term to what it means.",
+            "pairs": [
+              [
+                "Aggregation",
+                "Combining separate fields to learn something no single field said"
+              ],
+              [
+                "Re-identification",
+                "Putting names back onto data that had them removed"
+              ],
+              [
+                "Data minimisation",
+                "Collecting only the fields the feature actually needs"
+              ],
+              [
+                "Opt-in",
+                "Off until the user turns it on"
+              ],
+              [
+                "Opt-out",
+                "On until the user finds the setting and turns it off"
+              ]
+            ],
+            "why": "Opt-in and opt-out collect the same field. They differ only in who has to act, and that decides what most people end up with.",
+            "skills": [
+              "judge whether a data practice needs consent"
+            ]
+          },
+          {
+            "id": "e_ask",
+            "kind": "trace",
+            "instruction": "Two worth being sure about.",
+            "code": "// no code for this one",
+            "questions": [
+              {
+                "prompt": "An app collects your contacts to \"improve your experience\". What is the strongest objection?",
+                "opts": [
+                  "It should be opt-out instead of opt-in",
+                  "The purpose is too vague to agree or disagree with",
+                  "Contacts are not personal data",
+                  "Contacts are never useful to an app"
+                ],
+                "correct": 1,
+                "why": "You cannot consent to a purpose you cannot picture. A reason that covers everything is not a reason."
+              },
+              {
+                "prompt": "A dataset has no names, but has ZIP, birth date and sex. Is it anonymous?",
+                "opts": [
+                  "No - those three together often identify one person",
+                  "Only if it has fewer than 1000 rows",
+                  "Yes, as long as it is not made public",
+                  "Yes - the names are gone"
+                ],
+                "correct": 0,
+                "why": "That is exactly the combination re-identification attacks use."
+              }
+            ],
+            "skills": [
+              "judge whether a data practice needs consent"
+            ]
+          },
+          {
+            "id": "e_explain",
+            "kind": "explain",
+            "prompt": "A school app records which websites each student visits during class, so teachers can see who is off task. Name one thing about it you think is reasonable, and one change you would require before it ships.",
+            "rubric": "Credit an answer that (a) acknowledges a legitimate purpose - the teacher does have a reason to know whether students are working - and (b) names a concrete, specific change rather than a general objection. Strong changes: limit it to class time only, show teachers a status rather than a full browsing list, delete the logs after a set period, tell students plainly that it is on, collect only whether a site is on-task rather than which site. Weak answers reject it outright with no purpose acknowledged, or ask vaguely for \"more privacy\" with nothing specific.",
+            "skills": [
+              "judge whether a data practice needs consent"
+            ],
+            "instruction": "Write a few sentences. There is no single right answer here."
+          },
+          {
+            "id": "e_close",
+            "kind": "teach",
+            "instruction": "Four questions to ask about any feature you build.",
+            "points": [
+              {
+                "label": "What does it need?",
+                "text": "Not what would be useful. What breaks if you leave the field out."
+              },
+              {
+                "label": "How long?",
+                "text": "Data kept forever is data that leaks eventually."
+              },
+              {
+                "label": "Who else sees it?",
+                "text": "Every extra copy is another place it can go wrong."
+              },
+              {
+                "label": "Could they say no?",
+                "text": "And still use the thing. If not, it was not really a choice."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.14",
+      "title": "Data Structures Quiz",
+      "objectives": [
+        "choose the right structure for a job"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "r_open",
+            "kind": "teach",
+            "instruction": "Nothing new here. Six checks across the whole unit.",
+            "points": [
+              {
+                "label": "what it covers",
+                "text": "Arrays, enhanced for, ArrayList, removing while looping, 2D grids, HashMaps."
+              },
+              {
+                "label": "how to use it",
+                "text": "If one goes wrong, the lesson it came from is the one to go back to."
+              }
+            ]
+          },
+          {
+            "id": "r_index",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What prints?",
+            "code": "public void run() {\n  int[] a = {4, 8, 15, 16};\n  System.out.println(a[a.length - 1]);\n}",
+            "opts": [
+              "16",
+              "An error",
+              "15",
+              "4"
+            ],
+            "correct": 0,
+            "why": "length is 4, so the last valid index is 3. a[a.length] would be the error.",
+            "skills": [
+              "make an array and read it by index",
+              "explain what happens past the end of an array"
+            ]
+          },
+          {
+            "id": "r_enh",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does the array hold at the end?",
+            "code": "public void run() {\n  int[] a = {1, 2, 3};\n  for (int n : a) {\n    n = n * 10;\n  }\n  System.out.println(a[0]);\n}",
+            "opts": [
+              "0",
+              "An error",
+              "1",
+              "10"
+            ],
+            "correct": 2,
+            "why": "n is a copy of the element. Assigning to it changes the copy, not the array. That is what the enhanced form cannot do.",
+            "skills": [
+              "traverse an array with an enhanced for loop",
+              "say when the enhanced form does not fit"
+            ]
+          },
+          {
+            "id": "r_remove",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "How many items are left?",
+            "code": "public void run() {\n  ArrayList<Integer> xs = new ArrayList<Integer>();\n  xs.add(0);\n  xs.add(0);\n  xs.add(5);\n  for (int i = 0; i < xs.size(); i++) {\n    if (xs.get(i) == 0) {\n      xs.remove(i);\n    }\n  }\n  System.out.println(xs.size());\n}",
+            "opts": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ],
+            "correct": 2,
+            "why": "Removing index 0 shifts the second 0 DOWN into index 0 - and i has already moved to 1, so that 0 is never looked at again. One zero survives. Loop backwards and it cannot happen.",
+            "skills": [
+              "remove items safely while looping",
+              "use size, get, add and remove"
+            ]
+          },
+          {
+            "id": "r_grid",
+            "kind": "trace",
+            "instruction": "Two on grids and maps.",
+            "code": "int[][] grid = new int[3][5];\nHashMap<String, Integer> m = new HashMap<String, Integer>();",
+            "questions": [
+              {
+                "prompt": "What are grid.length and grid[0].length?",
+                "opts": [
+                  "5 and 3",
+                  "3 and 5",
+                  "3 and 3",
+                  "15 and 15"
+                ],
+                "correct": 1,
+                "why": "The outer length is the number of rows. grid[0].length measures one row, which is the number of columns."
+              },
+              {
+                "prompt": "m has no key \"x\". What is m.get(\"x\")?",
+                "opts": [
+                  "It crashes",
+                  "An empty string",
+                  "null",
+                  "0"
+                ],
+                "correct": 2,
+                "why": "An absent key gives null. getOrDefault(\"x\", 0) is how you get 0."
+              }
+            ],
+            "skills": [
+              "find the number of rows and columns",
+              "store and look up pairs in a HashMap"
+            ]
+          },
+          {
+            "id": "r_pick",
+            "kind": "bucket",
+            "instruction": "Which structure fits each job?",
+            "buckets": [
+              "Array",
+              "ArrayList",
+              "HashMap",
+              "2D array"
+            ],
+            "items": [
+              {
+                "text": "Exactly 7 daily temperatures, count never changes",
+                "bucket": 0
+              },
+              {
+                "text": "A queue of students that grows and shrinks all day",
+                "bucket": 1
+              },
+              {
+                "text": "Look a phone number up by a person's name",
+                "bucket": 2
+              },
+              {
+                "text": "A chess board",
+                "bucket": 3
+              },
+              {
+                "text": "Count how many times each word appears in a book",
+                "bucket": 2
+              }
+            ],
+            "why": "Fixed count means an array. Changing count means an ArrayList. Looking up BY something other than position means a map. A grid means two dimensions.",
+            "skills": [
+              "choose the right structure for a job",
+              "choose between an array and an ArrayList"
+            ]
+          },
+          {
+            "id": "r_write1",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Print the largest number anywhere in the grid.",
+            "code": "public void run() {\n  int[][] g = {\n    {3, 9, 4},\n    {8, 2, 7}\n  };\n  // print the biggest value in g\n}",
+            "target": "9",
+            "solution": "public void run() {\n  int[][] g = {\n    {3, 9, 4},\n    {8, 2, 7}\n  };\n  int best = g[0][0];\n  for (int[] row : g) {\n    for (int n : row) {\n      if (n > best) {\n        best = n;\n      }\n    }\n  }\n  System.out.println(best);\n}",
+            "hint": "Start best at the first value, then visit every square and keep the bigger one.",
+            "after": "Starting at g[0][0] rather than 0 means it still works on a grid of negative numbers.",
+            "skills": [
+              "traverse a 2D array with nested loops"
+            ]
+          },
+          {
+            "id": "r_write2",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Print how many DIFFERENT words there are.",
+            "code": "public void run() {\n  String[] words = {\"red\", \"blue\", \"red\", \"green\", \"blue\"};\n  // print the number of distinct words\n}",
+            "target": "3",
+            "solution": "public void run() {\n  String[] words = {\"red\", \"blue\", \"red\", \"green\", \"blue\"};\n  HashMap<String, Integer> seen = new HashMap<String, Integer>();\n  for (String w : words) {\n    seen.put(w, 1);\n  }\n  System.out.println(seen.size());\n}",
+            "hint": "Keys are unique. Putting the same key twice does not make the map bigger.",
+            "after": "red, blue, green. The map did the de-duplicating for you - no searching, no comparing.",
+            "skills": [
+              "store and look up pairs in a HashMap",
+              "choose the right structure for a job"
             ]
           }
         ]
