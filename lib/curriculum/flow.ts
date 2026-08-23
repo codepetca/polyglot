@@ -32,7 +32,7 @@
 
 export type FlowStep = {
   id: string;
-  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch" | "card";
+  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch" | "card" | "walk";
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -135,6 +135,14 @@ export type FlowStep = {
   // against the declared type (quotes for String, a decimal point for double,
   // single quotes for char), then a card is drawn from what they entered.
   vars?: { type: string; name: string; placeholder?: string; label?: string }[];
+  // walk: a loop, stepped through one move at a time by the student. Each frame
+  // says which line is executing, what the variables hold, and what has been
+  // printed so far. Authored by hand rather than simulated, because the whole
+  // point is to name what is happening ("is 0 < 3? yes") in words a beginner
+  // can read. The compiler gate checks the LAST frame's output against what the
+  // program really prints, so a walkthrough cannot drift from the code it
+  // claims to describe.
+  frames?: { line: number; note: string; vars?: Record<string, string>; out?: string }[];
   prompt?: string;
   rubric?: string;
   persona?: string;
@@ -182,6 +190,16 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
           errors.push(`${at}: needs code, points[], body[] or rules[]`);
         }
         break;
+      case "walk": {
+        if (!s.code) errors.push(`${at}: needs code`);
+        if (!s.frames || s.frames.length < 2) errors.push(`${at}: needs 2+ frames`);
+        const n = (s.code || "").split("\n").length;
+        for (const [i, fr] of (s.frames || []).entries()) {
+          if (typeof fr.line !== "number" || fr.line < 0 || fr.line >= n) errors.push(`${at}: frame ${i + 1} points at line ${fr.line}, outside the ${n}-line snippet`);
+          if (!fr.note) errors.push(`${at}: frame ${i + 1} needs a note`);
+        }
+        break;
+      }
       case "card":
         if (!s.vars || s.vars.length < 2) errors.push(`${at}: needs 2+ vars`);
         for (const v of s.vars || []) {
@@ -296,6 +314,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
     }
     case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, output: s.output };
     case "card": return { ...base, vars: s.vars };
+    case "walk": return { ...base, frames: s.frames };
     case "compare": return { ...base, sides: s.sides, points: s.points };
     // Blank out every cell the student is meant to work out; the answers stay
     // on the server like every other answer key.

@@ -51,6 +51,7 @@ type Step = {
   body?: string[];
   rules?: { text: string; example?: string }[];
   vars?: { type: string; name: string; placeholder?: string; label?: string }[];
+  frames?: { line: number; note: string; vars?: Record<string, string>; out?: string }[];
   output?: string;
   options?: { label: string; goto: string }[];
 };
@@ -234,6 +235,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   const [termOut, setTermOut] = useState<string | null>(null);
   const [termWait, setTermWait] = useState(false);
   const [termLine, setTermLine] = useState("");
+  const [frame, setFrame] = useState(0);
   const [cardVals, setCardVals] = useState<string[]>([]);
   const [cardErrs, setCardErrs] = useState<(string | null)[]>([]);
   const [reveal, setReveal] = useState<{ correct: boolean; correctIndex?: number; why?: string; chosen?: number } | null>(null);
@@ -832,6 +834,40 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           ))}
         </div>
       )}
+
+      {step.kind === "walk" && (() => {
+        const frames = step.frames || [];
+        const f = frames[Math.min(frame, frames.length - 1)];
+        const atEnd = frame >= frames.length - 1;
+        return (
+          <div className="walk">
+            <pre className="walkcode">
+              {(step.code || "").split("\n").map((ln, li) => (
+                <span key={li} className={li === f.line ? "wl now" : "wl"}>{ln || " "}</span>
+              ))}
+            </pre>
+            <div className="walknote">{f.note}</div>
+            <div className="walkstate">
+              {Object.entries(f.vars || {}).map(([k, v]) => (
+                <span className="wvar" key={k}><b>{k}</b>{v}</span>
+              ))}
+            </div>
+            <div className="walkout">
+              <div className="lbl">PRINTED SO FAR</div>
+              <pre>{f.out || "(nothing yet)"}</pre>
+            </div>
+            <div className="walkbar">
+              <button className="btn" disabled={frame === 0} onClick={() => setFrame((n) => Math.max(0, n - 1))}>Back</button>
+              {!atEnd ? (
+                <button className="btn green" onClick={() => setFrame((n) => n + 1)}>Next step</button>
+              ) : !won ? (
+                <button className="btn green" onClick={() => { setWon(true); post({ action: "complete", attempts: 1 }); }}>Done</button>
+              ) : null}
+              <span className="walkcount">{Math.min(frame + 1, frames.length)} of {frames.length}</span>
+            </div>
+          </div>
+        );
+      })()}
 
       {step.kind === "card" && (
         <div className="cardstep">

@@ -800,3 +800,21 @@ pre.flowcode.ro { margin: 0; }
 .terminput { flex: 1; min-width: 60px; background: transparent; border: none; outline: none; caret-color: #7fe3b0;
   font-family: var(--mono); font-size: 14px; line-height: 1.6; color: #7fe3b0; padding: 0; }
 .typenote { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
+
+/* walk: stepping through a loop one move at a time. The student drives it, so
+   nothing is waiting on an animation to finish. */
+.walk { margin-top: 12px; }
+.walkcode { margin: 0 0 10px; background: #101317; border-radius: 10px; padding: 10px 0; overflow-x: auto; }
+.walkcode .wl { display: block; padding: 2px 14px; font-family: var(--mono); font-size: 14px; line-height: 1.6;
+  color: #8d9aa4; white-space: pre; }
+.walkcode .wl.now { background: rgba(127,227,176,.14); color: #d9efe0; box-shadow: inset 3px 0 0 #7fe3b0; }
+.walknote { font-size: 15px; line-height: 1.55; margin-bottom: 9px; }
+.walkstate { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+.wvar { font-family: var(--mono); font-size: 13.5px; background: var(--card); border: 1.5px solid var(--line);
+  border-radius: 7px; padding: 3px 10px; }
+.wvar b { color: var(--accent); font-weight: 600; margin-right: 7px; }
+.walkout .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--muted); margin-bottom: 4px; }
+.walkout pre { margin: 0 0 12px; background: var(--card); border: 1.5px solid var(--line); border-radius: 9px;
+  padding: 8px 13px; font-family: var(--mono); font-size: 13.5px; white-space: pre-wrap; min-height: 1.6em; }
+.walkbar { display: flex; align-items: center; gap: 9px; }
+.walkcount { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: auto; }

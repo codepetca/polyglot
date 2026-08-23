@@ -1844,298 +1844,201 @@
       "code": "2.8",
       "title": "Comparison Operators",
       "objectives": [
-        "compare two values to get true or false",
-        "choose between ==, !=, <, >, <= and >=",
-        "store a comparison in a boolean and use it"
+        "compare two numbers and get a boolean back",
+        "tell == apart from ="
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "q_task",
+            "id": "p_task",
             "kind": "teach",
-            "instruction": "Last lesson strongEnough was simply handed to you as true.",
-            "points": [
+            "instruction": "We are building the gates that let a player through. How do we ask Java whether one value beats another?",
+            "body": [
+              "A gate needs a yes or a no.",
+              "Comparison operators turn two numbers into a boolean."
+            ]
+          },
+          {
+            "id": "p_ops",
+            "kind": "teach",
+            "instruction": "There are six of them.",
+            "rules": [
               {
-                "label": "boolean strongEnough = true;",
-                "text": "You typed the answer in. The program never worked anything out."
+                "text": "== is equal to",
+                "example": "5 == 5   is true"
               },
               {
-                "label": "what a game has",
-                "text": "A level — a number, like 7 — and a rule: you need at least 5 to get through this door."
+                "text": "!= is not equal to",
+                "example": "5 != 3   is true"
               },
               {
-                "label": "the missing piece",
-                "text": "Something that turns \"7 and the rule needs 5\" into a plain true or false. That is what a comparison does."
+                "text": "> is greater than",
+                "example": "5 > 3   is true"
+              },
+              {
+                "text": "< is less than",
+                "example": "5 < 3   is false"
+              },
+              {
+                "text": ">= is greater than or equal to",
+                "example": "5 >= 5   is true"
+              },
+              {
+                "text": "<= is less than or equal to",
+                "example": "3 <= 5   is true"
               }
             ]
           },
           {
-            "id": "q_cmp",
+            "id": "p_run",
+            "kind": "run",
+            "instruction": "Run it and see all six.",
+            "code": "int hp = 5;\nint need = 3;\nSystem.out.println(hp == need);\nSystem.out.println(hp != need);\nSystem.out.println(hp > need);\nSystem.out.println(hp < need);\nSystem.out.println(hp >= need);\nSystem.out.println(hp <= need);",
+            "after": "Every one of them gave back true or false."
+          },
+          {
+            "id": "p_eq",
             "kind": "teach",
-            "instruction": "level >= required is worked out into true or false.",
-            "code": "int level = 7;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
-            "output": "--- DUNGEON DOOR ---\nLevel:         7\nStrong enough: true\nDoor opens:    true",
-            "points": [
-              {
-                "label": "level >= required",
-                "text": "Reads as \"level is at least required\". 7 is at least 5, so this whole thing becomes true."
-              },
-              {
-                "label": "boolean strongEnough =",
-                "text": "The comparison produces true or false, so it fits in a boolean — the same kind of box you filled by hand last lesson."
-              },
-              {
-                "label": "hasKey && strongEnough",
-                "text": "Unchanged from last lesson. The && does not care that one value was typed and the other was calculated."
-              },
-              {
-                "label": ">= not >",
-                "text": "\"At least 5\" includes 5 itself. Using > would shut the door on a player who is exactly level 5."
-              }
-            ],
-            "highlight": [
-              3
+            "instruction": "== asks a question. = puts a value in.",
+            "code": "int hp = 5;\nSystem.out.println(hp == 5);",
+            "output": "true",
+            "body": [
+              "One equals sign stores. Two equals signs compare.",
+              "Mixing them up is the commonest mistake in this lesson."
             ]
           },
           {
-            "id": "q_tweak",
+            "id": "p_eqfix",
             "kind": "fix",
-            "instruction": "Send in a level 3 player. The door should shut.",
-            "code": "int level = 7;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
-            "target": "--- DUNGEON DOOR ---\nLevel:         3\nStrong enough: false\nDoor opens:    false",
-            "hint": "Change only the level on line 1. The comparison works it out from there.",
-            "after": "3 is not at least 5, so strongEnough became false and && shut the door.",
+            "instruction": "Fix this so it runs.",
+            "code": "int hp = 5;\nSystem.out.println(hp = 5);",
+            "target": "true",
+            "solution": "int hp = 5;\nSystem.out.println(hp == 5);",
+            "hint": "The line should ask a question, not store a value.",
+            "after": "One = assigns. Two == compare.",
             "skills": [
-              "compare two values to get true or false"
-            ],
-            "solution": "int level = 3;\nint required = 5;\nboolean hasKey = true;\nboolean strongEnough = level >= required;\nSystem.out.println(\"--- DUNGEON DOOR ---\");\nSystem.out.println(\"Level:         \" + level);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));"
-          },
-          {
-            "id": "q_six",
-            "kind": "teach",
-            "instruction": "There are six comparisons, and they all give true or false.",
-            "code": "System.out.println(10 > 3);\nSystem.out.println(10 < 3);\nSystem.out.println(80 >= 80);\nSystem.out.println(80 > 80);\nSystem.out.println(5 == 5);\nSystem.out.println(5 != 5);",
-            "output": "true\nfalse\ntrue\nfalse\ntrue\nfalse",
-            "points": [
-              {
-                "label": "> and <",
-                "text": "Strictly greater, strictly less. 10 > 3 is true; 10 < 3 is false."
-              },
-              {
-                "label": ">= and <=",
-                "text": "Greater-or-equal, less-or-equal. 80 >= 80 is true because equal counts."
-              },
-              {
-                "label": "80 > 80",
-                "text": "False. Strictly greater excludes the number itself — this one line is the difference between the two."
-              },
-              {
-                "label": "== and !=",
-                "text": "Equal and not-equal. 5 == 5 is true; 5 != 5 is false."
-              }
+              "compare two numbers and get a boolean back"
             ]
           },
           {
-            "id": "q_table",
-            "kind": "table",
-            "instruction": "Where exactly do > and >= differ?",
-            "columns": [
-              "level",
-              "level > 5",
-              "level >= 5"
+            "id": "p_prim",
+            "kind": "teach",
+            "instruction": "These work on primitive types.",
+            "body": [
+              "int, double, char and boolean can all be compared this way.",
+              "String is not a primitive type, so == does not compare its text. That comes later."
             ],
-            "fillFrom": 1,
-            "chips": [
+            "code": "System.out.println(3 < 4);\nSystem.out.println(2.5 > 1.0);\nSystem.out.println('a' < 'b');",
+            "output": "true\ntrue\ntrue"
+          },
+          {
+            "id": "p_bucket",
+            "kind": "bucket",
+            "instruction": "Does each comparison give true or false?",
+            "buckets": [
               "true",
               "false"
             ],
-            "exprs": [
-              "level > 5",
-              "level >= 5"
-            ],
-            "rows": [
-              [
-                "4",
-                "false",
-                "false"
-              ],
-              [
-                "5",
-                "false",
-                "true"
-              ],
-              [
-                "6",
-                "true",
-                "true"
-              ]
-            ],
-            "why": "They agree everywhere except at exactly 5. That single row is the whole difference, and it is where off-by-one bugs live.",
-            "skills": [
-              "choose between ==, !=, <, >, <= and >="
-            ]
-          },
-          {
-            "id": "q_eq",
-            "kind": "teach",
-            "instruction": "== asks a question. = gives an answer.",
-            "points": [
+            "items": [
               {
-                "label": "==",
-                "text": "TWO equals signs. Asks \"are these the same?\" and produces true or false."
+                "text": "7 == 7",
+                "bucket": 0
               },
               {
-                "label": "=",
-                "text": "ONE equals sign. Puts the value on the right into the box on the left. It asks nothing."
+                "text": "7 >= 7",
+                "bucket": 0
               },
               {
-                "label": "int x = 5;",
-                "text": "Assignment — creating a box and filling it."
+                "text": "4 != 5",
+                "bucket": 0
               },
               {
-                "label": "x == 5",
-                "text": "Comparison — a question whose answer is true or false."
+                "text": "7 > 7",
+                "bucket": 1
               },
               {
-                "label": "!=",
-                "text": "Not equal. The ! is the same \"not\" you met last lesson."
+                "text": "3 >= 8",
+                "bucket": 1
+              },
+              {
+                "text": "5 != 5",
+                "bucket": 1
               }
+            ],
+            "why": ">= and <= let the two sides be equal. > and < do not.",
+            "skills": [
+              "compare two numbers and get a boolean back"
             ]
           },
           {
-            "id": "q_predict",
+            "id": "p_predict",
             "kind": "predict",
-            "instruction": "The exact expression the quiz asks about.",
-            "code": "System.out.println(80 >= 80);",
+            "instruction": "What comes out?",
+            "code": "int score = 10;\nSystem.out.println(score >= 10);\nSystem.out.println(score > 10);",
             "opts": [
-              "(an error)",
-              "true",
-              "80",
-              "false"
+              "true\ntrue",
+              "true\nfalse",
+              "false\ntrue",
+              "false\nfalse"
             ],
             "correct": 1,
-            "why": ">= is satisfied by being greater OR equal. 80 is equal to 80, so it is true. Only > would be false here.",
+            "why": ">= allows equal, so the first is true. > needs strictly more, so the second is false.",
             "skills": [
-              "choose between ==, !=, <, >, <= and >="
+              "compare two numbers and get a boolean back"
             ]
           },
           {
-            "id": "q_combine",
-            "kind": "teach",
-            "instruction": "Comparisons join with && exactly like any other booleans.",
-            "code": "int points = 12;\nint rebounds = 10;\nint assists = 7;\nboolean tripleDouble = points >= 10 && rebounds >= 10 && assists >= 10;\nSystem.out.println(\"Got a Triple Double? \" + tripleDouble);",
-            "output": "Got a Triple Double? false",
-            "points": [
-              {
-                "label": "points >= 10 && rebounds >= 10 && assists >= 10",
-                "text": "Three separate comparisons, each producing true or false, chained with &&."
-              },
-              {
-                "label": "assists is 7",
-                "text": "7 >= 10 is false, and && needs every part true, so the whole thing is false."
-              },
-              {
-                "label": "no brackets needed",
-                "text": "Comparisons are worked out before && , so each >= finishes before the ands combine them."
-              },
-              {
-                "label": "tripleDouble",
-                "text": "A name that says what the answer MEANS, so the line that prints it reads like English."
-              }
-            ]
-          },
-          {
-            "id": "q_sharp",
-            "kind": "teach",
-            "instruction": "Six operators, one result type: boolean.",
-            "points": [
-              {
-                "label": ">  <  >=  <=  ==  !=",
-                "text": "The complete set. Every one of them produces true or false, never a number."
-              },
-              {
-                "label": "?",
-                "text": "Not a comparison operator. Java has no such thing — it is the quiz distractor."
-              },
-              {
-                "label": "80 >= 80 is true",
-                "text": "Equal counts for >= and <=. It does not count for > or <."
-              },
-              {
-                "label": "= vs ==",
-                "text": "Writing = where you meant == is the most common mistake in this unit."
-              }
-            ]
-          },
-          {
-            "id": "q_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "int score = 80;",
-            "questions": [
-              {
-                "prompt": "Which of the following is NOT a comparison operator?",
-                "opts": [
-                  "?",
-                  "==",
-                  "<",
-                  ">="
-                ],
-                "correct": 0,
-                "why": "Java compares with > < >= <= == and !=. The ? is not one of them."
-              },
-              {
-                "prompt": "What does 80 >= 80 evaluate to?",
-                "opts": [
-                  "true",
-                  "This expression will error",
-                  "false",
-                  "\"true\""
-                ],
-                "correct": 0,
-                "why": ">= means greater than OR equal to, and 80 equals 80. The answer is the boolean true — not the text \"true\"."
-              }
-            ],
-            "skills": [
-              "choose between ==, !=, <, >, <= and >="
-            ]
-          },
-          {
-            "id": "q_d1",
-            "kind": "fill",
-            "instruction": "A score of exactly 10 must count as enough.",
-            "code": "int points = 10;\nboolean scoredEnough = points ⟦1⟧ 10;\nSystem.out.println(scoredEnough);",
-            "blanks": [
-              {
-                "chips": [
-                  ">",
-                  ">=",
-                  "<",
-                  "=="
-                ],
-                "answer": 1
-              }
-            ],
-            "target": "true",
-            "hint": "\"At least 10\" has to include 10 itself.",
-            "after": "\"At least\" is always >=. Using > would have excluded exactly 10 and printed false.",
-            "skills": [
-              "choose between ==, !=, <, >, <= and >="
-            ]
-          },
-          {
-            "id": "q_d2",
+            "id": "p_gate1",
             "kind": "write",
-            "instruction": "Last one: a triple double needs at least 10 in all three.",
-            "code": "// read points, rebounds and assists, then print the verdict\n",
-            "stdin": "10\n11\n12",
-            "target": "Points? 10\nRebounds? 11\nAssists? 12\nGot a Triple Double? true",
-            "solution": "int points = readInt(\"Points? \");\nint rebounds = readInt(\"Rebounds? \");\nint assists = readInt(\"Assists? \");\nboolean tripleDouble = points >= 10 && rebounds >= 10 && assists >= 10;\nSystem.out.println(\"Got a Triple Double? \" + tripleDouble);",
-            "hint": "Three readInt calls with the prompts \"Points? \", \"Rebounds? \" and \"Assists? \", then chain three >= 10 checks with &&, and print \"Got a Triple Double? \" + the result.",
-            "after": "That is CodeHS exercise 3.8.4, Triple Double. Lesson done.",
+            "instruction": "Build a gate: the player passes when their level is at least 5.",
+            "code": "int level = 5;\n// print:  Pass: <true or false>\n",
+            "target": "Pass: true",
+            "solution": "int level = 5;\nSystem.out.println(\"Pass: \" + (level >= 5));",
+            "hint": "\"At least 5\" means 5 counts, so it is not the plain greater-than.",
+            "after": "Level 5 passes. Level 4 would not.",
             "skills": [
-              "store a comparison in a boolean and use it"
+              "compare two numbers and get a boolean back"
+            ]
+          },
+          {
+            "id": "p_gate2",
+            "kind": "write",
+            "instruction": "Build a gate: the door opens when the player is NOT out of keys.",
+            "code": "int keys = 2;\n// print:  Open: <true or false>\n",
+            "target": "Open: true",
+            "solution": "int keys = 2;\nSystem.out.println(\"Open: \" + (keys != 0));",
+            "hint": "Out of keys means keys is 0.",
+            "after": "!= 0 reads as \"has at least one\".",
+            "skills": [
+              "compare two numbers and get a boolean back"
+            ]
+          },
+          {
+            "id": "p_gate3",
+            "kind": "write",
+            "instruction": "Build a gate: they ride when they are tall enough and old enough.",
+            "code": "int height = 150;\nint age = 12;\n// they need 140cm or more, and 10 or older\n// print:  Ride: <true or false>\n",
+            "target": "Ride: true",
+            "solution": "int height = 150;\nint age = 12;\nSystem.out.println(\"Ride: \" + (height >= 140 && age >= 10));",
+            "hint": "Two comparisons joined with && from the last lesson.",
+            "after": "Comparisons make the booleans, and && joins them.",
+            "skills": [
+              "compare two numbers and get a boolean back"
+            ]
+          },
+          {
+            "id": "p_gate4",
+            "kind": "write",
+            "instruction": "Build a gate that asks the player: are they old enough to drive?",
+            "code": "// ask \"Age? \" with readInt\n// they can drive at 17 or over\n// print:  Can drive: <true or false>\n",
+            "stdin": "18",
+            "target": "Age? 18\nCan drive: true",
+            "solution": "int age = readInt(\"Age? \");\nSystem.out.println(\"Can drive: \" + (age >= 17));",
+            "hint": "Read the age, then compare it with >= 17.",
+            "after": "The gate now works for whoever is using it.",
+            "skills": [
+              "compare two numbers and get a boolean back"
             ]
           }
         ]
@@ -2145,327 +2048,374 @@
       "code": "2.9",
       "title": "For Loops",
       "objectives": [
-        "write a for loop that repeats a fixed number of times",
-        "control where a loop starts, stops and how far it steps",
-        "work out how many times a loop body runs"
+        "write a for loop that repeats a set number of times",
+        "work out how many times a loop body runs",
+        "use the loop counter inside the body"
       ],
       "flow": {
         "v": 1,
         "steps": [
           {
-            "id": "r_task",
+            "id": "f_task",
             "kind": "teach",
-            "instruction": "The dungeon has 5 floors, and each one needs a line.",
-            "code": "System.out.println(\"Floor 1\");\nSystem.out.println(\"Floor 2\");\nSystem.out.println(\"Floor 3\");\nSystem.out.println(\"Floor 4\");\nSystem.out.println(\"Floor 5\");",
-            "output": "Floor 1\nFloor 2\nFloor 3\nFloor 4\nFloor 5",
-            "points": [
-              {
-                "label": "five printlns",
-                "text": "This works. The output is exactly right and nothing here is broken."
-              },
-              {
-                "label": "\"Floor 1\" … \"Floor 5\"",
-                "text": "Every line is identical apart from one number that goes up by one."
-              },
-              {
-                "label": "8 floors",
-                "text": "Would mean typing three more lines. 100 floors would mean typing 95 more."
-              },
-              {
-                "label": "what we want",
-                "text": "To say the repeating line ONCE, and say how many times to do it."
-              }
+            "instruction": "We want to print the same line three times. How do we tell Java to repeat something?",
+            "code": "System.out.println(\"Hello\");\nSystem.out.println(\"Hello\");\nSystem.out.println(\"Hello\");",
+            "output": "Hello\nHello\nHello",
+            "body": [
+              "Copying the line works for three.",
+              "It does not work for a thousand."
             ]
           },
           {
-            "id": "r_for",
+            "id": "f_intro",
             "kind": "teach",
-            "instruction": "A for loop says the line once and repeats it.",
-            "code": "for (int floor = 1; floor <= 5; floor++) {\n  System.out.println(\"Floor \" + floor);\n}",
-            "output": "Floor 1\nFloor 2\nFloor 3\nFloor 4\nFloor 5",
-            "points": [
-              {
-                "label": "int floor = 1",
-                "text": "Where the counter starts. This runs once, before anything else."
-              },
-              {
-                "label": "floor <= 5",
-                "text": "Checked before every pass. While it is true the block runs; the moment it is false the loop is over."
-              },
-              {
-                "label": "floor++",
-                "text": "Runs after each pass, adding 1 to floor. Without it floor stays 1 and the loop never ends."
-              },
-              {
-                "label": "{ }",
-                "text": "Everything inside the braces is what gets repeated. Here that is one println."
-              }
-            ],
-            "highlight": [
-              0,
-              2
+            "instruction": "A for loop runs the same code a set number of times.",
+            "code": "for (int i = 0; i < 3; i++) {\n  System.out.println(\"Hello\");\n}",
+            "output": "Hello\nHello\nHello",
+            "body": [
+              "One line of code, three lines of output."
             ]
           },
           {
-            "id": "r_tweak",
-            "kind": "fix",
-            "instruction": "The dungeon just grew. Make it print 8 floors.",
-            "code": "for (int floor = 1; floor <= 5; floor++) {\n  System.out.println(\"Floor \" + floor);\n}",
-            "target": "Floor 1\nFloor 2\nFloor 3\nFloor 4\nFloor 5\nFloor 6\nFloor 7\nFloor 8",
-            "hint": "Only the number in the middle part changes.",
-            "after": "One character changed. The five-println version would have needed three whole new lines.",
-            "skills": [
-              "write a for loop that repeats a fixed number of times"
-            ],
-            "solution": "for (int floor = 1; floor <= 8; floor++) {\n  System.out.println(\"Floor \" + floor);\n}"
-          },
-          {
-            "id": "r_table",
-            "kind": "table",
-            "instruction": "The condition is checked before every pass — including one that fails.",
-            "columns": [
-              "floor",
-              "floor <= 5"
-            ],
-            "fillFrom": 1,
-            "chips": [
-              "true",
-              "false"
-            ],
-            "exprs": [
-              "floor <= 5"
-            ],
-            "rows": [
-              [
-                "1",
-                "true"
-              ],
-              [
-                "2",
-                "true"
-              ],
-              [
-                "3",
-                "true"
-              ],
-              [
-                "4",
-                "true"
-              ],
-              [
-                "5",
-                "true"
-              ],
-              [
-                "6",
-                "false"
-              ]
-            ],
-            "why": "Six checks for five passes. After printing Floor 5 the counter becomes 6, the check fails, and the loop stops — so the counter always ends up one past the last value it printed.",
-            "skills": [
-              "work out how many times a loop body runs"
-            ]
-          },
-          {
-            "id": "r_zero",
-            "kind": "teach",
-            "instruction": "Starting at 0 with < is the other common shape.",
-            "code": "for (int i = 0; i < 3; i++) {\n  System.out.println(i);\n}",
-            "output": "0\n1\n2",
-            "points": [
+            "id": "f_walk1",
+            "kind": "walk",
+            "instruction": "Step through it and watch what Java does.",
+            "code": "for (int i = 0; i < 3; i++) {\n  System.out.println(\"Hello\");\n}",
+            "frames": [
               {
-                "label": "i = 0 … i < 3",
-                "text": "Three passes, printing 0, 1 and 2. It stops before 3, so 3 never appears."
+                "line": 0,
+                "note": "i is made and set to 0. This happens once, before anything repeats.",
+                "vars": {
+                  "i": "0"
+                },
+                "out": ""
               },
               {
-                "label": "i = 1 … i <= 3",
-                "text": "Also three passes, printing 1, 2 and 3. Same count, different numbers."
+                "line": 0,
+                "note": "Is 0 less than 3? Yes, so run the body.",
+                "vars": {
+                  "i": "0"
+                },
+                "out": ""
               },
               {
-                "label": "i = 0 … i <= 3",
-                "text": "FOUR passes. Mixing the two shapes is the off-by-one that catches everyone."
+                "line": 1,
+                "note": "Print Hello.",
+                "vars": {
+                  "i": "0"
+                },
+                "out": "Hello"
               },
               {
-                "label": "which to use",
-                "text": "Start at 0 with < when you just need N repeats. Start at 1 with <= when the number itself is being shown, like a floor."
+                "line": 0,
+                "note": "i++ makes i 1.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": "Hello"
+              },
+              {
+                "line": 0,
+                "note": "Is 1 less than 3? Yes, so run the body again.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": "Hello"
+              },
+              {
+                "line": 1,
+                "note": "Print Hello.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": "Hello\nHello"
+              },
+              {
+                "line": 0,
+                "note": "i++ makes i 2.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "Hello\nHello"
+              },
+              {
+                "line": 0,
+                "note": "Is 2 less than 3? Yes, so run the body once more.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "Hello\nHello"
+              },
+              {
+                "line": 1,
+                "note": "Print Hello.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "Hello\nHello\nHello"
+              },
+              {
+                "line": 0,
+                "note": "i++ makes i 3.",
+                "vars": {
+                  "i": "3"
+                },
+                "out": "Hello\nHello\nHello"
+              },
+              {
+                "line": 0,
+                "note": "Is 3 less than 3? No. The loop stops here.",
+                "vars": {
+                  "i": "3"
+                },
+                "out": "Hello\nHello\nHello"
               }
             ]
           },
           {
-            "id": "r_predict",
-            "kind": "predict",
-            "instruction": "How many lines does this print?",
-            "code": "for (int i = 0; i < 4; i++) {\n  System.out.println(\"x\");\n}",
-            "opts": [
-              "x\nx\nx\nx",
-              "x\nx\nx\nx\nx",
-              "x\nx\nx",
-              "(nothing)"
-            ],
-            "correct": 0,
-            "why": "i takes the values 0, 1, 2 and 3 — four passes. It stops at 4 because 4 < 4 is false.",
-            "skills": [
-              "work out how many times a loop body runs"
-            ]
-          },
-          {
-            "id": "r_step",
-            "kind": "teach",
-            "instruction": "The counter does not have to go up by one.",
-            "code": "for (int i = 1; i <= 9; i += 2) {\n  System.out.println(i);\n}",
-            "output": "1\n3\n5\n7\n9",
-            "points": [
-              {
-                "label": "i += 2",
-                "text": "Adds 2 after each pass instead of 1, so the counter lands on 1, 3, 5, 7, 9."
-              },
-              {
-                "label": "i++",
-                "text": "Just the shorthand for i += 1. The last part can be any change you like."
-              },
-              {
-                "label": "i--",
-                "text": "Counts DOWN. Start high, end low, and the condition becomes something like i >= 1."
-              },
-              {
-                "label": "odd numbers",
-                "text": "Starting at 1 and stepping by 2 gives every odd number. Starting at 2 gives every even one."
-              }
-            ]
-          },
-          {
-            "id": "r_sharp",
-            "kind": "teach",
-            "instruction": "Three parts, separated by semicolons, then a block.",
-            "points": [
-              {
-                "label": "for (start; condition; change)",
-                "text": "Start runs once. Condition is checked before every pass. Change runs after every pass."
-              },
-              {
-                "label": "for (int i = 0; i < 10; i++)",
-                "text": "The most common loop in Java: ten passes, i going 0 to 9."
-              },
-              {
-                "label": "the counter is local",
-                "text": "An i declared in the for line exists only inside the loop. After the loop it is gone."
-              },
-              {
-                "label": "for (int i = 0; i < n; i += 2)",
-                "text": "Steps of 2 up to n gives (n + 1) / 2 passes — the counting question the quiz asks."
-              }
-            ]
-          },
-          {
-            "id": "r_mcq",
-            "kind": "trace",
-            "instruction": "Three the test always asks.",
-            "code": "for (int i = 0; i < 10; i++) {\n  System.out.println(i);\n}",
-            "questions": [
-              {
-                "prompt": "Why do we use for loops in Java?",
-                "opts": [
-                  "To do something if a condition is true",
-                  "To break out of some block of code",
-                  "To do something while a condition is true",
-                  "To repeat something a fixed number of times"
-                ],
-                "correct": 3,
-                "why": "A for loop is the shape you reach for when you already know the count. Repeating while something stays true is a while loop, which is the next lesson."
-              },
-              {
-                "prompt": "Which for loop correctly prints \"hello\" 10 times?",
-                "opts": [
-                  "for(int i = 10; i < 0; i++)",
-                  "for(int i = 0; i++; i < 10)",
-                  "for(int i = 10)",
-                  "for(int i = 0; i < 10; i++)"
-                ],
-                "correct": 3,
-                "why": "Start, condition, change — in that order. The second has no condition, the third has them swapped, and the fourth starts at 10 where 10 < 0 is already false, so it runs zero times."
-              },
-              {
-                "prompt": "for (int i = 0; i < n; i += 2) — at most how many passes, in terms of n?",
-                "opts": [
-                  "n / 2",
-                  "(n + 1) / 2",
-                  "(n - 1) / 2",
-                  "n"
-                ],
-                "correct": 1,
-                "why": "i lands on 0, 2, 4 … so it takes every other value below n. For n = 5 that is 0, 2, 4 — three passes, and (5 + 1) / 2 is 3."
-              }
-            ],
-            "skills": [
-              "work out how many times a loop body runs"
-            ]
-          },
-          {
-            "id": "r_d1",
-            "kind": "fill",
-            "instruction": "Make it print the even numbers up to 10.",
-            "code": "for (int i = ⟦1⟧; i <= 10; i += ⟦2⟧) {\n  System.out.println(i);\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "0",
-                  "1",
-                  "2"
-                ],
-                "answer": 2
-              },
-              {
-                "chips": [
-                  "1",
-                  "2",
-                  "3"
-                ],
-                "answer": 1
-              }
-            ],
-            "target": "2\n4\n6\n8\n10",
-            "hint": "Start on the first even number, then jump over every odd one.",
-            "after": "Start at 2, step by 2. Starting at 1 with the same step would have given the odds instead.",
-            "skills": [
-              "control where a loop starts, stops and how far it steps"
-            ]
-          },
-          {
-            "id": "r_d2",
-            "kind": "spot",
-            "instruction": "This one never stops. Tap the line to blame.",
-            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"row \" + i);\n  i = 1;\n}",
-            "correct": 2,
-            "why": "i = 1 drags the counter back to 1 on every pass, so i++ can never get it past 3. The body is allowed to change the counter, and this is how loops get stuck.",
-            "skills": [
-              "work out how many times a loop body runs"
-            ]
-          },
-          {
-            "id": "r_d3",
+            "id": "f_type1",
             "kind": "write",
-            "instruction": "Print the odd numbers from 1 to 9.",
-            "code": "// print 1, 3, 5, 7, 9 - one per line\n",
+            "instruction": "Type a loop that prints Hi five times.",
+            "code": "// print Hi five times\n",
+            "target": "Hi\nHi\nHi\nHi\nHi",
+            "solution": "for (int i = 0; i < 5; i++) {\n  System.out.println(\"Hi\");\n}",
+            "hint": "Start i at 0 and keep going while i is less than 5.",
+            "after": "Five lines from one loop.",
+            "skills": [
+              "write a for loop that repeats a set number of times"
+            ]
+          },
+          {
+            "id": "f_type2",
+            "kind": "write",
+            "instruction": "Type a loop that prints Go ten times.",
+            "code": "// print Go ten times\n",
+            "target": "Go\nGo\nGo\nGo\nGo\nGo\nGo\nGo\nGo\nGo",
+            "solution": "for (int i = 0; i < 10; i++) {\n  System.out.println(\"Go\");\n}",
+            "hint": "Only the number in the test changes.",
+            "after": "Ten was no more work than five.",
+            "skills": [
+              "write a for loop that repeats a set number of times"
+            ]
+          },
+          {
+            "id": "f_type3",
+            "kind": "write",
+            "instruction": "Type a loop that prints a row of 4 stars, each on its own line.",
+            "code": "// print * four times, one per line\n",
+            "target": "*\n*\n*\n*",
+            "solution": "for (int i = 0; i < 4; i++) {\n  System.out.println(\"*\");\n}",
+            "hint": "Same shape again. Change the count and the text.",
+            "after": "You now have the shape by heart.",
+            "skills": [
+              "write a for loop that repeats a set number of times"
+            ]
+          },
+          {
+            "id": "f_usei",
+            "kind": "teach",
+            "instruction": "The counter is a variable. You can print it.",
+            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"Floor \" + i);\n}",
+            "output": "Floor 1\nFloor 2\nFloor 3",
+            "body": [
+              "i changes every time round.",
+              "Starting at 1 and testing <= 3 counts 1, 2, 3."
+            ]
+          },
+          {
+            "id": "f_walk2",
+            "kind": "walk",
+            "instruction": "Step through it and watch i change.",
+            "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"Floor \" + i);\n}",
+            "frames": [
+              {
+                "line": 0,
+                "note": "i is made and set to 1.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": ""
+              },
+              {
+                "line": 0,
+                "note": "Is 1 less than or equal to 3? Yes.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": ""
+              },
+              {
+                "line": 1,
+                "note": "Print Floor and the value of i, which is 1.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": "Floor 1"
+              },
+              {
+                "line": 0,
+                "note": "i++ makes i 2.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "Floor 1"
+              },
+              {
+                "line": 0,
+                "note": "Is 2 less than or equal to 3? Yes.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "Floor 1"
+              },
+              {
+                "line": 1,
+                "note": "Print Floor 2. The same line of code, a different result.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "Floor 1\nFloor 2"
+              },
+              {
+                "line": 0,
+                "note": "i++ makes i 3.",
+                "vars": {
+                  "i": "3"
+                },
+                "out": "Floor 1\nFloor 2"
+              },
+              {
+                "line": 0,
+                "note": "Is 3 less than or equal to 3? Yes.",
+                "vars": {
+                  "i": "3"
+                },
+                "out": "Floor 1\nFloor 2"
+              },
+              {
+                "line": 1,
+                "note": "Print Floor 3.",
+                "vars": {
+                  "i": "3"
+                },
+                "out": "Floor 1\nFloor 2\nFloor 3"
+              },
+              {
+                "line": 0,
+                "note": "i++ makes i 4.",
+                "vars": {
+                  "i": "4"
+                },
+                "out": "Floor 1\nFloor 2\nFloor 3"
+              },
+              {
+                "line": 0,
+                "note": "Is 4 less than or equal to 3? No. The loop stops.",
+                "vars": {
+                  "i": "4"
+                },
+                "out": "Floor 1\nFloor 2\nFloor 3"
+              }
+            ]
+          },
+          {
+            "id": "f_parts",
+            "kind": "teach",
+            "instruction": "Every for loop has the same three parts.",
+            "rules": [
+              {
+                "text": "The first part makes the counter and runs once",
+                "example": "int i = 0"
+              },
+              {
+                "text": "The second part is checked before every pass",
+                "example": "i < 5"
+              },
+              {
+                "text": "The third part runs after every pass",
+                "example": "i++"
+              }
+            ]
+          },
+          {
+            "id": "f_count",
+            "kind": "predict",
+            "instruction": "How many times does the body run?",
+            "code": "int count = 0;\nfor (int i = 0; i < 4; i++) {\n  count++;\n}\nSystem.out.println(count);",
+            "opts": [
+              "3",
+              "4",
+              "5",
+              "0"
+            ],
+            "correct": 1,
+            "why": "i takes 0, 1, 2 and 3. That is four passes. Starting at 0 and testing < 4 always gives exactly 4.",
+            "skills": [
+              "work out how many times a loop body runs"
+            ]
+          },
+          {
+            "id": "f_step",
+            "kind": "teach",
+            "instruction": "The third part does not have to be i++.",
+            "code": "for (int i = 0; i <= 10; i += 2) {\n  System.out.println(i);\n}",
+            "output": "0\n2\n4\n6\n8\n10",
+            "body": [
+              "i += 2 counts up in twos.",
+              "Anything that changes the counter works."
+            ]
+          },
+          {
+            "id": "f_stepw",
+            "kind": "write",
+            "instruction": "Type a loop that prints every odd number from 1 to 9.",
+            "code": "// print 1 3 5 7 9, one per line\n",
             "target": "1\n3\n5\n7\n9",
             "solution": "for (int i = 1; i <= 9; i += 2) {\n  System.out.println(i);\n}",
-            "hint": "Start at 1 and step by 2.",
-            "after": "Change the 9 to 99 and you have written CodeHS exercise 3.9.8, Print The Odds.",
+            "hint": "Start at 1 and go up in twos.",
+            "after": "Where you start and how you step decide the numbers you get.",
             "skills": [
-              "control where a loop starts, stops and how far it steps"
+              "write a for loop that repeats a set number of times"
             ]
           },
           {
-            "id": "r_d4",
+            "id": "f_sum",
             "kind": "write",
-            "instruction": "Last one: a factorial. 4 means 4 * 3 * 2 * 1.",
-            "code": "int n = readInt(\"What number would you like to compute the factorial for? \");\n// multiply 1 by every number up to n, then print it\n",
-            "stdin": "4",
-            "target": "What number would you like to compute the factorial for? 4\n24",
-            "solution": "int n = readInt(\"What number would you like to compute the factorial for? \");\nint result = 1;\nfor (int i = 1; i <= n; i++) {\n  result = result * i;\n}\nSystem.out.println(result);",
-            "hint": "Start result at 1 — not 0, or everything multiplies to nothing. Then loop i from 1 to n doing result = result * i.",
-            "after": "That is CodeHS exercise 3.9.11, Factorial. Lesson done.",
+            "instruction": "Add up every number from 1 to 100 and print the total.",
+            "code": "// add 1 + 2 + 3 + ... + 100, then print the total\n",
+            "target": "5050",
+            "solution": "int total = 0;\nfor (int i = 1; i <= 100; i++) {\n  total = total + i;\n}\nSystem.out.println(total);",
+            "hint": "Make a total before the loop, add i to it inside, and print it after.",
+            "after": "The total has to live outside the loop, or it would be reset every pass.",
             "skills": [
-              "write a for loop that repeats a fixed number of times"
+              "use the loop counter inside the body"
+            ]
+          },
+          {
+            "id": "f_mult",
+            "kind": "write",
+            "instruction": "Add up every multiple of 3 from 1 to 1000 and print the total.",
+            "code": "// add 3 + 6 + 9 + ... up to 1000, then print the total\n",
+            "target": "166833",
+            "solution": "int total = 0;\nfor (int i = 3; i <= 1000; i += 3) {\n  total = total + i;\n}\nSystem.out.println(total);",
+            "hint": "Start at 3 and step by 3, so you never have to check whether a number is a multiple.",
+            "after": "Stepping by 3 was easier than testing every number.",
+            "skills": [
+              "use the loop counter inside the body"
+            ]
+          },
+          {
+            "id": "f_final",
+            "kind": "write",
+            "instruction": "Ask how many floors the dungeon has, then print a line for each one.",
+            "code": "// ask \"Floors? \" with readInt\n// then print:  Floor 1, Floor 2, ... one per line\n",
+            "stdin": "4",
+            "target": "Floors? 4\nFloor 1\nFloor 2\nFloor 3\nFloor 4",
+            "solution": "int floors = readInt(\"Floors? \");\nfor (int i = 1; i <= floors; i++) {\n  System.out.println(\"Floor \" + i);\n}",
+            "hint": "Read the number first, then use it as the limit in the test.",
+            "after": "The loop now runs as many times as the player asks for.",
+            "skills": [
+              "use the loop counter inside the body"
             ]
           }
         ]
@@ -2475,9 +2425,8 @@
       "code": "2.10",
       "title": "While Loops",
       "objectives": [
-        "decide when a while loop fits better than a for loop",
-        "trace a while loop until its condition fails",
-        "recognise why a while loop never stops"
+        "stop a while loop by changing the condition inside it",
+        "choose between a for loop and a while loop"
       ],
       "flow": {
         "v": 1,
@@ -2485,264 +2434,262 @@
           {
             "id": "w_task",
             "kind": "teach",
-            "instruction": "Last lesson the dungeon had 5 floors. A boss fight has no number.",
-            "points": [
-              {
-                "label": "5 floors",
-                "text": "You knew the count before starting, so a for loop fitted."
-              },
-              {
-                "label": "a boss",
-                "text": "You swing until its HP reaches 0. How many hits that takes depends on the damage rolls."
-              },
-              {
-                "label": "what is needed",
-                "text": "A loop that repeats while something stays true, instead of counting to a number."
-              }
+            "instruction": "We want to keep attacking the boss until its health runs out. How do we repeat something when we do not know the number of times?",
+            "body": [
+              "A for loop needs a count before it starts.",
+              "Nobody knows how many hits the boss will take."
             ]
           },
           {
-            "id": "w_while",
+            "id": "w_intro",
             "kind": "teach",
-            "instruction": "while repeats for as long as its condition holds.",
-            "code": "int bossHp = 30;\nint hits = 0;\nwhile (bossHp > 0) {\n  bossHp = bossHp - 7;\n  hits = hits + 1;\n  System.out.println(\"Hit \" + hits + \": boss at \" + bossHp);\n}\nSystem.out.println(\"Boss down in \" + hits + \" hits.\");",
-            "output": "Hit 1: boss at 23\nHit 2: boss at 16\nHit 3: boss at 9\nHit 4: boss at 2\nHit 5: boss at -5\nBoss down in 5 hits.",
-            "highlight": [
-              2,
-              3
-            ],
-            "points": [
+            "instruction": "A while loop repeats for as long as a condition stays true.",
+            "code": "int hp = 3;\nwhile (hp > 0) {\n  System.out.println(\"Boss hp \" + hp);\n  hp--;\n}",
+            "output": "Boss hp 3\nBoss hp 2\nBoss hp 1",
+            "body": [
+              "It checks the condition, runs the body, then checks again."
+            ]
+          },
+          {
+            "id": "w_walk",
+            "kind": "walk",
+            "instruction": "Step through it and watch the condition decide.",
+            "code": "int hp = 3;\nwhile (hp > 0) {\n  System.out.println(\"Boss hp \" + hp);\n  hp--;\n}",
+            "frames": [
               {
-                "label": "while (bossHp > 0)",
-                "text": "Checked before every swing. True means swing again."
+                "line": 0,
+                "note": "hp starts at 3.",
+                "vars": {
+                  "hp": "3"
+                },
+                "out": ""
               },
               {
-                "label": "bossHp = bossHp - 7",
-                "text": "Each pass takes 7 off. This is what eventually makes the condition false."
+                "line": 1,
+                "note": "Is 3 greater than 0? Yes, so run the body.",
+                "vars": {
+                  "hp": "3"
+                },
+                "out": ""
               },
               {
-                "label": "boss at -5",
-                "text": "The last hit overshoots. The loop stops at the next check, not the instant HP hits 0."
+                "line": 2,
+                "note": "Print the boss hp.",
+                "vars": {
+                  "hp": "3"
+                },
+                "out": "Boss hp 3"
               },
               {
-                "label": "5 hits",
-                "text": "Never written down anywhere. The loop worked it out."
+                "line": 3,
+                "note": "hp-- makes hp 2.",
+                "vars": {
+                  "hp": "2"
+                },
+                "out": "Boss hp 3"
+              },
+              {
+                "line": 1,
+                "note": "Is 2 greater than 0? Yes, go round again.",
+                "vars": {
+                  "hp": "2"
+                },
+                "out": "Boss hp 3"
+              },
+              {
+                "line": 2,
+                "note": "Print the boss hp.",
+                "vars": {
+                  "hp": "2"
+                },
+                "out": "Boss hp 3\nBoss hp 2"
+              },
+              {
+                "line": 3,
+                "note": "hp-- makes hp 1.",
+                "vars": {
+                  "hp": "1"
+                },
+                "out": "Boss hp 3\nBoss hp 2"
+              },
+              {
+                "line": 1,
+                "note": "Is 1 greater than 0? Yes, once more.",
+                "vars": {
+                  "hp": "1"
+                },
+                "out": "Boss hp 3\nBoss hp 2"
+              },
+              {
+                "line": 2,
+                "note": "Print the boss hp.",
+                "vars": {
+                  "hp": "1"
+                },
+                "out": "Boss hp 3\nBoss hp 2\nBoss hp 1"
+              },
+              {
+                "line": 3,
+                "note": "hp-- makes hp 0.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": "Boss hp 3\nBoss hp 2\nBoss hp 1"
+              },
+              {
+                "line": 1,
+                "note": "Is 0 greater than 0? No. The loop stops.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": "Boss hp 3\nBoss hp 2\nBoss hp 1"
               }
             ]
           },
           {
-            "id": "w_cmp",
-            "kind": "compare",
-            "instruction": "Known count, or unknown count.",
-            "sides": [
-              {
-                "label": "for - you know the count",
-                "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(\"Hit \" + i);\n}",
-                "output": "Hit 1\nHit 2\nHit 3"
-              },
-              {
-                "label": "while - you do not",
-                "code": "int hp = 20;\nwhile (hp > 0) {\n  hp = hp - 7;\n  System.out.println(\"hp \" + hp);\n}",
-                "output": "hp 13\nhp 6\nhp -1"
-              }
-            ],
-            "points": [
-              {
-                "label": "for",
-                "text": "Three passes because you asked for three."
-              },
-              {
-                "label": "while",
-                "text": "Three passes because that is when hp ran out. You did not choose it."
-              }
-            ],
-            "skills": [
-              "decide when a while loop fits better than a for loop"
-            ]
-          },
-          {
-            "id": "w_fix",
-            "kind": "fix",
-            "instruction": "This boss has 50 HP. Make the fight run to the end.",
-            "code": "int bossHp = 50;\nint hits = 0;\nwhile (bossHp > 0) {\n  bossHp = bossHp - 7;\n  hits = hits + 1;\n  System.out.println(\"Hit \" + hits + \": boss at \" + bossHp);\n}\nSystem.out.println(\"Boss down in \" + hits + \" hits.\");",
-            "target": "Hit 1: boss at 43\nHit 2: boss at 36\nHit 3: boss at 29\nHit 4: boss at 22\nHit 5: boss at 15\nHit 6: boss at 8\nHit 7: boss at 1\nHit 8: boss at -6\nBoss down in 8 hits.",
-            "solution": "int bossHp = 50;\nint hits = 0;\nwhile (bossHp > 0) {\n  bossHp = bossHp - 7;\n  hits = hits + 1;\n  System.out.println(\"Hit \" + hits + \": boss at \" + bossHp);\n}\nSystem.out.println(\"Boss down in \" + hits + \" hits.\");",
-            "hint": "Nothing is broken - run it and read how many hits a 50 HP boss takes.",
-            "after": "Same loop, different number of passes. You changed the data, not the logic.",
-            "skills": [
-              "trace a while loop until its condition fails"
-            ]
-          },
-          {
-            "id": "w_forever",
+            "id": "w_parts",
             "kind": "teach",
-            "instruction": "Take away the line that changes bossHp and it never ends.",
-            "code": "int bossHp = 30;\nwhile (bossHp > 0) {\n  System.out.println(\"Hit! boss at \" + bossHp);\n}",
-            "highlight": [
-              2
-            ],
-            "points": [
+            "instruction": "A while loop has two jobs you must do yourself.",
+            "rules": [
               {
-                "label": "no subtraction",
-                "text": "bossHp stays 30 forever, so bossHp > 0 is true forever."
+                "text": "Set the variable up before the loop",
+                "example": "int hp = 3;"
               },
               {
-                "label": "what happens",
-                "text": "The same line prints until something kills the program. No output is shown here because there is no end to show."
-              },
-              {
-                "label": "bossHp = bossHp - 7",
-                "text": "Put that line back and the loop ends. Something inside must move the condition towards false."
+                "text": "Change it inside the loop, or the condition never turns false",
+                "example": "hp--;"
               }
+            ]
+          },
+          {
+            "id": "w_inf",
+            "kind": "teach",
+            "instruction": "Forget to change it and the loop never ends.",
+            "code": "int hp = 3;\nwhile (hp > 0) {\n  System.out.println(\"Boss hp \" + hp);\n}",
+            "body": [
+              "hp stays 3 forever, so the condition stays true forever.",
+              "This is an infinite loop. The program never finishes and never gets to the code below it.",
+              "Do not run this one. Every while loop needs something inside it that moves towards stopping."
             ]
           },
           {
             "id": "w_spot",
             "kind": "spot",
-            "instruction": "Tap the line that should be changing count.",
-            "code": "int count = 1;\nwhile (count <= 3) {\n  System.out.println(count);\n}",
+            "instruction": "This loop never ends. Tap the line that should have changed.",
+            "code": "int count = 5;\nwhile (count > 0) {\n  System.out.println(count);\n}",
             "correct": 2,
-            "why": "The body prints count but never changes it, so count <= 3 stays true forever. It needs count++ here.",
+            "why": "The body only prints. Nothing takes anything off count, so it stays 5 and the condition stays true. A count-- belongs on this line.",
             "skills": [
-              "recognise why a while loop never stops"
+              "stop a while loop by changing the condition inside it"
+            ]
+          },
+          {
+            "id": "w_cmp",
+            "kind": "compare",
+            "instruction": "Both count to 3. Pick the one that fits what you know.",
+            "sides": [
+              {
+                "label": "for",
+                "code": "for (int i = 1; i <= 3; i++) {\n  System.out.println(i);\n}",
+                "output": "1\n2\n3"
+              },
+              {
+                "label": "while",
+                "code": "int i = 1;\nwhile (i <= 3) {\n  System.out.println(i);\n  i++;\n}",
+                "output": "1\n2\n3"
+              }
+            ]
+          },
+          {
+            "id": "w_which",
+            "kind": "bucket",
+            "instruction": "Which loop suits each job?",
+            "buckets": [
+              "for",
+              "while"
+            ],
+            "items": [
+              {
+                "text": "Print every number from 1 to 20",
+                "bucket": 0
+              },
+              {
+                "text": "Print all 5 items in a list",
+                "bucket": 0
+              },
+              {
+                "text": "Keep asking until the player types the right password",
+                "bucket": 1
+              },
+              {
+                "text": "Halve a number until it reaches 1",
+                "bucket": 1
+              },
+              {
+                "text": "Say Hello 3 times",
+                "bucket": 0
+              }
+            ],
+            "why": "Use a for loop when you know the count before you start. Use a while loop when the stopping point depends on something that happens along the way.",
+            "skills": [
+              "choose between a for loop and a while loop"
             ]
           },
           {
             "id": "w_predict",
             "kind": "predict",
-            "instruction": "n starts at 10. What prints?",
-            "code": "int n = 10;\nwhile (n < 5) {\n  System.out.println(\"inside\");\n  n++;\n}\nSystem.out.println(\"done\");",
+            "instruction": "What comes out?",
+            "code": "int n = 8;\nwhile (n > 1) {\n  System.out.println(n);\n  n = n / 2;\n}",
             "opts": [
-              "(nothing)",
-              "inside",
-              "inside\ndone",
-              "done"
+              "8\n4\n2",
+              "8\n4\n2\n1",
+              "8\n4",
+              "8"
             ],
-            "correct": 3,
-            "why": "The condition is checked BEFORE the first pass. 10 < 5 is false, so the body never runs once.",
+            "correct": 0,
+            "why": "8, then 4, then 2. Next n becomes 1, and 1 is not greater than 1, so it stops before printing it.",
             "skills": [
-              "trace a while loop until its condition fails"
+              "stop a while loop by changing the condition inside it"
             ]
           },
           {
-            "id": "w_down",
-            "kind": "teach",
-            "instruction": "A while loop can count down as easily as up.",
-            "code": "int i = 5;\nwhile (i >= 1) {\n  System.out.println(i);\n  i--;\n}\nSystem.out.println(\"Go!\");",
-            "output": "5\n4\n3\n2\n1\nGo!",
-            "points": [
-              {
-                "label": "i--",
-                "text": "Takes 1 off each pass, so i falls 5, 4, 3, 2, 1."
-              },
-              {
-                "label": "i >= 1",
-                "text": "At i = 0 this is false and the loop stops, so 0 never prints."
-              },
-              {
-                "label": "you write it",
-                "text": "Unlike a for loop, the start and the change are separate lines you place yourself."
-              }
-            ]
-          },
-          {
-            "id": "w_sharp",
-            "kind": "teach",
-            "instruction": "for when you know the count. while when you do not.",
-            "points": [
-              {
-                "label": "while (condition) { }",
-                "text": "Checked before every pass, including the first. A false condition means zero passes."
-              },
-              {
-                "label": "the counter",
-                "text": "You declare it before the loop and change it inside. Nothing is automatic."
-              },
-              {
-                "label": "while (true)",
-                "text": "Never false on its own. It runs forever unless something inside stops it."
-              },
-              {
-                "label": "either works",
-                "text": "Anything a for loop does a while loop can do. Pick the one that states your intent."
-              }
-            ]
-          },
-          {
-            "id": "w_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "int i = 0;\nwhile (i < 3) {\n  i++;\n}",
-            "questions": [
-              {
-                "prompt": "Why do we use while loops in Java?",
-                "opts": [
-                  "To repeat something a fixed number of times",
-                  "To repeat some code while a condition is true",
-                  "To do something if a condition is true",
-                  "To break out of some block of code"
-                ],
-                "correct": 1,
-                "why": "A while loop is the shape for \"keep going until this stops being true\". A fixed count is a for loop."
-              },
-              {
-                "prompt": "What will while(true) { System.out.println(\"Hello\"); } do?",
-                "opts": [
-                  "Print Hello until the program receives user input",
-                  "Print Hello one time",
-                  "Print Hello in an infinite loop",
-                  "Nothing"
-                ],
-                "correct": 2,
-                "why": "true is never false, and nothing inside stops it, so it prints forever."
-              }
-            ],
-            "skills": [
-              "recognise why a while loop never stops"
-            ]
-          },
-          {
-            "id": "w_fill",
-            "kind": "fill",
-            "instruction": "Make the countdown stop at 1.",
-            "code": "int i = 5;\nwhile (i ⟦1⟧ 1) {\n  System.out.println(i);\n  i⟦2⟧;\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "==",
-                  ">=",
-                  "<="
-                ],
-                "answer": 1
-              },
-              {
-                "chips": [
-                  "--",
-                  "+= 2",
-                  "++"
-                ],
-                "answer": 0
-              }
-            ],
-            "target": "5\n4\n3\n2\n1",
-            "hint": "It must keep going while i is still at least 1, and i has to fall.",
-            "after": "Condition and change work as a pair. Get one wrong and it either stops early or never stops.",
-            "skills": [
-              "trace a while loop until its condition fails"
-            ]
-          },
-          {
-            "id": "w_write",
+            "id": "w_w1",
             "kind": "write",
-            "instruction": "Last one: keep asking for the temperature until the taffy is ready.",
-            "code": "System.out.println(\"Starting Taffy Timer...\");\n// keep reading the temperature until it reaches 270\n",
-            "stdin": "40\n100\n300",
-            "target": "Starting Taffy Timer...\nEnter the temperature: 40\nThe mixture isn't ready yet.\nEnter the temperature: 100\nThe mixture isn't ready yet.\nEnter the temperature: 300\nYour taffy is ready for the next step!",
-            "solution": "System.out.println(\"Starting Taffy Timer...\");\nint temp = readInt(\"Enter the temperature: \");\nwhile (temp < 270) {\n  System.out.println(\"The mixture isn't ready yet.\");\n  temp = readInt(\"Enter the temperature: \");\n}\nSystem.out.println(\"Your taffy is ready for the next step!\");",
-            "hint": "Read once before the loop, then while (temp < 270) print \"The mixture isn't ready yet.\" and read again. Prompt is \"Enter the temperature: \".",
-            "after": "That is CodeHS exercise 3.10.4, Making Taffy. Lesson done.",
+            "instruction": "Type a while loop that counts down from 5 to 1.",
+            "code": "// print 5 4 3 2 1, one per line, using a while loop\n",
+            "target": "5\n4\n3\n2\n1",
+            "solution": "int n = 5;\nwhile (n > 0) {\n  System.out.println(n);\n  n--;\n}",
+            "hint": "Set n before the loop, print it inside, and take one off each pass.",
+            "after": "The n-- is what lets it finish.",
             "skills": [
-              "decide when a while loop fits better than a for loop"
+              "stop a while loop by changing the condition inside it"
+            ]
+          },
+          {
+            "id": "w_w2",
+            "kind": "write",
+            "instruction": "Type a while loop that doubles 1 until it passes 100, printing each value.",
+            "code": "// print 1 2 4 8 16 32 64, one per line\n",
+            "target": "1\n2\n4\n8\n16\n32\n64",
+            "solution": "int n = 1;\nwhile (n <= 100) {\n  System.out.println(n);\n  n = n * 2;\n}",
+            "hint": "Keep going while n is 100 or less, and double it each pass.",
+            "after": "128 was over 100, so the loop stopped before printing it.",
+            "skills": [
+              "choose between a for loop and a while loop"
+            ]
+          },
+          {
+            "id": "w_final",
+            "kind": "write",
+            "instruction": "Ask the player for the boss health, then attack until it reaches zero.",
+            "code": "// ask \"Boss hp? \" with readInt\n// then print:  Hit! hp now <n>   after each hit, down to 0\n",
+            "stdin": "3",
+            "target": "Boss hp? 3\nHit! hp now 2\nHit! hp now 1\nHit! hp now 0",
+            "solution": "int hp = readInt(\"Boss hp? \");\nwhile (hp > 0) {\n  hp--;\n  System.out.println(\"Hit! hp now \" + hp);\n}",
+            "hint": "Take one off first, then print. Keep going while hp is above 0.",
+            "after": "The number of hits came from the player, not from you.",
+            "skills": [
+              "stop a while loop by changing the condition inside it"
             ]
           }
         ]

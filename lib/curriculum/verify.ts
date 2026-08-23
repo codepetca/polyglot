@@ -135,6 +135,16 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           }
           break;
         }
+        case "walk": {
+          // The walkthrough claims what the program prints. Check the claim.
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          if (!r.compiled || r.error) { failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`); break; }
+          const last = (s.frames || [])[(s.frames || []).length - 1];
+          const claimed = last?.out ?? "";
+          if (norm(r.stdout) !== norm(claimed)) failures.push(`${name}: the last frame says the output is ${JSON.stringify(norm(claimed))}, but it prints ${JSON.stringify(norm(r.stdout))}`);
+          else results.push(`${name}: ✓ walkthrough matches the real run`);
+          break;
+        }
         case "arrange": {
           const r = await runJava(s.lines!.join("\n"), s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: correct order gives ${JSON.stringify(norm(r.stdout || r.error))} ≠ target ${JSON.stringify(norm(s.target!))}`);
