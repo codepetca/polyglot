@@ -9668,6 +9668,24 @@
             ]
           },
           {
+            "id": "b_eqeq",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Both Potions say Healing, and equals is overridden. What prints?",
+            "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n  System.out.println(a == b);\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.name);\n  }\n}",
+            "opts": [
+              "true\ntrue",
+              "true\nfalse",
+              "false\nfalse",
+              "false\ntrue"
+            ],
+            "correct": 1,
+            "why": "equals is yours, so it compares the names and says true. == is not a method and cannot be overridden - it asks whether these are the same object, and new was called twice, so false. This is why comparing objects with == is a bug.",
+            "skills": [
+              "override toString and equals from Object"
+            ]
+          },
+          {
             "id": "b_which",
             "kind": "teach",
             "instruction": "The two you will override in practice.",
