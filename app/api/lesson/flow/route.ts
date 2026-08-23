@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { logEvent, EVENT } from "@/lib/events";
+import { recordAttempt } from "@/lib/progress";
 import { complete } from "@/lib/llm";
 import { rateLimit } from "@/lib/ratelimit";
 import { stripStepForClient, type FlowStep } from "@/lib/curriculum/flow";
@@ -79,6 +80,39 @@ export async function POST(req: Request) {
     if (!isStudent || !firstAttempt) return;
     logEvent({ type: EVENT.QUIZ_ANSWER, userId: me.id, classId: me.classId, lessonId: flow.lessonId, questionId: step.id, correct, chosen: body.choice ?? null, source: "practice" });
     logEvent({ type: EVENT.FLOW_STEP, userId: me.id, classId: me.classId, lessonId: flow.lessonId, stepId: step.id, kind: step.kind, correct });
+    attempt(correct, { choice: body.choice ?? null });
+  };
+
+  /**
+   * Flow drills have to reach the same chokepoint every other attempt goes
+   * through, or they are invisible to everything downstream. Without this a
+   * student can finish every lesson in the course and still read NOT_STARTED
+   * in the gradebook, with readiness 0 and the "stuck" flag never firing —
+   * silently, because the events above still look healthy.
+   *
+   * PRACTICE, deliberately: recordAttempt lets this move NOT_STARTED to
+   * IN_PROGRESS and feed readiness, and refuses to let it reach MASTERED.
+   * Only a locked-down summative quiz does that.
+   *
+   * after() so the bookkeeping never sits between a student and their answer,
+   * and a failed write loses one row rather than breaking the step.
+   */
+  const attempt = (correct: boolean, detail: Record<string, unknown> = {}) => {
+    if (!isStudent) return;
+    after(async () => {
+      try {
+        await recordAttempt({
+          userId: me.id,
+          lessonId: flow.lessonId,
+          kind: "QUIZ_PRACTICE",
+          passed: correct,
+          score: correct ? 1 : 0,
+          detail: { stepId: step.id, stepKind: step.kind, source: "flow", ...detail },
+        });
+      } catch {
+        /* bookkeeping only */
+      }
+    });
   };
 
   switch (body.action) {
@@ -187,6 +221,9 @@ Return ONLY JSON: {"pass": true|false, "reply": "one warm sentence — if pass: 
       if (isStudent) {
         if (step.kind === "fix" || step.kind === "arrange" || step.kind === "write") {
           logEvent({ type: EVENT.QUIZ_ANSWER, userId: me.id, classId: me.classId, lessonId: flow.lessonId, questionId: step.id, correct: attempts <= 2, chosen: null, source: "practice" });
+          // These are the hands-on steps. evidence() cannot cover them: it gates
+          // on body.attempt, which this action does not send.
+          attempt(attempts <= 2, { attempts });
         }
         logEvent({ type: EVENT.FLOW_STEP, userId: me.id, classId: me.classId, lessonId: flow.lessonId, stepId: step.id, kind: step.kind, attempts });
       }
