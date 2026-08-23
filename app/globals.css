@@ -788,10 +788,15 @@ pre.flowcode.ro { margin: 0; }
 .pcard .pc-row span { color: var(--muted); text-transform: capitalize; }
 .pcard .pc-row b { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-/* A console the student types into, replacing the "simulated typing" caption. */
-.flowtype { margin-top: 12px; }
-.flowtype .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--muted); margin-bottom: 4px; }
-.typebox { width: 100%; font-family: var(--mono); font-size: 14px; line-height: 1.6; color: #d9efe0;
-  background: #101317; border: 1.5px solid #2a3138; border-radius: 10px; padding: 9px 13px; resize: vertical; }
-.typebox:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* A live console. The program prints its prompt, then waits on the caret,
+   exactly as it would in a terminal. */
+.term { margin-top: 12px; }
+.term .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--muted); margin-bottom: 4px; }
+.termbody { background: #101317; border-radius: 10px; padding: 10px 14px; }
+.termbody pre { margin: 0; font-family: var(--mono); font-size: 14px; line-height: 1.6; color: #d9efe0;
+  white-space: pre-wrap; }
+.termline { display: flex; align-items: baseline; }
+.termprompt { font-family: var(--mono); font-size: 14px; line-height: 1.6; color: #d9efe0; white-space: pre; }
+.terminput { flex: 1; min-width: 60px; background: transparent; border: none; outline: none; caret-color: #7fe3b0;
+  font-family: var(--mono); font-size: 14px; line-height: 1.6; color: #7fe3b0; padding: 0; }
 .typenote { font-size: 12.5px; color: var(--muted); margin-top: 5px; }

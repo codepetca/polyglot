@@ -632,84 +632,9 @@
             "code": "String name = \"Ada\";"
           },
           {
-            "id": "k_readline",
+            "id": "k_readers",
             "kind": "teach",
-            "instruction": "readLine asks a question and hands back what the player types.",
-            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"Welcome, \" + name + \"!\");",
-            "points": [
-              {
-                "label": "readLine(\"Your name? \")",
-                "text": "Prints the question, then waits for an answer."
-              },
-              {
-                "label": "String name =",
-                "text": "The answer comes back and goes into the box."
-              }
-            ]
-          },
-          {
-            "id": "k_try1",
-            "kind": "run",
-            "instruction": "Type a name, then run it.",
-            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"Welcome, \" + name + \"!\");",
-            "stdin": "Ada",
-            "after": "The program printed the question, waited, then used your answer."
-          },
-          {
-            "id": "k_int",
-            "kind": "teach",
-            "instruction": "readInt hands back a whole number.",
-            "body": [
-              "Use it when the answer is a number you want to calculate with."
-            ],
-            "code": "int level = readInt(\"Starting level? \");\nSystem.out.println(\"Next level is \" + (level + 1));"
-          },
-          {
-            "id": "k_try2",
-            "kind": "run",
-            "instruction": "Type a whole number, then run it.",
-            "code": "int level = readInt(\"Starting level? \");\nSystem.out.println(\"Next level is \" + (level + 1));",
-            "stdin": "7",
-            "after": "It added 1 to your number. readLine would have glued a 1 on the end instead."
-          },
-          {
-            "id": "k_dbl",
-            "kind": "teach",
-            "instruction": "readDouble hands back a number with a decimal.",
-            "body": [
-              "Use it for anything you measure."
-            ],
-            "code": "double health = readDouble(\"Health? \");\nSystem.out.println(\"Half of that is \" + (health / 2));"
-          },
-          {
-            "id": "k_try3",
-            "kind": "run",
-            "instruction": "Type a number with a decimal point, then run it.",
-            "code": "double health = readDouble(\"Health? \");\nSystem.out.println(\"Half of that is \" + (health / 2));",
-            "stdin": "2.5",
-            "after": "A double keeps the decimal part all the way through."
-          },
-          {
-            "id": "k_bool",
-            "kind": "teach",
-            "instruction": "readBoolean hands back true or false.",
-            "body": [
-              "The player types the word true or the word false."
-            ],
-            "code": "boolean online = readBoolean(\"Online? \");\nSystem.out.println(\"Online: \" + online);"
-          },
-          {
-            "id": "k_try4",
-            "kind": "run",
-            "instruction": "Type true or false, then run it.",
-            "code": "boolean online = readBoolean(\"Online? \");\nSystem.out.println(\"Online: \" + online);",
-            "stdin": "true",
-            "after": "Four questions, four readers. That is the whole set."
-          },
-          {
-            "id": "k_recap",
-            "kind": "teach",
-            "instruction": "There is one reader for each type.",
+            "instruction": "Java gives us four readers, one for each type.",
             "rules": [
               {
                 "text": "readLine hands back a String",
@@ -728,6 +653,63 @@
                 "example": "boolean ready = readBoolean(\"Ready? \");"
               }
             ]
+          },
+          {
+            "id": "k_shape",
+            "kind": "teach",
+            "instruction": "Every one of them works the same way.",
+            "code": "String name = readLine(\"Your name? \");",
+            "points": [
+              {
+                "label": "\"Your name? \"",
+                "text": "The question goes inside the brackets."
+              },
+              {
+                "label": "String name =",
+                "text": "The answer comes back and goes into the box."
+              }
+            ]
+          },
+          {
+            "id": "k_try1",
+            "kind": "run",
+            "instruction": "Run it, then type a name when it asks.",
+            "code": "String name = readLine(\"Your name? \");\nSystem.out.println(\"Welcome, \" + name + \"!\");",
+            "stdin": "Ada",
+            "after": "It printed the question, waited for you, then used your answer."
+          },
+          {
+            "id": "k_int",
+            "kind": "teach",
+            "instruction": "readInt hands back a whole number you can calculate with.",
+            "body": [
+              "readLine would hand back text. Adding 1 to the text \"7\" gives \"71\"."
+            ],
+            "code": "int level = readInt(\"Starting level? \");\nSystem.out.println(\"Next level is \" + (level + 1));"
+          },
+          {
+            "id": "k_try2",
+            "kind": "run",
+            "instruction": "Run it and type a whole number.",
+            "code": "int level = readInt(\"Starting level? \");\nSystem.out.println(\"Next level is \" + (level + 1));",
+            "stdin": "7",
+            "after": "It added 1 to your number, because a number came back."
+          },
+          {
+            "id": "k_try3",
+            "kind": "run",
+            "instruction": "Run it and type a number with a decimal point.",
+            "code": "double health = readDouble(\"Health? \");\nSystem.out.println(\"Half of that is \" + (health / 2));",
+            "stdin": "2.5",
+            "after": "readDouble keeps the decimal part."
+          },
+          {
+            "id": "k_try4",
+            "kind": "run",
+            "instruction": "Run it and type true or false.",
+            "code": "boolean online = readBoolean(\"Online? \");\nSystem.out.println(\"Online: \" + online);",
+            "stdin": "true",
+            "after": "Four questions, four readers."
           },
           {
             "id": "k_match",
@@ -751,52 +733,49 @@
                 "boolean"
               ]
             ],
-            "why": "The reader you pick decides the type, and the box in front has to match it.",
+            "why": "The reader decides the type, and the box in front has to match it.",
             "skills": [
               "choose the reader that matches the type you need"
             ]
           },
           {
-            "id": "k_fill",
-            "kind": "fill",
-            "instruction": "Pick the reader that fits each question.",
-            "code": "int age = ⟦1⟧(\"How old are you? \");\ndouble price = ⟦2⟧(\"Price? \");\nSystem.out.println(age);\nSystem.out.println(price);",
-            "blanks": [
-              {
-                "chips": [
-                  "readLine",
-                  "readInt",
-                  "readDouble"
-                ],
-                "answer": 1
-              },
-              {
-                "chips": [
-                  "readInt",
-                  "readDouble",
-                  "readLine"
-                ],
-                "answer": 1
-              }
-            ],
-            "stdin": "16\n9.99",
-            "target": "How old are you? 16\nPrice? 9.99\n16\n9.99",
-            "hint": "An age is a whole number. A price has a decimal point.",
-            "after": "The box in front and the reader after the = always agree.",
-            "skills": [
-              "choose the reader that matches the type you need"
-            ]
-          },
-          {
-            "id": "k_fixreader",
-            "kind": "fix",
-            "instruction": "Fix this so it runs.",
-            "code": "String name = readInt(\"Your name? \");\nSystem.out.println(\"Hi, \" + name + \"!\");",
+            "id": "k_w1",
+            "kind": "write",
+            "instruction": "Ask for the player name, then greet them.",
+            "code": "// ask \"Name? \" and print:  Hi, <name>\n",
             "stdin": "Ada",
-            "target": "Your name? Ada\nHi, Ada!",
-            "solution": "String name = readLine(\"Your name? \");\nSystem.out.println(\"Hi, \" + name + \"!\");",
-            "hint": "A name is text, so it needs the reader that hands back text.",
-            "after": "readInt would refuse the moment someone typed a name.",
+            "target": "Name? Ada\nHi, Ada",
+            "solution": "String name = readLine(\"Name? \");\nSystem.out.println(\"Hi, \" + name);",
+            "hint": "Store what readLine hands back, then use that box in the println.",
+            "after": "The prompt Name? was printed by readLine, not by you.",
+            "skills": [
+              "read what the user types with readLine"
+            ]
+          },
+          {
+            "id": "k_w2",
+            "kind": "write",
+            "instruction": "Ask for an age, then say what it will be next year.",
+            "code": "// ask \"Age? \" and print:  Next year you are <age+1>\n",
+            "stdin": "16",
+            "target": "Age? 16\nNext year you are 17",
+            "solution": "int age = readInt(\"Age? \");\nSystem.out.println(\"Next year you are \" + (age + 1));",
+            "hint": "An age is a whole number, so use the reader that hands one back.",
+            "after": "readLine would have given you \"16\" and printed 161.",
+            "skills": [
+              "choose the reader that matches the type you need"
+            ]
+          },
+          {
+            "id": "k_w3",
+            "kind": "write",
+            "instruction": "Ask for a price, then print double it.",
+            "code": "// ask \"Price? \" and print:  Two of those cost <price*2>\n",
+            "stdin": "9.99",
+            "target": "Price? 9.99\nTwo of those cost 19.98",
+            "solution": "double price = readDouble(\"Price? \");\nSystem.out.println(\"Two of those cost \" + (price * 2));",
+            "hint": "A price has a decimal point.",
+            "after": "A double stays a double through the multiplication.",
             "skills": [
               "choose the reader that matches the type you need"
             ]
@@ -819,11 +798,11 @@
             "id": "k_final",
             "kind": "write",
             "instruction": "Ask the player for a name, a level and health, then print the card.",
-            "code": "// ask three questions, then print:\n//   === PLAYER CARD ===\n//   Name:   ...\n//   Level:  ...\n//   Health: ...\n",
+            "code": "// ask \"Name? \", \"Level? \" and \"Health? \"\n// then print three lines:\n//   Name: <name>\n//   Level: <level>\n//   Health: <health>\n",
             "stdin": "Ada\n7\n2.5",
-            "target": "Name? Ada\nLevel? 7\nHealth? 2.5\n=== PLAYER CARD ===\nName:   Ada\nLevel:  7\nHealth: 2.5",
-            "solution": "String name = readLine(\"Name? \");\nint level = readInt(\"Level? \");\ndouble health = readDouble(\"Health? \");\nSystem.out.println(\"=== PLAYER CARD ===\");\nSystem.out.println(\"Name:   \" + name);\nSystem.out.println(\"Level:  \" + level);\nSystem.out.println(\"Health: \" + health);",
-            "hint": "Three readers, then four printlns. The prompts are Name? , Level? and Health? .",
+            "target": "Name? Ada\nLevel? 7\nHealth? 2.5\nName: Ada\nLevel: 7\nHealth: 2.5",
+            "solution": "String name = readLine(\"Name? \");\nint level = readInt(\"Level? \");\ndouble health = readDouble(\"Health? \");\nSystem.out.println(\"Name: \" + name);\nSystem.out.println(\"Level: \" + level);\nSystem.out.println(\"Health: \" + health);",
+            "hint": "Three readers, then three printlns. One space after each colon.",
             "after": "The card is filled in by whoever is playing, not by you.",
             "skills": [
               "store a typed value in a variable and use it later"

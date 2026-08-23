@@ -224,7 +224,16 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   // What the student types at the console. Seeded from step.stdin so the step
   // works untouched, but editable on `run` steps: the point of an input lesson
   // is that the value came from THEM.
-  const [typedIn, setTypedIn] = useState(step.stdin ?? "");
+  // A real terminal. The runner is one-shot, so we re-run the program with one
+  // more line of input each time the student presses enter. Because the output
+  // is deterministic, the transcript grows exactly the way a console does, and
+  // the value in it is one THEY typed. Scanner.nextLine() throws on EOF after
+  // the prompt has already printed, which is precisely the "waiting for you"
+  // signal we need.
+  const [termIn, setTermIn] = useState<string[]>([]);
+  const [termOut, setTermOut] = useState<string | null>(null);
+  const [termWait, setTermWait] = useState(false);
+  const [termLine, setTermLine] = useState("");
   const [cardVals, setCardVals] = useState<string[]>([]);
   const [cardErrs, setCardErrs] = useState<(string | null)[]>([]);
   const [reveal, setReveal] = useState<{ correct: boolean; correctIndex?: number; why?: string; chosen?: number } | null>(null);
@@ -282,7 +291,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           code: assembled,
           wrap: true,
           lessonCode,
-          stdin: step.kind === "ask" ? typed.join("\n") : step.kind === "run" ? typedIn : step.stdin || "",
+          stdin: step.kind === "ask" ? typed.join("\n") : step.stdin || "",
           wrapMode: step.wrap || "beginner",
         }),
       }).then((x) => x.json());
@@ -299,6 +308,41 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       : step.kind === "tweak" ? r.compiled && !r.error && norm(r.stdout) !== norm(step.target || "") && norm(r.stdout).length > 0
       : r.compiled && !r.error && norm(r.stdout) === norm(step.target || "");
     if (ok) setWon(true);
+  }
+
+  const readsInput = /\bread(Line|Int|Double|Boolean)\s*\(/.test(step.code || "");
+  const interactive = step.kind === "run" && readsInput;
+
+  async function runTerminal(lines: string[]) {
+    onAttempt(step.id);
+    setBusy(true);
+    setOut(null);
+    setElapsed(0);
+    const startedAt = Date.now();
+    const tick = setInterval(() => setElapsed(Math.floor((Date.now() - startedAt) / 1000)), 250);
+    let r: RunOut;
+    try {
+      r = await fetch("/api/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: assembled, wrap: true, lessonCode, stdin: lines.join("\n"), wrapMode: step.wrap || "beginner" }),
+      }).then((x) => x.json());
+    } catch {
+      r = { compiled: false, stdout: "", error: "Lost connection while running. Check your internet and try again." };
+    } finally {
+      clearInterval(tick);
+      setBusy(false);
+    }
+    if (!r.compiled) { setTermOut(null); setTermWait(false); setOut(r); return; }
+    setTermOut(r.stdout || "");
+    // Out of input: the prompt is already on screen and the program is waiting.
+    if (r.error && /NoSuchElementException|No line found/i.test(r.error)) {
+      setTermWait(true);
+      return;
+    }
+    setTermWait(false);
+    if (r.error) { setOut(r); return; }
+    setWon(true);
   }
 
   // ── graded taps ──
@@ -511,18 +555,49 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           run step they type here and the program reads exactly that; on a graded
           step the typing is fixed, and the transcript echoes it anyway, so
           there is nothing to caption. */}
-      {step.stdin !== undefined && step.kind === "run" && (
-        <div className="flowtype">
-          <div className="lbl">WHAT YOU TYPE</div>
-          <textarea
-            className="typebox"
-            value={typedIn}
-            rows={Math.max(1, (step.stdin || "").split("\n").length)}
-            spellCheck={false}
-            aria-label="what you type at the console"
-            onChange={(ev) => setTypedIn(ev.target.value)}
-          />
-          <div className="typenote">One line for each question the program asks.</div>
+      {interactive && termOut !== null && (
+        <div className="term">
+          <div className="lbl">CONSOLE</div>
+          <div className="termbody">
+            {/* The prompt ends without a newline, so the caret has to sit on the
+                same line as it. Split the last line off and lay it beside the
+                input rather than nudging a block with a negative margin. */}
+            {termWait ? (
+              (() => {
+                const ls = (termOut || "").split("\n");
+                const head = ls.slice(0, -1).join("\n");
+                return head ? <pre>{head}</pre> : null;
+              })()
+            ) : (
+              <pre>{termOut}</pre>
+            )}
+            {termWait && (
+              <form
+                className="termline"
+                onSubmit={(ev) => {
+                  ev.preventDefault();
+                  if (busy) return;
+                  const next = [...termIn, termLine];
+                  setTermIn(next);
+                  setTermLine("");
+                  setTermWait(false);
+                  runTerminal(next);
+                }}
+              >
+                <span className="termprompt">{(termOut || "").split("\n").slice(-1)[0]}</span>
+                <input
+                  className="terminput"
+                  value={termLine}
+                  autoFocus
+                  spellCheck={false}
+                  aria-label="type your answer"
+                  disabled={busy}
+                  onChange={(ev) => setTermLine(ev.target.value)}
+                />
+              </form>
+            )}
+          </div>
+          {termWait && <div className="typenote">Type your answer and press enter.</div>}
         </div>
       )}
 
@@ -858,7 +933,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       {/* ── run + output ── */}
       {runnable && (
         <div className="flowrun">
-          <button className="btn green" style={{ fontSize: 15, padding: "10px 26px" }} disabled={busy || (step.kind === "arrange" && picked.length !== (step.count ?? (step.lines || []).length))} onClick={run}>
+          <button className="btn green" style={{ fontSize: 15, padding: "10px 26px" }} disabled={busy || (step.kind === "arrange" && picked.length !== (step.count ?? (step.lines || []).length))} onClick={() => (interactive ? (setTermIn([]), setTermLine(""), runTerminal([])) : run())}>
             {busy ? `running… ${elapsed}s` : "▶ Run"}
           </button>
           {/* Past a few seconds a silent spinner reads as broken — say what's
