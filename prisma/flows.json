@@ -9949,6 +9949,1019 @@
           }
         ]
       }
+    },
+    {
+      "code": "5.1",
+      "title": "What are Data Structures?",
+      "objectives": [
+        "name the four data structures and what each is for",
+        "choose the right structure for a job"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "d_task",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Three monsters took three variables. Twenty would take twenty.",
+            "code": "public void run() {\n  int hp1 = 20;\n  int hp2 = 45;\n  int hp3 = 8;\n  System.out.println(hp1 + hp2 + hp3);\n}",
+            "output": "73",
+            "points": [
+              {
+                "label": "hp1, hp2, hp3",
+                "text": "Numbered by hand. There is no way to loop over them."
+              },
+              {
+                "label": "twenty monsters",
+                "text": "Twenty variables, and a sum twenty terms long."
+              },
+              {
+                "label": "a data structure",
+                "text": "One variable that holds many values, which you CAN loop over."
+              }
+            ]
+          },
+          {
+            "id": "d_four",
+            "kind": "teach",
+            "instruction": "Four of them, and each is for a different job.",
+            "points": [
+              {
+                "label": "array",
+                "text": "A fixed number of values, all the same type. Fastest and simplest. Size is set when you make it."
+              },
+              {
+                "label": "ArrayList",
+                "text": "Like an array, but it grows and shrinks. Use it when you do not know how many yet."
+              },
+              {
+                "label": "2D array",
+                "text": "A grid - rows and columns. For maps, boards and tables."
+              },
+              {
+                "label": "HashMap",
+                "text": "Pairs. Look a value up by a name rather than a number, like \"gold\" to 5."
+              }
+            ]
+          },
+          {
+            "id": "d_match",
+            "kind": "match",
+            "instruction": "Which structure fits the job?",
+            "pairs": [
+              [
+                "the 7 days of the week",
+                "array - a fixed count"
+              ],
+              [
+                "loot the player picks up",
+                "ArrayList - grows as you go"
+              ],
+              [
+                "a dungeon map of rooms",
+                "2D array - rows and columns"
+              ],
+              [
+                "each item name to its price",
+                "HashMap - look up by name"
+              ]
+            ],
+            "why": "Fixed count means an array. Unknown or changing count means an ArrayList. A grid means 2D. Looking up by a name rather than a position means a HashMap.",
+            "skills": [
+              "choose the right structure for a job"
+            ]
+          },
+          {
+            "id": "d_peek",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The same three numbers, in one variable.",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  System.out.println(hp.length);\n  System.out.println(hp[0]);\n}",
+            "output": "3\n20",
+            "highlight": [
+              1
+            ],
+            "points": [
+              {
+                "label": "int[] hp",
+                "text": "One variable holding three ints. The square brackets make it an array."
+              },
+              {
+                "label": "hp.length",
+                "text": "How many it holds. The program can ask, which it never could with hp1, hp2, hp3."
+              },
+              {
+                "label": "hp[0]",
+                "text": "The first one. Positions start at 0, exactly like String characters in 4.5."
+              },
+              {
+                "label": "this lesson",
+                "text": "Just the shape of them. Arrays properly start next lesson."
+              }
+            ]
+          },
+          {
+            "id": "d_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "int[] a = {1, 2, 3};",
+            "questions": [
+              {
+                "prompt": "Which structure should you use when you do not know how many items there will be?",
+                "opts": [
+                  "ArrayList",
+                  "array",
+                  "2D array",
+                  "none of them"
+                ],
+                "correct": 0,
+                "why": "An array has a fixed size once created. An ArrayList grows and shrinks as you add and remove."
+              },
+              {
+                "prompt": "What is a HashMap for?",
+                "opts": [
+                  "Looking a value up by a name instead of a number",
+                  "Storing a grid",
+                  "Storing a fixed list",
+                  "Sorting numbers"
+                ],
+                "correct": 0,
+                "why": "It stores pairs, so you ask for \"gold\" rather than position 3."
+              }
+            ],
+            "skills": [
+              "name the four data structures and what each is for"
+            ]
+          },
+          {
+            "id": "d_bucket",
+            "kind": "bucket",
+            "instruction": "Fixed size, or grows?",
+            "buckets": [
+              "fixed size",
+              "grows and shrinks"
+            ],
+            "items": [
+              {
+                "text": "array",
+                "bucket": 0
+              },
+              {
+                "text": "ArrayList",
+                "bucket": 1
+              },
+              {
+                "text": "int[] hp = {20, 45, 8};",
+                "bucket": 0
+              },
+              {
+                "text": "loot you pick up as you play",
+                "bucket": 1
+              }
+            ],
+            "why": "An array is created at one size and stays there. An ArrayList changes size as the program runs.",
+            "skills": [
+              "choose the right structure for a job"
+            ]
+          },
+          {
+            "id": "d_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: put four scores in one variable and print how many there are.",
+            "code": "public void run() {\n  // make an int array holding 10, 20, 30 and 40\n  // print its length, then its first item\n}",
+            "target": "4\n10",
+            "solution": "public void run() {\n  int[] scores = {10, 20, 30, 40};\n  System.out.println(scores.length);\n  System.out.println(scores[0]);\n}",
+            "hint": "int[] scores = {10, 20, 30, 40}; then .length and [0].",
+            "after": "One variable, four values, and the program can count them itself.",
+            "skills": [
+              "name the four data structures and what each is for"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.2",
+      "title": "Introduction to Arrays",
+      "objectives": [
+        "make an array and read it by index",
+        "change an item and find the length"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "r_task",
+            "kind": "teach",
+            "instruction": "One name, many slots, numbered from zero.",
+            "points": [
+              {
+                "label": "int[] hp",
+                "text": "A row of int slots under a single name."
+              },
+              {
+                "label": "numbered",
+                "text": "The first slot is 0, not 1. Same counting as String positions in 4.5."
+              },
+              {
+                "label": "fixed",
+                "text": "Once made, an array cannot grow. Its length never changes."
+              }
+            ]
+          },
+          {
+            "id": "r_make",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Two ways to make one.",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  String[] names = new String[3];\n  names[0] = \"Goblin\";\n  System.out.println(hp[0]);\n  System.out.println(names[0]);\n  System.out.println(names[1]);\n}",
+            "output": "20\nGoblin\nnull",
+            "highlight": [
+              1,
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "{20, 45, 8}",
+                "text": "Values listed up front. The length becomes 3 automatically."
+              },
+              {
+                "label": "new String[3]",
+                "text": "Three empty slots, filled in later."
+              },
+              {
+                "label": "names[1]",
+                "text": "null - never assigned. Empty object slots start null; empty int slots start 0."
+              },
+              {
+                "label": "both are arrays",
+                "text": "The difference is only whether you know the values yet."
+              }
+            ]
+          },
+          {
+            "id": "r_index",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "An index reads a slot, and can be assigned to.",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  System.out.println(hp[0]);\n  System.out.println(hp[2]);\n  hp[1] = 50;\n  System.out.println(hp[1]);\n  System.out.println(hp.length);\n}",
+            "output": "20\n8\n50\n3",
+            "highlight": [
+              4
+            ],
+            "points": [
+              {
+                "label": "hp[0]",
+                "text": "20 - the first slot."
+              },
+              {
+                "label": "hp[2]",
+                "text": "8 - the third and last, because 3 slots are numbered 0, 1, 2."
+              },
+              {
+                "label": "hp[1] = 50;",
+                "text": "An index on the LEFT of = writes to that slot instead of reading it."
+              },
+              {
+                "label": "hp.length",
+                "text": "3. No brackets - it is a field, not a method, unlike String's length()."
+              }
+            ]
+          },
+          {
+            "id": "r_trace",
+            "kind": "trace",
+            "instruction": "Three slots, numbered from zero.",
+            "code": "int[] hp = {20, 45, 8};",
+            "questions": [
+              {
+                "prompt": "hp[0]",
+                "opts": [
+                  "20",
+                  "45",
+                  "8"
+                ],
+                "correct": 0,
+                "why": "The first slot. Counting starts at 0."
+              },
+              {
+                "prompt": "hp[2]",
+                "opts": [
+                  "8",
+                  "45",
+                  "20"
+                ],
+                "correct": 0,
+                "why": "The third and last, because 3 slots are numbered 0, 1, 2."
+              },
+              {
+                "prompt": "hp.length",
+                "opts": [
+                  "3",
+                  "2",
+                  "8"
+                ],
+                "correct": 0,
+                "why": "How many slots there are - not the last index, which is 2."
+              }
+            ],
+            "skills": [
+              "make an array and read it by index"
+            ]
+          },
+          {
+            "id": "r_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What does this print?",
+            "code": "public void run() {\n  int[] a = {5, 10, 15};\n  a[0] = a[2];\n  System.out.println(a[0]);\n}",
+            "opts": [
+              "15",
+              "5",
+              "10",
+              "(an error)"
+            ],
+            "correct": 0,
+            "why": "a[2] is read first (15), then written into slot 0. The right-hand side is worked out before the assignment.",
+            "skills": [
+              "change an item and find the length"
+            ]
+          },
+          {
+            "id": "r_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "int[] hp = {20, 45, 8};",
+            "questions": [
+              {
+                "prompt": "What is the index of the LAST item in an array of length 3?",
+                "opts": [
+                  "2",
+                  "3",
+                  "1",
+                  "0"
+                ],
+                "correct": 0,
+                "why": "Indexes start at 0, so a length of 3 means 0, 1, 2. The last index is always length - 1."
+              },
+              {
+                "prompt": "How do you find how many items an array holds?",
+                "opts": [
+                  "hp.length",
+                  "hp.length()",
+                  "hp.size()",
+                  "hp.count"
+                ],
+                "correct": 0,
+                "why": "For an array it is a field with no brackets. String uses length() WITH brackets, and ArrayList uses size()."
+              }
+            ],
+            "skills": [
+              "change an item and find the length"
+            ]
+          },
+          {
+            "id": "r_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Set the last slot without counting by hand.",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  hp[hp.length - ⟦1⟧] = 99;\n  System.out.println(hp[2]);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "1",
+                  "0",
+                  "2"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "99",
+            "hint": "Length 3, last index 2. What do you subtract?",
+            "after": "length - 1 is the last index, whatever the size. Writing 2 would break the moment the array changed.",
+            "skills": [
+              "change an item and find the length"
+            ]
+          },
+          {
+            "id": "r_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: swap in a new first monster and report the size.",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  // set the first slot to 100, then print it and the length\n}",
+            "target": "100\n3",
+            "solution": "public void run() {\n  int[] hp = {20, 45, 8};\n  hp[0] = 100;\n  System.out.println(hp[0]);\n  System.out.println(hp.length);\n}",
+            "hint": "hp[0] = 100; then print hp[0] and hp.length.",
+            "after": "The length stayed 3. Assigning to a slot changes what is in it, never how many there are.",
+            "skills": [
+              "make an array and read it by index"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.3",
+      "title": "Using Arrays",
+      "objectives": [
+        "traverse an array with a for loop",
+        "explain what happens past the end of an array"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "u_task",
+            "kind": "teach",
+            "instruction": "Adding three by hand is fine. Adding twenty is not.",
+            "points": [
+              {
+                "label": "hp[0] + hp[1] + hp[2]",
+                "text": "Works, and stops working the moment the array is a different size."
+              },
+              {
+                "label": "the loop already exists",
+                "text": "You wrote for (int i = 0; i < n; i++) in 3.9. An index is exactly what i is."
+              },
+              {
+                "label": "i < hp.length",
+                "text": "Makes the loop fit any array, whatever its size."
+              }
+            ]
+          },
+          {
+            "id": "u_loop",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The counter and the index are the same number.",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  int total = 0;\n  for (int i = 0; i < hp.length; i++) {\n    total = total + hp[i];\n  }\n  System.out.println(total);\n}",
+            "output": "73",
+            "highlight": [
+              3,
+              4
+            ],
+            "points": [
+              {
+                "label": "int i = 0",
+                "text": "Starts at the first index, not 1."
+              },
+              {
+                "label": "i < hp.length",
+                "text": "Stops at 3, so i takes 0, 1, 2 - exactly the valid indexes."
+              },
+              {
+                "label": "hp[i]",
+                "text": "A different slot each pass: 20, then 45, then 8."
+              },
+              {
+                "label": "i <= hp.length",
+                "text": "Would try hp[3] and crash. Use < with length, always."
+              }
+            ]
+          },
+          {
+            "id": "u_bounds",
+            "kind": "teach",
+            "instruction": "hp[3] on a 3-slot array crashes.",
+            "points": [
+              {
+                "label": "ArrayIndexOutOfBoundsException",
+                "text": "Thrown at run time when the index is past the end. You met its cousin in 4.7 with charAt."
+              },
+              {
+                "label": "why 3 is past the end",
+                "text": "Three slots are numbered 0, 1, 2. There is no slot 3."
+              },
+              {
+                "label": "it compiles fine",
+                "text": "Java cannot know at compile time what i will be, so this is a run-time error, not a compile one."
+              },
+              {
+                "label": "i < hp.length",
+                "text": "Keeps you inside. Every off-by-one here ends in this exception."
+              }
+            ]
+          },
+          {
+            "id": "u_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "How many times does the body run?",
+            "code": "public void run() {\n  int[] a = {5, 10, 15, 20};\n  for (int i = 0; i < a.length; i++) {\n    System.out.print(a[i] + \" \");\n  }\n  System.out.println();\n}",
+            "opts": [
+              "5 10 15 20 ",
+              "5 10 15 ",
+              "10 15 20 ",
+              "(a crash)"
+            ],
+            "correct": 0,
+            "why": "length is 4, so i takes 0 to 3 and every slot prints once.",
+            "skills": [
+              "traverse an array with a for loop"
+            ]
+          },
+          {
+            "id": "u_alias",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Two names can point at the SAME array.",
+            "code": "public void run() {\n  int[] a = {1, 2, 3};\n  int[] b = a;\n  b[0] = 99;\n  System.out.println(a[0]);\n}",
+            "output": "99",
+            "highlight": [
+              2,
+              3
+            ],
+            "points": [
+              {
+                "label": "int[] b = a;",
+                "text": "Does NOT copy the array. Both names now refer to the same one."
+              },
+              {
+                "label": "b[0] = 99;",
+                "text": "Changes the single array that both point at."
+              },
+              {
+                "label": "a[0] is 99",
+                "text": "Even though a was never assigned to. This surprises everyone once."
+              },
+              {
+                "label": "an array is an object",
+                "text": "From 5.12, an object variable holds a reference, not the thing itself."
+              }
+            ]
+          },
+          {
+            "id": "u_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "int[] hp = {20, 45, 8};",
+            "questions": [
+              {
+                "prompt": "What happens when a program reads hp[3] here?",
+                "opts": [
+                  "It throws ArrayIndexOutOfBoundsException at run time",
+                  "It returns 0",
+                  "It will not compile",
+                  "It returns null"
+                ],
+                "correct": 0,
+                "why": "Three slots are numbered 0 to 2. Java checks at run time and throws."
+              },
+              {
+                "prompt": "int[] b = a; then b[0] = 99. What is a[0]?",
+                "opts": [
+                  "99",
+                  "the original value",
+                  "0",
+                  "null"
+                ],
+                "correct": 0,
+                "why": "b = a copies the reference, not the contents, so both names see the same array."
+              }
+            ],
+            "skills": [
+              "explain what happens past the end of an array"
+            ]
+          },
+          {
+            "id": "u_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Make the loop cover every slot and no more.",
+            "code": "public void run() {\n  int[] a = {5, 10, 15};\n  int total = 0;\n  for (int i = 0; i ⟦1⟧ a.length; i++) {\n    total = total + a[i];\n  }\n  System.out.println(total);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "<",
+                  "<=",
+                  ">"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "30",
+            "hint": "The last valid index is length - 1, so the loop must stop BEFORE length.",
+            "after": "<= would try a[3] and throw ArrayIndexOutOfBoundsException.",
+            "skills": [
+              "traverse an array with a for loop"
+            ]
+          },
+          {
+            "id": "u_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: find the strongest monster in the party.",
+            "code": "public void run() {\n  int[] hp = {20, 45, 8, 32};\n  // print the largest value, using a loop\n}",
+            "target": "45",
+            "solution": "public void run() {\n  int[] hp = {20, 45, 8, 32};\n  int best = hp[0];\n  for (int i = 1; i < hp.length; i++) {\n    if (hp[i] > best) {\n      best = hp[i];\n    }\n  }\n  System.out.println(best);\n}",
+            "hint": "Start best at hp[0], then loop from i = 1 replacing best whenever hp[i] is bigger. Same shape as Find the Minimum in 3.11.",
+            "after": "Exactly the pattern from Find the Minimum, over an array instead of three variables.",
+            "skills": [
+              "traverse an array with a for loop"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.4",
+      "title": "Enhanced For Loops",
+      "objectives": [
+        "traverse an array with an enhanced for loop",
+        "say when the enhanced form does not fit"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "e_task",
+            "kind": "teach",
+            "instruction": "Most loops never use i for anything except hp[i].",
+            "points": [
+              {
+                "label": "for (int i = 0; i < hp.length; i++)",
+                "text": "Three pieces of ceremony to look at every item."
+              },
+              {
+                "label": "hp[i]",
+                "text": "The only place i appears. The index itself is not interesting."
+              },
+              {
+                "label": "the enhanced for",
+                "text": "Hands you each value directly, with no counter at all."
+              }
+            ]
+          },
+          {
+            "id": "e_cmp",
+            "kind": "compare",
+            "instruction": "Same total, less ceremony.",
+            "sides": [
+              {
+                "label": "indexed for",
+                "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  int total = 0;\n  for (int i = 0; i < hp.length; i++) {\n    total = total + hp[i];\n  }\n  System.out.println(total);\n}",
+                "output": "73"
+              },
+              {
+                "label": "enhanced for",
+                "code": "public void run() {\n  int[] hp = {20, 45, 8};\n  int total = 0;\n  for (int n : hp) {\n    total = total + n;\n  }\n  System.out.println(total);\n}",
+                "output": "73"
+              }
+            ],
+            "points": [
+              {
+                "label": "indexed for",
+                "text": "You manage the counter, the bound and the lookup yourself."
+              },
+              {
+                "label": "enhanced for",
+                "text": "n IS the value. No index to get wrong, so no out-of-bounds is possible."
+              }
+            ],
+            "skills": [
+              "traverse an array with an enhanced for loop"
+            ]
+          },
+          {
+            "id": "e_form",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "for (Type name : array) reads as \"for each\".",
+            "code": "public void run() {\n  String[] loot = {\"Crown\", \"Ring\", \"Cup\"};\n  for (String item : loot) {\n    System.out.println(item);\n  }\n}",
+            "output": "Crown\nRing\nCup",
+            "highlight": [
+              2
+            ],
+            "points": [
+              {
+                "label": "String item",
+                "text": "The type of ONE element, not of the array."
+              },
+              {
+                "label": ":",
+                "text": "Read it as \"in\". For each item in loot."
+              },
+              {
+                "label": "no counter",
+                "text": "No i, no length, no brackets. It visits every element in order."
+              },
+              {
+                "label": "read only",
+                "text": "Assigning to item changes the copy, not the array. That is the main limit."
+              }
+            ]
+          },
+          {
+            "id": "e_limit",
+            "kind": "teach",
+            "instruction": "When the enhanced form does not fit.",
+            "points": [
+              {
+                "label": "you need the position",
+                "text": "Printing \"3. Cup\" needs the index, so use the indexed form."
+              },
+              {
+                "label": "you need to change the array",
+                "text": "hp[i] = 0 works. Assigning to the loop variable does not."
+              },
+              {
+                "label": "you need part of it",
+                "text": "Enhanced always visits everything, start to finish."
+              },
+              {
+                "label": "otherwise",
+                "text": "Prefer the enhanced form. Fewer moving parts, no off-by-one."
+              }
+            ]
+          },
+          {
+            "id": "e_predict",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Does the array change?",
+            "code": "public void run() {\n  int[] a = {1, 2, 3};\n  for (int n : a) {\n    n = n * 10;\n  }\n  System.out.println(a[0]);\n}",
+            "opts": [
+              "1",
+              "10",
+              "0",
+              "(an error)"
+            ],
+            "correct": 0,
+            "why": "n is a copy of each element. Changing the copy leaves the array untouched, which is why writes need the indexed form.",
+            "skills": [
+              "say when the enhanced form does not fit"
+            ]
+          },
+          {
+            "id": "e_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "for (int n : hp) { }",
+            "questions": [
+              {
+                "prompt": "What type goes before the name in for (___ n : hp)?",
+                "opts": [
+                  "The type of ONE element",
+                  "The type of the array",
+                  "int, always",
+                  "void"
+                ],
+                "correct": 0,
+                "why": "The variable holds one element at a time, so for a String[] it is String."
+              },
+              {
+                "prompt": "When must you use the indexed for instead?",
+                "opts": [
+                  "When you need the position, or need to change the array",
+                  "When the array is long",
+                  "When the array holds objects",
+                  "Never"
+                ],
+                "correct": 0,
+                "why": "The enhanced form gives you values, not positions, and its variable is a copy."
+              }
+            ],
+            "skills": [
+              "say when the enhanced form does not fit"
+            ]
+          },
+          {
+            "id": "e_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: count the party members still standing.",
+            "code": "public void run() {\n  int[] hp = {20, 0, 8, 0, 32};\n  // count how many are above 0, using an enhanced for loop\n}",
+            "target": "3",
+            "solution": "public void run() {\n  int[] hp = {20, 0, 8, 0, 32};\n  int alive = 0;\n  for (int n : hp) {\n    if (n > 0) {\n      alive = alive + 1;\n    }\n  }\n  System.out.println(alive);\n}",
+            "hint": "for (int n : hp) then an if inside counting the ones above 0.",
+            "after": "No index anywhere, so there was no off-by-one to make.",
+            "skills": [
+              "traverse an array with an enhanced for loop"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "5.5",
+      "title": "ArrayList Methods",
+      "objectives": [
+        "create an ArrayList and add to it",
+        "use size, get, add and remove"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "a_task",
+            "kind": "teach",
+            "instruction": "You do not know how much loot the player will find.",
+            "points": [
+              {
+                "label": "int[] loot = new String[?]",
+                "text": "An array needs its size up front. You do not have one."
+              },
+              {
+                "label": "guessing big",
+                "text": "new String[100] wastes 97 slots and still breaks at 101."
+              },
+              {
+                "label": "ArrayList",
+                "text": "Starts empty and grows as you add. Size is a running total, not a decision."
+              }
+            ]
+          },
+          {
+            "id": "a_make",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "Create empty, then add.",
+            "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  System.out.println(loot.size());\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  System.out.println(loot.size());\n  System.out.println(loot.get(0));\n}",
+            "output": "0\n2\nCrown",
+            "highlight": [
+              1,
+              3,
+              4
+            ],
+            "points": [
+              {
+                "label": "ArrayList<String>",
+                "text": "The angle brackets say what it holds. A list of Strings."
+              },
+              {
+                "label": "new ArrayList<String>()",
+                "text": "Starts empty - size 0, no slots reserved."
+              },
+              {
+                "label": "loot.add(\"Crown\")",
+                "text": "Appends to the end and the size goes up by one."
+              },
+              {
+                "label": "loot.get(0)",
+                "text": "Reads by position, still counting from 0. A method, not square brackets."
+              }
+            ]
+          },
+          {
+            "id": "a_cmp",
+            "kind": "compare",
+            "instruction": "Square brackets, or methods.",
+            "sides": [
+              {
+                "label": "array",
+                "code": "public void run() {\n  String[] loot = new String[2];\n  loot[0] = \"Crown\";\n  System.out.println(loot[0]);\n  System.out.println(loot.length);\n}",
+                "output": "Crown\n2"
+              },
+              {
+                "label": "ArrayList",
+                "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  System.out.println(loot.get(0));\n  System.out.println(loot.size());\n}",
+                "output": "Crown\n1"
+              }
+            ],
+            "points": [
+              {
+                "label": "array",
+                "text": "loot[0], loot.length, and a size fixed at 2 whether or not you filled it."
+              },
+              {
+                "label": "ArrayList",
+                "text": "loot.get(0), loot.size(), and a size that is however many you actually added."
+              }
+            ],
+            "skills": [
+              "create an ArrayList and add to it"
+            ]
+          },
+          {
+            "id": "a_methods",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "add, get, size, remove, set.",
+            "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  loot.add(\"Cup\");\n  loot.remove(1);\n  loot.set(0, \"Tiara\");\n  System.out.println(loot.size());\n  System.out.println(loot.get(0));\n  System.out.println(loot.get(1));\n}",
+            "output": "2\nTiara\nCup",
+            "highlight": [
+              5,
+              6
+            ],
+            "points": [
+              {
+                "label": "remove(1)",
+                "text": "Takes out \"Ring\". Everything after it shifts down, so \"Cup\" moves from 2 to 1."
+              },
+              {
+                "label": "set(0, \"Tiara\")",
+                "text": "Replaces what is at 0. Unlike add, it does not change the size."
+              },
+              {
+                "label": "size() is now 2",
+                "text": "Three added, one removed. The list tracks it for you."
+              },
+              {
+                "label": "removing renumbers",
+                "text": "Everything after the removed item moves down. That catches people inside loops."
+              }
+            ]
+          },
+          {
+            "id": "a_loop",
+            "kind": "teach",
+            "wrap": "methods",
+            "instruction": "The enhanced for works on an ArrayList too.",
+            "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  for (String item : loot) {\n    System.out.println(item);\n  }\n}",
+            "output": "Crown\nRing",
+            "highlight": [
+              4
+            ],
+            "points": [
+              {
+                "label": "for (String item : loot)",
+                "text": "Identical to the array version from 6.4."
+              },
+              {
+                "label": "the indexed form",
+                "text": "Works too, but uses loot.size() and loot.get(i) instead of length and brackets."
+              },
+              {
+                "label": "no size to manage",
+                "text": "The loop covers whatever is in the list at the time."
+              }
+            ]
+          },
+          {
+            "id": "a_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "ArrayList<String> loot = new ArrayList<String>();",
+            "questions": [
+              {
+                "prompt": "How do you find how many items an ArrayList holds?",
+                "opts": [
+                  "loot.size()",
+                  "loot.length",
+                  "loot.length()",
+                  "loot.count()"
+                ],
+                "correct": 0,
+                "why": "Arrays use .length with no brackets, Strings use .length(), and ArrayLists use .size()."
+              },
+              {
+                "prompt": "Why choose an ArrayList over an array?",
+                "opts": [
+                  "The number of items can change while the program runs",
+                  "It is faster",
+                  "It uses less memory",
+                  "It can hold objects"
+                ],
+                "correct": 0,
+                "why": "An array is fixed at creation. Arrays hold objects perfectly well - that is not the difference."
+              }
+            ],
+            "skills": [
+              "use size, get, add and remove"
+            ]
+          },
+          {
+            "id": "a_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "Ask the list how big it is.",
+            "code": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  System.out.println(loot.⟦1⟧);\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "size()",
+                  "length",
+                  "length()"
+                ],
+                "answer": 0
+              }
+            ],
+            "target": "2",
+            "hint": "Three different collections, three different spellings. This one is a method.",
+            "after": "array.length, string.length(), list.size(). Worth memorising as a set.",
+            "skills": [
+              "use size, get, add and remove"
+            ]
+          },
+          {
+            "id": "a_write",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Your turn: collect loot, drop one, and report what is left.",
+            "code": "public void run() {\n  // make an ArrayList<String>, add \"Crown\", \"Ring\" and \"Cup\",\n  // remove the Ring, then print the size and each remaining item\n}",
+            "target": "2\nCrown\nCup",
+            "solution": "public void run() {\n  ArrayList<String> loot = new ArrayList<String>();\n  loot.add(\"Crown\");\n  loot.add(\"Ring\");\n  loot.add(\"Cup\");\n  loot.remove(1);\n  System.out.println(loot.size());\n  for (String item : loot) {\n    System.out.println(item);\n  }\n}",
+            "hint": "remove(1) takes out the Ring. Then size() and an enhanced for over what is left.",
+            "after": "Cup shifted from index 2 to 1 when the Ring went. The list renumbered itself.",
+            "skills": [
+              "use size, get, add and remove"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

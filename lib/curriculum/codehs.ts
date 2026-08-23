@@ -655,8 +655,140 @@ export const CODEHS_CLASSES: CodeHSLesson[] = [
   },
 ];
 
+// ─── Unit 6: Data Structures ─────────────────────────────────────────────────
+// Objectives from the public lesson plans. `teaches` filled in per lesson as
+// each is built.
+export const CODEHS_DATA: CodeHSLesson[] = [
+  {
+    code: "5.1",
+    codehsCode: "6.1",
+    title: "What are Data Structures?",
+    objectives: ["Explain the difference between an Array, an Array List, a 2D Array, and a Hash Map.", "Choose the correct  Data Structure for a given purpose", "Understand how Data Structures fit into their programs"],
+    teaches: ["array", "ArrayList", "2D array", "HashMap", "choosing a structure"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.2",
+    codehsCode: "6.2",
+    title: "Introduction to Arrays",
+    objectives: ["Initialize an Array of various types", "Access items in the list with indexes", "Change the value of a list item using indexes", "Find out the length of any array"],
+    teaches: ["int[] declaration", "array literal {a, b, c}", "new Type[n]", "indexing from 0", "assigning by index", ".length"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.3",
+    codehsCode: "6.3",
+    title: "Using Arrays",
+    objectives: ["Create arrays of various types, including objects.", "Traverse arrays using a for loop", "Explain what happens when a program tries to access an array index that doesn't exist", "Explain how different arrays can point to the same value and the implication of this.", "Apply arrays to real-world examples."],
+    teaches: ["traversing with a for loop", "ArrayIndexOutOfBoundsException", "arrays are objects, so two names can alias one array"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.4",
+    codehsCode: "6.4",
+    title: "Enhanced For Loops",
+    objectives: ["Traverse the elements in a 1D array object using an enhanced for loop"],
+    teaches: ["enhanced for loop", "for (Type name : array)", "the loop variable is a copy"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.5",
+    codehsCode: "6.5",
+    title: "ArrayList Methods",
+    objectives: ["Create an ArrayList", "Add to and access ArrayList elements", "Traverse an ArrayList", "Use basic ArrayList methods"],
+    teaches: ["ArrayList<Type>", "add", "get", "size", "remove", "set", "enhanced for over a list"],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.6",
+    codehsCode: "6.6",
+    title: "Arrays vs ArrayLists",
+    objectives: ["Compare and contrast Arrays and ArrayLists.", "Explain when to use ArrayLists versus Arrays.", "Explain how ArrayList functionality can be built off an Array structure."],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.7",
+    codehsCode: "6.7",
+    title: "Additional Loop Examples",
+    objectives: ["Represent iterative processes using a for loop", "Traverse ArraysLists using a for or while loop", "Access elements in an ArrayList using iteration statements", "Remove elements in an ArrayList"],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.8",
+    codehsCode: "6.8",
+    title: "The List Interface",
+    objectives: ["Explain what the List interface is.", "Explain why we would use the List interface as a formal parameter", "Explain why we would use the List interface to define a List variable."],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.9",
+    codehsCode: "6.9",
+    title: "2D Arrays (Matrices or Grids)",
+    objectives: ["Explain how 2D arrays are created by making an array of an array", "Represent collections of related primitive or object reference data using two-dimensional (2D) array objects.", "Traverse 2D arrays using nested loop statements."],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.10",
+    codehsCode: "6.10",
+    title: "Traversing 2D Arrays",
+    objectives: ["Traverse 2D arrays using nested for loops", "Traverse 2D arrays using nested enhanced for loops"],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.11",
+    codehsCode: "6.11",
+    title: "HashMaps",
+    objectives: ["Explain what a HashMap is and when it should be used versus other data structures.", "Create, modify, and retrieve values from a HashMap.", "Loop through all values of a HashMap using an enhanced for loop."],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.12",
+    codehsCode: "6.12",
+    title: "Binary",
+    objectives: ["Convert by hand from binary, octal, and hexadecimal to decimal", "Explain how to convert from any number system to decimal", "Write basic computer programs to convert numbers to decimal"],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.13",
+    codehsCode: "6.13",
+    title: "Ethical Issues Around Data Collection",
+    objectives: ["Explain the risks to privacy from collecting and storing personal data on computer systems", "Explain the role that programmers have considering safeguarding personal privacy", "Explain the beneficial and harmful impacts that computer use and the creation of programs have on personal security"],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+  {
+    code: "5.14",
+    codehsCode: "6.14",
+    title: "Data Structures Quiz",
+    objectives: ["Demonstrate their knowledge of data structures in Java"],
+    teaches: [],
+    exercises: [],
+    unverified: true,
+  },
+];
+
 /** Every lesson we mirror, in teaching order. */
-export const CODEHS_ALL: CodeHSLesson[] = [...CODEHS_BASIC_JAVA, ...CODEHS_METHODS, ...CODEHS_CLASSES];
+export const CODEHS_ALL: CodeHSLesson[] = [...CODEHS_BASIC_JAVA, ...CODEHS_METHODS, ...CODEHS_CLASSES, ...CODEHS_DATA];
 
 const ORDER = CODEHS_ALL.map((l) => l.code);
 

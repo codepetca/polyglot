@@ -16,7 +16,11 @@
 // appears after the prompt. Here input arrives on stdin and would never be
 // shown, so __rd prints what it read. Verified against CodeHS's own "About You"
 // sample transcript, character for character.
-export const HEADER = `import java.util.Scanner;
+// java.util.* rather than just Scanner: Unit 6 needs ArrayList, List and
+// HashMap, and without the wildcard those lessons fail to compile on a symbol
+// the student did nothing wrong to use. Imports are invisible to them, and
+// CodeHS's own ConsoleProgram environment has these available too.
+export const HEADER = `import java.util.*;
 class Main {
     static Scanner __sc = new Scanner(System.in);
     static String __rd(String p){ System.out.print(p); String v = __sc.nextLine(); System.out.println(v); return v; }
@@ -47,7 +51,7 @@ export function wrap(code: string): { source: string; offset: number } {
 // run() on an instance. That is exactly CodeHS's shape: a run() method plus
 // whatever other instance methods they write. The readers stay static so they
 // are callable from any of them.
-export const HEADER_METHODS = `import java.util.Scanner;
+export const HEADER_METHODS = `import java.util.*;
 class Main {
     static Scanner __sc = new Scanner(System.in);
     static String __rd(String p){ System.out.print(p); String v = __sc.nextLine(); System.out.println(v); return v; }
