@@ -12,6 +12,7 @@
 //   node --env-file=.env scripts/flows.mjs seed      # create rows for new lessons
 //   node --env-file=.env scripts/flows.mjs restore   # prisma/flows.json → DB
 //   node --env-file=.env scripts/flows.mjs diff      # what would change
+//   node scripts/flows.mjs audit                     # course-wide quality checks
 //
 // Restore does NOT re-run compiler verification: everything in the file already
 // passed it on the way in, and re-checking ~100 snippets over the network would
@@ -178,6 +179,46 @@ async function doSeed(db) {
   console.log(`\n✓ ${missing.length} lesson row(s) created. Run "restore" to fill in the flows.`);
 }
 
+/**
+ * Course-wide checks that no single lesson can fail on its own. The one that
+ * prompted this: every multiple-choice answer in the course was option 0 — 152
+ * of 152 — so all of them were answerable without reading the question. Each
+ * lesson looked fine in isolation, which is exactly why it survived so long.
+ */
+function doAudit() {
+  const file = readFile();
+  const mcq = {}, blank = {};
+  let nq = 0, nb = 0, filler = [];
+  const vague = /^(why|so|but|the rule|watch out|remember|the habit|the catch|the problem|next|later|the result|the fix|the goal|the point|the order|the limit|why bother|the trap|inside)$/i;
+
+  for (const l of file.lessons) {
+    for (const s of l.flow.steps) {
+      if (s.kind === "predict" && typeof s.correct === "number") { mcq[s.correct] = (mcq[s.correct] || 0) + 1; nq++; }
+      for (const q of s.questions || []) if (typeof q.correct === "number") { mcq[q.correct] = (mcq[q.correct] || 0) + 1; nq++; }
+      for (const b of s.blanks || []) { blank[b.answer] = (blank[b.answer] || 0) + 1; nb++; }
+      for (const p of s.points || []) if (vague.test(p.label.trim())) filler.push(`${l.code} "${p.label}"`);
+    }
+  }
+
+  let problems = 0;
+  const spread = (name, counts, total) => {
+    const top = Math.max(...Object.values(counts));
+    const pct = Math.round((top / total) * 100);
+    const line = Object.keys(counts).sort().map((k) => `${k}:${counts[k]}`).join("  ");
+    console.log(`${name} (${total}) — ${line}`);
+    if (total >= 20 && pct > 50) { console.log(`  ✗ ${pct}% sit in one position — answerable without reading`); problems++; }
+  };
+  spread("MCQ answer position", mcq, nq);
+  spread("Fill answer position", blank, nb);
+
+  if (filler.length) { console.log(`\n✗ ${filler.length} point label(s) that name nothing:`); for (const x of filler.slice(0, 12)) console.log("   " + x); problems++; }
+
+  const steps = file.lessons.reduce((n, l) => n + l.flow.steps.length, 0);
+  console.log(`\n${file.lessons.length} lessons, ${steps} steps`);
+  console.log(problems ? `✗ ${problems} course-wide problem(s)` : "✓ no course-wide problems");
+  if (problems) process.exitCode = 1;
+}
+
 async function doRestore(db) {
   const file = readFile();
 
@@ -271,7 +312,11 @@ async function doRestore(db) {
 }
 
 const mode = process.argv[2];
-const run = mode === "restore" ? doRestore : mode === "diff" ? doDiff : mode === "seed" ? doSeed : doExport;
+const run = mode === "restore" ? doRestore : mode === "diff" ? doDiff : mode === "seed" ? doSeed : mode === "audit" ? doAudit : doExport;
+
+// audit reads the file only — no reason to make it need a database.
+if (mode === "audit") { doAudit(); process.exit(process.exitCode || 0); }
+
 const db = await connect();
 console.log(`· connected via ${db.via}\n`);
 try {

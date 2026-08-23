@@ -169,6 +169,17 @@ node --env-file=.env scripts/flows.mjs restore   # push the flows
 safe to re-run. A new unit needs its chapter listed in `CHAPTERS` at the top of
 the script.
 
+### Before you open the PR
+
+```bash
+node scripts/flows.mjs audit
+```
+
+Checks things no single lesson can fail on its own — chiefly whether the
+correct answer keeps landing in the same position. Every MCQ in the course was
+option 0 once, 152 of them, so the whole drill set was answerable without
+reading. Each lesson looked fine alone. Vary the position as you write.
+
 ### If it says the database is unreachable
 
 It probably isn't. Many school and office networks swallow port 5432 — they
