@@ -157,5 +157,24 @@ npx tsx scripts/lesson.ts add my-lesson.json
 git checkout -b lesson-2.6 && git commit -am "..." && git push
 ```
 
-Open a PR. `prisma/flows.json` is the source of truth; `node scripts/flows.mjs
-restore` pushes it to the database once merged.
+Open a PR. `prisma/flows.json` is the source of truth. Once merged:
+
+```bash
+node --env-file=.env scripts/flows.mjs diff      # what would change
+node --env-file=.env scripts/flows.mjs seed      # rows for brand-new lessons
+node --env-file=.env scripts/flows.mjs restore   # push the flows
+```
+
+`seed` only creates empty rows and `restore` only moves content, so both are
+safe to re-run. A new unit needs its chapter listed in `CHAPTERS` at the top of
+the script.
+
+### If it says the database is unreachable
+
+It probably isn't. Many school and office networks swallow port 5432 — they
+accept the TCP connection so the port *looks* open, then drop the traffic, and
+Prisma reports the database as down. The script falls back to Neon over HTTPS
+on its own and prints which pipe it used; if you see `neon over https`, that is
+what happened and nothing is wrong. `nc -z example.com 5432` succeeding is the
+tell: nothing runs Postgres there, so a "success" means a middlebox is
+answering for it.
