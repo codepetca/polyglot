@@ -198,7 +198,7 @@
           {
             "id": "v_task",
             "kind": "teach",
-            "instruction": "We are building a player card.",
+            "instruction": "We are building a player card. How do we store the values it needs?",
             "body": [
               "We need somewhere to keep the values.",
               "A variable is a box that holds one value."
@@ -624,7 +624,7 @@
           {
             "id": "k_task",
             "kind": "teach",
-            "instruction": "Your player card always says Ada.",
+            "instruction": "Your player card always says Ada. How do we ask the player for their own name?",
             "body": [
               "A real game asks the player who they are.",
               "We need a way to get a value from whoever is playing."
@@ -825,7 +825,7 @@
           {
             "id": "m_task",
             "kind": "teach",
-            "instruction": "We are building a calculator.",
+            "instruction": "We are building a calculator. How do we make Java do the maths?",
             "body": [
               "A calculator takes numbers and works something out.",
               "Java does the maths for us."
@@ -1187,7 +1187,7 @@
           {
             "id": "c_recap",
             "kind": "teach",
-            "instruction": "One double anywhere makes the answer a double.",
+            "instruction": "Two whole numbers divided give a whole number. How do we keep the decimal part?",
             "code": "System.out.println(7 / 2);\nSystem.out.println(7.0 / 2);",
             "output": "3\n3.5",
             "body": [
@@ -1410,7 +1410,7 @@
           {
             "id": "o_bool",
             "kind": "teach",
-            "instruction": "A boolean holds true or false. Nothing else.",
+            "instruction": "A game has to remember facts that are simply yes or no. How do we store one?",
             "code": "boolean alive = true;\nSystem.out.println(alive);",
             "output": "true",
             "body": [
@@ -1570,7 +1570,7 @@
           {
             "id": "g_task",
             "kind": "teach",
-            "instruction": "Logical operators connect and modify boolean expressions.",
+            "instruction": "A dungeon door needs a key and enough strength. How do we join two conditions together?",
             "rules": [
               {
                 "text": "! reverses a boolean",
@@ -2709,136 +2709,123 @@
           {
             "id": "i_task",
             "kind": "teach",
-            "instruction": "You have been printing \"Door opens: true\". A game opens the door.",
-            "points": [
-              {
-                "label": "Door opens: true",
-                "text": "Everything so far ends by printing a boolean. The program computes an answer and does nothing with it."
-              },
-              {
-                "label": "what a game does",
-                "text": "Runs different lines depending on that answer. Open the door, or say it is locked."
-              },
-              {
-                "label": "if",
-                "text": "The statement that finally acts on a true or false instead of showing it."
-              }
+            "instruction": "So far our gates only print true or false. How do we make the program act on the answer?",
+            "code": "boolean canOpen = true;\nSystem.out.println(\"Door opens: \" + canOpen);",
+            "output": "Door opens: true",
+            "body": [
+              "Printing the answer is not the same as using it.",
+              "A real game opens the door, or does not."
             ]
           },
           {
             "id": "i_if",
             "kind": "teach",
             "instruction": "if runs a block only when the condition is true.",
-            "code": "boolean hasKey = true;\nint level = 7;\nboolean strongEnough = level >= 5;\nif (hasKey && strongEnough) {\n  System.out.println(\"The door swings open.\");\n}\nSystem.out.println(\"You walk on.\");",
+            "code": "boolean hasKey = true;\nif (hasKey) {\n  System.out.println(\"The door swings open.\");\n}\nSystem.out.println(\"You walk on.\");",
             "output": "The door swings open.\nYou walk on.",
-            "highlight": [
-              3,
-              4,
-              5
-            ],
             "points": [
               {
-                "label": "if (hasKey && strongEnough)",
-                "text": "The condition is the same boolean you built in 3.8. Nothing new about it."
+                "label": "if (hasKey)",
+                "text": "The condition goes in round brackets."
               },
               {
-                "label": "the braces",
-                "text": "Only the lines inside { } are skipped when the condition is false."
-              },
-              {
-                "label": "\"You walk on.\"",
-                "text": "Outside the braces, so it prints either way."
-              },
-              {
-                "label": "no semicolon",
-                "text": "There is no ; after the round brackets. Adding one detaches the block and it always runs."
+                "label": "{ }",
+                "text": "Only the lines inside are skipped when it is false."
               }
-            ]
-          },
-          {
-            "id": "i_cmp",
-            "kind": "compare",
-            "instruction": "Reporting the answer, or acting on it.",
-            "sides": [
-              {
-                "label": "print the boolean",
-                "code": "boolean canOpen = true;\nSystem.out.println(\"Door opens: \" + canOpen);",
-                "output": "Door opens: true"
-              },
-              {
-                "label": "act on it",
-                "code": "boolean canOpen = true;\nif (canOpen) {\n  System.out.println(\"The door swings open.\");\n}",
-                "output": "The door swings open."
-              }
-            ],
-            "points": [
-              {
-                "label": "left",
-                "text": "Always prints one line, whatever the answer is."
-              },
-              {
-                "label": "right",
-                "text": "Prints that line only when canOpen is true. Otherwise nothing."
-              }
-            ],
-            "skills": [
-              "run a block of code only when a condition is true"
-            ]
-          },
-          {
-            "id": "i_tweak",
-            "kind": "fix",
-            "instruction": "Send in a level 3 player. The door should not open.",
-            "code": "boolean hasKey = true;\nint level = 7;\nboolean strongEnough = level >= 5;\nif (hasKey && strongEnough) {\n  System.out.println(\"The door swings open.\");\n}\nSystem.out.println(\"You walk on.\");",
-            "target": "You walk on.",
-            "solution": "boolean hasKey = true;\nint level = 3;\nboolean strongEnough = level >= 5;\nif (hasKey && strongEnough) {\n  System.out.println(\"The door swings open.\");\n}\nSystem.out.println(\"You walk on.\");",
-            "hint": "Change the level. The condition works the rest out.",
-            "after": "The block was skipped entirely, and the line after it still ran.",
-            "skills": [
-              "run a block of code only when a condition is true"
             ]
           },
           {
             "id": "i_else",
             "kind": "teach",
             "instruction": "else covers the other case.",
-            "code": "int hp = -5;\nif (hp > 0) {\n  System.out.println(\"Still standing.\");\n} else {\n  System.out.println(\"You collapse.\");\n}",
+            "code": "int hp = 0;\nif (hp > 0) {\n  System.out.println(\"Still standing.\");\n} else {\n  System.out.println(\"You collapse.\");\n}",
             "output": "You collapse.",
-            "highlight": [
-              3,
-              4,
-              5
-            ],
-            "points": [
+            "body": [
+              "Exactly one block runs. Never both, and never neither."
+            ]
+          },
+          {
+            "id": "i_walk",
+            "kind": "walk",
+            "instruction": "Step through it and watch Java choose.",
+            "code": "int hp = 0;\nif (hp > 0) {\n  System.out.println(\"Still standing.\");\n} else {\n  System.out.println(\"You collapse.\");\n}",
+            "frames": [
               {
-                "label": "else",
-                "text": "Runs when the condition was false. It has no condition of its own."
+                "line": 0,
+                "note": "hp is set to 0.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": ""
               },
               {
-                "label": "exactly one",
-                "text": "One block runs, never both and never neither."
+                "line": 1,
+                "note": "Is 0 greater than 0? No.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": ""
               },
               {
-                "label": "} else {",
-                "text": "else sits on the closing brace of the if."
+                "line": 2,
+                "note": "So this line is skipped entirely.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": ""
+              },
+              {
+                "line": 3,
+                "note": "Java jumps to else.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": ""
+              },
+              {
+                "line": 4,
+                "note": "Print You collapse.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": "You collapse."
+              },
+              {
+                "line": 5,
+                "note": "The if is finished. Only one of the two blocks ever ran.",
+                "vars": {
+                  "hp": "0"
+                },
+                "out": "You collapse."
               }
             ]
           },
           {
             "id": "i_zero",
             "kind": "predict",
-            "instruction": "hp is exactly 0. What prints?",
+            "instruction": "hp is exactly 0. What comes out?",
             "code": "int hp = 0;\nif (hp > 0) {\n  System.out.println(\"Still standing.\");\n} else {\n  System.out.println(\"You collapse.\");\n}",
             "opts": [
-              "both",
+              "Still standing.",
               "You collapse.",
-              "(nothing)",
-              "Still standing."
+              "Both lines",
+              "Nothing"
             ],
             "correct": 1,
-            "why": "0 > 0 is false, so else runs. Zero is where > and >= disagree, and where most off-by-one bugs live.",
+            "why": "0 is not greater than 0, so the condition is false and else runs. Use >= 0 if zero should count as standing.",
             "skills": [
               "use else to handle the other case"
+            ]
+          },
+          {
+            "id": "i_chain",
+            "kind": "teach",
+            "instruction": "else if checks the next thing only when the last one failed.",
+            "code": "int score = 75;\nif (score >= 90) {\n  System.out.println(\"A\");\n} else if (score >= 80) {\n  System.out.println(\"B\");\n} else {\n  System.out.println(\"C\");\n}",
+            "output": "C",
+            "body": [
+              "Java stops at the first condition that is true.",
+              "Order matters. Put >= 80 first and every score above 90 would print B as well."
             ]
           },
           {
@@ -2847,148 +2834,74 @@
             "instruction": "A remainder makes a good condition.",
             "code": "int n = 7;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
             "output": "odd",
-            "points": [
-              {
-                "label": "n % 2",
-                "text": "The remainder after dividing by 2. It is 0 or 1, nothing else."
-              },
-              {
-                "label": "n % 2 == 0",
-                "text": "Remainder zero means it divided evenly, so n is even."
-              },
-              {
-                "label": "7 % 2 is 1",
-                "text": "Not 0, so the condition is false and else runs."
-              }
+            "body": [
+              "n % 2 is 0 for an even number and 1 for an odd one.",
+              "So n % 2 == 0 asks whether n is even."
             ]
           },
           {
             "id": "i_fix",
             "kind": "fix",
-            "instruction": "8 is even, but this says odd. Fix the condition.",
+            "instruction": "8 is even, but this says odd. Fix it.",
             "code": "int n = 8;\nif (n % 2 == 1) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
             "target": "even",
             "solution": "int n = 8;\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
-            "hint": "What remainder does an even number leave when divided by 2?",
-            "after": "Remainder 0 is even, remainder 1 is odd. It was testing the wrong one.",
+            "hint": "An even number leaves nothing behind when you divide it by 2.",
+            "after": "8 % 2 is 0, so the condition has to test against 0.",
             "skills": [
               "use the remainder operator inside a condition"
             ]
           },
           {
-            "id": "i_chain",
-            "kind": "teach",
-            "instruction": "else if checks the next thing only if the last one failed.",
-            "code": "int score = 75;\nif (score >= 90) {\n  System.out.println(\"A\");\n} else if (score >= 80) {\n  System.out.println(\"B\");\n} else {\n  System.out.println(\"C\");\n}",
-            "output": "C",
-            "highlight": [
-              4
-            ],
-            "points": [
-              {
-                "label": "top to bottom",
-                "text": "Java stops at the first condition that is true."
-              },
-              {
-                "label": "75",
-                "text": "Not >= 90, not >= 80, so it falls through to else."
-              },
-              {
-                "label": "order matters",
-                "text": "Put >= 80 first and every score above 90 would print B."
-              }
-            ]
-          },
-          {
-            "id": "i_sharp",
-            "kind": "teach",
-            "instruction": "if (condition) { }, then optionally else.",
-            "points": [
-              {
-                "label": "if (…) { }",
-                "text": "Round brackets around a boolean, braces around the lines to run."
-              },
-              {
-                "label": "else",
-                "text": "Optional. No condition, no brackets."
-              },
-              {
-                "label": "else if (…)",
-                "text": "As many as you like, checked in order, first match wins."
-              },
-              {
-                "label": "if (x) ;",
-                "text": "A semicolon there ends the if immediately, so the block below always runs. Silent and common."
-              }
-            ]
-          },
-          {
-            "id": "i_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "int n = 5;\nif (n > 0) {\n  System.out.println(\"positive\");\n}",
-            "questions": [
-              {
-                "prompt": "Why do we use if statements in Java?",
-                "opts": [
-                  "To break out of some block of code",
-                  "To do something only if a condition is true",
-                  "To repeat something a fixed number of times",
-                  "To do something while a condition is true"
-                ],
-                "correct": 1,
-                "why": "An if runs a block once, or not at all. Repeating while something is true is a while loop."
-              },
-              {
-                "prompt": "Which if statement is written properly?",
-                "opts": [
-                  "if condition\n[\n    // code\n]",
-                  "if(condition)\n{\n    // code\n}",
-                  "if condition\n{\n    // code\n}",
-                  "if (condition):\n    // code"
-                ],
-                "correct": 1,
-                "why": "Round brackets around the condition and braces around the block. Java uses neither a colon nor square brackets."
-              }
-            ],
+            "id": "i_semi",
+            "kind": "spot",
+            "instruction": "This prints the line even when it should not. Tap the line to blame.",
+            "code": "int hp = 0;\nif (hp > 0);\n{\n  System.out.println(\"Still standing.\");\n}",
+            "correct": 1,
+            "why": "The semicolon right after the brackets ends the if there and then. The block below it is no longer attached to anything, so it always runs.",
             "skills": [
               "run a block of code only when a condition is true"
             ]
           },
           {
-            "id": "i_fill",
-            "kind": "fill",
-            "instruction": "Keep the smaller of the two.",
-            "code": "int a = 12;\nint b = 5;\nint min = a;\nif (b ⟦1⟧ min) {\n  min = b;\n}\nSystem.out.println(min);",
-            "blanks": [
-              {
-                "chips": [
-                  "<",
-                  ">",
-                  "=="
-                ],
-                "answer": 0
-              }
-            ],
-            "target": "5",
-            "hint": "Replace min only when b is smaller than what is already there.",
-            "after": "Assume the first is smallest, then replace it if you find better. That scales to any number of values.",
-            "skills": [
-              "run a block of code only when a condition is true"
-            ]
-          },
-          {
-            "id": "i_write",
+            "id": "i_w1",
             "kind": "write",
-            "instruction": "Last one: read three numbers and print the smallest.",
-            "code": "// read three ints, then print the smallest\n",
-            "stdin": "10\n15\n20",
-            "target": "Enter first number: 10\nEnter second number: 15\nEnter third number: 20\n10",
-            "solution": "int a = readInt(\"Enter first number: \");\nint b = readInt(\"Enter second number: \");\nint c = readInt(\"Enter third number: \");\nint min = a;\nif (b < min) {\n  min = b;\n}\nif (c < min) {\n  min = c;\n}\nSystem.out.println(min);",
-            "hint": "Start with min = a, then two ifs replacing it if b or c is smaller. Prompts are \"Enter first number: \", \"Enter second number: \", \"Enter third number: \".",
-            "after": "That is CodeHS exercise 3.11.5, Find the Minimum. Lesson done.",
+            "instruction": "Print Pass when the score is 50 or more, and Fail otherwise.",
+            "code": "int score = 64;\n// print Pass or Fail\n",
+            "target": "Pass",
+            "solution": "int score = 64;\nif (score >= 50) {\n  System.out.println(\"Pass\");\n} else {\n  System.out.println(\"Fail\");\n}",
+            "hint": "One if, one else. 50 itself should pass.",
+            "after": ">= let 50 through. > would have failed it.",
             "skills": [
-              "run a block of code only when a condition is true"
+              "use else to handle the other case"
+            ]
+          },
+          {
+            "id": "i_w2",
+            "kind": "write",
+            "instruction": "Ask for a number, then say whether it is even or odd.",
+            "code": "// ask \"Number? \" with readInt\n// then print even or odd\n",
+            "stdin": "7",
+            "target": "Number? 7\nodd",
+            "solution": "int n = readInt(\"Number? \");\nif (n % 2 == 0) {\n  System.out.println(\"even\");\n} else {\n  System.out.println(\"odd\");\n}",
+            "hint": "Read the number, then test the remainder.",
+            "after": "The same test works for any number they type.",
+            "skills": [
+              "use the remainder operator inside a condition"
+            ]
+          },
+          {
+            "id": "i_w3",
+            "kind": "write",
+            "instruction": "Ask for a mark, then print A, B or C.",
+            "code": "// ask \"Mark? \" with readInt\n// 90 or more is A, 80 or more is B, anything else is C\n",
+            "stdin": "85",
+            "target": "Mark? 85\nB",
+            "solution": "int mark = readInt(\"Mark? \");\nif (mark >= 90) {\n  System.out.println(\"A\");\n} else if (mark >= 80) {\n  System.out.println(\"B\");\n} else {\n  System.out.println(\"C\");\n}",
+            "hint": "Check the highest grade first, or 95 would come out as B.",
+            "after": "First match wins, so the order of the tests is part of the answer.",
+            "skills": [
+              "use else to handle the other case"
             ]
           }
         ]
@@ -3008,137 +2921,143 @@
           {
             "id": "h_task",
             "kind": "teach",
-            "instruction": "Today you build the number guessing game.",
-            "points": [
-              {
-                "label": "the game",
-                "text": "It picks a secret number, you guess, it says \"Try again!\" until you get it."
-              },
-              {
-                "label": "why this one",
-                "text": "It is the coding question on your final exam, and it is CodeHS exercise 3.12.4."
-              },
-              {
-                "label": "what is new",
-                "text": "One statement: break. Everything else you already have."
-              }
+            "instruction": "We are building a number guessing game. How do we keep asking until the player gets it right?",
+            "body": [
+              "The game has to ask, then check, then ask again.",
+              "We do not know how many guesses it will take."
             ]
           },
           {
             "id": "h_twice",
             "kind": "teach",
-            "instruction": "Here it is with a plain while loop. It works.",
-            "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
-            "stdin": "4\n6",
-            "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
-            "highlight": [
-              0,
-              3
-            ],
-            "points": [
-              {
-                "label": "line 1",
-                "text": "Reads a guess before the loop, because while checks its condition first and needs something to check."
-              },
-              {
-                "label": "line 4",
-                "text": "Reads the next guess inside the loop."
-              },
-              {
-                "label": "the same question twice",
-                "text": "readInt(\"Enter your guess: \") is written on both lines. Change the wording in one and forget the other, and the game asks two different things."
-              }
-            ]
-          },
-          {
-            "id": "h_cmp",
-            "kind": "compare",
-            "instruction": "Same game, same output. One asks once.",
-            "sides": [
-              {
-                "label": "plain while - asks twice",
-                "code": "int guess = readInt(\"Enter your guess: \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Enter your guess: \");\n}\nSystem.out.println(\"Correct!\");",
-                "stdin": "4\n6",
-                "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!"
-              },
-              {
-                "label": "loop-and-a-half - asks once",
-                "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-                "stdin": "4\n6",
-                "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!"
-              }
-            ],
-            "points": [
-              {
-                "label": "left",
-                "text": "readInt appears on two lines, above the loop and inside it."
-              },
-              {
-                "label": "right",
-                "text": "readInt appears once. The check moved into the middle of the loop."
-              }
-            ],
-            "skills": [
-              "write a while (true) loop that asks once and checks once"
+            "instruction": "A plain while loop makes you ask the question twice.",
+            "code": "int guess = readInt(\"Guess? \");\nwhile (guess != 6) {\n  System.out.println(\"Try again!\");\n  guess = readInt(\"Guess? \");\n}\nSystem.out.println(\"Correct!\");",
+            "body": [
+              "One readInt above the loop, because while checks before it runs.",
+              "Another inside, to get the next guess.",
+              "The same question written on two lines is easy to get out of step."
             ]
           },
           {
             "id": "h_break",
             "kind": "teach",
-            "instruction": "while (true) never stops on its own. break is the exit.",
-            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "stdin": "4\n6",
-            "output": "Enter your guess: 4\nTry again!\nEnter your guess: 6\nCorrect!",
-            "highlight": [
-              0,
-              2,
-              3,
-              4
-            ],
+            "instruction": "while (true) never stops on its own. break is the way out.",
+            "code": "while (true) {\n  int guess = readInt(\"Guess? \");\n  if (guess == 6) {\n    System.out.println(\"Correct!\");\n    break;\n  }\n  System.out.println(\"Try again!\");\n}",
             "points": [
               {
                 "label": "while (true)",
-                "text": "The condition is always true, so the loop will not end by itself."
+                "text": "The condition is always true, so the loop cannot end by itself."
               },
               {
                 "label": "break;",
-                "text": "Leaves the loop immediately, skipping everything below it in the block."
-              },
-              {
-                "label": "ask, check, act",
-                "text": "Read the guess, break out if it is right, otherwise print \"Try again!\" and go round again."
-              },
-              {
-                "label": "the half",
-                "text": "On the winning pass only the top half runs. That is where the name comes from."
+                "text": "Leaves the loop at once, skipping the rest of the body."
               }
             ]
           },
           {
-            "id": "h_predict",
-            "kind": "predict",
-            "instruction": "break works in any loop. What prints?",
-            "code": "for (int i = 1; i <= 5; i++) {\n  if (i == 3) {\n    break;\n  }\n  System.out.println(i);\n}",
-            "opts": [
-              "1\n2\n3",
-              "1\n2\n4\n5",
-              "1\n2\n3\n4\n5",
-              "1\n2"
-            ],
-            "correct": 3,
-            "why": "At i = 3 the break runs before the println, and the whole loop ends. It does not skip one and carry on.",
-            "skills": [
-              "use break to leave a loop from the middle"
+            "id": "h_walk",
+            "kind": "walk",
+            "instruction": "Step through two guesses and watch break end it.",
+            "code": "while (true) {\n  int guess = readInt(\"Guess? \");\n  if (guess == 6) {\n    System.out.println(\"Correct!\");\n    break;\n  }\n  System.out.println(\"Try again!\");\n}",
+            "stdin": "4\n6",
+            "frames": [
+              {
+                "line": 0,
+                "note": "The condition is true, so the body runs.",
+                "out": ""
+              },
+              {
+                "line": 1,
+                "note": "Ask for a guess. The player types 4.",
+                "vars": {
+                  "guess": "4"
+                },
+                "out": "Guess? 4"
+              },
+              {
+                "line": 2,
+                "note": "Is 4 equal to 6? No, so skip the block.",
+                "vars": {
+                  "guess": "4"
+                },
+                "out": "Guess? 4"
+              },
+              {
+                "line": 6,
+                "note": "Print Try again!",
+                "vars": {
+                  "guess": "4"
+                },
+                "out": "Guess? 4\nTry again!"
+              },
+              {
+                "line": 0,
+                "note": "Back to the top. The condition is still true.",
+                "vars": {
+                  "guess": "4"
+                },
+                "out": "Guess? 4\nTry again!"
+              },
+              {
+                "line": 1,
+                "note": "Ask again. This time the player types 6.",
+                "vars": {
+                  "guess": "6"
+                },
+                "out": "Guess? 4\nTry again!\nGuess? 6"
+              },
+              {
+                "line": 2,
+                "note": "Is 6 equal to 6? Yes, so run the block.",
+                "vars": {
+                  "guess": "6"
+                },
+                "out": "Guess? 4\nTry again!\nGuess? 6"
+              },
+              {
+                "line": 3,
+                "note": "Print Correct!",
+                "vars": {
+                  "guess": "6"
+                },
+                "out": "Guess? 4\nTry again!\nGuess? 6\nCorrect!"
+              },
+              {
+                "line": 4,
+                "note": "break leaves the loop. Try again! below is never reached.",
+                "vars": {
+                  "guess": "6"
+                },
+                "out": "Guess? 4\nTry again!\nGuess? 6\nCorrect!"
+              }
+            ]
+          },
+          {
+            "id": "h_shape",
+            "kind": "teach",
+            "instruction": "This shape has a name: ask, check, act.",
+            "rules": [
+              {
+                "text": "Ask at the top of the loop",
+                "example": "int guess = readInt(\"Guess? \");"
+              },
+              {
+                "text": "Check in the middle, and break when you are done",
+                "example": "if (guess == 6) break;"
+              },
+              {
+                "text": "Act at the bottom, only when you did not break",
+                "example": "System.out.println(\"Try again!\");"
+              }
             ]
           },
           {
             "id": "h_spot",
             "kind": "spot",
             "instruction": "Tap the only line that can end this loop.",
-            "code": "while (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == 6) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "stdin": "6",
+            "code": "while (true) {\n  int n = readInt(\"Number? \");\n  if (n == 0) {\n    break;\n  }\n  System.out.println(n);\n}",
             "correct": 3,
-            "why": "while (true) is never false, so nothing else can stop it. Delete that line and the game runs forever.",
+            "why": "while (true) is never false, so nothing at the top can stop it. Only break gets you out.",
             "skills": [
               "use break to leave a loop from the middle"
             ]
@@ -3146,118 +3065,61 @@
           {
             "id": "h_sentinel",
             "kind": "teach",
-            "instruction": "A sentinel is a value that means \"stop\".",
+            "instruction": "A sentinel is a value that means stop.",
             "code": "int total = 0;\nwhile (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    break;\n  }\n  total = total + n;\n}\nSystem.out.println(total);",
             "stdin": "5\n7\n0",
             "output": "Number (0 to stop): 5\nNumber (0 to stop): 7\nNumber (0 to stop): 0\n12",
-            "points": [
-              {
-                "label": "0",
-                "text": "The sentinel here. Typing it ends the loop instead of adding to the total."
-              },
-              {
-                "label": "\"Number (0 to stop): \"",
-                "text": "The prompt says what the sentinel is. A secret one is a broken program."
-              },
-              {
-                "label": "12",
-                "text": "5 + 7. The 0 breaks before the addition, so it never joins the total."
-              },
-              {
-                "label": "choosing one",
-                "text": "Pick a value that cannot be real data. 0 marks works; 0 degrees does not."
-              }
+            "body": [
+              "The prompt says what the sentinel is, so the player is not guessing.",
+              "Pick a value that cannot be real data."
             ]
           },
           {
             "id": "h_fill",
             "kind": "fill",
             "instruction": "Fill in the statement that leaves the loop.",
-            "code": "while (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    ⟦1⟧\n  }\n  System.out.println(n);\n}",
+            "code": "int count = 0;\nwhile (true) {\n  count++;\n  if (count == 3) {\n    ⟦1⟧\n  }\n}\nSystem.out.println(count);",
             "blanks": [
               {
                 "chips": [
                   "return;",
                   "break;",
-                  "continue;"
+                  "stop;"
                 ],
                 "answer": 1
               }
             ],
-            "stdin": "5\n0",
-            "target": "Number (0 to stop): 5\n5\nNumber (0 to stop): 0",
-            "hint": "You want out of the loop entirely, not on to the next pass.",
-            "after": "break leaves the loop. continue would jump to the next pass and ask again forever.",
+            "target": "3",
+            "hint": "One statement ends a loop early.",
+            "after": "Without it, count would keep rising forever.",
             "skills": [
               "use break to leave a loop from the middle"
             ]
           },
           {
-            "id": "h_sharp",
-            "kind": "teach",
-            "instruction": "while (true) { ask; if (done) break; act; }",
-            "points": [
-              {
-                "label": "while (true)",
-                "text": "A loop with no exit condition of its own."
-              },
-              {
-                "label": "break;",
-                "text": "The statement that ends a loop early. It ends the loop, not just the pass."
-              },
-              {
-                "label": "the shape",
-                "text": "Ask at the top, check in the middle, act at the bottom. The check is what makes it a loop-and-a-half."
-              },
-              {
-                "label": "when to use it",
-                "text": "Whenever the thing you test has to be read first. Otherwise a plain while is simpler."
-              }
-            ]
-          },
-          {
-            "id": "h_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "while (true) {\n  int n = readInt(\"n? \");\n  if (n == 0) {\n    break;\n  }\n}",
-            "questions": [
-              {
-                "prompt": "Which statement can we use inside a loop to end it?",
-                "opts": [
-                  "break;",
-                  "else",
-                  "System.out.println;",
-                  "SENTINEL;"
-                ],
-                "correct": 0,
-                "why": "break exits the loop immediately. The others are not exit statements."
-              },
-              {
-                "prompt": "Which is the correct loop-and-a-half structure?",
-                "opts": [
-                  "while(condition)\n{\n    // code\n}",
-                  "while(true)\n{\n    // code\n    if(condition)\n    {\n        break;\n    }\n    // code\n}",
-                  "for(int i = 0; i <= 1.5; i++)\n{\n    // code\n}",
-                  "for(int i = 0; i < 2; i++)\n{\n    // code\n    break;\n    // code\n}"
-                ],
-                "correct": 1,
-                "why": "An always-true loop with the exit test in the middle. The second is an ordinary while; the fourth breaks on the first pass every time."
-              }
-            ],
-            "skills": [
-              "write a while (true) loop that asks once and checks once"
-            ]
-          },
-          {
-            "id": "h_write",
+            "id": "h_w1",
             "kind": "write",
-            "instruction": "Last one: the guessing game. The secret is 6.",
-            "code": "int secretNumber = 6;\n// greet, then keep asking until they get it\n",
-            "stdin": "4\n3\n6",
-            "target": "I'm thinking of a number between 1 and 10.\nSee if you can guess the number!\nEnter your guess: 4\nTry again!\nEnter your guess: 3\nTry again!\nEnter your guess: 6\nCorrect!",
-            "solution": "int secretNumber = 6;\nSystem.out.println(\"I'm thinking of a number between 1 and 10.\");\nSystem.out.println(\"See if you can guess the number!\");\nwhile (true) {\n  int guess = readInt(\"Enter your guess: \");\n  if (guess == secretNumber) {\n    break;\n  }\n  System.out.println(\"Try again!\");\n}\nSystem.out.println(\"Correct!\");",
-            "hint": "Two greeting lines, then while (true): read the guess, break if it equals secretNumber, otherwise print \"Try again!\". \"Correct!\" goes after the loop.",
-            "after": "That is CodeHS exercise 3.12.4, and the program your final exam asks for. Lesson done.",
+            "instruction": "Keep asking for a number until they type 0, then print how many they gave.",
+            "code": "// ask \"Number (0 to stop): \" until they type 0\n// then print how many numbers they typed before the 0\n",
+            "stdin": "4\n9\n2\n0",
+            "target": "Number (0 to stop): 4\nNumber (0 to stop): 9\nNumber (0 to stop): 2\nNumber (0 to stop): 0\n3",
+            "solution": "int count = 0;\nwhile (true) {\n  int n = readInt(\"Number (0 to stop): \");\n  if (n == 0) {\n    break;\n  }\n  count++;\n}\nSystem.out.println(count);",
+            "hint": "Break before you count, so the 0 itself is not counted.",
+            "after": "The 0 ended the loop without joining the total.",
+            "skills": [
+              "stop a loop on a sentinel value"
+            ]
+          },
+          {
+            "id": "h_final",
+            "kind": "write",
+            "instruction": "Build the guessing game. The secret number is 6.",
+            "code": "// ask \"Guess? \" over and over\n// wrong:  Try again!\n// right:  Correct!  then stop\n",
+            "stdin": "3\n8\n6",
+            "target": "Guess? 3\nTry again!\nGuess? 8\nTry again!\nGuess? 6\nCorrect!",
+            "solution": "while (true) {\n  int guess = readInt(\"Guess? \");\n  if (guess == 6) {\n    System.out.println(\"Correct!\");\n    break;\n  }\n  System.out.println(\"Try again!\");\n}",
+            "hint": "Ask at the top, check in the middle and break, print Try again at the bottom.",
+            "after": "That is the loop-and-a-half, and it is the shape the exam asks for.",
             "skills": [
               "write a while (true) loop that asks once and checks once"
             ]
