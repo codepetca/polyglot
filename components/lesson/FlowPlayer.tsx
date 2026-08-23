@@ -221,6 +221,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   // A bare "running…" for 8s reads as broken, so count up and reassure.
   const [elapsed, setElapsed] = useState(0);
   const [won, setWon] = useState(false);
+  // What the student types at the console. Seeded from step.stdin so the step
+  // works untouched, but editable on `run` steps: the point of an input lesson
+  // is that the value came from THEM.
+  const [typedIn, setTypedIn] = useState(step.stdin ?? "");
   const [cardVals, setCardVals] = useState<string[]>([]);
   const [cardErrs, setCardErrs] = useState<(string | null)[]>([]);
   const [reveal, setReveal] = useState<{ correct: boolean; correctIndex?: number; why?: string; chosen?: number } | null>(null);
@@ -278,7 +282,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           code: assembled,
           wrap: true,
           lessonCode,
-          stdin: step.kind === "ask" ? typed.join("\n") : step.stdin || "",
+          stdin: step.kind === "ask" ? typed.join("\n") : step.kind === "run" ? typedIn : step.stdin || "",
           wrapMode: step.wrap || "beginner",
         }),
       }).then((x) => x.json());
@@ -502,12 +506,23 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       )}
 
       {/* no real keyboard in a run-and-watch step — show what's "typed" */}
-      {step.stdin && (
-        <div className="flowstdin">
-          <span className="lbl">simulated typing</span>
-          {step.stdin.split("\n").map((line, j) => (
-            <span key={j} className="chip">⌨ {line}</span>
-          ))}
+      {/* A console, not a caption. Showing "simulated typing: Ada" taught the
+          student to watch a value they did not choose arrive from nowhere. On a
+          run step they type here and the program reads exactly that; on a graded
+          step the typing is fixed, and the transcript echoes it anyway, so
+          there is nothing to caption. */}
+      {step.stdin !== undefined && step.kind === "run" && (
+        <div className="flowtype">
+          <div className="lbl">WHAT YOU TYPE</div>
+          <textarea
+            className="typebox"
+            value={typedIn}
+            rows={Math.max(1, (step.stdin || "").split("\n").length)}
+            spellCheck={false}
+            aria-label="what you type at the console"
+            onChange={(ev) => setTypedIn(ev.target.value)}
+          />
+          <div className="typenote">One line for each question the program asks.</div>
         </div>
       )}
 
