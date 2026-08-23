@@ -1185,330 +1185,211 @@
         "v": 1,
         "steps": [
           {
-            "id": "c_task",
+            "id": "c_recap",
             "kind": "teach",
-            "instruction": "Your character has 7 XP. The next level needs 20.",
-            "points": [
-              {
-                "label": "Progress: 35%",
-                "text": "The share of the way to the next level, shown as a whole number."
-              },
-              {
-                "label": "7 / 20 * 100",
-                "text": "Seven out of twenty, as a percentage. Straightforward arithmetic."
-              },
-              {
-                "label": "7 / 20 * 100 gives 0",
-                "text": "Java prints 0, not 35."
-              },
-              {
-                "label": "(double) and (int)",
-                "text": "Two casts, doing opposite jobs. One keeps a decimal the division would destroy; the other removes it again for display."
-              }
-            ]
-          },
-          {
-            "id": "c_zero",
-            "kind": "teach",
-            "instruction": "7 XP out of 20, times 100. Java prints 0.",
-            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println(xp / needed * 100);",
-            "output": "0",
-            "points": [
-              {
-                "label": "7 / 20 first",
-                "text": "Equal precedence, so left to right. The division goes first."
-              },
-              {
-                "label": "both are ints",
-                "text": "7 / 20 = 0.35. As ints, that is 0."
-              },
-              {
-                "label": "then 0 * 100",
-                "text": "0 * 100 = 0. The answer was already lost."
-              },
-              {
-                "label": "Java is not broken",
-                "text": "This is what int division always does."
-              }
+            "instruction": "One double anywhere makes the answer a double.",
+            "code": "System.out.println(7 / 2);\nSystem.out.println(7.0 / 2);",
+            "output": "3\n3.5",
+            "body": [
+              "Two whole numbers give a whole number.",
+              "So we need a way to turn a number into a double on purpose."
             ]
           },
           {
             "id": "c_cast",
             "kind": "teach",
-            "instruction": "Casting tells Java to treat a value as a different type.",
-            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println((double) xp / needed * 100);",
-            "output": "35.0",
+            "instruction": "A cast tells Java to treat a value as another type.",
+            "code": "int a = 7;\nSystem.out.println((double) a / 2);",
+            "output": "3.5",
             "points": [
               {
                 "label": "(double)",
-                "text": "The type you want, in brackets, in front of the value. Here it turns 7 into 7.0."
-              },
-              {
-                "label": "7.0 / 20",
-                "text": "7.0 / 20 = 0.35. One decimal keeps the decimal."
-              },
-              {
-                "label": "(double) xp",
-                "text": "Cast one side. Java converts the other."
-              },
-              {
-                "label": "35.0",
-                "text": "A double, so it shows a decimal point. Turning that into a plain 35 is coming."
+                "text": "Treat a as a double, just for this line."
               }
+            ]
+          },
+          {
+            "id": "c_two",
+            "kind": "teach",
+            "instruction": "The two directions are not the same.",
+            "rules": [
+              {
+                "text": "int to double happens on its own, because nothing is lost",
+                "example": "double d = 5;   gives 5.0"
+              },
+              {
+                "text": "double to int needs a cast, because the decimal part is thrown away",
+                "example": "int i = (int) 5.9;   gives 5"
+              },
+              {
+                "text": "(int) chops. It never rounds",
+                "example": "(int) 5.9   is 5, not 6"
+              }
+            ]
+          },
+          {
+            "id": "c_chop",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "System.out.println((int) 9.99);",
+            "opts": [
+              "9",
+              "10",
+              "9.0",
+              "An error"
             ],
-            "highlight": [
-              2
+            "correct": 0,
+            "why": "(int) throws away everything after the point, however close it was to the next number.",
+            "skills": [
+              "use (int) to turn a decimal into a whole number"
             ]
           },
           {
             "id": "c_where",
             "kind": "predict",
-            "instruction": "Same cast, moved. What does this print?",
-            "code": "int xp = 7;\nint needed = 20;\nSystem.out.println((double) (xp / needed) * 100);",
+            "instruction": "What comes out?",
+            "code": "System.out.println((double) (7 / 2));",
             "opts": [
-              "0.0",
-              "0",
-              "0.35",
-              "35.0"
+              "3.5",
+              "3.0",
+              "3",
+              "4.0"
             ],
-            "correct": 0,
-            "why": "The brackets make xp / needed happen FIRST, as two ints — that is already 0. Casting 0 gives 0.0. The cast arrived too late to save anything.",
+            "correct": 1,
+            "why": "The brackets make 7 / 2 happen first, so it is 3 before the cast ever sees it. Casting afterwards only makes it 3.0. The cast has to reach a number BEFORE the division.",
             "skills": [
               "use (double) so whole-number division keeps its decimal"
             ]
           },
           {
-            "id": "c_timing",
+            "id": "c_div",
             "kind": "teach",
-            "instruction": "A cast only reaches what comes immediately after it.",
-            "points": [
-              {
-                "label": "(double) x / y",
-                "text": "Works. (double) (x / y) does not — the cast has to reach the division before it happens."
-              },
-              {
-                "label": "(double) (7 / 20)",
-                "text": "7 / 20 = 0 first. (double) 0 = 0.0. Too late."
-              },
-              {
-                "label": "(double) x",
-                "text": "A cast applies only to the thing immediately after it. Brackets change what that thing is."
-              },
-              {
-                "label": "(double) xp / needed",
-                "text": "Put the cast on the first value, so it reaches the division. Not around the whole sum."
-              }
-            ]
+            "instruction": "Use it to stop division truncating.",
+            "body": [
+              "7 XP out of 20 is 35 percent.",
+              "Without the cast the division finishes first and gives 0."
+            ],
+            "code": "int xp = 7;\nint need = 20;\nSystem.out.println(xp / need * 100);\nSystem.out.println((double) xp / need * 100);",
+            "output": "0\n35.0"
           },
           {
-            "id": "c_toint",
-            "kind": "teach",
-            "instruction": "35.0 has a decimal point. The bar should read 35.",
-            "code": "double percent = 35.9;\nSystem.out.println((int) percent);",
-            "output": "35",
-            "points": [
-              {
-                "label": "(int)",
-                "text": "Turns a decimal into a whole number."
-              },
-              {
-                "label": "35.9 gives 35",
-                "text": "Chops the decimal. 35.999 also gives 35."
-              },
-              {
-                "label": "even 35.999",
-                "text": "Still 35. Casting never looks at how close it was."
-              },
-              {
-                "label": "(int) 9.9 is 9",
-                "text": "The exact question the quiz asks. Not 10."
-              }
+            "id": "c_divw",
+            "kind": "write",
+            "instruction": "Print what 3 out of 8 is as a percentage.",
+            "code": "int got = 3;\nint total = 8;\n// print 37.5\n",
+            "target": "37.5",
+            "solution": "int got = 3;\nint total = 8;\nSystem.out.println((double) got / total * 100);",
+            "hint": "Cast the first number before the division happens.",
+            "after": "Without the cast, 3 / 8 is 0 and the answer is 0.0.",
+            "skills": [
+              "use (double) so whole-number division keeps its decimal"
             ]
           },
           {
             "id": "c_round",
             "kind": "teach",
-            "instruction": "To round properly, nudge it first.",
-            "code": "double percent = 37.5;\nSystem.out.println((int) (percent + 0.5));",
-            "output": "38",
-            "points": [
-              {
-                "label": "+ 0.5 then chop",
-                "text": "37.5 + 0.5 is 38.0, which chops to 38. Rounded up, using only chopping."
-              },
-              {
-                "label": "37.4 + 0.5 is 37.9",
-                "text": "Chops to 37. Correct."
-              },
-              {
-                "label": "exactly .5 goes up",
-                "text": "That is the rule you were taught in maths, and this reproduces it."
-              },
-              {
-                "label": "(int) (percent + 0.5)",
-                "text": "The + 0.5 must happen before the chop, so it needs its own brackets inside the cast."
-              }
-            ]
-          },
-          {
-            "id": "c_final",
-            "kind": "run",
-            "instruction": "Run the finished XP readout.",
-            "code": "int xp = 7;\nint needed = 20;\ndouble percent = (double) xp / needed * 100;\nint shown = (int) (percent + 0.5);\nSystem.out.println(\"XP: \" + xp + \" / \" + needed);\nSystem.out.println(\"Progress: \" + shown + \"%\");",
-            "after": "Both casts, doing different jobs: one to keep the decimal, one to get rid of it.",
-            "skills": [
-              "round to the nearest whole number using casting"
-            ]
-          },
-          {
-            "id": "c_sharp",
-            "kind": "teach",
-            "instruction": "(int) chops. (double) must arrive before the division.",
-            "code": "System.out.println((int) 9.9);\nSystem.out.println((double) 9 / 2);\nSystem.out.println((double) (9 / 2));",
-            "output": "9\n4.5\n4.0",
-            "points": [
-              {
-                "label": "(int) and (double)",
-                "text": "Taking a value of one type and treating it as another. That is the entire definition."
-              },
-              {
-                "label": "(int) 9.9 is 9",
-                "text": "Chops. Never rounds. This is the single most asked casting question."
-              },
-              {
-                "label": "(double) 9 / 2 is 4.5",
-                "text": "The cast reaches the 9 before the division, so the division is decimal."
-              },
-              {
-                "label": "(double) (9 / 2) is 4.0",
-                "text": "The brackets divide first as ints — 4 — and then convert. Same symbols, different answer."
-              }
-            ]
-          },
-          {
-            "id": "c_cmp",
-            "kind": "compare",
-            "instruction": "One decimal point changes the answer.",
-            "sides": [
-              {
-                "label": "both ints",
-                "code": "System.out.println(7 / 2);",
-                "output": "3"
-              },
-              {
-                "label": "one double",
-                "code": "System.out.println(7.0 / 2);",
-                "output": "3.5"
-              }
+            "instruction": "Use it to round, by nudging first.",
+            "body": [
+              "(int) always chops down.",
+              "Adding 0.5 first turns chopping into rounding."
             ],
-            "points": [
-              {
-                "label": "7 / 2",
-                "text": "Two ints, so the answer must be an int. 3.5 becomes 3."
-              },
-              {
-                "label": "7.0 / 2",
-                "text": "One side is a decimal, so the answer keeps its decimal."
-              }
-            ],
-            "skills": [
-              "use (double) so whole-number division keeps its decimal"
-            ]
+            "code": "System.out.println((int) 3.4);\nSystem.out.println((int) (3.4 + 0.5));\nSystem.out.println((int) (3.6 + 0.5));",
+            "output": "3\n3\n4"
           },
           {
-            "id": "c_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "double d = 9.9;\nint i = (int) d;",
-            "questions": [
-              {
-                "prompt": "What is casting in Java?",
-                "opts": [
-                  "Turning a value of one type into another type",
-                  "A way to print to the screen",
-                  "What Karel does when she breaks her leg",
-                  "A way to get user input"
-                ],
-                "correct": 0,
-                "why": "That is the whole idea: the value stays, the type it is treated as changes."
-              },
-              {
-                "prompt": "What does (int) 9.9 evaluate to?",
-                "opts": [
-                  "0",
-                  "5",
-                  "9",
-                  "10"
-                ],
-                "correct": 2,
-                "why": "Casting to int chops everything after the decimal point. It does not round, so 9.9 gives 9, not 10."
-              }
-            ],
-            "skills": [
-              "use (int) to turn a decimal into a whole number"
-            ]
-          },
-          {
-            "id": "c_d1",
+            "id": "c_roundf",
             "kind": "fill",
-            "instruction": "Fill it in so 3.4 rounds to 3 — and 3.6 would round to 4.",
-            "code": "double rating = 3.4;\nSystem.out.println((int) (rating ⟦1⟧ 0.5));",
+            "instruction": "Make this round to the nearest whole number.",
+            "code": "double rating = 4.7;\nSystem.out.println((int) (rating + ⟦1⟧));",
             "blanks": [
               {
                 "chips": [
-                  "-",
-                  "+",
-                  "*"
+                  "1.0",
+                  "0.5",
+                  "0.1"
                 ],
                 "answer": 1
               }
             ],
-            "target": "3",
-            "hint": "Nudge it up by half, then let the chop decide.",
-            "after": "3.4 + 0.5 is 3.9, which chops to 3. Not enough of a nudge to reach 4 — exactly right.",
+            "target": "5",
+            "hint": "Anything at .5 or above should tip over to the next whole number.",
+            "after": "4.7 plus 0.5 is 5.2, and chopping that gives 5.",
             "skills": [
               "round to the nearest whole number using casting"
             ]
           },
           {
-            "id": "c_d2",
-            "kind": "write",
-            "instruction": "Read a decimal and print it as a whole number.",
-            "code": "double myDouble = readDouble(\"Please input your double: \");\n// print the int version\n",
-            "stdin": "9.9",
-            "target": "Please input your double: 9.9\n9",
-            "solution": "double myDouble = readDouble(\"Please input your double: \");\nSystem.out.println((int) myDouble);",
-            "hint": "Put (int) in front of it. No rounding — just the cast.",
-            "after": "That is CodeHS exercise 3.5.4, Casting to an Int.",
+            "id": "c_bits",
+            "kind": "teach",
+            "instruction": "An int is 32 bits, so it cannot hold every number.",
+            "body": [
+              "There is a largest int and a smallest one.",
+              "Java will tell you what they are."
+            ],
+            "code": "System.out.println(Integer.MAX_VALUE);\nSystem.out.println(Integer.MIN_VALUE);",
+            "output": "2147483647\n-2147483648"
+          },
+          {
+            "id": "c_over",
+            "kind": "teach",
+            "instruction": "Go past the top and it wraps round to the bottom.",
+            "body": [
+              "This is called overflow.",
+              "Java does not warn you. It just keeps counting from the other end."
+            ],
+            "code": "System.out.println(Integer.MAX_VALUE + 1);",
+            "output": "-2147483648"
+          },
+          {
+            "id": "c_overrun",
+            "kind": "run",
+            "instruction": "Run it and watch a number go wrong.",
+            "code": "int big = Integer.MAX_VALUE - 2;\nfor (int i = 0; i < 5; i++) {\n  System.out.println(big);\n  big++;\n}",
+            "after": "It counted up, hit the ceiling, and came back at the floor."
+          },
+          {
+            "id": "c_overq",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "int n = Integer.MAX_VALUE;\nn = n + 2;\nSystem.out.println(n);",
+            "opts": [
+              "2147483649",
+              "-2147483647",
+              "2147483647",
+              "An error"
+            ],
+            "correct": 1,
+            "why": "One past the top lands on the bottom, and the second step moves one up from there.",
             "skills": [
               "use (int) to turn a decimal into a whole number"
             ]
           },
           {
-            "id": "c_d3",
+            "id": "c_proj",
             "kind": "write",
-            "instruction": "Read two whole numbers and divide them — but keep the decimal.",
-            "code": "int firstInt = readInt(\"First Int: \");\nint secondInt = readInt(\"Second Int: \");\n// print the division as a double\n",
-            "stdin": "3\n4",
-            "target": "First Int: 3\nSecond Int: 4\n0.75",
-            "solution": "int firstInt = readInt(\"First Int: \");\nint secondInt = readInt(\"Second Int: \");\nSystem.out.println((double) firstInt / secondInt);",
-            "hint": "Cast the FIRST one, before the division happens. 3 / 4 as ints would be 0.",
-            "after": "That is CodeHS exercise 3.5.5, Casting to a Double.",
+            "instruction": "Project: round a film rating to the nearest whole star.",
+            "code": "// ask \"Rating? \" with readDouble\n// then print:  Stars: <rating rounded>\n",
+            "stdin": "4.6",
+            "target": "Rating? 4.6\nStars: 5",
+            "solution": "double rating = readDouble(\"Rating? \");\nSystem.out.println(\"Stars: \" + (int) (rating + 0.5));",
+            "hint": "Add 0.5, then cast to int. Keep the whole sum in brackets.",
+            "after": "4.6 rounds up to 5. A rating of 4.4 would give 4.",
             "skills": [
-              "use (double) so whole-number division keeps its decimal"
+              "round to the nearest whole number using casting"
             ]
           },
           {
-            "id": "c_d4",
+            "id": "c_proj2",
             "kind": "write",
-            "instruction": "Last one: round a film rating to the nearest whole star.",
-            "code": "double movieRating = readDouble(\"Please enter a movie rating: \");\n// round it and print \"Rating rounded: N\"\n",
-            "stdin": "3.5",
-            "target": "Please enter a movie rating: 3.5\nRating rounded: 4",
-            "solution": "double movieRating = readDouble(\"Please enter a movie rating: \");\nint rounded = (int) (movieRating + 0.5);\nSystem.out.println(\"Rating rounded: \" + rounded);",
-            "hint": "Add 0.5, cast to int, then join it into the sentence.",
-            "after": "That is CodeHS exercise 3.5.8, Movie Ratings. Lesson done.",
+            "instruction": "Project: print a test score as a percentage, rounded.",
+            "code": "// ask \"Correct? \" and \"Total? \" with readInt\n// then print:  Score: <percent rounded>%\n",
+            "stdin": "17\n20",
+            "target": "Correct? 17\nTotal? 20\nScore: 85%",
+            "solution": "int correct = readInt(\"Correct? \");\nint total = readInt(\"Total? \");\ndouble pct = (double) correct / total * 100;\nSystem.out.println(\"Score: \" + (int) (pct + 0.5) + \"%\");",
+            "hint": "Cast before dividing to keep the decimal, then add 0.5 and cast to int to round.",
+            "after": "Both casts were needed. One kept the decimal, the other rounded it.",
             "skills": [
+              "use (double) so whole-number division keeps its decimal",
               "round to the nearest whole number using casting"
             ]
           }
@@ -1527,121 +1408,58 @@
         "v": 1,
         "steps": [
           {
-            "id": "o_task",
-            "kind": "teach",
-            "instruction": "A game is full of facts that are simply yes or no.",
-            "points": [
-              {
-                "label": "the panel",
-                "text": "Is the player alive? Do they have the key? Is the quest finished? We are building that status screen."
-              },
-              {
-                "label": "not a number",
-                "text": "None of these is a count or a measurement. There is no \"3 alive\". It is yes or no, and nothing else."
-              },
-              {
-                "label": "true or false",
-                "text": "A yes/no fact is so common that Java gives it a type of its own, with exactly two possible values."
-              },
-              {
-                "label": "doorLocked",
-                "text": "From 3.11, every decision starts from a value like this."
-              }
-            ]
-          },
-          {
             "id": "o_bool",
             "kind": "teach",
-            "instruction": "boolean holds one of exactly two values.",
-            "code": "boolean alive = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);",
-            "output": "=== STATUS ===\nAlive:      true",
-            "points": [
-              {
-                "label": "boolean",
-                "text": "The type. Same four parts as always: type, name, =, value."
-              },
-              {
-                "label": "true",
-                "text": "One of only two values it can ever hold. The other is false."
-              },
-              {
-                "label": "lowercase, no quotes",
-                "text": "true, not True and not \"true\". Java is strict about this."
-              },
-              {
-                "label": "alive",
-                "text": "Naming it like a yes/no question makes the code read like English."
-              }
+            "instruction": "A boolean holds true or false. Nothing else.",
+            "code": "boolean alive = true;\nSystem.out.println(alive);",
+            "output": "true",
+            "body": [
+              "Use it for any fact that is a yes or a no."
             ]
           },
           {
-            "id": "o_tweak",
-            "kind": "fix",
-            "instruction": "The player just died. Make the panel say so.",
-            "code": "boolean alive = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);",
-            "target": "=== STATUS ===\nAlive:      false",
-            "hint": "There is only one other value a boolean can hold.",
-            "after": "Two values, and you have now used both.",
-            "skills": [
-              "create boolean variables that hold true or false"
-            ],
-            "solution": "boolean alive = false;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);"
+            "id": "o_uses",
+            "kind": "teach",
+            "instruction": "Games are full of them.",
+            "rules": [
+              {
+                "text": "Is the player alive?",
+                "example": "boolean alive = true;"
+              },
+              {
+                "text": "Is the door unlocked?",
+                "example": "boolean unlocked = false;"
+              },
+              {
+                "text": "Is the sound on?",
+                "example": "boolean muted = false;"
+              }
+            ]
           },
           {
             "id": "o_panel",
+            "kind": "run",
+            "instruction": "Run the status panel.",
+            "code": "boolean alive = true;\nboolean unlocked = false;\nboolean muted = false;\nSystem.out.println(\"Alive:    \" + alive);\nSystem.out.println(\"Unlocked: \" + unlocked);\nSystem.out.println(\"Muted:    \" + muted);",
+            "after": "Three facts, three booleans."
+          },
+          {
+            "id": "o_change",
             "kind": "teach",
-            "instruction": "Three facts, three booleans.",
-            "code": "boolean alive = true;\nboolean hasKey = false;\nboolean questDone = true;\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Alive:      \" + alive);\nSystem.out.println(\"Has key:    \" + hasKey);\nSystem.out.println(\"Quest done: \" + questDone);",
-            "output": "=== STATUS ===\nAlive:      true\nHas key:    false\nQuest done: true",
-            "points": [
-              {
-                "label": "one box per fact",
-                "text": "Each yes/no answer needs its own boolean. They do not share."
-              },
-              {
-                "label": "false is a real value",
-                "text": "hasKey = false is not \"empty\" or \"unset\". It is a definite no."
-              },
-              {
-                "label": "alive, no key, quest done",
-                "text": "Three words describe the player completely."
-              }
+            "instruction": "Change one the same way you change any variable.",
+            "code": "boolean alive = true;\nalive = false;\nSystem.out.println(alive);",
+            "output": "false",
+            "body": [
+              "No type the second time, because the box already exists."
             ]
           },
           {
-            "id": "o_vsstring",
-            "kind": "teach",
-            "instruction": "true and \"true\" both print as true. They are different types.",
-            "code": "boolean answer = true;\nString word = \"true\";\nSystem.out.println(answer);\nSystem.out.println(word);",
-            "output": "true\ntrue",
-            "points": [
-              {
-                "label": "true and \"true\"",
-                "text": "Both print true. Quotes never appear in output, so you cannot tell them apart by looking."
-              },
-              {
-                "label": "true",
-                "text": "A boolean. Java understands it as a yes and can reason with it."
-              },
-              {
-                "label": "\"true\"",
-                "text": "A String. Four letters that happen to spell true. Java cannot make a decision from it."
-              },
-              {
-                "label": "'T' and 10.1",
-                "text": "'T' is a char — one character in single quotes. 10.1 is a double. Neither is a boolean; only bare true and false are."
-              }
-            ]
-          },
-          {
-            "id": "o_bucket",
+            "id": "o_types",
             "kind": "bucket",
-            "instruction": "Which type is each value?",
+            "instruction": "Which of these is really a boolean?",
             "buckets": [
-              "boolean",
-              "String",
-              "char",
-              "double"
+              "A boolean",
+              "Something else"
             ],
             "items": [
               {
@@ -1649,150 +1467,88 @@
                 "bucket": 0
               },
               {
-                "text": "\"true\"",
-                "bucket": 1
-              },
-              {
-                "text": "'F'",
-                "bucket": 2
-              },
-              {
-                "text": "10.1",
-                "bucket": 3
-              },
-              {
                 "text": "false",
                 "bucket": 0
               },
               {
-                "text": "\"yes\"",
+                "text": "\"true\"",
+                "bucket": 1
+              },
+              {
+                "text": "'t'",
+                "bucket": 1
+              },
+              {
+                "text": "1",
+                "bucket": 1
+              },
+              {
+                "text": "True",
                 "bucket": 1
               }
             ],
-            "why": "Bare true/false → boolean. Double quotes → String. Single quotes around one character → char. A decimal → double.",
+            "why": "\"true\" in double quotes is a String. Java is also case sensitive, so True is not the keyword true.",
             "skills": [
               "tell a boolean apart from text, a character and a number"
             ]
           },
           {
-            "id": "o_ask",
-            "kind": "teach",
-            "instruction": "Let the player answer it themselves.",
-            "code": "boolean hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(\"=== STATUS ===\");\nSystem.out.println(\"Has key:    \" + hasKey);",
-            "stdin": "true",
-            "output": "Did you find the key? true\n=== STATUS ===\nHas key:    true",
-            "points": [
-              {
-                "label": "readBoolean",
-                "text": "The fourth reader from the input lesson. It hands back true or false."
-              },
-              {
-                "label": "they type the word",
-                "text": "The player types true or false. Anything else is not an answer to a yes/no question."
-              },
-              {
-                "label": "box matches reader",
-                "text": "readBoolean gives a boolean, so it goes in a boolean. Same rule as always."
-              }
-            ]
-          },
-          {
-            "id": "o_sharp",
-            "kind": "teach",
-            "instruction": "A boolean is true or false — and nothing else is.",
-            "points": [
-              {
-                "label": "what it is",
-                "text": "A boolean is a true-or-false value. Not a number, not a character, not text."
-              },
-              {
-                "label": "exactly two",
-                "text": "true and false. There is no third option and no \"empty\"."
-              },
-              {
-                "label": "\"true\", 't', 10.1",
-                "text": "A String, a char and a double. Not one of them is a boolean, however much \"true\" looks like one."
-              },
-              {
-                "label": "what it is for",
-                "text": "Storing a yes/no fact, and — from the next lesson on — deciding what the program does."
-              }
-            ]
-          },
-          {
-            "id": "o_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "boolean alive = true;\nboolean hasKey = false;",
-            "questions": [
-              {
-                "prompt": "What is a boolean in Java?",
-                "opts": [
-                  "A single character",
-                  "A sequence of characters",
-                  "A true or false value",
-                  "A very precise number"
-                ],
-                "correct": 2,
-                "why": "That is the whole type: two values, true and false."
-              },
-              {
-                "prompt": "Which of these IS a boolean?",
-                "opts": [
-                  "'F'",
-                  "true",
-                  "\"true\"",
-                  "10.1"
-                ],
-                "correct": 1,
-                "why": "Bare true is the boolean. \"true\" is a String, 'F' is a char, and 10.1 is a double."
-              }
-            ],
+            "id": "o_fix",
+            "kind": "fix",
+            "instruction": "Fix this so it runs.",
+            "code": "boolean alive = \"true\";\nSystem.out.println(alive);",
+            "target": "true",
+            "solution": "boolean alive = true;\nSystem.out.println(alive);",
+            "hint": "The quotes make it text. A boolean wants the keyword.",
+            "after": "true and \"true\" both print as true, which is exactly why the mistake is easy to miss.",
             "skills": [
               "tell a boolean apart from text, a character and a number"
             ]
           },
           {
-            "id": "o_d1",
+            "id": "o_predict",
             "kind": "predict",
-            "instruction": "The player unlocks the door. What prints?",
-            "code": "boolean doorLocked = true;\ndoorLocked = false;\nSystem.out.println(doorLocked);",
+            "instruction": "What comes out?",
+            "code": "boolean unlocked = false;\nunlocked = true;\nSystem.out.println(unlocked);",
             "opts": [
               "false",
-              "\"false\"",
-              "(an error)",
-              "true"
+              "true",
+              "An error",
+              "false true"
             ],
-            "correct": 0,
-            "why": "The second line puts a new value in the box, exactly like any other variable. The true is gone.",
+            "correct": 1,
+            "why": "The second line replaced the value. A box holds one thing at a time.",
             "skills": [
               "create boolean variables that hold true or false"
             ]
           },
           {
-            "id": "o_d2",
-            "kind": "fix",
-            "instruction": "The box is the wrong type. Fix it.",
-            "code": "String hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(hasKey);",
-            "stdin": "true",
-            "target": "Did you find the key? true\ntrue",
-            "solution": "boolean hasKey = readBoolean(\"Did you find the key? \");\nSystem.out.println(hasKey);",
-            "hint": "What type does readBoolean hand back?",
-            "after": "Reader and box always have to agree.",
-            "skills": [
-              "read a true/false answer from the user"
+            "id": "o_read",
+            "kind": "teach",
+            "instruction": "You can ask the player directly.",
+            "code": "boolean ready = readBoolean(\"Ready? \");\nSystem.out.println(\"Ready: \" + ready);",
+            "body": [
+              "They type the word true or the word false."
             ]
           },
           {
-            "id": "o_d3",
-            "kind": "write",
-            "instruction": "Last one: ask whether they like ice cream, then print the answer.",
-            "code": "// ask with readBoolean, store it, print it\n",
+            "id": "o_run",
+            "kind": "run",
+            "instruction": "Run it and type true or false.",
+            "code": "boolean ready = readBoolean(\"Ready? \");\nSystem.out.println(\"Ready: \" + ready);",
             "stdin": "true",
-            "target": "Do you like ice cream? true\ntrue",
-            "solution": "boolean likesIceCream = readBoolean(\"Do you like ice cream? \");\nSystem.out.println(likesIceCream);",
-            "hint": "The question is \"Do you like ice cream? \" — mind the space before the closing quote.",
-            "after": "That is CodeHS exercise 3.6.4, Ice Cream. Lesson done.",
+            "after": "readBoolean hands back a real boolean, not text."
+          },
+          {
+            "id": "o_write",
+            "kind": "write",
+            "instruction": "Ask whether they like ice cream, then print the answer.",
+            "code": "// ask \"Do you like ice cream? \" and print:  You said: <answer>\n",
+            "stdin": "true",
+            "target": "Do you like ice cream? true\nYou said: true",
+            "solution": "boolean likes = readBoolean(\"Do you like ice cream? \");\nSystem.out.println(\"You said: \" + likes);",
+            "hint": "Store what readBoolean hands back, then print that box.",
+            "after": "A boolean travels from the keyboard into a box and out again.",
             "skills": [
               "read a true/false answer from the user"
             ]
@@ -1814,76 +1570,140 @@
           {
             "id": "g_task",
             "kind": "teach",
-            "instruction": "A dungeon door. You get through with the key AND enough strength.",
-            "points": [
+            "instruction": "Logical operators connect and modify boolean expressions.",
+            "rules": [
               {
-                "label": "two facts",
-                "text": "hasKey is true or false. strongEnough is true or false. You already know how to store both."
+                "text": "! reverses a boolean",
+                "example": "!true   is false"
               },
               {
-                "label": "one answer",
-                "text": "The door needs a single true or false: does it open? That answer has to be built out of the two facts."
+                "text": "|| is true when at least one side is true",
+                "example": "true || false   is true"
               },
               {
-                "label": "AND, OR, NOT",
-                "text": "Three symbols combine booleans. This lesson is those three and nothing else."
+                "text": "&& is true only when both sides are true",
+                "example": "true && false   is false"
               }
+            ]
+          },
+          {
+            "id": "g_not",
+            "kind": "teach",
+            "instruction": "! reverses the boolean.",
+            "code": "boolean alive = true;\nSystem.out.println(!alive);",
+            "output": "false",
+            "body": [
+              "Read it as \"not\"."
+            ]
+          },
+          {
+            "id": "g_tnot",
+            "kind": "table",
+            "instruction": "Fill in what ! gives.",
+            "columns": [
+              "a",
+              "!a"
+            ],
+            "fillFrom": 1,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "rows": [
+              [
+                "true",
+                "false"
+              ],
+              [
+                "false",
+                "true"
+              ]
+            ],
+            "exprs": [
+              "!a"
+            ],
+            "why": "! always gives the opposite of what it was handed.",
+            "skills": [
+              "flip a boolean with !"
+            ]
+          },
+          {
+            "id": "g_or",
+            "kind": "teach",
+            "instruction": "|| is true when at least one side is true.",
+            "code": "boolean hasKey = false;\nboolean hasCrowbar = true;\nSystem.out.println(hasKey || hasCrowbar);",
+            "output": "true",
+            "body": [
+              "Read it as \"or\". Either one will do."
+            ]
+          },
+          {
+            "id": "g_tor",
+            "kind": "table",
+            "instruction": "Fill in what || gives.",
+            "columns": [
+              "a",
+              "b",
+              "a || b"
+            ],
+            "fillFrom": 2,
+            "chips": [
+              "true",
+              "false"
+            ],
+            "rows": [
+              [
+                "true",
+                "true",
+                "true"
+              ],
+              [
+                "true",
+                "false",
+                "true"
+              ],
+              [
+                "false",
+                "true",
+                "true"
+              ],
+              [
+                "false",
+                "false",
+                "false"
+              ]
+            ],
+            "exprs": [
+              "a || b"
+            ],
+            "why": "Only one row is false, the one where neither side is true.",
+            "skills": [
+              "combine two booleans with || so either will do"
             ]
           },
           {
             "id": "g_and",
             "kind": "teach",
             "instruction": "&& is true only when both sides are true.",
-            "code": "boolean hasKey = true;\nboolean strongEnough = true;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
-            "output": "=== DUNGEON DOOR ===\nHas key:       true\nStrong enough: true\nDoor opens:    true",
-            "points": [
-              {
-                "label": "&&",
-                "text": "Two ampersands, no space between them. Read it as \"and\"."
-              },
-              {
-                "label": "hasKey && strongEnough",
-                "text": "Both are true here, so the whole expression is true and the door opens."
-              },
-              {
-                "label": "the brackets",
-                "text": "Needed — + would otherwise glue before the && runs."
-              },
-              {
-                "label": "one false is enough",
-                "text": "Set either fact to false and the door stays shut. && has no tolerance."
-              }
+            "code": "boolean hasKey = true;\nboolean strong = false;\nSystem.out.println(hasKey && strong);",
+            "output": "false",
+            "body": [
+              "Read it as \"and\". Both must hold."
             ]
           },
           {
-            "id": "g_tweak",
-            "kind": "fix",
-            "instruction": "The player is not strong enough yet. Make the door stay shut.",
-            "code": "boolean hasKey = true;\nboolean strongEnough = true;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));",
-            "target": "=== DUNGEON DOOR ===\nHas key:       true\nStrong enough: false\nDoor opens:    false",
-            "hint": "Change one of the two facts at the top. Leave the last line alone.",
-            "after": "Key but no strength, and the door refuses. That is && being strict.",
-            "skills": [
-              "combine two booleans with && so both must be true"
-            ],
-            "solution": "boolean hasKey = true;\nboolean strongEnough = false;\nSystem.out.println(\"=== DUNGEON DOOR ===\");\nSystem.out.println(\"Has key:       \" + hasKey);\nSystem.out.println(\"Strong enough: \" + strongEnough);\nSystem.out.println(\"Door opens:    \" + (hasKey && strongEnough));"
-          },
-          {
-            "id": "g_table_and",
+            "id": "g_tand",
             "kind": "table",
-            "instruction": "Fill in every combination of && .",
+            "instruction": "Fill in what && gives.",
             "columns": [
-              "hasKey",
-              "strongEnough",
-              "hasKey && strongEnough"
+              "a",
+              "b",
+              "a && b"
             ],
             "fillFrom": 2,
             "chips": [
               "true",
               "false"
-            ],
-            "exprs": [
-              "hasKey && strongEnough"
             ],
             "rows": [
               [
@@ -1907,181 +1727,73 @@
                 "false"
               ]
             ],
-            "why": "Exactly one row out of four is true. && is the strict one: everything must hold.",
+            "exprs": [
+              "a && b"
+            ],
+            "why": "Only one row is true, the one where both sides are.",
             "skills": [
               "combine two booleans with && so both must be true"
             ]
           },
           {
-            "id": "g_or",
+            "id": "g_door",
             "kind": "teach",
-            "instruction": "|| is true when either side is true.",
-            "code": "boolean hasKey = false;\nboolean knowsPassword = true;\nSystem.out.println(\"Secret passage: \" + (hasKey || knowsPassword));",
-            "output": "Secret passage: true",
-            "points": [
-              {
-                "label": "||",
-                "text": "Two pipe characters, on the backslash key. Read it as \"or\"."
-              },
-              {
-                "label": "hasKey is false",
-                "text": "It does not matter. knowsPassword is true, and || only needs one side."
-              },
-              {
-                "label": "|| vs everyday \"or\"",
-                "text": "In English \"tea or coffee\" usually means one or the other. In Java || is also true when BOTH are true."
-              }
+            "instruction": "A dungeon door needs the key and the strength.",
+            "code": "boolean hasKey = true;\nboolean strong = true;\nboolean canOpen = hasKey && strong;\nSystem.out.println(\"Door opens: \" + canOpen);",
+            "output": "Door opens: true",
+            "body": [
+              "&& because one without the other is not enough."
             ]
           },
           {
-            "id": "g_table_or",
-            "kind": "table",
-            "instruction": "Now the same four combinations with || .",
-            "columns": [
-              "hasKey",
-              "knowsPassword",
-              "hasKey || knowsPassword"
-            ],
-            "fillFrom": 2,
-            "chips": [
-              "true",
-              "false"
-            ],
-            "exprs": [
-              "hasKey || knowsPassword"
-            ],
-            "rows": [
-              [
-                "true",
-                "true",
-                "true"
-              ],
-              [
-                "true",
-                "false",
-                "true"
-              ],
-              [
-                "false",
-                "true",
-                "true"
-              ],
-              [
-                "false",
-                "false",
-                "false"
-              ]
-            ],
-            "why": "Exactly one row out of four is false — the mirror image of &&. || only fails when nothing is true.",
-            "skills": [
-              "combine two booleans with || so either will do"
+            "id": "g_doorrun",
+            "kind": "run",
+            "instruction": "Run it, then change strong to false and run it again.",
+            "code": "boolean hasKey = true;\nboolean strong = true;\nSystem.out.println(\"Door opens: \" + (hasKey && strong));",
+            "after": "With && , one false shuts the door."
+          },
+          {
+            "id": "g_shop",
+            "kind": "teach",
+            "instruction": "A shop takes gold or gems.",
+            "code": "boolean hasGold = false;\nboolean hasGems = true;\nSystem.out.println(\"Can buy: \" + (hasGold || hasGems));",
+            "output": "Can buy: true",
+            "body": [
+              "|| because either payment works."
             ]
           },
           {
-            "id": "g_not",
+            "id": "g_alarm",
             "kind": "teach",
-            "instruction": "! flips a boolean to its opposite.",
-            "code": "boolean hasKey = false;\nSystem.out.println(\"Door is locked: \" + !hasKey);",
-            "output": "Door is locked: true",
-            "points": [
-              {
-                "label": "!",
-                "text": "An exclamation mark in front of the value. Read it as \"not\"."
-              },
-              {
-                "label": "!hasKey",
-                "text": "hasKey is false, so !hasKey is true. The door is locked precisely because you have no key."
-              },
-              {
-                "label": "!true is false",
-                "text": "And !false is true. It only ever swaps the two values."
-              },
-              {
-                "label": "! runs first",
-                "text": "Before && and ||, the same way * runs before +. So true && !false is true && true, which is true."
-              }
+            "instruction": "An alarm sounds when the player is NOT hidden.",
+            "code": "boolean hidden = false;\nSystem.out.println(\"Alarm: \" + !hidden);",
+            "output": "Alarm: true",
+            "body": [
+              "! turns \"hidden\" into \"not hidden\" without a second variable."
             ]
           },
           {
             "id": "g_predict",
             "kind": "predict",
-            "instruction": "The exact expression the quiz asks about.",
-            "code": "System.out.println(true && !false);",
+            "instruction": "What comes out?",
+            "code": "boolean a = true;\nboolean b = false;\nSystem.out.println(a && !b);",
             "opts": [
               "true",
-              "nothing",
               "false",
-              "(an error)"
+              "An error",
+              "true false"
             ],
             "correct": 0,
-            "why": "!false is true, so this becomes true && true. Both sides are true, so && gives true.",
+            "why": "!b is true, and a is true, so both sides hold.",
             "skills": [
               "flip a boolean with !"
             ]
           },
           {
-            "id": "g_sharp",
-            "kind": "teach",
-            "instruction": "&& needs all. || needs one. ! swaps.",
-            "points": [
-              {
-                "label": "&&",
-                "text": "True only when BOTH sides are true. One row of four."
-              },
-              {
-                "label": "||",
-                "text": "True when EITHER side is true, including when both are. Three rows of four."
-              },
-              {
-                "label": "!",
-                "text": "Turns true into false and false into true."
-              },
-              {
-                "label": "order",
-                "text": "! first, then &&, then ||. Brackets override all of it."
-              },
-              {
-                "label": "&& is not &",
-                "text": "Two characters, both times. A single & is a different operator you have not been taught."
-              }
-            ]
-          },
-          {
-            "id": "g_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "boolean a = true;\nboolean b = false;",
-            "questions": [
-              {
-                "prompt": "Which of these is a logical operator?",
-                "opts": [
-                  "%",
-                  "##",
-                  "!",
-                  "**"
-                ],
-                "correct": 2,
-                "why": "! is NOT. The other logical operators are && and ||. % is the remainder operator — arithmetic, not logic — and ## and ** are not Java at all."
-              },
-              {
-                "prompt": "What does true && !false evaluate to?",
-                "opts": [
-                  "true",
-                  "false"
-                ],
-                "correct": 0,
-                "why": "! runs first and turns false into true, leaving true && true, which is true."
-              }
-            ],
-            "skills": [
-              "flip a boolean with !"
-            ]
-          },
-          {
-            "id": "g_d1",
+            "id": "g_fill",
             "kind": "fill",
             "instruction": "Only one operator makes this print false.",
-            "code": "boolean tallEnough = true;\nboolean oldEnough = false;\nSystem.out.println(tallEnough ⟦1⟧ oldEnough);",
+            "code": "boolean hasTicket = true;\nboolean onTime = false;\nSystem.out.println(hasTicket ⟦1⟧ onTime);",
             "blanks": [
               {
                 "chips": [
@@ -2092,24 +1804,37 @@
               }
             ],
             "target": "false",
-            "hint": "One side is false. Which operator refuses to accept that?",
-            "after": "&& fails on a single false. || would have accepted the one true and printed true.",
+            "hint": "One of them needs both sides to be true.",
+            "after": "|| would have printed true, because the ticket alone was enough for it.",
             "skills": [
               "combine two booleans with && so both must be true"
             ]
           },
           {
-            "id": "g_d2",
+            "id": "g_write",
             "kind": "write",
-            "instruction": "Last one: they ride only if they are tall enough AND old enough.",
-            "code": "// ask both questions with readBoolean, then print whether they can ride\n",
-            "stdin": "true\ntrue",
-            "target": "Tall enough? true\nOld enough? true\ntrue",
-            "solution": "boolean tallEnough = readBoolean(\"Tall enough? \");\nboolean oldEnough = readBoolean(\"Old enough? \");\nSystem.out.println(tallEnough && oldEnough);",
-            "hint": "Two readBoolean calls storing tallEnough and oldEnough, then print the two joined with &&. The questions are \"Tall enough? \" and \"Old enough? \".",
-            "after": "That is CodeHS exercise 3.7.4, Roller Coaster. Lesson done.",
+            "instruction": "They ride only if they are tall enough and old enough.",
+            "code": "boolean tall = true;\nboolean old = false;\n// print:  Can ride: <true or false>\n",
+            "target": "Can ride: false",
+            "solution": "boolean tall = true;\nboolean old = false;\nSystem.out.println(\"Can ride: \" + (tall && old));",
+            "hint": "Both conditions must hold, so use && . Keep it in brackets inside the println.",
+            "after": "Tall but not old enough, so the answer is false.",
             "skills": [
               "combine two booleans with && so both must be true"
+            ]
+          },
+          {
+            "id": "g_write2",
+            "kind": "write",
+            "instruction": "Ask if they have a key, then say whether the door stays shut.",
+            "code": "// ask \"Have a key? \" with readBoolean\n// then print:  Door shut: <true when they have NO key>\n",
+            "stdin": "false",
+            "target": "Have a key? false\nDoor shut: true",
+            "solution": "boolean hasKey = readBoolean(\"Have a key? \");\nSystem.out.println(\"Door shut: \" + !hasKey);",
+            "hint": "The door is shut when they do NOT have a key.",
+            "after": "! turned the question round without needing a second variable.",
+            "skills": [
+              "flip a boolean with !"
             ]
           }
         ]
