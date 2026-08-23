@@ -169,6 +169,47 @@ node --env-file=.env scripts/flows.mjs restore   # push the flows
 safe to re-run. A new unit needs its chapter listed in `CHAPTERS` at the top of
 the script.
 
+## House style
+
+These are the owner's rules, from a line-by-line review of 3.1. They override
+anything below that disagrees.
+
+**Words**
+- Prefer the familiar word to the far-fetched.
+- Prefer the concrete word to the abstract.
+- Prefer the single word to the circumlocution.
+- Prefer the short word to the long.
+
+**One idea per sentence.** Never extend with a colon, an em-dash, or a phrase
+like "differs by one thing".
+
+| Don't | Do |
+| --- | --- |
+| `print and println differ by one thing: the line ending.` | `Using print instead of println does not start a new line.` |
+| `Two prints in a row this time. What comes out?` | `What comes out?` |
+| `This one will not run. Something is missing.` | `Fix this so it runs.` |
+| `Tap the lines in order to make the output below.` | `Tap the lines in order.` |
+| `Two the test always asks.` | *(delete it)* |
+
+**One highlight per screen.** Point labels render as highlights. A screen with
+three labels pointing at three different kinds of thing has no focus at all.
+Every label must be a literal token from the code — `System.out.println`, `;`,
+`" "` — never an abstract phrase like "three commands" or "the spaces count".
+
+**Cut anything that is not the point.** No foreshadowing. No screen that
+repeats one already taught. No screen that exists only to be pleasant.
+
+**Never show the answer above the question.** Check every `trace` step: if its
+`code` contains the correct syntax, a "which one is right" question is free.
+
+**Shape: ask, teach, tie back.**
+1. Open with the goal, as a question.
+2. Teach only what answers it.
+3. End by making the student build the thing from the opening.
+
+**Widgets over text.** Prefer an interactive step to a paragraph. Students who
+dislike reading will not read a paragraph.
+
 ### Before you open the PR
 
 ```bash

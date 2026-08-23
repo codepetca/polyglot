@@ -29,3 +29,4 @@ yarn-error.log*
 
 # prisma generated client
 /lib/generated
+tsconfig.tsbuildinfo

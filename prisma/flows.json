@@ -16,84 +16,67 @@
           {
             "id": "p_task",
             "kind": "teach",
-            "instruction": "We're building a game's title screen.",
-            "points": [
-              {
-                "label": "title, menu, prompt",
-                "text": "A title at the top, two choices, and a line asking the player to pick one."
-              },
-              {
-                "label": "\"*** DUNGEON QUEST ***\"",
-                "text": "Every line a program has ever printed is just text it was told to print, character for character."
-              },
-              {
-                "label": "System.out.println",
-                "text": "One command builds the entire screen. You meet its no-newline twin later in the lesson."
-              }
-            ]
-          },
-          {
-            "id": "p_println",
-            "kind": "teach",
-            "instruction": "This is the command that puts text on the screen.",
+            "instruction": "We are building a game title screen. How do we print something on it?",
             "code": "System.out.println(\"*** DUNGEON QUEST ***\");",
             "output": "*** DUNGEON QUEST ***",
             "points": [
               {
                 "label": "System.out.println",
-                "text": "Spelled exactly like that. Capital S, everything else lowercase, no spaces."
+                "text": "This is the command that prints."
+              }
+            ]
+          },
+          {
+            "id": "p_parts",
+            "kind": "teach",
+            "instruction": "Look at the parts of the command.",
+            "code": "System.out.println(\"*** DUNGEON QUEST ***\");",
+            "output": "*** DUNGEON QUEST ***",
+            "points": [
+              {
+                "label": "System.out.println",
+                "text": "Capital S. Everything else is lowercase."
               },
               {
-                "label": "the quotes",
-                "text": "Whatever sits between the double quotes is what appears. Java does not read it — it just prints it."
+                "label": "( )",
+                "text": "The message goes inside the brackets."
               },
               {
-                "label": "the quotes vanish",
-                "text": "They mark where the text starts and stops. They never show up in the output."
+                "label": "\" \"",
+                "text": "Text goes inside quotes. The quotes are not printed."
               },
               {
-                "label": "the semicolon",
-                "text": "Ends the instruction. Every line like this needs one."
+                "label": ";",
+                "text": "Ends the command."
               }
             ]
           },
           {
             "id": "p_tweak",
             "kind": "tweak",
-            "instruction": "Rename the game to anything you like.",
+            "instruction": "Change the title to your own.",
             "code": "System.out.println(\"*** DUNGEON QUEST ***\");",
             "target": "*** DUNGEON QUEST ***",
-            "hint": "Change the text between the quotes.",
-            "after": "Your game, your title.",
-            "skills": [
-              "print a line of text with System.out.println"
-            ]
+            "hint": "Change the text inside the quotes.",
+            "after": "Your game, your title."
           },
           {
             "id": "p_stack",
             "kind": "teach",
-            "instruction": "Add the menu. Each println starts a new line.",
+            "instruction": "Each println starts a new line.",
             "code": "System.out.println(\"*** DUNGEON QUEST ***\");\nSystem.out.println(\"  1. New game\");\nSystem.out.println(\"  2. Quit\");",
             "output": "*** DUNGEON QUEST ***\n  1. New game\n  2. Quit",
             "points": [
               {
-                "label": "three commands",
-                "text": "Three printlns, three lines. They run top to bottom, in order."
-              },
-              {
                 "label": "ln",
-                "text": "The ln on the end means \"then move to the next line\". That is why they stack instead of running together."
-              },
-              {
-                "label": "the spaces count",
-                "text": "The two spaces before 1. are inside the quotes, so they get printed too. That is how the menu is indented."
+                "text": "The ln means: go to a new line after printing."
               }
             ]
           },
           {
             "id": "p_cmp",
             "kind": "compare",
-            "instruction": "print and println differ by one thing: the line ending.",
+            "instruction": "Using print instead of println does not start a new line.",
             "sides": [
               {
                 "label": "print",
@@ -105,148 +88,56 @@
                 "code": "System.out.println(\"Hi\");\nSystem.out.println(\"Bye\");",
                 "output": "Hi\nBye"
               }
-            ],
-            "points": [
-              {
-                "label": "print",
-                "text": "Leaves the line open, so Bye continues on it."
-              },
-              {
-                "label": "println",
-                "text": "Ends the line, so Bye starts a new one."
-              }
-            ],
-            "skills": [
-              "keep the cursor on the same line with System.out.print"
-            ]
-          },
-          {
-            "id": "p_blank",
-            "kind": "teach",
-            "instruction": "A gap under the title makes it readable.",
-            "code": "System.out.println(\"*** DUNGEON QUEST ***\");\nSystem.out.println(\"\");\nSystem.out.println(\"  1. New game\");\nSystem.out.println(\"  2. Quit\");",
-            "output": "*** DUNGEON QUEST ***\n\n  1. New game\n  2. Quit",
-            "points": [
-              {
-                "label": "println(\"\")",
-                "text": "Nothing between the quotes, so it prints nothing — then moves to the next line anyway."
-              },
-              {
-                "label": "\"\"",
-                "text": "Zero characters printed, and the line still ends. That is a blank line."
-              },
-              {
-                "label": "title, gap, menu",
-                "text": "Same words, easier to read. Where the gaps go is a decision you make, not something Java does for you."
-              }
-            ]
-          },
-          {
-            "id": "p_print",
-            "kind": "teach",
-            "instruction": "The last line is different — the player types right after it.",
-            "code": "System.out.println(\"*** DUNGEON QUEST ***\");\nSystem.out.println(\"\");\nSystem.out.println(\"  1. New game\");\nSystem.out.println(\"  2. Quit\");\nSystem.out.println(\"\");\nSystem.out.print(\"Choose 1-2: \");",
-            "output": "*** DUNGEON QUEST ***\n\n  1. New game\n  2. Quit\n\nChoose 1-2: ",
-            "points": [
-              {
-                "label": "print, no ln",
-                "text": "Prints and STAYS on the line. The cursor waits right after the text."
-              },
-              {
-                "label": "Choose 1-2: 2",
-                "text": "print keeps the answer on the question line. println would drop it below."
-              },
-              {
-                "label": "the space",
-                "text": "The space after the colon is inside the quotes, so the answer will not touch the question mark."
-              },
-              {
-                "label": "print vs println",
-                "text": "Identical commands apart from one thing: println ends the line, print leaves it open."
-              }
             ]
           },
           {
             "id": "p_predict",
             "kind": "predict",
-            "instruction": "Two prints in a row this time. What comes out?",
+            "instruction": "What comes out?",
             "code": "System.out.print(\"Load\");\nSystem.out.print(\"ing\");\nSystem.out.println(\"...\");",
             "opts": [
+              "Load ing ...",
               "Loading...",
-              "(an error)",
               "Load\ning\n...",
-              "Load ing ..."
+              "An error"
             ],
-            "correct": 0,
-            "why": "Neither print ends its line, so all three land on one line. Only the final println ends it.",
+            "correct": 1,
+            "why": "print does not end the line, so all three land on one line.",
             "skills": [
               "keep the cursor on the same line with System.out.print"
             ]
           },
           {
-            "id": "p_run3",
-            "kind": "run",
-            "instruction": "Run the finished title screen.",
-            "code": "System.out.println(\"*** DUNGEON QUEST ***\");\nSystem.out.println(\"\");\nSystem.out.println(\"  1. New game\");\nSystem.out.println(\"  2. Quit\");\nSystem.out.println(\"\");\nSystem.out.print(\"Choose 1-2: \");",
-            "after": "You built a whole screen out of one command and its no-newline twin.",
-            "skills": [
-              "stack several printed lines to build a screen"
-            ]
-          },
-          {
-            "id": "p_sharp",
-            "kind": "teach",
-            "instruction": "println ends the line. print does not.",
-            "code": "System.out.println(\"one\");\nSystem.out.print(\"two\");\nSystem.out.println(\"three\");",
-            "output": "one\ntwothree",
-            "points": [
+            "id": "p_real",
+            "kind": "bucket",
+            "instruction": "Which of these really print in Java?",
+            "buckets": [
+              "Real",
+              "Not a command"
+            ],
+            "items": [
               {
-                "label": "System.out.println",
-                "text": "Capital S, then out, then println all in lowercase. printLine, System.println and bare print do not exist."
+                "text": "System.out.println(\"Hi\");",
+                "bucket": 0
               },
               {
-                "label": "println",
-                "text": "Prints, then ENDS the line."
+                "text": "System.out.print(\"Hi\");",
+                "bucket": 0
               },
               {
-                "label": "print",
-                "text": "Prints, and LEAVES the line open. The next thing continues right after it."
+                "text": "System.println(\"Hi\");",
+                "bucket": 1
               },
               {
-                "label": "one / twothree",
-                "text": "Line 1 used println, so it ended. Line 2 used print, so it stayed open — and line 3 landed on the same line as \"two\"."
-              }
-            ]
-          },
-          {
-            "id": "p_mcq",
-            "kind": "trace",
-            "instruction": "Two the test always asks.",
-            "code": "System.out.println(\"Hello Karel\");",
-            "questions": [
-              {
-                "prompt": "Which one actually prints in Java?",
-                "opts": [
-                  "System.println(\"Hello Karel\");",
-                  "System.out.println(\"Hello Karel\");",
-                  "print \"Hello Karel\";",
-                  "System.out.printLine(\"Hello Karel\");"
-                ],
-                "correct": 1,
-                "why": "println is all lowercase, and it has to be System.out in front. The other three do not exist."
+                "text": "System.out.printLine(\"Hi\");",
+                "bucket": 1
               },
               {
-                "prompt": "System.out.println(\"Hello\"); then System.out.println(\"World\"); prints how many lines?",
-                "opts": [
-                  "0",
-                  "1",
-                  "2",
-                  "3"
-                ],
-                "correct": 2,
-                "why": "Each println ends its own line, so the two words land on separate lines."
+                "text": "print \"Hi\";",
+                "bucket": 1
               }
             ],
+            "why": "Java only knows print and println, and only through System.out.",
             "skills": [
               "print a line of text with System.out.println"
             ]
@@ -254,54 +145,38 @@
           {
             "id": "p_d1",
             "kind": "fix",
-            "instruction": "This one will not run. Something is missing.",
+            "instruction": "Fix this so it runs.",
             "code": "System.out.println(Game over);",
             "target": "Game over",
             "solution": "System.out.println(\"Game over\");",
-            "hint": "Text has to be wrapped in double quotes, or Java tries to read it as code.",
-            "after": "Without quotes Java thinks Game and over are things you defined. They are not.",
+            "hint": "Text needs quotes around it.",
+            "after": "Without quotes, Java reads Game and over as code.",
             "skills": [
               "print a line of text with System.out.println"
             ]
           },
           {
-            "id": "p_d2",
-            "kind": "arrange",
-            "instruction": "Tap the lines in order to make the output below.",
-            "lines": [
-              "System.out.print(\"Loading\");",
-              "System.out.println(\"...\");",
-              "System.out.println(\"Ready!\");"
-            ],
-            "target": "Loading...\nReady!",
-            "hint": "print keeps the line open. println closes it.",
-            "after": "You now control exactly where each line breaks.",
-            "skills": [
-              "keep the cursor on the same line with System.out.print"
-            ]
-          },
-          {
             "id": "p_d3",
             "kind": "write",
-            "instruction": "Introduce yourself in two lines.",
-            "code": "// line 1 says your name, line 2 says what you like\n",
+            "instruction": "Print these two lines exactly.",
+            "code": "// line 1: My name is Ada.\n// line 2: I like comedy.\n",
             "target": "My name is Ada.\nI like comedy.",
             "solution": "System.out.println(\"My name is Ada.\");\nSystem.out.println(\"I like comedy.\");",
-            "hint": "Two printlns. Line 1 must contain the word name, line 2 the word like.",
+            "hint": "One println per line. Copy the text exactly.",
             "after": "That is CodeHS exercise 3.1.5, Welcome Program.",
             "skills": [
               "stack several printed lines to build a screen"
             ]
           },
           {
-            "id": "p_d4",
+            "id": "p_final",
             "kind": "write",
-            "instruction": "Last one: draw this exactly.",
-            "code": "// four printlns, one per line of the drawing\n",
-            "target": "   /)___\n  /     O|___\n /           )\n/       )___/",
-            "solution": "System.out.println(\"   /)___\");\nSystem.out.println(\"  /     O|___\");\nSystem.out.println(\" /           )\");\nSystem.out.println(\"/       )___/\");",
-            "hint": "One println per line. The spaces at the start of each line go inside the quotes.",
-            "after": "That is CodeHS exercise 3.1.6, ASCII Art. Lesson done.",
+            "instruction": "Now build the title screen.",
+            "code": "// *** DUNGEON QUEST ***\n//   1. New game\n//   2. Quit\n",
+            "target": "*** DUNGEON QUEST ***\n  1. New game\n  2. Quit",
+            "solution": "System.out.println(\"*** DUNGEON QUEST ***\");\nSystem.out.println(\"  1. New game\");\nSystem.out.println(\"  2. Quit\");",
+            "hint": "Three printlns. The two spaces before 1. go inside the quotes.",
+            "after": "You built the screen you started with.",
             "skills": [
               "stack several printed lines to build a screen"
             ]
