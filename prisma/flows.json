@@ -5184,6 +5184,20 @@
             ]
           },
           {
+            "id": "p_order",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "The values are right. Their order is not.",
+            "code": "public void run() {\n  attack(7, \"goblin\");\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
+            "target": "You hit the goblin for 7 damage.",
+            "solution": "public void run() {\n  attack(\"goblin\", 7);\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
+            "hint": "The first argument fills the first parameter, whatever you meant it to do.",
+            "after": "Java matched 7 against String enemy and gave up. Arguments are matched by position, never by what looks sensible.",
+            "skills": [
+              "tell an argument apart from a parameter"
+            ]
+          },
+          {
             "id": "p_write",
             "kind": "write",
             "wrap": "methods",
@@ -5601,6 +5615,52 @@
             ]
           },
           {
+            "id": "j_spot",
+            "kind": "spot",
+            "instruction": "The tags are right and no tool will read them. Tap the line to blame.",
+            "code": "/*\n * Works out damage from a number of hits.\n * @param hits how many hits landed\n * @return the damage dealt\n */\npublic int damage(int hits) {\n  return hits * 3;\n}",
+            "correct": 0,
+            "why": "A Javadoc opens with /** - two stars. With one star it is an ordinary comment, so Java and every documentation tool skip straight past the tags. The content was never the problem.",
+            "skills": [
+              "write a Javadoc comment for a method"
+            ]
+          },
+          {
+            "id": "j_bucket",
+            "kind": "bucket",
+            "instruction": "The method is public int damage(int hits). What belongs in its Javadoc?",
+            "buckets": [
+              "Belongs",
+              "Does not"
+            ],
+            "items": [
+              {
+                "text": "A first line saying what the method does",
+                "bucket": 0
+              },
+              {
+                "text": "@param hits how many hits landed",
+                "bucket": 0
+              },
+              {
+                "text": "@return the total damage dealt",
+                "bucket": 0
+              },
+              {
+                "text": "@param damage the number that comes back",
+                "bucket": 1
+              },
+              {
+                "text": "The body of the method, copied in underneath",
+                "bucket": 1
+              }
+            ],
+            "why": "@param names a PARAMETER. damage is the method, not a parameter, so there is nothing for that tag to describe. And the point of the comment is to save the reader from the body - repeating it defeats it.",
+            "skills": [
+              "use @param and @return correctly"
+            ]
+          },
+          {
             "id": "j_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -5802,6 +5862,20 @@
             ]
           },
           {
+            "id": "s_last",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "\"Ada\" has three characters. This asks for one that is not there.",
+            "code": "public void run() {\n  String word = \"Ada\";\n  System.out.println(word.charAt(3));\n}",
+            "target": "a",
+            "solution": "public void run() {\n  String word = \"Ada\";\n  System.out.println(word.charAt(2));\n}",
+            "hint": "length() is 3, and positions start at 0. So what is the LAST position?",
+            "after": "A is 0, d is 1, a is 2. The last position is always length() - 1, which is why charAt(length()) always crashes.",
+            "skills": [
+              "count positions from zero"
+            ]
+          },
+          {
             "id": "s_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -5995,6 +6069,20 @@
             "after": "<= would ask for position 3 in a 3-character String and crash.",
             "skills": [
               "loop through the characters of a String"
+            ]
+          },
+          {
+            "id": "c_quote",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "charAt gives a char. This compares it to something else.",
+            "code": "public void run() {\n  String word = \"gold\";\n  char first = word.charAt(0);\n  System.out.println(first == \"g\");\n}",
+            "target": "true",
+            "solution": "public void run() {\n  String word = \"gold\";\n  char first = word.charAt(0);\n  System.out.println(first == 'g');\n}",
+            "hint": "Single quotes make a char. Double quotes make a String, and the two types cannot be compared.",
+            "after": "A char is a single character and a String is an object holding characters. \"g\" is not a char, so the comparison will not even compile.",
+            "skills": [
+              "use Character methods to test a character"
             ]
           },
           {
