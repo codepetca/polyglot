@@ -32,7 +32,7 @@
 
 export type FlowStep = {
   id: string;
-  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch";
+  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch" | "card";
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -121,6 +121,20 @@ export type FlowStep = {
   exprs?: string[];
   // teach: short labelled explanation lines shown beside/below the code.
   points?: { label: string; text: string }[];
+  // PLAIN PROSE. Short lines, rendered as ordinary sentences with no label and
+  // no highlight. This exists because `points` was the only way to say anything,
+  // so every explanation got forced into a highlighted label — including ones
+  // where the label was filler ("after that", "so", "the rule"). If a sentence
+  // does not need a piece of code attached to it, it belongs here.
+  body?: string[];
+  // A NUMBERED LIST of rules, each with an optional example. For content that
+  // genuinely is an enumerated set — naming rules, an ordered procedure. Not a
+  // highlight in sight.
+  rules?: { text: string; example?: string }[];
+  // card: the variables the student fills in. Their typed value is checked
+  // against the declared type (quotes for String, a decimal point for double,
+  // single quotes for char), then a card is drawn from what they entered.
+  vars?: { type: string; name: string; placeholder?: string; label?: string }[];
   prompt?: string;
   rubric?: string;
   persona?: string;
@@ -164,7 +178,15 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       case "run": if (!s.code) errors.push(`${at}: needs code`); break;
       case "tweak": if (!s.code || s.target === undefined) errors.push(`${at}: needs code + target (the ORIGINAL output)`); break;
       case "teach":
-        if (!s.code && !(s.points || []).length) errors.push(`${at}: needs code and/or points[]`);
+        if (!s.code && !(s.points || []).length && !(s.body || []).length && !(s.rules || []).length) {
+          errors.push(`${at}: needs code, points[], body[] or rules[]`);
+        }
+        break;
+      case "card":
+        if (!s.vars || s.vars.length < 2) errors.push(`${at}: needs 2+ vars`);
+        for (const v of s.vars || []) {
+          if (!v.type || !v.name) errors.push(`${at}: every var needs a type and a name`);
+        }
         break;
       case "note": break;
       case "compare":
@@ -272,7 +294,8 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       for (let i = rights.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rights[i], rights[j]] = [rights[j], rights[i]]; }
       return { ...base, lefts, rights };
     }
-    case "teach": return { ...base, points: s.points, output: s.output };
+    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, output: s.output };
+    case "card": return { ...base, vars: s.vars };
     case "compare": return { ...base, sides: s.sides, points: s.points };
     // Blank out every cell the student is meant to work out; the answers stay
     // on the server like every other answer key.

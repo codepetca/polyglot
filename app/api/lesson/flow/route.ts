@@ -214,12 +214,12 @@ Return ONLY JSON: {"pass": true|false, "reply": "one warm sentence — if pass: 
       }
     }
 
-    // run/tweak/fix/arrange/write finishing (client-verified vs the visible
+    // run/tweak/fix/arrange/write/card finishing (client-verified vs the visible
     // target; MASTERED still only comes from the server-graded clean quiz)
     case "complete": {
       const attempts = Math.max(1, Number(body.attempts) || 1);
       if (isStudent) {
-        if (step.kind === "fix" || step.kind === "arrange" || step.kind === "write") {
+        if (step.kind === "fix" || step.kind === "arrange" || step.kind === "write" || step.kind === "card") {
           logEvent({ type: EVENT.QUIZ_ANSWER, userId: me.id, classId: me.classId, lessonId: flow.lessonId, questionId: step.id, correct: attempts <= 2, chosen: null, source: "practice" });
           // These are the hands-on steps. evidence() cannot cover them: it gates
           // on body.attempt, which this action does not send.

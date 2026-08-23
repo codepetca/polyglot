@@ -48,6 +48,9 @@ type Step = {
   rights?: string[];
   prompt?: string;
   points?: { label: string; text: string }[];
+  body?: string[];
+  rules?: { text: string; example?: string }[];
+  vars?: { type: string; name: string; placeholder?: string; label?: string }[];
   output?: string;
   options?: { label: string; goto: string }[];
 };
@@ -218,6 +221,8 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   // A bare "running…" for 8s reads as broken, so count up and reassure.
   const [elapsed, setElapsed] = useState(0);
   const [won, setWon] = useState(false);
+  const [cardVals, setCardVals] = useState<string[]>([]);
+  const [cardErrs, setCardErrs] = useState<(string | null)[]>([]);
   const [reveal, setReveal] = useState<{ correct: boolean; correctIndex?: number; why?: string; chosen?: number } | null>(null);
   const [picked, setPicked] = useState<string[]>([]); // arrange
   // predict/spot: which option is SELECTED but not yet committed (see below).
@@ -372,6 +377,11 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
     <div className={`panel flowstep ${won ? "won" : ""}`}>
       <div className="flowq">{step.instruction}</div>
       <Assist text={assist?.instruction} lang={lang} />
+      {(step.body || []).length > 0 && (
+        <div className="teachbody">
+          {(step.body || []).map((line, j) => <p key={j}>{line}</p>)}
+        </div>
+      )}
 
       {/* ── code surface ── */}
       {step.kind === "spot" ? (
@@ -733,6 +743,69 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         </div>
       )}
 
+      {step.kind === "card" && (
+        <div className="cardstep">
+          <div className="cardform">
+            {(step.vars || []).map((v, j) => (
+              <div className="cardrow" key={j}>
+                <code className="cv-decl">
+                  <span className="cv-type">{v.type}</span> {v.name} =
+                </code>
+                <input
+                  className={`cv-in ${cardErrs[j] ? "bad" : ""}`}
+                  value={cardVals[j] ?? ""}
+                  placeholder={v.placeholder || ""}
+                  aria-label={`value for ${v.name}`}
+                  disabled={won}
+                  onChange={(ev) => {
+                    const next = [...cardVals];
+                    next[j] = ev.target.value;
+                    setCardVals(next);
+                    if (cardErrs[j]) { const e2 = [...cardErrs]; e2[j] = null; setCardErrs(e2); }
+                  }}
+                />
+                <span className="cv-semi">;</span>
+                {cardErrs[j] ? <span className="cv-err">{cardErrs[j]}</span> : null}
+              </div>
+            ))}
+          </div>
+          {!won && (
+            <button
+              className="btn primary"
+              onClick={() => {
+                const vs = step.vars || [];
+                const errs = vs.map((v, j) => checkLiteral(v.type, (cardVals[j] ?? "").trim()));
+                setCardErrs(errs);
+                if (errs.every((e2) => !e2)) {
+                  setWon(true);
+                  post({ action: "complete", attempts: fails + 1 });
+                } else {
+                  onAttempt(step.id);
+                }
+              }}
+            >
+              Make my card
+            </button>
+          )}
+          {won && (
+            <div className="pcard">
+              <div className="pc-top">
+                <span className="pc-name">{strip(cardVals[0] ?? "")}</span>
+                {(step.vars || [])[4] ? <span className="pc-rank">{strip(cardVals[4] ?? "")}</span> : null}
+              </div>
+              <div className="pc-rows">
+                {(step.vars || []).slice(1, 4).map((v, j) => (
+                  <div className="pc-row" key={j}>
+                    <span>{v.label || v.name}</span>
+                    <b>{strip(cardVals[j + 1] ?? "")}</b>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {step.kind === "teach" && (
         <div className="teachcard">
           {step.output !== undefined && (
@@ -740,6 +813,16 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
               <div className="lbl">WHAT IT PRINTS</div>
               <pre>{step.output || "(nothing)"}</pre>
             </div>
+          )}
+          {(step.rules || []).length > 0 && (
+            <ol className="rulelist">
+              {(step.rules || []).map((r, j) => (
+                <li key={j}>
+                  <span className="rl-t">{r.text}</span>
+                  {r.example ? <code className="rl-e">{r.example}</code> : null}
+                </li>
+              ))}
+            </ol>
           )}
           {(step.points || []).map((p, j) => (
             <div className="teachpoint" key={j}>
@@ -889,4 +972,33 @@ function FlowDone({ total, firstTry, nextHref }: { total: number; firstTry: numb
       )}
     </div>
   );
+}
+
+/**
+ * Checks a typed value against the type declared next to it. This IS the
+ * lesson: a String needs double quotes, a char needs single ones, a double
+ * needs a decimal point. Returning the reason rather than a boolean lets the
+ * student see which rule they missed.
+ */
+function checkLiteral(type: string, v: string): string | null {
+  if (!v) return "needs a value";
+  switch (type) {
+    case "String":
+      return /^".*"$/.test(v) ? null : 'text needs double quotes, like "Ada"';
+    case "int":
+      return /^-?\d+$/.test(v) ? null : "a whole number, no decimal point";
+    case "double":
+      return /^-?\d+\.\d+$/.test(v) ? null : "a number with a decimal point, like 2.5";
+    case "boolean":
+      return v === "true" || v === "false" ? null : "only true or false";
+    case "char":
+      return /^'.'$/.test(v) ? null : "one character in single quotes, like 'A'";
+    default:
+      return null;
+  }
+}
+
+/** Strips the quotes so the finished card shows the value, not the literal. */
+function strip(v: string): string {
+  return v.trim().replace(/^["']|["']$/g, "");
 }

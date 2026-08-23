@@ -50,6 +50,8 @@ app/
       page.tsx
     usage/
       page.tsx
+    users/
+      page.tsx
   api/
     account/
       route.ts
@@ -59,6 +61,14 @@ app/
     ai/
       route.ts
     auth/
+      forgot/
+        route.ts
+      google/
+        callback/
+          route.ts
+        test-sync/
+          route.ts
+        route.ts
       join/
         route.ts
       login/
@@ -66,6 +76,10 @@ app/
       logout/
         route.ts
       password/
+        route.ts
+      totp/
+        route.ts
+      verify/
         route.ts
     classes/
       route.ts
@@ -146,8 +160,9 @@ app/
 components/
   account/
     ProfileForm.tsx
+    TotpSetup.tsx
   admin/
-    StaffManager.tsx
+    UserManager.tsx
   lesson/
     HighlightOnLoad.tsx
     LessonQuizBlock.tsx
@@ -159,6 +174,7 @@ components/
   student/
     ExamRunner.tsx
     FloatingWindow.tsx
+    MasteryQuizRunner.tsx
     ScratchpadPanel.tsx
     StudentTools.tsx
     TestResult.tsx
@@ -172,6 +188,7 @@ components/
     TestGrader.tsx
     TestList.tsx
   CodeEditor.tsx
+  Collapsible.tsx
   Editor.tsx
   Forbidden.tsx
   JoinForm.tsx
@@ -197,6 +214,7 @@ lib/
     types.ts
   auth.ts
   db.ts
+  email.ts
   grading.ts
   messaging.ts
   progress.ts
@@ -205,6 +223,7 @@ lib/
   sanitize.ts
   settings.ts
   text.ts
+  totp.ts
 prisma/
   curriculum.seed.json
   schema.prisma
@@ -228,6 +247,158 @@ WORKING-SOLO.md
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="app/api/auth/google/callback/route.ts">
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const code = searchParams.get("code");
+
+  if (!code) {
+    return NextResponse.json({ error: "No authorization code returned from Google." }, { status: 400 });
+  }
+
+  try {
+    // 1. Exchange the authorization code for access and refresh tokens
+    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        client_id: process.env.GOOGLE_CLIENT_ID || "",
+        client_secret: process.env.GOOGLE_CLIENT_SECRET || "",
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI || "",
+        grant_type: "authorization_code",
+      }),
+    });
+
+    const tokenData = await tokenResponse.json();
+
+    if (tokenData.error) {
+      return NextResponse.json({ error: tokenData.error_description || "Token exchange failed." }, { status: 400 });
+    }
+
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token; // Save this in your DB associated with the teacher!
+
+    // 2. Fetch the teacher's Google Classroom courses
+    const coursesResponse = await fetch("https://classroom.googleapis.com/v1/courses", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const coursesData = await coursesResponse.json();
+
+    // 3. For testing, we will just echo the list of classes Google returned
+    return NextResponse.json({
+      message: "Successfully authenticated with Google Classroom!",
+      refreshToken: refreshToken ? "Received and ready to save" : "Not sent (user already authorized)",
+      courses: coursesData.courses || [],
+    });
+
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Internal server error during authentication." }, { status: 500 });
+  }
+}
+</file>
+
+<file path="app/api/auth/google/test-sync/route.ts">
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const token = searchParams.get("token");
+  const courseId = searchParams.get("courseId");
+
+  if (!token || !courseId) {
+    return NextResponse.json({ error: "Missing '?token=...' or '?courseId=...' in your browser URL." }, { status: 400 });
+  }
+
+  try {
+    // ─── ACTION 1: READ EXISTING ANNOUNCEMENTS ───
+    const readResponse = await fetch(`https://classroom.googleapis.com/v1/courses/${courseId}/announcements`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const initialAnnouncements = await readResponse.json();
+
+    // ─── ACTION 2: PUSH (WRITE) A NEW ANNOUNCEMENT ───
+    const writeAnnounceResponse = await fetch(`https://classroom.googleapis.com/v1/courses/${courseId}/announcements`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: `Hello class! This announcement was posted automatically by classOS on ${new Date().toLocaleTimeString()}!`,
+        state: "PUBLISHED",
+      }),
+    });
+    const createdAnnouncement = await writeAnnounceResponse.json();
+
+    // ─── ACTION 3: PUSH (WRITE) A NEW ASSIGNMENT (COURSEWORK) ───
+    const writeWorkResponse = await fetch(`https://classroom.googleapis.com/v1/courses/${courseId}/courseWork`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: `AP Java Homework ${Math.floor(Math.random() * 100)}`,
+        description: "Complete Unit 2.1 Graded Coding Exercise on printing inside your classOS workspace.",
+        workType: "ASSIGNMENT",
+        state: "PUBLISHED",
+        maxPoints: 10,
+      }),
+    });
+    const createdAssignment = await writeWorkResponse.json();
+
+    // ─── ACTION 4: READ LATEST ANNOUNCEMENTS (PROVE THE UPDATE) ───
+    const readLatestResponse = await fetch(`https://classroom.googleapis.com/v1/courses/${courseId}/announcements`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const updatedAnnouncements = await readLatestResponse.json();
+
+    // ─── RETURN THE PROOF ───
+    return NextResponse.json({
+      status: "SUCCESS! Two-way communication proven.",
+      step1_initialAnnouncementsInClassroom: initialAnnouncements.announcements || [],
+      step2_announcementWePushed: createdAnnouncement,
+      step3_assignmentWePushed: createdAssignment,
+      step4_updatedAnnouncementsInClassroom: updatedAnnouncements.announcements || []
+    });
+
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Sync test failed." }, { status: 500 });
+  }
+}
+</file>
+
+<file path="app/api/auth/google/route.ts">
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+  
+  const options = {
+    redirect_uri: process.env.GOOGLE_REDIRECT_URI || "",
+    client_id: process.env.GOOGLE_CLIENT_ID || "",
+    access_type: "offline", // Essential to get a refresh_token for background syncing
+    response_type: "code",
+    prompt: "consent",
+    scope: [
+      "https://www.googleapis.com/auth/classroom.courses.readonly",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ].join(" "),
+  };
+
+  const qs = new URLSearchParams(options);
+  return NextResponse.redirect(`${rootUrl}?${qs.toString()}`);
+}
+</file>
 
 <file path="app/admin/usage/page.tsx">
 import { redirect } from "next/navigation";
@@ -321,6 +492,30 @@ export default async function UsagePage() {
 }
 </file>
 
+<file path="app/admin/users/page.tsx">
+import { redirect } from "next/navigation";
+import { currentUser } from "@/lib/auth";
+import Forbidden from "@/components/Forbidden";
+import UserManager from "@/components/admin/UserManager";
+
+export default async function UsersPage() {
+  const me = await currentUser();
+  if (!me) redirect("/login");
+  if (me.role !== "ADMIN") return <Forbidden need="Admin" />;
+  return (
+    <div className="main" style={{ maxWidth: 1000 }}>
+      <div className="crumb">ADMIN · ACCOUNTS</div>
+      <h1 className="title" style={{ marginBottom: 6 }}>All accounts</h1>
+      <p style={{ color: "var(--muted)", marginBottom: 16 }}>
+        Full control: rename, change email, set a new password, unlock, verify, disable 2FA, remove. (Passwords are hashed —
+        they can be replaced, never viewed.)
+      </p>
+      <UserManager meId={me.id} />
+    </div>
+  );
+}
+</file>
+
 <file path="app/api/account/route.ts">
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
@@ -345,121 +540,49 @@ export async function POST(req: Request) {
 }
 </file>
 
-<file path="app/api/admin/users/route.ts">
+<file path="app/api/auth/forgot/route.ts">
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireRoleApi, hashPassword } from "@/lib/auth";
-import { makeJoinCode } from "@/lib/auth";
-
-// Admin-only staff management: add / rename / remove teachers (and other admins).
-export async function POST(req: Request) {
-  const me = await requireRoleApi("ADMIN");
-  if (me instanceof NextResponse) return me;
-  const b = await req.json();
-
-  switch (b.action) {
-    case "addTeacher": {
-      const email = String(b.email || "").toLowerCase().trim();
-      const name = String(b.name || "").trim().slice(0, 60);
-      const password = String(b.password || "");
-      if (!email || !name) return NextResponse.json({ error: "Name and email required." }, { status: 400 });
-      if (password.length < 8) return NextResponse.json({ error: "Password must be 8+ characters." }, { status: 400 });
-      const exists = await prisma.user.findUnique({ where: { email } });
-      if (exists) return NextResponse.json({ error: "That email is already in use." }, { status: 409 });
-      await prisma.user.create({ data: { name, email, role: b.role === "ADMIN" ? "ADMIN" : "TEACHER", passwordHash: hashPassword(password) } });
-      return NextResponse.json({ ok: true });
-    }
-    case "rename": {
-      await prisma.user.update({ where: { id: b.id }, data: { name: String(b.name || "").trim().slice(0, 60) || "Unnamed" } });
-      return NextResponse.json({ ok: true });
-    }
-    case "resetPassword": {
-      const pw = makeJoinCode(4) + makeJoinCode(4); // 8-char temp
-      await prisma.user.update({ where: { id: b.id }, data: { passwordHash: hashPassword(pw) } });
-      return NextResponse.json({ ok: true, password: pw });
-    }
-    case "remove": {
-      if (b.id === me.id) return NextResponse.json({ error: "You can't remove yourself." }, { status: 400 });
-      const u = await prisma.user.findUnique({ where: { id: b.id } });
-      if (!u || u.role === "STUDENT") return NextResponse.json({ error: "Not a staff account." }, { status: 400 });
-      await prisma.user.delete({ where: { id: b.id } });
-      return NextResponse.json({ ok: true });
-    }
-    default:
-      return NextResponse.json({ error: "unknown action" }, { status: 400 });
-  }
-}
-</file>
-
-<file path="app/api/auth/join/route.ts">
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { startSession } from "@/lib/auth";
+import { hashPassword } from "@/lib/auth";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
+import { isEmailConfigured, issueCode, sendMail, consumeCode } from "@/lib/email";
 
-const MAX_CLASS_SIZE = 100;
-
-// Student join: class code + display name. Returning students who type the
-// same name in the same class get their existing account (progress intact) —
-// the deliberate classroom-simple tradeoff, visible to the teacher either way.
+// Forgot password. POST {email} → emails a reset code.
+// POST {email, code, newPassword} → sets the new password + unlocks.
 export async function POST(req: Request) {
-  const { code, name } = await req.json();
-  const cleanName = String(name || "").trim().slice(0, 40);
-  const cleanCode = String(code || "").trim().toUpperCase();
-  if (!cleanCode || cleanName.length < 2) {
-    return NextResponse.json({ error: "Enter the class code and your name." }, { status: 400 });
-  }
-
-  // Guessing codes / spamming joins gets slow fast.
-  if (!rateLimit(`join:${clientIp(req)}`, 10, 10 * 60 * 1000)) {
+  const { email, code, newPassword } = await req.json();
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (!rateLimit(`forgot:${clientIp(req)}`, 6, 10 * 60 * 1000)) {
     return NextResponse.json({ error: "Too many attempts — wait a few minutes." }, { status: 429 });
   }
 
-  const cls = await prisma.class.findUnique({ where: { joinCode: cleanCode } });
-  if (!cls) return NextResponse.json({ error: "No class with that code — check with your teacher." }, { status: 404 });
+  if (!code) {
+    if (!(await isEmailConfigured())) return NextResponse.json({ error: "Email isn't set up — ask your teacher/admin to reset your password." }, { status: 501 });
+    const user = await prisma.user.findUnique({ where: { email: cleanEmail } });
+    // Always answer the same whether or not the account exists (no probing).
+    if (user) {
+      const c = await issueCode(cleanEmail, "reset");
+      try {
+        await sendMail(cleanEmail, "classOS password reset", `Your password reset code is: ${c}\n\nIt expires in 15 minutes. If you didn't ask for this, ignore it.`);
+      } catch {
+        return NextResponse.json({ error: "Couldn't send email — try again later." }, { status: 502 });
+      }
+    }
+    return NextResponse.json({ sent: true });
+  }
 
-  const existing = await prisma.user.findFirst({
-    where: { classId: cls.id, role: "STUDENT", name: cleanName },
+  if (typeof newPassword !== "string" || newPassword.length < 8) {
+    return NextResponse.json({ error: "New password must be 8+ characters." }, { status: 400 });
+  }
+  const r = await consumeCode(cleanEmail, "reset", code);
+  if (!r.ok) return NextResponse.json({ error: "Wrong or expired code." }, { status: 400 });
+  const user = await prisma.user.findUnique({ where: { email: cleanEmail } });
+  if (!user) return NextResponse.json({ error: "Account not found." }, { status: 404 });
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { passwordHash: hashPassword(newPassword), failedLogins: 0, lockedAt: null, emailVerifiedAt: user.emailVerifiedAt ?? new Date() },
   });
-  if (!existing) {
-    const size = await prisma.user.count({ where: { classId: cls.id } });
-    if (size >= MAX_CLASS_SIZE) return NextResponse.json({ error: "This class is full — tell your teacher." }, { status: 403 });
-  }
-  const student =
-    existing ??
-    (await prisma.user.create({
-      data: { name: cleanName, role: "STUDENT", classId: cls.id },
-    }));
-
-  await startSession(student.id);
-  return NextResponse.json({ ok: true, className: cls.name, returning: Boolean(existing) });
-}
-</file>
-
-<file path="app/api/auth/login/route.ts">
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { verifyPassword, startSession } from "@/lib/auth";
-import { rateLimit, clientIp } from "@/lib/ratelimit";
-
-// Staff sign-in (ADMIN / TEACHER) with email + password.
-export async function POST(req: Request) {
-  const { email, password } = await req.json();
-  if (!email || !password) return NextResponse.json({ error: "Email and password required." }, { status: 400 });
-
-  // Brute-force guard: 5 tries per email+IP, 20 per IP, per 10 minutes.
-  const ip = clientIp(req);
-  if (!rateLimit(`login:${ip}:${email}`, 5, 10 * 60 * 1000) || !rateLimit(`login:${ip}`, 20, 10 * 60 * 1000)) {
-    return NextResponse.json({ error: "Too many attempts — wait a few minutes and try again." }, { status: 429 });
-  }
-
-  const user = await prisma.user.findUnique({ where: { email: String(email).toLowerCase().trim() } });
-  if (!user || !user.passwordHash || !verifyPassword(password, user.passwordHash)) {
-    return NextResponse.json({ error: "Wrong email or password." }, { status: 401 });
-  }
-
-  await startSession(user.id);
-  return NextResponse.json({ ok: true, role: user.role });
+  return NextResponse.json({ ok: true });
 }
 </file>
 
@@ -493,6 +616,86 @@ export async function POST(req: Request) {
   }
   await prisma.user.update({ where: { id: me.id }, data: { passwordHash: hashPassword(next) } });
   return NextResponse.json({ ok: true });
+}
+</file>
+
+<file path="app/api/auth/totp/route.ts">
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { currentUser } from "@/lib/auth";
+import { generateTotpSecret, verifyTotp, otpauthUri } from "@/lib/totp";
+import { encryptSecret, decryptSecret } from "@/lib/settings";
+
+// Google Authenticator enrollment for staff.
+// GET → a fresh secret + otpauth:// URI (shown once; user adds it to the app)
+// POST {secret, code} → verify the first code, then save (encrypted)
+// POST {disable: true, code} → turn 2FA off (requires a current code)
+export async function GET() {
+  const me = await currentUser();
+  if (!me || me.role === "STUDENT") return NextResponse.json({ error: "staff only" }, { status: 403 });
+  const secret = generateTotpSecret();
+  return NextResponse.json({ secret, uri: otpauthUri(me.email || me.name, secret), enabled: Boolean(me.totpSecret) });
+}
+
+export async function POST(req: Request) {
+  const me = await currentUser();
+  if (!me || me.role === "STUDENT") return NextResponse.json({ error: "staff only" }, { status: 403 });
+  const { secret, code, disable } = await req.json();
+
+  if (disable) {
+    if (!me.totpSecret || !verifyTotp(decryptSecret(me.totpSecret), code)) {
+      return NextResponse.json({ error: "Wrong authenticator code." }, { status: 401 });
+    }
+    await prisma.user.update({ where: { id: me.id }, data: { totpSecret: null } });
+    return NextResponse.json({ ok: true, enabled: false });
+  }
+
+  if (!secret || !verifyTotp(secret, code)) {
+    return NextResponse.json({ error: "That code doesn't match — check the app and try again." }, { status: 400 });
+  }
+  await prisma.user.update({ where: { id: me.id }, data: { totpSecret: encryptSecret(secret) } });
+  return NextResponse.json({ ok: true, enabled: true });
+}
+</file>
+
+<file path="app/api/auth/verify/route.ts">
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { startSession } from "@/lib/auth";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
+import { consumeCode } from "@/lib/email";
+
+// Redeem a 6-digit emailed code:
+// - purpose "join": creates the pending student account, signs them in
+// - purpose "verify": marks an existing account's email verified, signs in
+export async function POST(req: Request) {
+  const { email, code, purpose } = await req.json();
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (!rateLimit(`verify:${clientIp(req)}:${cleanEmail}`, 8, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many tries — wait a few minutes." }, { status: 429 });
+  }
+
+  const p = purpose === "verify" ? "verify" : "join";
+  const r = await consumeCode(cleanEmail, p, code);
+  if (!r.ok) return NextResponse.json({ error: "Wrong or expired code." }, { status: 400 });
+
+  if (p === "join") {
+    const pay = r.payload as { classId: string; name: string; passwordHash: string };
+    if (!pay?.classId) return NextResponse.json({ error: "Signup expired — start again." }, { status: 400 });
+    const exists = await prisma.user.findUnique({ where: { email: cleanEmail } });
+    if (exists) return NextResponse.json({ error: "That email already has an account." }, { status: 409 });
+    const student = await prisma.user.create({
+      data: { name: pay.name, email: cleanEmail, passwordHash: pay.passwordHash, role: "STUDENT", classId: pay.classId, emailVerifiedAt: new Date() },
+    });
+    await startSession(student.id);
+    return NextResponse.json({ ok: true });
+  }
+
+  const user = await prisma.user.findUnique({ where: { email: cleanEmail } });
+  if (!user) return NextResponse.json({ error: "Account not found." }, { status: 404 });
+  await prisma.user.update({ where: { id: user.id }, data: { emailVerifiedAt: new Date(), failedLogins: 0 } });
+  await startSession(user.id);
+  return NextResponse.json({ ok: true, role: user.role });
 }
 </file>
 
@@ -604,70 +807,6 @@ export async function POST(req: Request) {
 }
 </file>
 
-<file path="app/api/quiz/route.ts">
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { currentUser } from "@/lib/auth";
-import { recordAttempt } from "@/lib/progress";
-import type { QuizQuestion } from "@/lib/curriculum/blocks";
-
-// The summative ("clean") quiz, done honestly:
-// - GET serves the questions WITHOUT answers (the bank never reaches the browser),
-// - POST grades the picks server-side and records the attempt itself.
-// This is the only path that can set MASTERED — /api/progress refuses summative.
-
-const PASS = 0.75;
-
-export async function GET(req: Request) {
-  const me = await currentUser();
-  if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
-
-  const code = new URL(req.url).searchParams.get("lessonCode");
-  const lesson = await prisma.lesson.findUnique({ where: { code: code || "" } });
-  if (!lesson) return NextResponse.json({ error: "lesson not found" }, { status: 404 });
-
-  const bank = lesson.quizBank as unknown as QuizQuestion[];
-  return NextResponse.json({
-    questions: (bank || []).map((q) => ({ q: q.q, opts: q.opts })), // no correct, no why
-    passPct: PASS,
-  });
-}
-
-export async function POST(req: Request) {
-  const me = await currentUser();
-  if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
-
-  const { lessonCode, picks } = await req.json();
-  const lesson = await prisma.lesson.findUnique({ where: { code: lessonCode || "" } });
-  if (!lesson) return NextResponse.json({ error: "lesson not found" }, { status: 404 });
-
-  const bank = lesson.quizBank as unknown as QuizQuestion[];
-  if (!bank?.length) return NextResponse.json({ error: "no quiz for this lesson" }, { status: 400 });
-  if (!Array.isArray(picks) || picks.length !== bank.length || picks.some((p) => !Number.isInteger(p))) {
-    return NextResponse.json({ error: "answer every question" }, { status: 400 });
-  }
-
-  const results = bank.map((q, i) => ({ answerIndex: q.correct, ok: picks[i] === q.correct }));
-  const correct = results.filter((r) => r.ok).length;
-  const score = correct / bank.length;
-  const passed = score >= PASS;
-
-  const { status } = await recordAttempt({
-    userId: me.id,
-    lessonId: lesson.id,
-    kind: "QUIZ_SUMMATIVE",
-    passed,
-    score,
-    detail: {
-      summative: true,
-      questions: bank.map((q, i) => ({ q: q.q, picked: q.opts[picks[i]] ?? "—", answer: q.opts[q.correct], ok: picks[i] === q.correct })),
-    },
-  });
-
-  return NextResponse.json({ passed, score, correct, total: bank.length, status, results });
-}
-</file>
-
 <file path="app/api/tests/[id]/seb/route.ts">
 import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
@@ -755,41 +894,6 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   });
 
   return NextResponse.json({ ok: true, autoScore, maxScore, needsManual });
-}
-</file>
-
-<file path="app/exam/[code]/page.tsx">
-import { notFound, redirect } from "next/navigation";
-import { prisma } from "@/lib/db";
-import { currentUser } from "@/lib/auth";
-import ExamRunner from "@/components/student/ExamRunner";
-
-// Full-screen summative exam — its own tab, nothing else on screen, easier to
-// focus. Questions come from /api/quiz (no answers); grading is server-side.
-// SEB (Safe Exam Browser) integration hooks in here later.
-export default async function ExamPage({ params }: { params: Promise<{ code: string }> }) {
-  const { code } = await params;
-  const me = await currentUser();
-  if (!me) redirect("/join");
-  const lesson = await prisma.lesson.findUnique({ where: { code } });
-  if (!lesson) notFound();
-
-  return (
-    <div className="examwrap">
-      <div className="sebbar" style={{ borderRadius: 0 }}>
-        <span>🔒 CLEAN QUIZ — {lesson.code} {lesson.title.toUpperCase()}</span>
-        <span>AI: DISABLED · GRADED ON THE SERVER</span>
-      </div>
-      <div className="exambody">
-        <h1 className="title" style={{ fontSize: 28 }}>Clean Quiz — {lesson.title}</h1>
-        <p style={{ color: "var(--muted)", marginBottom: 20 }}>
-          Summative. Pass ≥ 75% → <b>MASTERED</b>. Practice never sets Mastered — this does. You can close this tab and retake
-          any time.
-        </p>
-        <ExamRunner lessonCode={lesson.code} lessonTitle={lesson.title} />
-      </div>
-    </div>
-  );
 }
 </file>
 
@@ -931,36 +1035,6 @@ export default async function InboxPage() {
 }
 </file>
 
-<file path="app/join/page.tsx">
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { currentUser } from "@/lib/auth";
-import JoinForm from "@/components/JoinForm";
-
-export default async function JoinPage() {
-  const me = await currentUser();
-  if (me) redirect(me.role === "STUDENT" ? "/lessons" : "/teacher");
-
-  return (
-    <div className="authwrap">
-      <div className="panel authcard">
-        <div className="crumb">STUDENT ENTRANCE</div>
-        <h1 className="title" style={{ fontSize: 28, marginBottom: 6 }}>
-          Join your class
-        </h1>
-        <p style={{ color: "var(--muted)", marginBottom: 14, fontSize: 14 }}>
-          Type the class code from the board and your name. Use the <b>same name every time</b> to keep your progress.
-        </p>
-        <JoinForm />
-        <div className="authalt">
-          Teacher or admin? <Link href="/login">Staff sign-in →</Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-</file>
-
 <file path="app/lessons/page.tsx">
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
@@ -977,33 +1051,6 @@ export default async function LessonsIndex() {
     );
   }
   redirect(`/lessons/${first.code}`);
-}
-</file>
-
-<file path="app/login/page.tsx">
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { currentUser } from "@/lib/auth";
-import LoginForm from "@/components/LoginForm";
-
-export default async function LoginPage() {
-  const me = await currentUser();
-  if (me) redirect(me.role === "STUDENT" ? "/lessons" : "/teacher");
-
-  return (
-    <div className="authwrap">
-      <div className="panel authcard">
-        <div className="crumb">STAFF SIGN-IN</div>
-        <h1 className="title" style={{ fontSize: 28, marginBottom: 14 }}>
-          Welcome back
-        </h1>
-        <LoginForm />
-        <div className="authalt">
-          Student? <Link href="/join">Join your class with a code →</Link>
-        </div>
-      </div>
-    </div>
-  );
 }
 </file>
 
@@ -1058,51 +1105,202 @@ export default async function TestResultPage({ params }: { params: Promise<{ id:
 }
 </file>
 
-<file path="components/admin/StaffManager.tsx">
+<file path="components/account/TotpSetup.tsx">
 "use client";
 
+// Google Authenticator (TOTP) enrollment for staff. Shows a setup key + link;
+// verifying one code from the app turns 2FA on. Sign-ins then require a code.
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
-type Staff = { id: string; name: string; email: string | null; role: string };
+export default function TotpSetup({ enabled: initialEnabled }: { enabled: boolean }) {
+  const [enabled, setEnabled] = useState(initialEnabled);
+  const [setup, setSetup] = useState<{ secret: string; uri: string } | null>(null);
+  const [code, setCode] = useState("");
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [busy, setBusy] = useState(false);
 
-export default function StaffManager({ staff, meId }: { staff: Staff[]; meId: string }) {
-  const router = useRouter();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [msg, setMsg] = useState("");
-
-  async function act(body: object) {
-    const r = await fetch("/api/admin/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    const d = await r.json();
-    if (!r.ok) setMsg(d.error || "failed");
-    return d;
+  async function begin() {
+    const d = await fetch("/api/auth/totp").then((r) => r.json());
+    if (d.secret) setSetup({ secret: d.secret, uri: d.uri });
   }
 
-  async function add(e: React.FormEvent) {
+  async function confirm(e: React.FormEvent) {
     e.preventDefault();
-    setMsg("");
-    const d = await act({ action: "addTeacher", ...form });
-    if (d.ok) {
-      setForm({ name: "", email: "", password: "" });
-      setMsg("teacher added ✓");
-      router.refresh();
-    }
+    setBusy(true);
+    setMsg(null);
+    const r = await fetch("/api/auth/totp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ secret: setup?.secret, code }) });
+    const d = await r.json();
+    setBusy(false);
+    if (!r.ok) return setMsg({ ok: false, text: d.error || "Failed." });
+    setEnabled(true);
+    setSetup(null);
+    setCode("");
+    setMsg({ ok: true, text: "2FA is ON — sign-ins now require your authenticator code. Don't delete the app entry!" });
+  }
+
+  async function disable(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setMsg(null);
+    const r = await fetch("/api/auth/totp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ disable: true, code }) });
+    const d = await r.json();
+    setBusy(false);
+    if (!r.ok) return setMsg({ ok: false, text: d.error || "Failed." });
+    setEnabled(false);
+    setCode("");
+    setMsg({ ok: true, text: "2FA is off." });
   }
 
   return (
-    <div className="panel">
-      <h2>Staff accounts <span className="tag k">ADMIN</span></h2>
-      <div className="dashgrid" style={{ marginBottom: 16 }}>
+    <div>
+      {msg && <div className={msg.ok ? "notice" : "offline-note"}>{msg.text}</div>}
+
+      {enabled ? (
+        <form onSubmit={disable} className="runrow">
+          <span className="statuschip live">2FA ON</span>
+          <input className="f codein" style={{ maxWidth: 140 }} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} maxLength={6} placeholder="123456" />
+          <button className="btn ghost" disabled={busy}>Turn off</button>
+        </form>
+      ) : setup ? (
+        <form onSubmit={confirm}>
+          <ol style={{ margin: "0 0 10px 20px", lineHeight: 1.9, fontSize: 14 }}>
+            <li>Open <b>Google Authenticator</b> → + → <b>Enter a setup key</b>.</li>
+            <li>Account: <code>classOS</code> · Key: <code style={{ userSelect: "all" }}>{setup.secret}</code> (time-based)</li>
+            <li>Type the 6-digit code it shows:</li>
+          </ol>
+          <div className="runrow">
+            <input className="f codein" style={{ maxWidth: 160 }} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} maxLength={6} autoFocus required />
+            <button className="btn green" disabled={busy}>{busy ? "checking…" : "Verify & enable"}</button>
+            <button type="button" className="btn ghost" onClick={() => setSetup(null)}>Cancel</button>
+          </div>
+          <p className="meta">Or copy this into any authenticator app: <code style={{ userSelect: "all", fontSize: 10 }}>{setup.uri}</code></p>
+        </form>
+      ) : (
+        <div className="runrow">
+          <span className="statuschip draft">2FA OFF</span>
+          <button className="btn" onClick={begin}>Set up Google Authenticator</button>
+        </div>
+      )}
+      <p className="meta" style={{ marginTop: 8 }}>
+        ⚠ If you lose the authenticator, you can't sign in — another admin (or a database fix) must disable it for you.
+      </p>
+    </div>
+  );
+}
+</file>
+
+<file path="components/admin/UserManager.tsx">
+"use client";
+
+import { useEffect, useState } from "react";
+
+type U = { id: string; name: string; email: string | null; role: string; className: string | null; verified: boolean; locked: boolean; totp: boolean };
+
+async function act(body: object) {
+  const r = await fetch("/api/admin/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  return { ok: r.ok, ...(await r.json()) };
+}
+
+export default function UserManager({ meId }: { meId: string }) {
+  const [users, setUsers] = useState<U[]>([]);
+  const [filter, setFilter] = useState("");
+  const [edit, setEdit] = useState<{ id: string; field: "name" | "email" | "password"; value: string } | null>(null);
+  const [confirm, setConfirm] = useState<U | null>(null);
+  const [msg, setMsg] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+
+  async function load() {
+    const d = await fetch("/api/admin/users").then((r) => r.json());
+    setUsers(d.users || []);
+  }
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function run(body: object, okMsg: string) {
+    const d = await act(body);
+    setMsg(d.ok ? okMsg : d.error || "failed");
+    if (d.ok) load();
+  }
+
+  async function saveEdit() {
+    if (!edit) return;
+    const { id, field, value } = edit;
+    setEdit(null);
+    if (!value.trim()) return;
+    if (field === "name") run({ action: "rename", id, name: value }, "renamed ✓");
+    if (field === "email") run({ action: "setEmail", id, email: value }, "email changed ✓ (marked verified)");
+    if (field === "password") run({ action: "setPassword", id, password: value }, "password set ✓ (account unlocked)");
+  }
+
+  async function addTeacher(e: React.FormEvent) {
+    e.preventDefault();
+    const d = await act({ action: "addTeacher", ...form });
+    setMsg(d.ok ? "teacher added ✓" : d.error || "failed");
+    if (d.ok) {
+      setForm({ name: "", email: "", password: "" });
+      load();
+    }
+  }
+
+  const shown = users.filter((u) => (u.name + " " + (u.email || "") + " " + u.role).toLowerCase().includes(filter.toLowerCase()));
+
+  return (
+    <>
+      <div className="runrow" style={{ marginBottom: 10 }}>
+        <input className="f" style={{ maxWidth: 300 }} value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Search name / email / role…" />
+        {msg && <span className="meta" style={{ margin: 0 }}>{msg}</span>}
+      </div>
+
+      {edit && (
+        <div className="notice" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <b>{edit.field === "password" ? "New password" : `New ${edit.field}`}:</b>
+          <input
+            className="f"
+            style={{ maxWidth: 280 }}
+            type={edit.field === "password" ? "text" : "text"}
+            value={edit.value}
+            autoFocus
+            onChange={(e) => setEdit({ ...edit, value: e.target.value })}
+            onKeyDown={(e) => e.key === "Enter" && saveEdit()}
+          />
+          <button className="btn green" style={{ padding: "6px 12px" }} onClick={saveEdit}>Save</button>
+          <button className="tbtn2" onClick={() => setEdit(null)}>Cancel</button>
+        </div>
+      )}
+
+      {confirm && (
+        <div className="confirmbar" style={{ borderRadius: 8, marginBottom: 10 }}>
+          Remove <b>{confirm.name}</b> ({confirm.role.toLowerCase()}) and all their data?
+          <button className="btn orange" style={{ padding: "5px 12px", fontSize: 12 }} onClick={() => { run({ action: "remove", id: confirm.id }, "removed ✓"); setConfirm(null); }}>Remove</button>
+          <button className="tbtn2" onClick={() => setConfirm(null)}>Cancel</button>
+        </div>
+      )}
+
+      <div className="dashgrid">
         <table>
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Class</th><th>Status</th><th>Actions</th></tr>
+          </thead>
           <tbody>
-            {staff.map((s) => (
-              <tr key={s.id}>
-                <td className="name">{s.name}{s.id === meId && " (you)"}</td>
-                <td style={{ color: "var(--muted)" }}>{s.email}</td>
-                <td><span className="statuschip live">{s.role}</span></td>
-                <td>
-                  <button className="tbtn2" title="Reset password" onClick={async () => { const d = await act({ action: "resetPassword", id: s.id }); if (d.password) alert(`New temporary password for ${s.name}:\n\n${d.password}\n\nGive it to them; they can change it at /account.`); }}>🔑</button>
-                  {s.id !== meId && <button className="tbtn2 danger" title="Remove" onClick={async () => { if (confirm(`Remove ${s.name}? Their classes stay but lose their teacher link.`)) { await act({ action: "remove", id: s.id }); router.refresh(); } }}>🗑</button>}
+            {shown.map((u) => (
+              <tr key={u.id}>
+                <td className="name">{u.name}{u.id === meId && " (you)"}</td>
+                <td style={{ color: "var(--muted)", fontSize: 13 }}>{u.email || "—"}</td>
+                <td><span className="statuschip live">{u.role}</span></td>
+                <td style={{ fontSize: 13 }}>{u.className || "—"}</td>
+                <td style={{ fontSize: 11, fontFamily: "var(--mono)" }}>
+                  {u.locked ? <span className="score bad">LOCKED</span> : u.verified ? <span className="score ok">verified</span> : <span style={{ color: "var(--muted)" }}>unverified</span>}
+                  {u.totp && " · 2FA"}
+                </td>
+                <td style={{ whiteSpace: "nowrap" }}>
+                  <button className="tbtn2" title="Rename" onClick={() => setEdit({ id: u.id, field: "name", value: u.name })}>✎</button>
+                  <button className="tbtn2" title="Change email" onClick={() => setEdit({ id: u.id, field: "email", value: u.email || "" })}>@</button>
+                  <button className="tbtn2" title="Set new password" onClick={() => setEdit({ id: u.id, field: "password", value: "" })}>🔑</button>
+                  {u.locked && <button className="tbtn2" title="Unlock" onClick={() => run({ action: "unlock", id: u.id }, "unlocked ✓")}>🔓</button>}
+                  {!u.verified && <button className="tbtn2" title="Mark verified" onClick={() => run({ action: "verify", id: u.id }, "verified ✓")}>✓</button>}
+                  {u.totp && <button className="tbtn2" title="Disable 2FA" onClick={() => run({ action: "disableTotp", id: u.id }, "2FA disabled ✓")}>⊘</button>}
+                  {u.id !== meId && <button className="tbtn2 danger" title="Remove" onClick={() => setConfirm(u)}>🗑</button>}
                 </td>
               </tr>
             ))}
@@ -1110,14 +1308,16 @@ export default function StaffManager({ staff, meId }: { staff: Staff[]; meId: st
         </table>
       </div>
 
-      <form onSubmit={add} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr auto", gap: 8, alignItems: "end" }}>
-        <label className="field" style={{ margin: 0 }}><span className="l">Name</span><input className="f" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></label>
-        <label className="field" style={{ margin: 0 }}><span className="l">Email</span><input className="f" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></label>
-        <label className="field" style={{ margin: 0 }}><span className="l">Temp password (8+)</span><input className="f" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required /></label>
-        <button className="btn green">+ Add teacher</button>
-      </form>
-      {msg && <div className="meta">{msg}</div>}
-    </div>
+      <div className="panel" style={{ marginTop: 18 }}>
+        <h2>Add a teacher</h2>
+        <form onSubmit={addTeacher} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr auto", gap: 8, alignItems: "end" }}>
+          <label className="field" style={{ margin: 0 }}><span className="l">Name</span><input className="f" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></label>
+          <label className="field" style={{ margin: 0 }}><span className="l">Email</span><input className="f" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></label>
+          <label className="field" style={{ margin: 0 }}><span className="l">Temp password (8+)</span><input className="f" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required /></label>
+          <button className="btn green">+ Add</button>
+        </form>
+      </div>
+    </>
   );
 }
 </file>
@@ -1370,6 +1570,78 @@ export default function ExamRunner({ lessonCode, lessonTitle }: { lessonCode: st
           </div>
         </div>
       )}
+    </>
+  );
+}
+</file>
+
+<file path="components/student/MasteryQuizRunner.tsx">
+"use client";
+
+// Takes the mastery ("clean") quiz — typed questions, server-graded, the only
+// path to MASTERED. Used by the full-screen /exam/[code] page.
+
+import { useEffect, useState } from "react";
+import QuestionView, { type TakerQ } from "@/components/questions/QuestionView";
+
+export default function MasteryQuizRunner({ lessonCode, lessonTitle }: { lessonCode: string; lessonTitle: string }) {
+  const [questions, setQuestions] = useState<TakerQ[] | null>(null);
+  const [answers, setAnswers] = useState<Record<string, unknown>>({});
+  const [attempt, setAttempt] = useState(1);
+  const [result, setResult] = useState<null | { passed: boolean; pct: number }>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/quiz?lessonCode=${encodeURIComponent(lessonCode)}`)
+      .then((r) => r.json())
+      .then((d) => setQuestions(d.questions || []));
+  }, [lessonCode, attempt]);
+
+  async function submit() {
+    if (busy) return;
+    setBusy(true);
+    const r = await fetch("/api/quiz", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lessonCode, answers }),
+    }).then((x) => x.json());
+    setBusy(false);
+    if (!r.error) setResult({ passed: r.passed, pct: Math.round((r.score || 0) * 100) });
+  }
+
+  if (questions === null) return <p style={{ color: "var(--muted)" }}>loading questions…</p>;
+  if (questions.length === 0) return <p style={{ color: "var(--muted)" }}>This lesson has no mastery quiz yet.</p>;
+
+  if (result) {
+    return (
+      <div className={`sebres ${result.passed ? "pass" : "fail"}`} style={{ display: "block" }}>
+        {result.passed
+          ? `✓ ${result.pct}% — ${lessonTitle} → MASTERED. You can close this tab.`
+          : `✗ ${result.pct}% — below 75%. Logged; the topic stays In Progress.`}
+        <div style={{ marginTop: 12, display: "flex", gap: 10 }}>
+          {!result.passed && (
+            <button className="btn orange" onClick={() => { setResult(null); setAnswers({}); setAttempt((a) => a + 1); }}>
+              Retake now
+            </button>
+          )}
+          <button className="btn ghost" onClick={() => window.close()}>Close tab</button>
+        </div>
+      </div>
+    );
+  }
+
+  let n = 0;
+  return (
+    <>
+      {questions.map((q) => {
+        if (q.type !== "info") n++;
+        return (
+          <QuestionView key={q.id} question={q} index={n} answer={answers[q.id]} onAnswer={(v) => setAnswers((a) => ({ ...a, [q.id]: v }))} />
+        );
+      })}
+      <button className="btn green" style={{ marginTop: 16 }} onClick={submit} disabled={busy}>
+        {busy ? "submitting…" : "Submit clean quiz"}
+      </button>
     </>
   );
 }
@@ -1684,112 +1956,50 @@ export default function CodeEditor({
 }
 </file>
 
-<file path="components/JoinForm.tsx">
+<file path="components/Collapsible.tsx">
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+// A foldable panel that remembers its open/closed state per key. Wrap any
+// dashboard section to let people collapse it and save vertical space.
+import { useEffect, useState } from "react";
 
-export default function JoinForm() {
-  const router = useRouter();
-  const [code, setCode] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+export default function Collapsible({
+  title,
+  storageKey,
+  defaultOpen = true,
+  right,
+  children,
+}: {
+  title: string;
+  storageKey: string;
+  defaultOpen?: boolean;
+  right?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  useEffect(() => {
+    const s = localStorage.getItem("fold:" + storageKey);
+    if (s !== null) setOpen(s === "1");
+  }, [storageKey]);
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    const r = await fetch("/api/auth/join", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, name }),
-    });
-    const d = await r.json();
-    if (!r.ok) {
-      setError(d.error || "Couldn't join.");
-      setBusy(false);
-      return;
-    }
-    router.push("/lessons");
-    router.refresh();
+  function toggle() {
+    const n = !open;
+    setOpen(n);
+    try {
+      localStorage.setItem("fold:" + storageKey, n ? "1" : "0");
+    } catch {}
   }
 
   return (
-    <form onSubmit={submit}>
-      <label className="field">
-        <span className="l">Class code</span>
-        <input
-          className="f codein"
-          value={code}
-          onChange={(e) => setCode(e.target.value.toUpperCase())}
-          placeholder="e.g. XK4M2P"
-          maxLength={8}
-          autoFocus
-          required
-        />
-      </label>
-      <label className="field">
-        <span className="l">Your name</span>
-        <input className="f" value={name} onChange={(e) => setName(e.target.value)} placeholder="First name + last initial, e.g. Ada L." required />
-      </label>
-      {error && <div className="offline-note">✗ {error}</div>}
-      <button className="btn green" style={{ width: "100%", marginTop: 8 }} disabled={busy}>
-        {busy ? "joining…" : "Join class →"}
-      </button>
-    </form>
-  );
-}
-</file>
-
-<file path="components/LoginForm.tsx">
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-export default function LoginForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    const r = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const d = await r.json();
-    if (!r.ok) {
-      setError(d.error || "Sign-in failed.");
-      setBusy(false);
-      return;
-    }
-    router.push(d.role === "STUDENT" ? "/lessons" : "/teacher");
-    router.refresh();
-  }
-
-  return (
-    <form onSubmit={submit}>
-      <label className="field">
-        <span className="l">Email</span>
-        <input className="f" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus required />
-      </label>
-      <label className="field">
-        <span className="l">Password</span>
-        <input className="f" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </label>
-      {error && <div className="offline-note">✗ {error}</div>}
-      <button className="btn green" style={{ width: "100%", marginTop: 8 }} disabled={busy}>
-        {busy ? "signing in…" : "Sign in"}
-      </button>
-    </form>
+    <div className="foldpanel">
+      <div className="foldhead">
+        <button className="foldbtn" onClick={toggle}>
+          <span className={`foldcaret ${open ? "open" : ""}`}>▸</span> {title}
+        </button>
+        {right}
+      </div>
+      {open && <div className="foldbody">{children}</div>}
+    </div>
   );
 }
 </file>
@@ -2048,6 +2258,77 @@ export const prisma =
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 </file>
 
+<file path="lib/email.ts">
+import "server-only";
+import nodemailer from "nodemailer";
+import { prisma } from "./db";
+import { getSetting, setSetting, encryptSecret, decryptSecret } from "./settings";
+
+// Email sending via the admin's own SMTP (typically Gmail + App Password —
+// free, no card). Config lives in Settings (encrypted), not env, so it's
+// editable in-app. If unconfigured, callers fall back gracefully.
+
+export interface SmtpConfig {
+  host: string;
+  port: number;
+  user: string;
+  encryptedPass: string;
+}
+
+export async function getSmtpConfig(): Promise<SmtpConfig | null> {
+  const c = await getSetting<SmtpConfig | null>("smtp", null);
+  return c && c.host && c.user && c.encryptedPass ? c : null;
+}
+
+export async function saveSmtpConfig(input: { host: string; port: number; user: string; pass?: string }) {
+  const existing = await getSetting<SmtpConfig | null>("smtp", null);
+  await setSetting("smtp", {
+    host: input.host || "smtp.gmail.com",
+    port: Number(input.port) || 465,
+    user: input.user,
+    encryptedPass: input.pass ? encryptSecret(input.pass) : existing?.encryptedPass || "",
+  });
+}
+
+export async function isEmailConfigured(): Promise<boolean> {
+  return (await getSmtpConfig()) !== null;
+}
+
+export async function sendMail(to: string, subject: string, text: string): Promise<void> {
+  const cfg = await getSmtpConfig();
+  if (!cfg) throw new Error("email not configured");
+  const transporter = nodemailer.createTransport({
+    host: cfg.host,
+    port: cfg.port,
+    secure: cfg.port === 465,
+    auth: { user: cfg.user, pass: decryptSecret(cfg.encryptedPass) },
+  });
+  await transporter.sendMail({ from: `"classOS" <${cfg.user}>`, to, subject, text });
+}
+
+// ─── Verification codes ──────────────────────────────────────────────────────
+
+export function sixDigits(): string {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+export async function issueCode(email: string, purpose: string, payload?: unknown): Promise<string> {
+  const code = sixDigits();
+  await prisma.authCode.deleteMany({ where: { email, purpose } }); // one active code per purpose
+  await prisma.authCode.create({
+    data: { email, purpose, code, payload: (payload ?? null) as any, expiresAt: new Date(Date.now() + 15 * 60 * 1000) },
+  });
+  return code;
+}
+
+export async function consumeCode(email: string, purpose: string, code: string): Promise<{ ok: boolean; payload?: any }> {
+  const row = await prisma.authCode.findFirst({ where: { email, purpose }, orderBy: { createdAt: "desc" } });
+  if (!row || row.expiresAt < new Date() || row.code !== String(code || "").trim()) return { ok: false };
+  await prisma.authCode.delete({ where: { id: row.id } });
+  return { ok: true, payload: row.payload };
+}
+</file>
+
 <file path="lib/grading.ts">
 import "server-only";
 import type { Question } from "./curriculum/questions";
@@ -2226,6 +2507,59 @@ export function normalize(s: string): string {
     .map((l) => l.replace(/\s+$/, ""))
     .join("\n")
     .trim();
+}
+</file>
+
+<file path="lib/totp.ts">
+import "server-only";
+import crypto from "node:crypto";
+
+// RFC 6238 TOTP, compatible with Google Authenticator. No dependencies.
+
+const B32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
+export function generateTotpSecret(): string {
+  const bytes = crypto.randomBytes(20);
+  let bits = "";
+  for (const b of bytes) bits += b.toString(2).padStart(8, "0");
+  let out = "";
+  for (let i = 0; i + 5 <= bits.length; i += 5) out += B32[parseInt(bits.slice(i, i + 5), 2)];
+  return out;
+}
+
+function b32decode(s: string): Buffer {
+  let bits = "";
+  for (const c of s.toUpperCase().replace(/[^A-Z2-7]/g, "")) {
+    bits += B32.indexOf(c).toString(2).padStart(5, "0");
+  }
+  const bytes: number[] = [];
+  for (let i = 0; i + 8 <= bits.length; i += 8) bytes.push(parseInt(bits.slice(i, i + 8), 2));
+  return Buffer.from(bytes);
+}
+
+function hotp(secret: string, counter: number): string {
+  const buf = Buffer.alloc(8);
+  buf.writeBigUInt64BE(BigInt(counter));
+  const hmac = crypto.createHmac("sha1", b32decode(secret)).update(buf).digest();
+  const off = hmac[hmac.length - 1] & 0xf;
+  const code = ((hmac.readUInt32BE(off) & 0x7fffffff) % 1_000_000).toString().padStart(6, "0");
+  return code;
+}
+
+// Accept the current 30s window ± 1 (clock drift).
+export function verifyTotp(secret: string, code: string): boolean {
+  const clean = String(code || "").replace(/\D/g, "");
+  if (clean.length !== 6 || !secret) return false;
+  const counter = Math.floor(Date.now() / 30_000);
+  for (const c of [counter, counter - 1, counter + 1]) {
+    const expect = hotp(secret, c);
+    if (expect.length === clean.length && crypto.timingSafeEqual(Buffer.from(expect), Buffer.from(clean))) return true;
+  }
+  return false;
+}
+
+export function otpauthUri(accountLabel: string, secret: string): string {
+  return `otpauth://totp/${encodeURIComponent("classOS")}:${encodeURIComponent(accountLabel)}?secret=${secret}&issuer=classOS&digits=6&period=30`;
 }
 </file>
 
@@ -5194,45 +5528,6 @@ been doing.
   and paste `ARCHITECTURE.md`.
 </file>
 
-<file path="app/account/page.tsx">
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/db";
-import { currentUser } from "@/lib/auth";
-import ProfileForm from "@/components/account/ProfileForm";
-import PasswordForm from "@/components/PasswordForm";
-import StaffManager from "@/components/admin/StaffManager";
-
-export default async function AccountPage() {
-  const me = await currentUser();
-  if (!me) redirect("/login");
-  if (!me.passwordHash) redirect("/lessons"); // students have no account to manage
-
-  const staff = me.role === "ADMIN"
-    ? await prisma.user.findMany({ where: { role: { in: ["ADMIN", "TEACHER"] } }, orderBy: [{ role: "asc" }, { name: "asc" }] })
-    : [];
-
-  return (
-    <div className="main" style={{ maxWidth: 720 }}>
-      <div className="crumb">YOUR ACCOUNT</div>
-      <h1 className="title" style={{ fontSize: 26 }}>{me.name}</h1>
-      <p style={{ color: "var(--muted)", marginBottom: 18 }}>{me.email} · {me.role}</p>
-
-      <div className="panel">
-        <h2>Profile</h2>
-        <ProfileForm initialName={me.name} initialAvatar={me.avatar} />
-      </div>
-
-      <div className="panel">
-        <h2>Change password</h2>
-        <PasswordForm />
-      </div>
-
-      {me.role === "ADMIN" && <StaffManager staff={staff.map((s) => ({ id: s.id, name: s.name, email: s.email, role: s.role }))} meId={me.id} />}
-    </div>
-  );
-}
-</file>
-
 <file path="app/admin/editor/page.tsx">
 import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
@@ -5247,28 +5542,210 @@ export default async function EditorPage() {
 }
 </file>
 
-<file path="app/admin/settings/page.tsx">
-import { redirect } from "next/navigation";
-import { currentUser } from "@/lib/auth";
-import { getLLMConfigForClient } from "@/lib/settings";
-import SettingsForm from "@/components/SettingsForm";
-import Forbidden from "@/components/Forbidden";
+<file path="app/api/admin/users/route.ts">
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { requireRoleApi, hashPassword } from "@/lib/auth";
 
-export default async function SettingsPage() {
-  const me = await currentUser();
-  if (!me) redirect("/login");
-  if (me.role !== "ADMIN") return <Forbidden need="Admin" />;
-  const cfg = await getLLMConfigForClient();
-  return (
-    <div className="main">
-      <div className="crumb">ADMIN · AI PROVIDER</div>
-      <h1 className="title" style={{ marginBottom: 6 }}>Settings</h1>
-      <p style={{ color: "var(--muted)", marginBottom: 10 }}>
-        Bring your own key. Swap providers here — no redeploy. The app runs offline (canned responses) until you add one.
-      </p>
-      <SettingsForm initial={cfg} />
-    </div>
-  );
+// Admin's absolute account control: every user (staff + students) — rename,
+// change email, set a new password, unlock, verify, disable 2FA, add, remove.
+export async function GET() {
+  const me = await requireRoleApi("ADMIN");
+  if (me instanceof NextResponse) return me;
+  const users = await prisma.user.findMany({
+    include: { class: { select: { name: true } } },
+    orderBy: [{ role: "asc" }, { name: "asc" }],
+  });
+  return NextResponse.json({
+    users: users.map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      className: u.class?.name || null,
+      verified: Boolean(u.emailVerifiedAt),
+      locked: Boolean(u.lockedAt),
+      totp: Boolean(u.totpSecret),
+      createdAt: u.createdAt,
+    })),
+  });
+}
+
+export async function POST(req: Request) {
+  const me = await requireRoleApi("ADMIN");
+  if (me instanceof NextResponse) return me;
+  const b = await req.json();
+
+  switch (b.action) {
+    case "addTeacher": {
+      const email = String(b.email || "").toLowerCase().trim();
+      const name = String(b.name || "").trim().slice(0, 60);
+      if (!email || !name) return NextResponse.json({ error: "Name and email required." }, { status: 400 });
+      if (String(b.password || "").length < 8) return NextResponse.json({ error: "Password must be 8+ characters." }, { status: 400 });
+      if (await prisma.user.findUnique({ where: { email } })) return NextResponse.json({ error: "That email is already in use." }, { status: 409 });
+      await prisma.user.create({
+        data: { name, email, role: b.role === "ADMIN" ? "ADMIN" : "TEACHER", passwordHash: hashPassword(b.password), emailVerifiedAt: new Date() },
+      });
+      return NextResponse.json({ ok: true });
+    }
+    case "rename": {
+      await prisma.user.update({ where: { id: b.id }, data: { name: String(b.name || "").trim().slice(0, 60) || "Unnamed" } });
+      return NextResponse.json({ ok: true });
+    }
+    case "setEmail": {
+      const email = String(b.email || "").toLowerCase().trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return NextResponse.json({ error: "Invalid email." }, { status: 400 });
+      const clash = await prisma.user.findUnique({ where: { email } });
+      if (clash && clash.id !== b.id) return NextResponse.json({ error: "That email is already in use." }, { status: 409 });
+      await prisma.user.update({ where: { id: b.id }, data: { email, emailVerifiedAt: new Date() } }); // admin-set = trusted
+      return NextResponse.json({ ok: true });
+    }
+    case "setPassword": {
+      if (String(b.password || "").length < 8) return NextResponse.json({ error: "Password must be 8+ characters." }, { status: 400 });
+      await prisma.user.update({ where: { id: b.id }, data: { passwordHash: hashPassword(b.password), failedLogins: 0, lockedAt: null } });
+      return NextResponse.json({ ok: true });
+    }
+    case "unlock": {
+      await prisma.user.update({ where: { id: b.id }, data: { lockedAt: null, failedLogins: 0 } });
+      return NextResponse.json({ ok: true });
+    }
+    case "verify": {
+      await prisma.user.update({ where: { id: b.id }, data: { emailVerifiedAt: new Date() } });
+      return NextResponse.json({ ok: true });
+    }
+    case "disableTotp": {
+      await prisma.user.update({ where: { id: b.id }, data: { totpSecret: null } });
+      return NextResponse.json({ ok: true });
+    }
+    case "remove": {
+      if (b.id === me.id) return NextResponse.json({ error: "You can't remove yourself." }, { status: 400 });
+      await prisma.user.delete({ where: { id: b.id } });
+      return NextResponse.json({ ok: true });
+    }
+    default:
+      return NextResponse.json({ error: "unknown action" }, { status: 400 });
+  }
+}
+</file>
+
+<file path="app/api/auth/join/route.ts">
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { startSession, hashPassword } from "@/lib/auth";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
+import { isEmailConfigured, issueCode, sendMail } from "@/lib/email";
+
+const MAX_CLASS_SIZE = 100;
+
+// Student signup: class code + name + email + password.
+// With SMTP configured: a 6-digit code goes to the email; the account is
+// created by /api/auth/verify. Without SMTP: account is created immediately
+// (unverified) so the platform still works before email is set up.
+export async function POST(req: Request) {
+  const { code, name, email, password } = await req.json();
+  const cleanName = String(name || "").trim().slice(0, 40);
+  const cleanCode = String(code || "").trim().toUpperCase();
+  const cleanEmail = String(email || "").trim().toLowerCase();
+
+  if (!rateLimit(`join:${clientIp(req)}`, 10, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many attempts — wait a few minutes." }, { status: 429 });
+  }
+  if (!cleanCode || cleanName.length < 2) return NextResponse.json({ error: "Enter the class code and your name." }, { status: 400 });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return NextResponse.json({ error: "Enter a real email address." }, { status: 400 });
+  if (typeof password !== "string" || password.length < 8) return NextResponse.json({ error: "Password must be 8+ characters." }, { status: 400 });
+
+  const cls = await prisma.class.findUnique({ where: { joinCode: cleanCode } });
+  if (!cls) return NextResponse.json({ error: "No class with that code — check with your teacher." }, { status: 404 });
+
+  const taken = await prisma.user.findUnique({ where: { email: cleanEmail } });
+  if (taken) return NextResponse.json({ error: "That email already has an account — sign in instead." }, { status: 409 });
+
+  const size = await prisma.user.count({ where: { classId: cls.id } });
+  if (size >= MAX_CLASS_SIZE) return NextResponse.json({ error: "This class is full — tell your teacher." }, { status: 403 });
+
+  const passwordHash = hashPassword(password);
+
+  if (await isEmailConfigured()) {
+    const codeStr = await issueCode(cleanEmail, "join", { classId: cls.id, name: cleanName, passwordHash });
+    try {
+      await sendMail(cleanEmail, "Your classOS code", `Hi ${cleanName},\n\nYour verification code is: ${codeStr}\n\nIt expires in 15 minutes. If you didn't request this, ignore this email.`);
+    } catch (e) {
+      return NextResponse.json({ error: "Couldn't send the email — tell your teacher (SMTP problem)." }, { status: 502 });
+    }
+    return NextResponse.json({ pending: true, email: cleanEmail, className: cls.name });
+  }
+
+  // No SMTP yet — create directly (unverified) so classes can still run.
+  const student = await prisma.user.create({
+    data: { name: cleanName, email: cleanEmail, passwordHash, role: "STUDENT", classId: cls.id },
+  });
+  await startSession(student.id);
+  return NextResponse.json({ ok: true, className: cls.name });
+}
+</file>
+
+<file path="app/api/auth/login/route.ts">
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { verifyPassword, startSession } from "@/lib/auth";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
+import { verifyTotp } from "@/lib/totp";
+import { decryptSecret } from "@/lib/settings";
+import { isEmailConfigured, issueCode, sendMail } from "@/lib/email";
+
+const LOCK_AFTER = 8; // failed attempts before the account locks (admin can unlock)
+
+// Everyone signs in with email + password. Extra gates when applicable:
+// - locked account → 423 (admin unlocks, or password reset clears it)
+// - TOTP enrolled (e.g. the admin) → requires the 6-digit authenticator code
+// - unverified email (and SMTP on) → emails a code; /api/auth/verify finishes
+export async function POST(req: Request) {
+  const { email, password, totp } = await req.json();
+  if (!email || !password) return NextResponse.json({ error: "Email and password required." }, { status: 400 });
+
+  const ip = clientIp(req);
+  if (!rateLimit(`login:${ip}:${email}`, 8, 10 * 60 * 1000) || !rateLimit(`login:${ip}`, 30, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many attempts — wait a few minutes." }, { status: 429 });
+  }
+
+  const user = await prisma.user.findUnique({ where: { email: String(email).toLowerCase().trim() } });
+  if (!user || !user.passwordHash) return NextResponse.json({ error: "Wrong email or password." }, { status: 401 });
+
+  if (user.lockedAt) {
+    return NextResponse.json({ error: "This account is locked after too many failed attempts. Use “Forgot password”, or ask your teacher/admin to unlock it." }, { status: 423 });
+  }
+
+  if (!verifyPassword(password, user.passwordHash)) {
+    const fails = user.failedLogins + 1;
+    await prisma.user.update({ where: { id: user.id }, data: { failedLogins: fails, lockedAt: fails >= LOCK_AFTER ? new Date() : null } });
+    return NextResponse.json({ error: fails >= LOCK_AFTER ? "Account locked after too many failed attempts." : "Wrong email or password." }, { status: 401 });
+  }
+
+  // Password OK. TOTP gate (Google Authenticator), if enrolled.
+  if (user.totpSecret) {
+    if (!totp) return NextResponse.json({ totpRequired: true });
+    if (!verifyTotp(decryptSecret(user.totpSecret), totp)) {
+      return NextResponse.json({ error: "Wrong authenticator code.", totpRequired: true }, { status: 401 });
+    }
+  }
+
+  // Email-verification gate (only when we can actually send email).
+  if (!user.emailVerifiedAt && (await isEmailConfigured())) {
+    const code = await issueCode(user.email!, "verify");
+    try {
+      await sendMail(user.email!, "Your classOS verification code", `Your verification code is: ${code}\n\nIt expires in 15 minutes.`);
+    } catch {
+      /* SMTP hiccup: fall through and let them in rather than locking everyone out */
+      await prisma.user.update({ where: { id: user.id }, data: { failedLogins: 0 } });
+      await startSession(user.id);
+      return NextResponse.json({ ok: true, role: user.role });
+    }
+    return NextResponse.json({ verifyRequired: true, email: user.email });
+  }
+
+  await prisma.user.update({ where: { id: user.id }, data: { failedLogins: 0 } });
+  await startSession(user.id);
+  return NextResponse.json({ ok: true, role: user.role });
 }
 </file>
 
@@ -5346,52 +5823,6 @@ export async function POST(req: Request) {
 }
 </file>
 
-<file path="app/api/curriculum/import/route.ts">
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { requireRoleApi } from "@/lib/auth";
-
-// Replace the whole curriculum from a JSON export. Portability = freedom:
-// export from one classOS, import into another. Shape: { chapters: [...] }.
-export async function POST(req: Request) {
-  const gate = await requireRoleApi("ADMIN");
-  if (gate instanceof NextResponse) return gate;
-  const { chapters } = await req.json();
-  if (!Array.isArray(chapters)) return NextResponse.json({ error: "expected { chapters: [] }" }, { status: 400 });
-
-  await prisma.$transaction(async (tx) => {
-    // Attempts/progress reference lessons — clear them so a fresh import is clean.
-    await tx.attempt.deleteMany();
-    await tx.progress.deleteMany();
-    await tx.lesson.deleteMany();
-    await tx.chapter.deleteMany();
-
-    for (let ci = 0; ci < chapters.length; ci++) {
-      const c = chapters[ci];
-      const chapter = await tx.chapter.create({ data: { order: c.order ?? ci, title: c.title || "Untitled chapter" } });
-      const lessons = c.lessons || [];
-      for (let li = 0; li < lessons.length; li++) {
-        const l = lessons[li];
-        await tx.lesson.create({
-          data: {
-            chapterId: chapter.id,
-            code: l.code || `${ci}.${li}`,
-            order: l.order ?? li,
-            title: l.title || "Untitled lesson",
-            goal: l.goal || "",
-            blocks: l.blocks ?? [],
-            exercise: l.exercise ?? {},
-            quizBank: l.quizBank ?? [],
-          },
-        });
-      }
-    }
-  });
-
-  return NextResponse.json({ ok: true });
-}
-</file>
-
 <file path="app/api/progress/route.ts">
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
@@ -5415,6 +5846,80 @@ export async function POST(req: Request) {
 
   const result = await recordAttempt({ userId: me.id, lessonId: lesson.id, kind, passed: !!passed, score, detail });
   return NextResponse.json(result);
+}
+</file>
+
+<file path="app/api/quiz/route.ts">
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { currentUser } from "@/lib/auth";
+import { recordAttempt } from "@/lib/progress";
+import { normalizeQuestions, stripAnswers, type Question } from "@/lib/curriculum/questions";
+import { gradeSubmission } from "@/lib/grading";
+
+// The mastery ("clean") quiz — the ONLY path to MASTERED.
+// Source: lesson.masteryQuiz (typed) if set, else the legacy quizBank (MCQ).
+// Questions are served without answers; grading happens here on the server.
+const PASS = 0.75;
+
+function masteryQuestions(lesson: { masteryQuiz: unknown; quizBank: unknown }): Question[] {
+  const mq = (lesson.masteryQuiz as any[]) || [];
+  if (mq.length) return normalizeQuestions(mq);
+  return normalizeQuestions((lesson.quizBank as any[]) || []);
+}
+
+export async function GET(req: Request) {
+  const me = await currentUser();
+  if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
+  const code = new URL(req.url).searchParams.get("lessonCode");
+  const lesson = await prisma.lesson.findUnique({ where: { code: code || "" } });
+  if (!lesson) return NextResponse.json({ error: "lesson not found" }, { status: 404 });
+
+  const questions = masteryQuestions(lesson).map(stripAnswers);
+  return NextResponse.json({ questions, passPct: PASS });
+}
+
+export async function POST(req: Request) {
+  const me = await currentUser();
+  if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
+
+  const { lessonCode, answers } = await req.json();
+  const lesson = await prisma.lesson.findUnique({ where: { code: lessonCode || "" } });
+  if (!lesson) return NextResponse.json({ error: "lesson not found" }, { status: 404 });
+
+  const questions = masteryQuestions(lesson);
+  if (!questions.length) return NextResponse.json({ error: "no mastery quiz for this lesson" }, { status: 400 });
+
+  const { results } = await gradeSubmission(questions, answers || {});
+  // Mastery is decided on auto-gradable questions (mcq/tf/short/code).
+  const auto = results.filter((r) => r.auto);
+  const awarded = auto.reduce((s, r) => s + r.awarded, 0);
+  const max = auto.reduce((s, r) => s + r.max, 0);
+  const score = max > 0 ? awarded / max : 0;
+  const passed = score >= PASS;
+
+  const qById = new Map(questions.map((q) => [q.id, q as any]));
+  const detail = results.map((r) => {
+    const q = qById.get(r.id);
+    const a = (answers || {})[r.id];
+    return {
+      q: q?.q || "",
+      picked: q?.type === "mcq" ? q.opts?.[Number(a)] ?? "—" : String(a ?? "—"),
+      answer: q?.type === "mcq" ? q.opts?.[q.correct] ?? "" : q?.type === "tf" ? String(q.correct) : "",
+      ok: r.correct ?? r.awarded >= r.max,
+    };
+  });
+
+  const { status } = await recordAttempt({
+    userId: me.id,
+    lessonId: lesson.id,
+    kind: "QUIZ_SUMMATIVE",
+    passed,
+    score,
+    detail: { summative: true, questions: detail },
+  });
+
+  return NextResponse.json({ passed, score, awarded, max, status, results });
 }
 </file>
 
@@ -5595,6 +6100,41 @@ Produce ${Math.min(15, Math.max(1, Number(count) || 5))} questions. "correct" is
 }
 </file>
 
+<file path="app/exam/[code]/page.tsx">
+import { notFound, redirect } from "next/navigation";
+import { prisma } from "@/lib/db";
+import { currentUser } from "@/lib/auth";
+import MasteryQuizRunner from "@/components/student/MasteryQuizRunner";
+
+// Full-screen summative exam — its own tab, nothing else on screen, easier to
+// focus. Questions come from /api/quiz (no answers); grading is server-side.
+// SEB (Safe Exam Browser) integration hooks in here later.
+export default async function ExamPage({ params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params;
+  const me = await currentUser();
+  if (!me) redirect("/join");
+  const lesson = await prisma.lesson.findUnique({ where: { code } });
+  if (!lesson) notFound();
+
+  return (
+    <div className="examwrap">
+      <div className="sebbar" style={{ borderRadius: 0 }}>
+        <span>🔒 CLEAN QUIZ — {lesson.code} {lesson.title.toUpperCase()}</span>
+        <span>AI: DISABLED · GRADED ON THE SERVER</span>
+      </div>
+      <div className="exambody">
+        <h1 className="title" style={{ fontSize: 28 }}>Clean Quiz — {lesson.title}</h1>
+        <p style={{ color: "var(--muted)", marginBottom: 20 }}>
+          Summative. Pass ≥ 75% → <b>MASTERED</b>. Practice never sets Mastered — this does. You can close this tab and retake
+          any time.
+        </p>
+        <MasteryQuizRunner lessonCode={lesson.code} lessonTitle={lesson.title} />
+      </div>
+    </div>
+  );
+}
+</file>
+
 <file path="app/exam/test/[id]/page.tsx">
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
@@ -5651,6 +6191,36 @@ export default async function TakeTestPage({ params }: { params: Promise<{ id: s
 }
 </file>
 
+<file path="app/join/page.tsx">
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { currentUser } from "@/lib/auth";
+import JoinForm from "@/components/JoinForm";
+
+export default async function JoinPage() {
+  const me = await currentUser();
+  if (me) redirect(me.role === "STUDENT" ? "/lessons" : "/teacher");
+
+  return (
+    <div className="authwrap">
+      <div className="panel authcard">
+        <div className="crumb">STUDENT ENTRANCE</div>
+        <h1 className="title" style={{ fontSize: 28, marginBottom: 6 }}>
+          Join your class
+        </h1>
+        <p style={{ color: "var(--muted)", marginBottom: 14, fontSize: 14 }}>
+          First time here: enter your class code, your name, your real email, and choose a password. Already joined? <b>Sign in instead.</b>
+        </p>
+        <JoinForm />
+        <div className="authalt">
+          Already have an account? <Link href="/login">Sign in →</Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
 <file path="app/lessons/layout.tsx">
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -5698,6 +6268,33 @@ export default async function LessonsLayout({ children }: { children: React.Reac
         </div>
       </aside>
       <main className="main">{children}</main>
+    </div>
+  );
+}
+</file>
+
+<file path="app/login/page.tsx">
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { currentUser } from "@/lib/auth";
+import LoginForm from "@/components/LoginForm";
+
+export default async function LoginPage() {
+  const me = await currentUser();
+  if (me) redirect(me.role === "STUDENT" ? "/lessons" : "/teacher");
+
+  return (
+    <div className="authwrap">
+      <div className="panel authcard">
+        <div className="crumb">SIGN IN</div>
+        <h1 className="title" style={{ fontSize: 28, marginBottom: 14 }}>
+          Welcome back
+        </h1>
+        <LoginForm />
+        <div className="authalt">
+          New student? <Link href="/join">Join your class with a code →</Link>
+        </div>
+      </div>
     </div>
   );
 }
@@ -6869,6 +7466,275 @@ export default function Forbidden({ need }: { need: string }) {
 }
 </file>
 
+<file path="components/JoinForm.tsx">
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function JoinForm() {
+  const router = useRouter();
+  const [stage, setStage] = useState<"form" | "code">("form");
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailCode, setEmailCode] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const r = await fetch("/api/auth/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, name, email, password }),
+    });
+    const d = await r.json();
+    setBusy(false);
+    if (!r.ok) return setError(d.error || "Couldn't join.");
+    if (d.pending) return setStage("code"); // code emailed
+    router.push("/lessons");
+    router.refresh();
+  }
+
+  async function verify(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const r = await fetch("/api/auth/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code: emailCode, purpose: "join" }),
+    });
+    const d = await r.json();
+    setBusy(false);
+    if (!r.ok) return setError(d.error || "Wrong code.");
+    router.push("/lessons");
+    router.refresh();
+  }
+
+  if (stage === "code") {
+    return (
+      <form onSubmit={verify}>
+        <div className="notice">📬 We emailed a 6-digit code to <b>{email}</b>. Check your inbox (and spam).</div>
+        <label className="field">
+          <span className="l">Verification code</span>
+          <input className="f codein" value={emailCode} onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, ""))} maxLength={6} autoFocus required />
+        </label>
+        {error && <div className="offline-note">✗ {error}</div>}
+        <button className="btn green" style={{ width: "100%", marginTop: 8 }} disabled={busy}>
+          {busy ? "checking…" : "Verify & join →"}
+        </button>
+      </form>
+    );
+  }
+
+  return (
+    <form onSubmit={submit}>
+      <label className="field">
+        <span className="l">Class code</span>
+        <input className="f codein" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="e.g. XK4M2P" maxLength={8} autoFocus required />
+      </label>
+      <label className="field">
+        <span className="l">Your name</span>
+        <input className="f" value={name} onChange={(e) => setName(e.target.value)} placeholder="First name + last initial, e.g. Ada L." required />
+      </label>
+      <label className="field">
+        <span className="l">Email <span className="hint">(your real one — we'll send a code)</span></span>
+        <input className="f" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@gmail.com" required />
+      </label>
+      <label className="field">
+        <span className="l">Choose a password <span className="hint">(8+ characters)</span></span>
+        <input className="f" type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={8} required />
+      </label>
+      {error && <div className="offline-note">✗ {error}</div>}
+      <button className="btn green" style={{ width: "100%", marginTop: 8 }} disabled={busy}>
+        {busy ? "joining…" : "Join class →"}
+      </button>
+    </form>
+  );
+}
+</file>
+
+<file path="components/LoginForm.tsx">
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+type Stage = "creds" | "totp" | "verify" | "forgot" | "reset";
+
+export default function LoginForm() {
+  const router = useRouter();
+  const [stage, setStage] = useState<Stage>("creds");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [totp, setTotp] = useState("");
+  const [code, setCode] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  function go(role: string) {
+    router.push(role === "STUDENT" ? "/lessons" : "/teacher");
+    router.refresh();
+  }
+
+  async function login(e?: React.FormEvent) {
+    e?.preventDefault();
+    setBusy(true);
+    setError("");
+    const r = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, totp: totp || undefined }),
+    });
+    const d = await r.json();
+    setBusy(false);
+    if (d.totpRequired) {
+      setStage("totp");
+      if (d.error) setError(d.error);
+      return;
+    }
+    if (d.verifyRequired) {
+      setStage("verify");
+      setInfo(`We emailed a code to ${d.email}.`);
+      return;
+    }
+    if (!r.ok) return setError(d.error || "Sign-in failed.");
+    go(d.role);
+  }
+
+  async function verify(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const r = await fetch("/api/auth/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code, purpose: "verify" }),
+    });
+    const d = await r.json();
+    setBusy(false);
+    if (!r.ok) return setError(d.error || "Wrong code.");
+    go(d.role || "STUDENT");
+  }
+
+  async function forgot(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const r = await fetch("/api/auth/forgot", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
+    const d = await r.json();
+    setBusy(false);
+    if (!r.ok) return setError(d.error || "Failed.");
+    setStage("reset");
+    setInfo("If that email has an account, a reset code is on its way.");
+  }
+
+  async function reset(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const r = await fetch("/api/auth/forgot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code, newPassword: newPw }),
+    });
+    const d = await r.json();
+    setBusy(false);
+    if (!r.ok) return setError(d.error || "Failed.");
+    setStage("creds");
+    setPassword("");
+    setInfo("Password changed ✓ — sign in with the new one.");
+  }
+
+  const errBox = error && <div className="offline-note">✗ {error}</div>;
+  const infoBox = info && <div className="notice">{info}</div>;
+
+  if (stage === "totp")
+    return (
+      <form onSubmit={login}>
+        {infoBox}
+        <label className="field">
+          <span className="l">Authenticator code <span className="hint">(Google Authenticator)</span></span>
+          <input className="f codein" value={totp} onChange={(e) => setTotp(e.target.value.replace(/\D/g, ""))} maxLength={6} autoFocus required />
+        </label>
+        {errBox}
+        <button className="btn green" style={{ width: "100%" }} disabled={busy}>{busy ? "checking…" : "Verify →"}</button>
+      </form>
+    );
+
+  if (stage === "verify")
+    return (
+      <form onSubmit={verify}>
+        {infoBox}
+        <label className="field">
+          <span className="l">Email verification code</span>
+          <input className="f codein" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} maxLength={6} autoFocus required />
+        </label>
+        {errBox}
+        <button className="btn green" style={{ width: "100%" }} disabled={busy}>{busy ? "checking…" : "Verify & sign in →"}</button>
+      </form>
+    );
+
+  if (stage === "forgot")
+    return (
+      <form onSubmit={forgot}>
+        <label className="field">
+          <span className="l">Your account email</span>
+          <input className="f" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus required />
+        </label>
+        {errBox}
+        <button className="btn green" style={{ width: "100%" }} disabled={busy}>{busy ? "sending…" : "Email me a reset code"}</button>
+        <div className="authalt"><a href="#" onClick={(e) => { e.preventDefault(); setStage("creds"); }}>← Back to sign-in</a></div>
+      </form>
+    );
+
+  if (stage === "reset")
+    return (
+      <form onSubmit={reset}>
+        {infoBox}
+        <label className="field">
+          <span className="l">Reset code (from your email)</span>
+          <input className="f codein" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} maxLength={6} autoFocus required />
+        </label>
+        <label className="field">
+          <span className="l">New password <span className="hint">(8+ characters)</span></span>
+          <input className="f" type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} minLength={8} required />
+        </label>
+        {errBox}
+        <button className="btn green" style={{ width: "100%" }} disabled={busy}>{busy ? "saving…" : "Set new password"}</button>
+      </form>
+    );
+
+  return (
+    <form onSubmit={login}>
+      {infoBox}
+      <label className="field">
+        <span className="l">Email</span>
+        <input className="f" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus required />
+      </label>
+      <label className="field">
+        <span className="l">Password</span>
+        <input className="f" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      </label>
+      {errBox}
+      <button className="btn green" style={{ width: "100%", marginTop: 8 }} disabled={busy}>
+        {busy ? "signing in…" : "Sign in"}
+      </button>
+      <div className="authalt">
+        <a href="#" onClick={(e) => { e.preventDefault(); setError(""); setInfo(""); setStage("forgot"); }}>Forgot password?</a>
+      </div>
+    </form>
+  );
+}
+</file>
+
 <file path="lib/curriculum/blocks.ts">
 // The canonical block model. One shape, rendered by <LessonRenderer>, edited by
 // the admin CMS. This is what lives in Lesson.blocks (JSON) in the database.
@@ -7497,225 +8363,6 @@ export async function performanceSummary(userId: string, lessonId: string): Prom
 }
 </file>
 
-<file path="prisma/seed.ts">
-import { existsSync, readFileSync } from "node:fs";
-import crypto from "node:crypto";
-import { PrismaClient } from "@prisma/client";
-import type { Block, Exercise, QuizQuestion } from "../lib/curriculum/blocks";
-
-const prisma = new PrismaClient();
-
-// Same scrypt format as lib/auth.ts (duplicated here because the seed runs
-// under tsx without the Next.js "server-only" context).
-function hashPassword(password: string): string {
-  const salt = crypto.randomBytes(16).toString("hex");
-  return `${salt}:${crypto.scryptSync(password, salt, 64).toString("hex")}`;
-}
-
-// If `npm run import:lessons` has produced this, we seed all 15 real lessons.
-const SEED_JSON = "prisma/curriculum.seed.json";
-
-type SeedLesson = {
-  code: string;
-  title: string;
-  goal: string;
-  blocks: Block[];
-  exercise: Exercise;
-  quizBank: QuizQuestion[];
-};
-
-// A first slice of Unit 2, in the canonical block model. Import the remaining
-// lessons any time via Admin → Editor → Import JSON (that's the "your data,
-// your control" path from the brief). These four make the demo fully clickable.
-const UNIT2: SeedLesson[] = [
-  {
-    code: "2.1",
-    title: "Printing in Java",
-    goal: "Display text and numbers on the screen with <b>System.out.println</b>, and control formatting with escape sequences.",
-    blocks: [
-      { type: "prose", html: "Every program needs to communicate with the person using it. In Java, the most basic way to send information to the screen is to <strong>print</strong> it." },
-      { type: "heading", text: "Your first printed line" },
-      { type: "prose", html: "Java code lives inside a <strong>class</strong> and runs starting from a special method called <code>main</code>. Treat the outer lines as a fixed frame you write your code inside." },
-      { type: "code", code: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, world!");\n    }\n}', out: "Hello, world!" },
-      { type: "prose", html: "<strong>1.</strong> Text goes in double quotes (a <strong>String</strong>). <strong>2.</strong> Every statement ends with a semicolon <code>;</code>. <strong>3.</strong> <code>println</code> adds a new line at the end." },
-      { type: "callout", kind: "mistake", title: "Common beginner mistakes", html: "<strong>Forgetting the semicolon</strong> is the #1 cause of \"it won't compile.\" <strong>Forgetting the quotes</strong> makes Java look for a variable. <strong>Smart/curly quotes</strong> from a document are rejected — use straight quotes." },
-      { type: "check", items: [["What is the difference between <code>print</code> and <code>println</code>?", "<code>println</code> moves to a new line after printing; <code>print</code> stays on the same line."]] },
-      { type: "exercise", html: 'Print a three-line "business card": your name, a title, and an email — each on its own line.', meta: "checks: 3 lines of output" },
-    ],
-    exercise: {
-      prompt: "Print exactly three lines: your name, a title, and an email — one per line.",
-      starter: '// print three lines here\n',
-      expected: "Ada Lovelace\nProgrammer\nada@classos.dev",
-      behaviour: "Three separate lines of output, one for name, title, and email.",
-    },
-    quizBank: [
-      { q: "Which command moves to a new line after printing?", opts: ["print", "println", "printf", "echo"], correct: 1, why: "println = print line." },
-      { q: 'What does "a\\nb" print?', opts: ["a\\nb", "ab", "a then b on two lines", "error"], correct: 2, why: "\\n is a newline." },
-      { q: 'What prints from "Sum: " + 3 + 4?', opts: ["Sum: 7", "Sum: 34", "error", "Sum: 3 4"], correct: 1, why: "Left-to-right: text + number becomes text." },
-    ],
-  },
-  {
-    code: "2.2",
-    title: "Variables and Types",
-    goal: "Store, name, and reuse values using <b>variables</b>, and choose the right <b>type</b> for each kind of data.",
-    blocks: [
-      { type: "prose", html: "A <strong>variable</strong> is a named box in memory that holds a value you want to keep and reuse." },
-      { type: "heading", text: "Declaring a variable" },
-      { type: "code", code: 'int age = 17;\ndouble price = 4.99;\nboolean isOpen = true;\nString name = "Ava";\n\nSystem.out.println(name + " is " + age);', out: "Ava is 17" },
-      { type: "terms", items: [["int", "whole numbers"], ["double", "decimal numbers"], ["boolean", "true / false"], ["String", "text"]] },
-      { type: "callout", kind: "tip", title: "= is assignment, not equality", html: 'Read <code>int age = 17;</code> as "make an integer box called age and put 17 in it."' },
-      { type: "exercise", html: "Declare a variable for your age and one for your name, then print a sentence using both.", meta: "checks: one line combining both" },
-    ],
-    exercise: {
-      prompt: "Declare an int and a String, then print one sentence using both.",
-      starter: "int age = 16;\nString name = \"Sam\";\n// print a sentence using both\n",
-      expected: "Sam is 16 years old",
-      behaviour: "One line that combines the name and age into a sentence.",
-    },
-    quizBank: [
-      { q: "Which type holds 4.99?", opts: ["int", "double", "boolean", "String"], correct: 1, why: "Decimals need double." },
-      { q: "double d = 3; — allowed?", opts: ["No", "Yes, 3 becomes 3.0", "Only with quotes", "Only in loops"], correct: 1, why: "int widens to double." },
-    ],
-  },
-  {
-    code: "2.10",
-    title: "While Loops",
-    goal: "Repeat code an <b>unknown</b> number of times — as long as a condition stays true.",
-    blocks: [
-      { type: "prose", html: "A <strong>while loop</strong> repeats a block of code <em>as long as</em> a condition is true. Before every pass, Java checks the condition: true → run again; false → skip past." },
-      { type: "heading", text: "Anatomy of a while loop" },
-      { type: "code", code: "int n = 1;\nwhile (n <= 3) {\n    System.out.println(n);\n    n++;\n}", out: "1\n2\n3" },
-      { type: "prose", html: "Three parts to get right: where the variable <strong>starts</strong>, the <strong>condition</strong> that keeps it going, and the line that <strong>moves it toward stopping</strong> (<code>n++</code>)." },
-      { type: "callout", kind: "mistake", title: "The infinite loop", html: "If nothing inside the loop moves the condition toward false, it runs forever. The classic cause is forgetting the update line." },
-      { type: "check", items: [["Why does a loop with no update line run forever?", "The condition never becomes false, so Java keeps re-running the block."]] },
-      { type: "exercise", html: "Use a while loop to print the numbers 1, 2, 3 — each on its own line.", meta: "checks: output is 1, 2, 3" },
-    ],
-    exercise: {
-      prompt: "Using a while loop, print 1, 2, 3 — each on its own line.",
-      starter: "int n = 1;\n// your loop here\n",
-      expected: "1\n2\n3",
-      behaviour: "Prints 1, 2, 3 on separate lines using a while loop.",
-    },
-    quizBank: [
-      { q: "int k=5; while(k>5){k--;} — how many iterations?", opts: ["5", "1", "0", "Infinite"], correct: 2, why: "5>5 is false at the first check." },
-      { q: "Which line prevents an infinite loop in `int i=0; while(i<4){...}`?", opts: ["println(i);", "i++;", "int i=0;", "while(true);"], correct: 1, why: "Only updating i moves toward false." },
-      { q: "Repeat until the user types stop. Condition?", opts: ['while(input=="stop")', 'while(!input.equals("stop"))', "while(true)", "while(input!=null)"], correct: 1, why: ".equals compares String content." },
-      { q: "When does a while loop's body run zero times?", opts: ["Never", "When the condition is false at the first check", "Only with break", "When n is negative"], correct: 1, why: "The condition is checked before the first pass." },
-    ],
-  },
-  {
-    code: "2.11",
-    title: "If Statements",
-    goal: "Make decisions with <b>if</b>, <b>else if</b>, and <b>else</b>, running different code for different situations.",
-    blocks: [
-      { type: "prose", html: "An <strong>if statement</strong> lets a program choose what to do based on a condition." },
-      { type: "code", code: "int score = 72;\nif (score >= 90) {\n    System.out.println(\"A\");\n} else if (score >= 60) {\n    System.out.println(\"Pass\");\n} else {\n    System.out.println(\"Try again\");\n}", out: "Pass" },
-      { type: "callout", kind: "mistake", title: "Common beginner mistakes", html: "<strong>Using <code>=</code> instead of <code>==</code></strong> in a condition. <strong>A semicolon after the condition</strong>: <code>if (x &gt; 0);</code> ends the if immediately. <strong>Forgetting braces</strong> on multi-line blocks." },
-      { type: "exercise", html: "Read a number with <code>inputInt</code> and print \"positive\", \"negative\", or \"zero\".", meta: "checks: correct branch for each case" },
-    ],
-    exercise: {
-      prompt: 'Read an int with inputInt("Number: ") and print "positive", "negative", or "zero".',
-      starter: 'int x = inputInt("Number: ");\n// decide and print\n',
-      expected: "positive",
-      behaviour: "Prints positive/negative/zero depending on the input value.",
-      stdin: "5",
-    },
-    quizBank: [
-      { q: "What's wrong with `if (x = 5)`?", opts: ["Nothing", "= is assignment, needs ==", "Missing braces", "Needs a semicolon"], correct: 1, why: "= assigns; == compares." },
-      { q: "What does `if (x > 0);` followed by a block do?", opts: ["Runs block only if x>0", "Always runs the block (empty if)", "Compile error", "Never runs"], correct: 1, why: "The semicolon ends the if immediately." },
-    ],
-  },
-];
-
-const DEMO_STUDENTS = ["Ada Lovelace", "Grace Hopper", "Alan Turing", "Katherine Johnson", "Linus Torvalds"];
-
-async function main() {
-  console.log("Seeding classOS…");
-
-  // clean slate (safe for a dev prototype DB)
-  await prisma.attempt.deleteMany();
-  await prisma.progress.deleteMany();
-  await prisma.aiCall.deleteMany();
-  await prisma.lesson.deleteMany();
-  await prisma.chapter.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.class.deleteMany();
-
-  // Exercises + quiz banks I authored for these 4 lessons — merged onto the
-  // imported bodies so the graded exercise and clean quiz keep working.
-  const EXTRAS: Record<string, { exercise: Exercise; quizBank: QuizQuestion[] }> = Object.fromEntries(
-    UNIT2.map((l) => [l.code, { exercise: l.exercise, quizBank: l.quizBank }])
-  );
-
-  const chapters: any[] = existsSync(SEED_JSON)
-    ? JSON.parse(readFileSync(SEED_JSON, "utf8")).chapters
-    : [{ order: 2, title: "Unit 2 — Basic Java", lessons: UNIT2 }];
-
-  let lessonCount = 0;
-  for (const c of chapters) {
-    const chapter = await prisma.chapter.create({ data: { order: c.order ?? 2, title: c.title } });
-    const ls = c.lessons ?? [];
-    for (let i = 0; i < ls.length; i++) {
-      const l = ls[i];
-      const extra = EXTRAS[l.code] || {};
-      const exercise = l.exercise && Object.keys(l.exercise).length ? l.exercise : extra.exercise ?? {};
-      const quizBank = l.quizBank && l.quizBank.length ? l.quizBank : extra.quizBank ?? [];
-      await prisma.lesson.create({
-        data: {
-          chapterId: chapter.id,
-          code: l.code,
-          order: l.order ?? i,
-          title: l.title,
-          goal: l.goal ?? "",
-          blocks: l.blocks as any,
-          exercise: exercise as any,
-          quizBank: quizBank as any,
-        },
-      });
-      lessonCount++;
-    }
-  }
-
-  // No public defaults: unless overridden, passwords are random per-seed and
-  // printed below. (A fixed default in a public README = free admin access.)
-  const genPw = () => crypto.randomBytes(9).toString("base64url");
-  const adminPw = process.env.ADMIN_PASSWORD || genPw();
-  const teacherPw = process.env.TEACHER_PASSWORD || genPw();
-
-  await prisma.user.create({
-    data: { name: "Owner", email: "admin@classos.dev", role: "ADMIN", passwordHash: hashPassword(adminPw) },
-  });
-  const teacher = await prisma.user.create({
-    data: { name: "Ms. Rivera", email: "teacher@classos.dev", role: "TEACHER", passwordHash: hashPassword(teacherPw) },
-  });
-
-  const demoClass = await prisma.class.create({
-    data: { name: "Period 3 — Intro Java", joinCode: "JAVA26", teacherId: teacher.id },
-  });
-  for (const name of DEMO_STUDENTS) {
-    await prisma.user.create({ data: { name, role: "STUDENT", classId: demoClass.id } });
-  }
-
-  console.log(`Seeded ${lessonCount} lessons, 1 class, ${DEMO_STUDENTS.length + 2} users.`);
-  console.log("");
-  console.log("── Sign-in details (SAVE THESE — passwords are random) ──");
-  console.log(`  Admin:    admin@classos.dev / ${adminPw}`);
-  console.log(`  Teacher:  teacher@classos.dev / ${teacherPw}`);
-  console.log(`  Students: join code JAVA26 + any name (at /join)`);
-  console.log("  You can change passwords any time at /account.");
-  console.log("─────────────────────────────────────────────────────────");
-}
-
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
-</file>
-
 <file path="next.config.mjs">
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7738,48 +8385,6 @@ const nextConfig = {
 };
 
 export default nextConfig;
-</file>
-
-<file path="package.json">
-{
-  "name": "classos",
-  "version": "0.1.0",
-  "private": true,
-  "description": "classOS — self-hosted, editable, AI-integrated Java teaching platform",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate",
-    "db:push": "prisma db push",
-    "db:seed": "prisma db seed",
-    "db:reset": "prisma db push --force-reset && prisma db seed",
-    "db:studio": "prisma studio",
-    "import:lessons": "node scripts/import-lessons.mjs",
-    "setup": "prisma generate && prisma db push && prisma db seed"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
-  "dependencies": {
-    "@codemirror/lang-java": "^6.0.1",
-    "@prisma/client": "^6.2.1",
-    "@uiw/react-codemirror": "^4.23.7",
-    "next": "^15.1.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "server-only": "^0.0.1"
-  },
-  "devDependencies": {
-    "@types/node": "^22.10.5",
-    "@types/react": "^19.0.4",
-    "@types/react-dom": "^19.0.2",
-    "prisma": "^6.2.1",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
-  }
-}
 </file>
 
 <file path="README.md">
@@ -7898,128 +8503,141 @@ Each is a self-contained upgrade — the surrounding code doesn't change:
   the coding panel. The scratchpad, generator, and tutor work on every lesson.
 </file>
 
-<file path="app/api/curriculum/route.ts">
+<file path="app/account/page.tsx">
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { currentUser } from "@/lib/auth";
+import ProfileForm from "@/components/account/ProfileForm";
+import PasswordForm from "@/components/PasswordForm";
+import TotpSetup from "@/components/account/TotpSetup";
+
+export default async function AccountPage() {
+  const me = await currentUser();
+  if (!me) redirect("/login");
+  if (!me.passwordHash) redirect("/lessons");
+
+  return (
+    <div className="main" style={{ maxWidth: 720 }}>
+      <div className="crumb">YOUR ACCOUNT</div>
+      <h1 className="title" style={{ fontSize: 26 }}>{me.name}</h1>
+      <p style={{ color: "var(--muted)", marginBottom: 18 }}>{me.email} · {me.role}</p>
+
+      <div className="panel">
+        <h2>Profile</h2>
+        <ProfileForm initialName={me.name} initialAvatar={me.avatar} />
+      </div>
+
+      <div className="panel">
+        <h2>Change password</h2>
+        <PasswordForm />
+      </div>
+
+      {me.role !== "STUDENT" && (
+        <div className="panel">
+          <h2>Two-factor authentication <span className="tag k">SECURITY</span></h2>
+          <TotpSetup enabled={Boolean(me.totpSecret)} />
+        </div>
+      )}
+
+      {me.role === "ADMIN" && (
+        <div className="panel">
+          <h2>Accounts</h2>
+          <p style={{ fontSize: 14, marginBottom: 10 }}>Manage every user — emails, passwords, locks, 2FA, teachers.</p>
+          <Link className="btn" href="/admin/users" style={{ textDecoration: "none" }}>Open account control →</Link>
+        </div>
+      )}
+    </div>
+  );
+}
+</file>
+
+<file path="app/admin/settings/page.tsx">
+import { redirect } from "next/navigation";
+import { currentUser } from "@/lib/auth";
+import { getLLMConfigForClient } from "@/lib/settings";
+import SettingsForm from "@/components/SettingsForm";
+import Forbidden from "@/components/Forbidden";
+
+export default async function SettingsPage() {
+  const me = await currentUser();
+  if (!me) redirect("/login");
+  if (me.role !== "ADMIN") return <Forbidden need="Admin" />;
+  const cfg = await getLLMConfigForClient();
+  const { getSmtpConfig } = await import("@/lib/email");
+  const smtpCfg = await getSmtpConfig();
+  (cfg as any).smtp = smtpCfg ? { host: smtpCfg.host, port: smtpCfg.port, user: smtpCfg.user } : null;
+  return (
+    <div className="main">
+      <div className="crumb">ADMIN · AI PROVIDER</div>
+      <h1 className="title" style={{ marginBottom: 6 }}>Settings</h1>
+      <p style={{ color: "var(--muted)", marginBottom: 10 }}>
+        Bring your own key. Swap providers here — no redeploy. The app runs offline (canned responses) until you add one.
+      </p>
+      <SettingsForm initial={cfg} />
+    </div>
+  );
+}
+</file>
+
+<file path="app/api/curriculum/import/route.ts">
 import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { requireRoleApi } from "@/lib/auth";
 
-// GET whole curriculum tree (for the editor + export).
-export async function GET() {
-  const gate = await requireRoleApi("ADMIN");
-  if (gate instanceof NextResponse) return gate;
-  const chapters = await prisma.chapter.findMany({
-    orderBy: { order: "asc" },
-    include: { lessons: { orderBy: { order: "asc" } } },
-  });
-  return NextResponse.json({ chapters });
-}
-
-// PUT autosaves the DRAFT (never live fields — students keep seeing the last
-// published version until the owner hits Publish).
-export async function PUT(req: Request) {
-  const gate = await requireRoleApi("ADMIN");
-  if (gate instanceof NextResponse) return gate;
-  const { id, draft, code } = await req.json();
-  const data: Record<string, unknown> = { draft, draftAt: new Date() };
-  if (code !== undefined) data.code = code; // lesson code is structural, applies immediately
-  const lesson = await prisma.lesson.update({ where: { id }, data });
-  return NextResponse.json({ ok: true, draftAt: lesson.draftAt });
-}
-
-// POST = structural actions from the editor (add/delete/duplicate/rename).
+// Import curriculum JSON. Shape: { chapters: [...], mode?: "append" | "replace" }.
+// - "append" (default): add these chapters/lessons alongside existing ones;
+//   colliding lesson codes get a "-2" suffix. Nothing is deleted.
+// - "replace": wipe everything first (attempts/progress too). Used by the
+//   editor's Import (which warns first).
 export async function POST(req: Request) {
   const gate = await requireRoleApi("ADMIN");
   if (gate instanceof NextResponse) return gate;
   const body = await req.json();
+  const chapters = body.chapters;
+  const mode = body.mode === "replace" ? "replace" : "append";
+  if (!Array.isArray(chapters)) return NextResponse.json({ error: "expected { chapters: [] }" }, { status: 400 });
 
-  switch (body.action) {
-    case "addChapter": {
-      const count = await prisma.chapter.count();
-      const chapter = await prisma.chapter.create({ data: { order: count + 1, title: body.title || "New Chapter" } });
-      return NextResponse.json({ ok: true, chapter });
+  let added = 0;
+  await prisma.$transaction(async (tx) => {
+    if (mode === "replace") {
+      await tx.attempt.deleteMany();
+      await tx.progress.deleteMany();
+      await tx.lesson.deleteMany();
+      await tx.chapter.deleteMany();
     }
-    case "renameChapter": {
-      await prisma.chapter.update({ where: { id: body.chapterId }, data: { title: body.title } });
-      return NextResponse.json({ ok: true });
+
+    const used = new Set((await tx.lesson.findMany({ select: { code: true } })).map((l) => l.code));
+    const chapCount = await tx.chapter.count();
+
+    for (let ci = 0; ci < chapters.length; ci++) {
+      const c = chapters[ci];
+      const chapter = await tx.chapter.create({ data: { order: c.order ?? chapCount + ci + 1, title: c.title || "Untitled chapter" } });
+      const lessons = c.lessons || [];
+      for (let li = 0; li < lessons.length; li++) {
+        const l = lessons[li];
+        let code = String(l.code || `${ci}.${li}`);
+        while (used.has(code)) code = `${code}-2`;
+        used.add(code);
+        await tx.lesson.create({
+          data: {
+            chapterId: chapter.id,
+            code,
+            order: l.order ?? li,
+            title: l.title || "Untitled lesson",
+            goal: l.goal || "",
+            objectives: l.objectives ?? undefined,
+            blocks: l.blocks ?? [],
+            exercise: l.exercise ?? {},
+            quizBank: l.quizBank ?? [],
+            masteryQuiz: l.masteryQuiz ?? undefined,
+          },
+        });
+        added++;
+      }
     }
-    case "addLesson": {
-      const count = await prisma.lesson.count({ where: { chapterId: body.chapterId } });
-      const lesson = await prisma.lesson.create({
-        data: {
-          chapterId: body.chapterId,
-          code: body.code || `new-${Date.now().toString(36)}`,
-          order: count,
-          title: "New Lesson",
-          goal: "",
-          blocks: [],
-          exercise: {},
-          quizBank: [],
-        },
-      });
-      return NextResponse.json({ ok: true, lesson });
-    }
-    case "duplicateLesson": {
-      const src = await prisma.lesson.findUnique({ where: { id: body.lessonId } });
-      if (!src) return NextResponse.json({ error: "not found" }, { status: 404 });
-      const lesson = await prisma.lesson.create({
-        data: {
-          chapterId: src.chapterId,
-          code: `${src.code}-copy`,
-          order: src.order + 1,
-          title: `${src.title} (copy)`,
-          goal: src.goal,
-          blocks: src.blocks as any,
-          exercise: src.exercise as any,
-          quizBank: src.quizBank as any,
-        },
-      });
-      return NextResponse.json({ ok: true, lesson });
-    }
-    case "deleteLesson": {
-      await prisma.lesson.delete({ where: { id: body.lessonId } });
-      return NextResponse.json({ ok: true });
-    }
-    case "publish": {
-      const l = await prisma.lesson.findUnique({ where: { id: body.lessonId } });
-      if (!l || !l.draft) return NextResponse.json({ error: "nothing to publish" }, { status: 400 });
-      // Snapshot the outgoing live version first — that's the undo history.
-      await prisma.lessonVersion.create({
-        data: {
-          lessonId: l.id,
-          snapshot: { title: l.title, goal: l.goal, objectives: l.objectives, blocks: l.blocks, exercise: l.exercise, quizBank: l.quizBank } as any,
-        },
-      });
-      const d = l.draft as any;
-      await prisma.lesson.update({
-        where: { id: l.id },
-        data: {
-          title: d.title ?? l.title,
-          goal: d.goal ?? l.goal,
-          objectives: d.objectives ?? l.objectives ?? [],
-          blocks: d.blocks ?? l.blocks,
-          exercise: d.exercise ?? l.exercise,
-          quizBank: d.quizBank ?? l.quizBank,
-          draft: Prisma.DbNull,
-          draftAt: null,
-        },
-      });
-      return NextResponse.json({ ok: true });
-    }
-    case "discardDraft": {
-      await prisma.lesson.update({ where: { id: body.lessonId }, data: { draft: Prisma.DbNull, draftAt: null } });
-      return NextResponse.json({ ok: true });
-    }
-    case "restoreVersion": {
-      const v = await prisma.lessonVersion.findUnique({ where: { id: body.versionId } });
-      if (!v) return NextResponse.json({ error: "version not found" }, { status: 404 });
-      // Restore into the DRAFT so the owner can review before publishing.
-      await prisma.lesson.update({ where: { id: v.lessonId }, data: { draft: v.snapshot as any, draftAt: new Date() } });
-      return NextResponse.json({ ok: true });
-    }
-    default:
-      return NextResponse.json({ error: "unknown action" }, { status: 400 });
-  }
+  });
+
+  return NextResponse.json({ ok: true, added, mode });
 }
 </file>
 
@@ -8161,23 +8779,6 @@ export async function POST(req: Request) {
   } catch (e) {
     return NextResponse.json({ ok: false, message: (e as Error).message.slice(0, 200) });
   }
-}
-</file>
-
-<file path="app/api/settings/route.ts">
-import { NextResponse } from "next/server";
-import { requireRoleApi } from "@/lib/auth";
-import { saveLLMConfig } from "@/lib/settings";
-
-// Save the whole LLM config: keys (rotation lanes), per-task models, prompts.
-// Admin only. Keys are encrypted in saveLLMConfig; a blank key row keeps the
-// existing key (matched by id).
-export async function POST(req: Request) {
-  const gate = await requireRoleApi("ADMIN");
-  if (gate instanceof NextResponse) return gate;
-  const body = await req.json();
-  await saveLLMConfig({ keys: body.keys || [], models: body.models || {}, prompts: body.prompts || {} });
-  return NextResponse.json({ ok: true });
 }
 </file>
 
@@ -9327,147 +9928,6 @@ export default function Quiz({
 }
 </file>
 
-<file path="components/SettingsForm.tsx">
-"use client";
-
-import { useState } from "react";
-import { DEFAULT_PROMPTS, PROMPT_PLACEHOLDERS } from "@/lib/llm/prompts";
-
-type KeyRow = { id: string; provider: string; model: string; label: string; hasKey: boolean; newKey?: string };
-type ClientCfg = {
-  keys: { id: string; provider: string; model: string; label: string; hasKey: boolean }[];
-  models: Record<string, string>;
-  prompts: Record<string, string>;
-};
-
-const PROVIDERS = [
-  { id: "gemini", label: "Google Gemini (free tier)" },
-  { id: "groq", label: "Groq (free, fast)" },
-  { id: "openrouter", label: "OpenRouter (many models)" },
-  { id: "anthropic", label: "Anthropic (Claude)" },
-];
-const MODEL_HINT: Record<string, string> = {
-  gemini: "gemini-2.0-flash",
-  groq: "llama-3.3-70b-versatile",
-  openrouter: "meta-llama/llama-3.3-70b-instruct:free",
-  anthropic: "claude-haiku-4-5",
-};
-const FEATURES: { key: string; label: string }[] = [
-  { key: "tutor", label: "Tutor chat" },
-  { key: "grade", label: "Grading / feedback" },
-  { key: "generate", label: "Question generation" },
-];
-
-export default function SettingsForm({ initial }: { initial: ClientCfg }) {
-  const [keys, setKeys] = useState<KeyRow[]>(initial.keys.length ? initial.keys : []);
-  const [models, setModels] = useState<Record<string, string>>(initial.models || {});
-  const [prompts, setPrompts] = useState<Record<string, string>>(initial.prompts || {});
-  const [status, setStatus] = useState("");
-
-  const rid = () => Math.random().toString(36).slice(2, 10);
-  const addKey = () => setKeys((k) => [...k, { id: rid(), provider: "gemini", model: "", label: "", hasKey: false }]);
-  const setKey = (id: string, patch: Partial<KeyRow>) => setKeys((k) => k.map((r) => (r.id === id ? { ...r, ...patch } : r)));
-  const delKey = (id: string) => setKeys((k) => k.filter((r) => r.id !== id));
-
-  async function save() {
-    setStatus("saving…");
-    await fetch("/api/settings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        keys: keys.map((k) => ({ id: k.id, provider: k.provider, model: k.model || MODEL_HINT[k.provider], label: k.label, apiKey: k.newKey || undefined })),
-        models,
-        prompts,
-      }),
-    });
-    setKeys((k) => k.map((r) => ({ ...r, newKey: undefined, hasKey: r.hasKey || !!r.newKey })));
-    setStatus("saved ✓ — keys encrypted at rest");
-  }
-
-  async function testKey(k: KeyRow) {
-    setStatus(`testing ${k.label || k.provider}…`);
-    const r = await fetch("/api/settings/test", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: k.id, provider: k.provider, apiKey: k.newKey, model: k.model || MODEL_HINT[k.provider] }),
-    }).then((x) => x.json());
-    setStatus(r.message);
-  }
-
-  return (
-    <div style={{ maxWidth: 720 }}>
-      {/* ── Keys / rotation ── */}
-      <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "8px 0 4px" }}>API keys</h2>
-      <p style={{ color: "var(--muted)", fontSize: 13.5, marginBottom: 10 }}>
-        Add several keys — the app tries them <b>in order and rotates to the next when one hits its rate limit</b>, so multiple
-        free keys stretch your daily quota. Runs offline (canned) if none work.
-      </p>
-
-      {keys.map((k, i) => (
-        <div className="classcard" key={k.id}>
-          <div className="cchead">
-            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>#{i + 1}</span>
-            <select className="f" style={{ maxWidth: 200 }} value={k.provider} onChange={(e) => setKey(k.id, { provider: e.target.value })}>
-              {PROVIDERS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
-            </select>
-            <input className="f" style={{ maxWidth: 130 }} value={k.label} placeholder="label (optional)" onChange={(e) => setKey(k.id, { label: e.target.value })} />
-            <span style={{ flex: 1 }} />
-            <button className="tbtn2" onClick={() => testKey(k)} title="Test this key">test</button>
-            <button className="tbtn2 danger" onClick={() => delKey(k.id)}>✕</button>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
-            <input className="f" type="password" value={k.newKey || ""} placeholder={k.hasKey ? "•••••••• saved (blank = keep)" : "paste API key"} onChange={(e) => setKey(k.id, { newKey: e.target.value })} />
-            <input className="f" value={k.model} placeholder={`model — e.g. ${MODEL_HINT[k.provider]}`} onChange={(e) => setKey(k.id, { model: e.target.value })} />
-          </div>
-        </div>
-      ))}
-      <button className="btn ghost" onClick={addKey}>+ Add key</button>
-
-      {/* ── Per-task model ── */}
-      <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "22px 0 4px" }}>Model per task</h2>
-      <p style={{ color: "var(--muted)", fontSize: 13.5, marginBottom: 10 }}>
-        Optional: force a specific model for each task (leave blank to use each key's model). Handy for a cheap model on
-        grading and a stronger one on the tutor.
-      </p>
-      {FEATURES.map((f) => (
-        <label className="field" key={f.key} style={{ display: "grid", gridTemplateColumns: "180px 1fr", alignItems: "center", gap: 10, margin: "6px 0" }}>
-          <span className="l" style={{ margin: 0 }}>{f.label}</span>
-          <input className="f" value={models[f.key] || ""} placeholder="(use the key's model)" onChange={(e) => setModels((m) => ({ ...m, [f.key]: e.target.value }))} />
-        </label>
-      ))}
-
-      {/* ── Prompts ── */}
-      <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "22px 0 4px" }}>AI prompts</h2>
-      <p style={{ color: "var(--muted)", fontSize: 13.5, marginBottom: 10 }}>
-        Edit how the AI is instructed. Blank = the built-in default. Keep the <code>{"{{placeholders}}"}</code> or they render empty.
-      </p>
-      {FEATURES.map((f) => (
-        <div key={f.key} className="field" style={{ margin: "10px 0" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span className="l" style={{ margin: 0 }}>{f.label} prompt</span>
-            <span className="meta" style={{ margin: 0 }}>placeholders: {(PROMPT_PLACEHOLDERS[f.key] || []).map((p) => `{{${p}}}`).join(" ")}</span>
-            <span style={{ flex: 1 }} />
-            <button className="tbtn2" onClick={() => setPrompts((p) => ({ ...p, [f.key]: (DEFAULT_PROMPTS as any)[f.key] }))}>load default</button>
-            <button className="tbtn2" onClick={() => setPrompts((p) => ({ ...p, [f.key]: "" }))}>reset</button>
-          </div>
-          <textarea className="f" rows={5} style={{ fontFamily: "var(--mono)", fontSize: 12 }} value={prompts[f.key] || ""} placeholder="Using the built-in default — type here to override…" onChange={(e) => setPrompts((p) => ({ ...p, [f.key]: e.target.value }))} />
-        </div>
-      ))}
-
-      <div className="notice">
-        ⚠ <b>Privacy:</b> most free tiers train on submitted prompts. Fine for lesson content and synthetic practice — weigh it
-        before sending real student data.
-      </div>
-
-      <div className="runrow" style={{ marginTop: 14 }}>
-        <button className="btn green" onClick={save}>Save all settings</button>
-        {status && <span className="meta" style={{ margin: 0 }}>{status}</span>}
-      </div>
-    </div>
-  );
-}
-</file>
-
 <file path="lib/settings.ts">
 import "server-only";
 import crypto from "node:crypto";
@@ -9608,6 +10068,425 @@ export async function saveLLMConfig(input: {
   for (const p of ["tutor", "grade", "generate"] as PromptKey[]) if (input.prompts?.[p]?.trim()) prompts[p] = input.prompts[p];
 
   await setSetting("llm", { keys, models, prompts });
+}
+</file>
+
+<file path="prisma/seed.ts">
+import { existsSync, readFileSync } from "node:fs";
+import crypto from "node:crypto";
+import { PrismaClient } from "@prisma/client";
+import type { Block, Exercise, QuizQuestion } from "../lib/curriculum/blocks";
+
+const prisma = new PrismaClient();
+
+// Same scrypt format as lib/auth.ts (duplicated here because the seed runs
+// under tsx without the Next.js "server-only" context).
+function hashPassword(password: string): string {
+  const salt = crypto.randomBytes(16).toString("hex");
+  return `${salt}:${crypto.scryptSync(password, salt, 64).toString("hex")}`;
+}
+
+// If `npm run import:lessons` has produced this, we seed all 15 real lessons.
+const SEED_JSON = "prisma/curriculum.seed.json";
+
+type SeedLesson = {
+  code: string;
+  title: string;
+  goal: string;
+  blocks: Block[];
+  exercise: Exercise;
+  quizBank: QuizQuestion[];
+};
+
+// A first slice of Unit 2, in the canonical block model. Import the remaining
+// lessons any time via Admin → Editor → Import JSON (that's the "your data,
+// your control" path from the brief). These four make the demo fully clickable.
+const UNIT2: SeedLesson[] = [
+  {
+    code: "2.1",
+    title: "Printing in Java",
+    goal: "Display text and numbers on the screen with <b>System.out.println</b>, and control formatting with escape sequences.",
+    blocks: [
+      { type: "prose", html: "Every program needs to communicate with the person using it. In Java, the most basic way to send information to the screen is to <strong>print</strong> it." },
+      { type: "heading", text: "Your first printed line" },
+      { type: "prose", html: "Java code lives inside a <strong>class</strong> and runs starting from a special method called <code>main</code>. Treat the outer lines as a fixed frame you write your code inside." },
+      { type: "code", code: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, world!");\n    }\n}', out: "Hello, world!" },
+      { type: "prose", html: "<strong>1.</strong> Text goes in double quotes (a <strong>String</strong>). <strong>2.</strong> Every statement ends with a semicolon <code>;</code>. <strong>3.</strong> <code>println</code> adds a new line at the end." },
+      { type: "callout", kind: "mistake", title: "Common beginner mistakes", html: "<strong>Forgetting the semicolon</strong> is the #1 cause of \"it won't compile.\" <strong>Forgetting the quotes</strong> makes Java look for a variable. <strong>Smart/curly quotes</strong> from a document are rejected — use straight quotes." },
+      { type: "check", items: [["What is the difference between <code>print</code> and <code>println</code>?", "<code>println</code> moves to a new line after printing; <code>print</code> stays on the same line."]] },
+      { type: "exercise", html: 'Print a three-line "business card": your name, a title, and an email — each on its own line.', meta: "checks: 3 lines of output" },
+    ],
+    exercise: {
+      prompt: "Print exactly three lines: your name, a title, and an email — one per line.",
+      starter: '// print three lines here\n',
+      expected: "Ada Lovelace\nProgrammer\nada@classos.dev",
+      behaviour: "Three separate lines of output, one for name, title, and email.",
+    },
+    quizBank: [
+      { q: "Which command moves to a new line after printing?", opts: ["print", "println", "printf", "echo"], correct: 1, why: "println = print line." },
+      { q: 'What does "a\\nb" print?', opts: ["a\\nb", "ab", "a then b on two lines", "error"], correct: 2, why: "\\n is a newline." },
+      { q: 'What prints from "Sum: " + 3 + 4?', opts: ["Sum: 7", "Sum: 34", "error", "Sum: 3 4"], correct: 1, why: "Left-to-right: text + number becomes text." },
+    ],
+  },
+  {
+    code: "2.2",
+    title: "Variables and Types",
+    goal: "Store, name, and reuse values using <b>variables</b>, and choose the right <b>type</b> for each kind of data.",
+    blocks: [
+      { type: "prose", html: "A <strong>variable</strong> is a named box in memory that holds a value you want to keep and reuse." },
+      { type: "heading", text: "Declaring a variable" },
+      { type: "code", code: 'int age = 17;\ndouble price = 4.99;\nboolean isOpen = true;\nString name = "Ava";\n\nSystem.out.println(name + " is " + age);', out: "Ava is 17" },
+      { type: "terms", items: [["int", "whole numbers"], ["double", "decimal numbers"], ["boolean", "true / false"], ["String", "text"]] },
+      { type: "callout", kind: "tip", title: "= is assignment, not equality", html: 'Read <code>int age = 17;</code> as "make an integer box called age and put 17 in it."' },
+      { type: "exercise", html: "Declare a variable for your age and one for your name, then print a sentence using both.", meta: "checks: one line combining both" },
+    ],
+    exercise: {
+      prompt: "Declare an int and a String, then print one sentence using both.",
+      starter: "int age = 16;\nString name = \"Sam\";\n// print a sentence using both\n",
+      expected: "Sam is 16 years old",
+      behaviour: "One line that combines the name and age into a sentence.",
+    },
+    quizBank: [
+      { q: "Which type holds 4.99?", opts: ["int", "double", "boolean", "String"], correct: 1, why: "Decimals need double." },
+      { q: "double d = 3; — allowed?", opts: ["No", "Yes, 3 becomes 3.0", "Only with quotes", "Only in loops"], correct: 1, why: "int widens to double." },
+    ],
+  },
+  {
+    code: "2.10",
+    title: "While Loops",
+    goal: "Repeat code an <b>unknown</b> number of times — as long as a condition stays true.",
+    blocks: [
+      { type: "prose", html: "A <strong>while loop</strong> repeats a block of code <em>as long as</em> a condition is true. Before every pass, Java checks the condition: true → run again; false → skip past." },
+      { type: "heading", text: "Anatomy of a while loop" },
+      { type: "code", code: "int n = 1;\nwhile (n <= 3) {\n    System.out.println(n);\n    n++;\n}", out: "1\n2\n3" },
+      { type: "prose", html: "Three parts to get right: where the variable <strong>starts</strong>, the <strong>condition</strong> that keeps it going, and the line that <strong>moves it toward stopping</strong> (<code>n++</code>)." },
+      { type: "callout", kind: "mistake", title: "The infinite loop", html: "If nothing inside the loop moves the condition toward false, it runs forever. The classic cause is forgetting the update line." },
+      { type: "check", items: [["Why does a loop with no update line run forever?", "The condition never becomes false, so Java keeps re-running the block."]] },
+      { type: "exercise", html: "Use a while loop to print the numbers 1, 2, 3 — each on its own line.", meta: "checks: output is 1, 2, 3" },
+    ],
+    exercise: {
+      prompt: "Using a while loop, print 1, 2, 3 — each on its own line.",
+      starter: "int n = 1;\n// your loop here\n",
+      expected: "1\n2\n3",
+      behaviour: "Prints 1, 2, 3 on separate lines using a while loop.",
+    },
+    quizBank: [
+      { q: "int k=5; while(k>5){k--;} — how many iterations?", opts: ["5", "1", "0", "Infinite"], correct: 2, why: "5>5 is false at the first check." },
+      { q: "Which line prevents an infinite loop in `int i=0; while(i<4){...}`?", opts: ["println(i);", "i++;", "int i=0;", "while(true);"], correct: 1, why: "Only updating i moves toward false." },
+      { q: "Repeat until the user types stop. Condition?", opts: ['while(input=="stop")', 'while(!input.equals("stop"))', "while(true)", "while(input!=null)"], correct: 1, why: ".equals compares String content." },
+      { q: "When does a while loop's body run zero times?", opts: ["Never", "When the condition is false at the first check", "Only with break", "When n is negative"], correct: 1, why: "The condition is checked before the first pass." },
+    ],
+  },
+  {
+    code: "2.11",
+    title: "If Statements",
+    goal: "Make decisions with <b>if</b>, <b>else if</b>, and <b>else</b>, running different code for different situations.",
+    blocks: [
+      { type: "prose", html: "An <strong>if statement</strong> lets a program choose what to do based on a condition." },
+      { type: "code", code: "int score = 72;\nif (score >= 90) {\n    System.out.println(\"A\");\n} else if (score >= 60) {\n    System.out.println(\"Pass\");\n} else {\n    System.out.println(\"Try again\");\n}", out: "Pass" },
+      { type: "callout", kind: "mistake", title: "Common beginner mistakes", html: "<strong>Using <code>=</code> instead of <code>==</code></strong> in a condition. <strong>A semicolon after the condition</strong>: <code>if (x &gt; 0);</code> ends the if immediately. <strong>Forgetting braces</strong> on multi-line blocks." },
+      { type: "exercise", html: "Read a number with <code>inputInt</code> and print \"positive\", \"negative\", or \"zero\".", meta: "checks: correct branch for each case" },
+    ],
+    exercise: {
+      prompt: 'Read an int with inputInt("Number: ") and print "positive", "negative", or "zero".',
+      starter: 'int x = inputInt("Number: ");\n// decide and print\n',
+      expected: "positive",
+      behaviour: "Prints positive/negative/zero depending on the input value.",
+      stdin: "5",
+    },
+    quizBank: [
+      { q: "What's wrong with `if (x = 5)`?", opts: ["Nothing", "= is assignment, needs ==", "Missing braces", "Needs a semicolon"], correct: 1, why: "= assigns; == compares." },
+      { q: "What does `if (x > 0);` followed by a block do?", opts: ["Runs block only if x>0", "Always runs the block (empty if)", "Compile error", "Never runs"], correct: 1, why: "The semicolon ends the if immediately." },
+    ],
+  },
+];
+
+const DEMO_STUDENTS = ["Ada Lovelace", "Grace Hopper", "Alan Turing", "Katherine Johnson", "Linus Torvalds"];
+
+async function main() {
+  console.log("Seeding classOS…");
+
+  // clean slate (safe for a dev prototype DB)
+  await prisma.attempt.deleteMany();
+  await prisma.progress.deleteMany();
+  await prisma.aiCall.deleteMany();
+  await prisma.lesson.deleteMany();
+  await prisma.chapter.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.class.deleteMany();
+
+  // Exercises + quiz banks I authored for these 4 lessons — merged onto the
+  // imported bodies so the graded exercise and clean quiz keep working.
+  const EXTRAS: Record<string, { exercise: Exercise; quizBank: QuizQuestion[] }> = Object.fromEntries(
+    UNIT2.map((l) => [l.code, { exercise: l.exercise, quizBank: l.quizBank }])
+  );
+
+  const chapters: any[] = existsSync(SEED_JSON)
+    ? JSON.parse(readFileSync(SEED_JSON, "utf8")).chapters
+    : [{ order: 2, title: "Unit 2 — Basic Java", lessons: UNIT2 }];
+
+  let lessonCount = 0;
+  for (const c of chapters) {
+    const chapter = await prisma.chapter.create({ data: { order: c.order ?? 2, title: c.title } });
+    const ls = c.lessons ?? [];
+    for (let i = 0; i < ls.length; i++) {
+      const l = ls[i];
+      const extra = EXTRAS[l.code] || {};
+      const exercise = l.exercise && Object.keys(l.exercise).length ? l.exercise : extra.exercise ?? {};
+      const quizBank = l.quizBank && l.quizBank.length ? l.quizBank : extra.quizBank ?? [];
+      await prisma.lesson.create({
+        data: {
+          chapterId: chapter.id,
+          code: l.code,
+          order: l.order ?? i,
+          title: l.title,
+          goal: l.goal ?? "",
+          blocks: l.blocks as any,
+          exercise: exercise as any,
+          quizBank: quizBank as any,
+        },
+      });
+      lessonCount++;
+    }
+  }
+
+  // No public defaults: unless overridden, passwords are random per-seed and
+  // printed below. (A fixed default in a public README = free admin access.)
+  const genPw = () => crypto.randomBytes(9).toString("base64url");
+  const adminPw = process.env.ADMIN_PASSWORD || genPw();
+  const teacherPw = process.env.TEACHER_PASSWORD || genPw();
+
+  await prisma.user.create({
+    data: { name: "Owner", email: "admin@classos.dev", role: "ADMIN", passwordHash: hashPassword(adminPw), emailVerifiedAt: new Date() },
+  });
+  const teacher = await prisma.user.create({
+    data: { name: "Ms. Rivera", email: "teacher@classos.dev", role: "TEACHER", passwordHash: hashPassword(teacherPw), emailVerifiedAt: new Date() },
+  });
+
+  const demoClass = await prisma.class.create({
+    data: { name: "Period 3 — Intro Java", joinCode: "JAVA26", teacherId: teacher.id },
+  });
+  for (const name of DEMO_STUDENTS) {
+    await prisma.user.create({ data: { name, role: "STUDENT", classId: demoClass.id } });
+  }
+
+  console.log(`Seeded ${lessonCount} lessons, 1 class, ${DEMO_STUDENTS.length + 2} users.`);
+  console.log("");
+  console.log("── Sign-in details (SAVE THESE — passwords are random) ──");
+  console.log(`  Admin:    admin@classos.dev / ${adminPw}`);
+  console.log(`  Teacher:  teacher@classos.dev / ${teacherPw}`);
+  console.log(`  Students: join code JAVA26 + any name (at /join)`);
+  console.log("  You can change passwords any time at /account.");
+  console.log("─────────────────────────────────────────────────────────");
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+</file>
+
+<file path="package.json">
+{
+  "name": "classos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "classOS — self-hosted, editable, AI-integrated Java teaching platform",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:reset": "prisma db push --force-reset && prisma db seed",
+    "db:studio": "prisma studio",
+    "import:lessons": "node scripts/import-lessons.mjs",
+    "setup": "prisma generate && prisma db push && prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@codemirror/lang-java": "^6.0.1",
+    "@prisma/client": "^6.2.1",
+    "@uiw/react-codemirror": "^4.23.7",
+    "next": "^15.1.4",
+    "nodemailer": "^9.0.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/nodemailer": "^8.0.1",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2",
+    "prisma": "^6.2.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
+</file>
+
+<file path="app/api/curriculum/route.ts">
+import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import { requireRoleApi } from "@/lib/auth";
+
+// GET whole curriculum tree (for the editor + export).
+export async function GET() {
+  const gate = await requireRoleApi("ADMIN");
+  if (gate instanceof NextResponse) return gate;
+  const chapters = await prisma.chapter.findMany({
+    orderBy: { order: "asc" },
+    include: { lessons: { orderBy: { order: "asc" } } },
+  });
+  return NextResponse.json({ chapters });
+}
+
+// PUT autosaves the DRAFT (never live fields — students keep seeing the last
+// published version until the owner hits Publish).
+export async function PUT(req: Request) {
+  const gate = await requireRoleApi("ADMIN");
+  if (gate instanceof NextResponse) return gate;
+  const { id, draft, code } = await req.json();
+  const data: Record<string, unknown> = { draft, draftAt: new Date() };
+  if (code !== undefined) data.code = code; // lesson code is structural, applies immediately
+  const lesson = await prisma.lesson.update({ where: { id }, data });
+  return NextResponse.json({ ok: true, draftAt: lesson.draftAt });
+}
+
+// POST = structural actions from the editor (add/delete/duplicate/rename).
+export async function POST(req: Request) {
+  const gate = await requireRoleApi("ADMIN");
+  if (gate instanceof NextResponse) return gate;
+  const body = await req.json();
+
+  switch (body.action) {
+    case "addChapter": {
+      const count = await prisma.chapter.count();
+      const chapter = await prisma.chapter.create({ data: { order: count + 1, title: body.title || "New Chapter" } });
+      return NextResponse.json({ ok: true, chapter });
+    }
+    case "renameChapter": {
+      await prisma.chapter.update({ where: { id: body.chapterId }, data: { title: body.title } });
+      return NextResponse.json({ ok: true });
+    }
+    case "addLesson": {
+      const count = await prisma.lesson.count({ where: { chapterId: body.chapterId } });
+      const lesson = await prisma.lesson.create({
+        data: {
+          chapterId: body.chapterId,
+          code: body.code || `new-${Date.now().toString(36)}`,
+          order: count,
+          title: "New Lesson",
+          goal: "",
+          blocks: [],
+          exercise: {},
+          quizBank: [],
+        },
+      });
+      return NextResponse.json({ ok: true, lesson });
+    }
+    case "duplicateLesson": {
+      const src = await prisma.lesson.findUnique({ where: { id: body.lessonId } });
+      if (!src) return NextResponse.json({ error: "not found" }, { status: 404 });
+      const lesson = await prisma.lesson.create({
+        data: {
+          chapterId: src.chapterId,
+          code: `${src.code}-copy`,
+          order: src.order + 1,
+          title: `${src.title} (copy)`,
+          goal: src.goal,
+          blocks: src.blocks as any,
+          exercise: src.exercise as any,
+          quizBank: src.quizBank as any,
+        },
+      });
+      return NextResponse.json({ ok: true, lesson });
+    }
+    case "deleteLesson": {
+      await prisma.lesson.delete({ where: { id: body.lessonId } });
+      return NextResponse.json({ ok: true });
+    }
+    case "publish": {
+      const l = await prisma.lesson.findUnique({ where: { id: body.lessonId } });
+      if (!l || !l.draft) return NextResponse.json({ error: "nothing to publish" }, { status: 400 });
+      // Snapshot the outgoing live version first — that's the undo history.
+      await prisma.lessonVersion.create({
+        data: {
+          lessonId: l.id,
+          snapshot: { title: l.title, goal: l.goal, objectives: l.objectives, blocks: l.blocks, exercise: l.exercise, quizBank: l.quizBank, masteryQuiz: l.masteryQuiz } as any,
+        },
+      });
+      const d = l.draft as any;
+      await prisma.lesson.update({
+        where: { id: l.id },
+        data: {
+          title: d.title ?? l.title,
+          goal: d.goal ?? l.goal,
+          objectives: d.objectives ?? l.objectives ?? [],
+          blocks: d.blocks ?? l.blocks,
+          exercise: d.exercise ?? l.exercise,
+          quizBank: d.quizBank ?? l.quizBank,
+          masteryQuiz: d.masteryQuiz ?? l.masteryQuiz ?? undefined,
+          draft: Prisma.DbNull,
+          draftAt: null,
+        },
+      });
+      return NextResponse.json({ ok: true });
+    }
+    case "discardDraft": {
+      await prisma.lesson.update({ where: { id: body.lessonId }, data: { draft: Prisma.DbNull, draftAt: null } });
+      return NextResponse.json({ ok: true });
+    }
+    case "restoreVersion": {
+      const v = await prisma.lessonVersion.findUnique({ where: { id: body.versionId } });
+      if (!v) return NextResponse.json({ error: "version not found" }, { status: 404 });
+      // Restore into the DRAFT so the owner can review before publishing.
+      await prisma.lesson.update({ where: { id: v.lessonId }, data: { draft: v.snapshot as any, draftAt: new Date() } });
+      return NextResponse.json({ ok: true });
+    }
+    default:
+      return NextResponse.json({ error: "unknown action" }, { status: 400 });
+  }
+}
+</file>
+
+<file path="app/api/settings/route.ts">
+import { NextResponse } from "next/server";
+import { requireRoleApi } from "@/lib/auth";
+import { saveLLMConfig } from "@/lib/settings";
+import { saveSmtpConfig, sendMail } from "@/lib/email";
+
+// Save settings (admin only): LLM config (keys/models/prompts) and/or SMTP.
+export async function POST(req: Request) {
+  const gate = await requireRoleApi("ADMIN");
+  if (gate instanceof NextResponse) return gate;
+  const body = await req.json();
+
+  if (body.smtp) {
+    await saveSmtpConfig(body.smtp);
+    if (body.smtp.testTo) {
+      try {
+        await sendMail(body.smtp.testTo, "classOS email test", "It works! Email verification and password resets are now active.");
+        return NextResponse.json({ ok: true, message: `Test email sent to ${body.smtp.testTo} ✓` });
+      } catch (e) {
+        return NextResponse.json({ ok: false, message: `Saved, but sending failed: ${(e as Error).message.slice(0, 160)}` });
+      }
+    }
+    if (!body.keys) return NextResponse.json({ ok: true });
+  }
+
+  await saveLLMConfig({ keys: body.keys || [], models: body.models || {}, prompts: body.prompts || {} });
+  return NextResponse.json({ ok: true });
 }
 </file>
 
@@ -9830,6 +10709,181 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
       </body>
     </html>
+  );
+}
+</file>
+
+<file path="components/SettingsForm.tsx">
+"use client";
+
+import { useState } from "react";
+import { DEFAULT_PROMPTS, PROMPT_PLACEHOLDERS } from "@/lib/llm/prompts";
+
+type KeyRow = { id: string; provider: string; model: string; label: string; hasKey: boolean; newKey?: string };
+type ClientCfg = {
+  keys: { id: string; provider: string; model: string; label: string; hasKey: boolean }[];
+  models: Record<string, string>;
+  prompts: Record<string, string>;
+  smtp?: { host: string; port: number; user: string } | null;
+};
+
+const PROVIDERS = [
+  { id: "gemini", label: "Google Gemini (free tier)" },
+  { id: "groq", label: "Groq (free, fast)" },
+  { id: "openrouter", label: "OpenRouter (many models)" },
+  { id: "anthropic", label: "Anthropic (Claude)" },
+];
+const MODEL_HINT: Record<string, string> = {
+  gemini: "gemini-2.0-flash",
+  groq: "llama-3.3-70b-versatile",
+  openrouter: "meta-llama/llama-3.3-70b-instruct:free",
+  anthropic: "claude-haiku-4-5",
+};
+const FEATURES: { key: string; label: string }[] = [
+  { key: "tutor", label: "Tutor chat" },
+  { key: "grade", label: "Grading / feedback" },
+  { key: "generate", label: "Question generation" },
+];
+
+export default function SettingsForm({ initial }: { initial: ClientCfg }) {
+  const [keys, setKeys] = useState<KeyRow[]>(initial.keys.length ? initial.keys : []);
+  const [models, setModels] = useState<Record<string, string>>(initial.models || {});
+  const [prompts, setPrompts] = useState<Record<string, string>>(initial.prompts || {});
+  const [smtp, setSmtp] = useState({ host: initial.smtp?.host || "", port: initial.smtp?.port ? String(initial.smtp.port) : "", user: initial.smtp?.user || "", pass: "" });
+  const [status, setStatus] = useState("");
+
+  const rid = () => Math.random().toString(36).slice(2, 10);
+  const addKey = () => setKeys((k) => [...k, { id: rid(), provider: "gemini", model: "", label: "", hasKey: false }]);
+  const setKey = (id: string, patch: Partial<KeyRow>) => setKeys((k) => k.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  const delKey = (id: string) => setKeys((k) => k.filter((r) => r.id !== id));
+
+  async function save() {
+    setStatus("saving…");
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        keys: keys.map((k) => ({ id: k.id, provider: k.provider, model: k.model || MODEL_HINT[k.provider], label: k.label, apiKey: k.newKey || undefined })),
+        models,
+        prompts,
+      }),
+    });
+    setKeys((k) => k.map((r) => ({ ...r, newKey: undefined, hasKey: r.hasKey || !!r.newKey })));
+    setStatus("saved ✓ — keys encrypted at rest");
+  }
+
+  async function testKey(k: KeyRow) {
+    setStatus(`testing ${k.label || k.provider}…`);
+    const r = await fetch("/api/settings/test", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: k.id, provider: k.provider, apiKey: k.newKey, model: k.model || MODEL_HINT[k.provider] }),
+    }).then((x) => x.json());
+    setStatus(r.message);
+  }
+
+  return (
+    <div style={{ maxWidth: 720 }}>
+      {/* ── Keys / rotation ── */}
+      <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "8px 0 4px" }}>API keys</h2>
+      <p style={{ color: "var(--muted)", fontSize: 13.5, marginBottom: 10 }}>
+        Add several keys — the app tries them <b>in order and rotates to the next when one hits its rate limit</b>, so multiple
+        free keys stretch your daily quota. Runs offline (canned) if none work.
+      </p>
+
+      {keys.map((k, i) => (
+        <div className="classcard" key={k.id}>
+          <div className="cchead">
+            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>#{i + 1}</span>
+            <select className="f" style={{ maxWidth: 200 }} value={k.provider} onChange={(e) => setKey(k.id, { provider: e.target.value })}>
+              {PROVIDERS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+            </select>
+            <input className="f" style={{ maxWidth: 130 }} value={k.label} placeholder="label (optional)" onChange={(e) => setKey(k.id, { label: e.target.value })} />
+            <span style={{ flex: 1 }} />
+            <button className="tbtn2" onClick={() => testKey(k)} title="Test this key">test</button>
+            <button className="tbtn2 danger" onClick={() => delKey(k.id)}>✕</button>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
+            <input className="f" type="password" value={k.newKey || ""} placeholder={k.hasKey ? "•••••••• saved (blank = keep)" : "paste API key"} onChange={(e) => setKey(k.id, { newKey: e.target.value })} />
+            <input className="f" value={k.model} placeholder={`model — e.g. ${MODEL_HINT[k.provider]}`} onChange={(e) => setKey(k.id, { model: e.target.value })} />
+          </div>
+        </div>
+      ))}
+      <button className="btn ghost" onClick={addKey}>+ Add key</button>
+
+      {/* ── Per-task model ── */}
+      <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "22px 0 4px" }}>Model per task</h2>
+      <p style={{ color: "var(--muted)", fontSize: 13.5, marginBottom: 10 }}>
+        Optional: force a specific model for each task (leave blank to use each key's model). Handy for a cheap model on
+        grading and a stronger one on the tutor.
+      </p>
+      {FEATURES.map((f) => (
+        <label className="field" key={f.key} style={{ display: "grid", gridTemplateColumns: "180px 1fr", alignItems: "center", gap: 10, margin: "6px 0" }}>
+          <span className="l" style={{ margin: 0 }}>{f.label}</span>
+          <input className="f" value={models[f.key] || ""} placeholder="(use the key's model)" onChange={(e) => setModels((m) => ({ ...m, [f.key]: e.target.value }))} />
+        </label>
+      ))}
+
+      {/* ── Prompts ── */}
+      <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "22px 0 4px" }}>AI prompts</h2>
+      <p style={{ color: "var(--muted)", fontSize: 13.5, marginBottom: 10 }}>
+        Edit how the AI is instructed. Blank = the built-in default. Keep the <code>{"{{placeholders}}"}</code> or they render empty.
+      </p>
+      {FEATURES.map((f) => (
+        <div key={f.key} className="field" style={{ margin: "10px 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span className="l" style={{ margin: 0 }}>{f.label} prompt</span>
+            <span className="meta" style={{ margin: 0 }}>placeholders: {(PROMPT_PLACEHOLDERS[f.key] || []).map((p) => `{{${p}}}`).join(" ")}</span>
+            <span style={{ flex: 1 }} />
+            <button className="tbtn2" onClick={() => setPrompts((p) => ({ ...p, [f.key]: (DEFAULT_PROMPTS as any)[f.key] }))}>load default</button>
+            <button className="tbtn2" onClick={() => setPrompts((p) => ({ ...p, [f.key]: "" }))}>reset</button>
+          </div>
+          <textarea className="f" rows={5} style={{ fontFamily: "var(--mono)", fontSize: 12 }} value={prompts[f.key] || ""} placeholder="Using the built-in default — type here to override…" onChange={(e) => setPrompts((p) => ({ ...p, [f.key]: e.target.value }))} />
+        </div>
+      ))}
+
+      <div className="notice">
+        ⚠ <b>Privacy:</b> most free tiers train on submitted prompts. Fine for lesson content and synthetic practice — weigh it
+        before sending real student data.
+      </div>
+
+      {/* ── Email (SMTP) ── */}
+      <h2 style={{ fontFamily: "var(--serif)", fontSize: 18, margin: "22px 0 4px" }}>Email sending (verification codes)</h2>
+      <p style={{ color: "var(--muted)", fontSize: 13.5, marginBottom: 10 }}>
+        Powers signup codes, email verification, and password resets. Easiest free option: your Gmail — go to{" "}
+        <b>myaccount.google.com → Security → 2-Step Verification → App passwords</b>, create one for "Mail", and paste it here.
+        Until this is set up, signups skip email verification.
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 90px", gap: 8 }}>
+        <input className="f" value={smtp.host} placeholder="smtp.gmail.com" onChange={(e) => setSmtp({ ...smtp, host: e.target.value })} />
+        <input className="f" value={smtp.port} placeholder="465" onChange={(e) => setSmtp({ ...smtp, port: e.target.value })} />
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
+        <input className="f" value={smtp.user} placeholder="your.address@gmail.com" onChange={(e) => setSmtp({ ...smtp, user: e.target.value })} />
+        <input className="f" type="password" value={smtp.pass} placeholder="16-char app password (blank = keep saved)" onChange={(e) => setSmtp({ ...smtp, pass: e.target.value })} />
+      </div>
+      <div className="runrow" style={{ marginTop: 8 }}>
+        <button
+          className="btn ghost"
+          onClick={async () => {
+            setStatus("saving + sending test…");
+            const r = await fetch("/api/settings", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ smtp: { host: smtp.host || "smtp.gmail.com", port: Number(smtp.port) || 465, user: smtp.user, pass: smtp.pass || undefined, testTo: smtp.user } }),
+            }).then((x) => x.json());
+            setStatus(r.message || (r.ok ? "saved ✓" : "failed"));
+          }}
+        >
+          Save email settings + send test
+        </button>
+      </div>
+
+      <div className="runrow" style={{ marginTop: 14 }}>
+        <button className="btn green" onClick={save}>Save all settings</button>
+        {status && <span className="meta" style={{ margin: 0 }}>{status}</span>}
+      </div>
+    </div>
   );
 }
 </file>
@@ -10248,12 +11302,12 @@ export default function Inbox({ meId }: { meId: string }) {
 
 import { useEffect, useRef, useState } from "react";
 import type { Block } from "@/lib/curriculum/blocks";
-import { blankQuestion, QUESTION_TYPES } from "@/lib/curriculum/questions";
+import { blankQuestion, QUESTION_TYPES, normalizeQuestions, type Question } from "@/lib/curriculum/questions";
 import QuestionEditor from "@/components/questions/QuestionEditor";
 
 type WBlock = { uid: string; b: Block };
-type Working = { title: string; goal: string; objectives: string[]; blocks: WBlock[]; exercise: any; quizBank: any[] };
-type Lesson = { id: string; code: string; title: string; goal: string; objectives?: string[]; blocks: Block[]; exercise: any; quizBank: any[]; draft: any; draftAt: string | null };
+type Working = { title: string; goal: string; objectives: string[]; blocks: WBlock[]; exercise: any; quizBank: any[]; masteryQuiz: Question[] };
+type Lesson = { id: string; code: string; title: string; goal: string; objectives?: string[]; blocks: Block[]; exercise: any; quizBank: any[]; masteryQuiz?: any[]; draft: any; draftAt: string | null };
 type Chapter = { id: string; title: string; order: number; lessons: Lesson[] };
 
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -10309,8 +11363,10 @@ export default function Editor() {
     const lesson = tree[s.c]?.lessons[s.l];
     lessonRef.current = lesson ?? null;
     if (!lesson) return setWorking(null);
-    const src = lesson.draft ?? { title: lesson.title, goal: lesson.goal, objectives: lesson.objectives, blocks: lesson.blocks, exercise: lesson.exercise, quizBank: lesson.quizBank };
+    const src = lesson.draft ?? { title: lesson.title, goal: lesson.goal, objectives: lesson.objectives, blocks: lesson.blocks, exercise: lesson.exercise, quizBank: lesson.quizBank, masteryQuiz: lesson.masteryQuiz };
     setHasDraft(Boolean(lesson.draft));
+    // Migrate a legacy quizBank into the typed mastery quiz on first edit.
+    const mastery = (src.masteryQuiz?.length ? src.masteryQuiz : normalizeQuestions(src.quizBank || [])) as Question[];
     setWorking({
       title: src.title ?? "",
       goal: src.goal ?? "",
@@ -10318,6 +11374,7 @@ export default function Editor() {
       blocks: (src.blocks ?? []).map((b: Block) => ({ uid: uid(), b })),
       exercise: src.exercise ?? {},
       quizBank: src.quizBank ?? [],
+      masteryQuiz: mastery,
     });
     setHistOpen(false);
     setSaveState(lesson.draft ? "draft loaded" : "");
@@ -10345,7 +11402,7 @@ export default function Editor() {
       if (!w || !lesson) return;
       await api("PUT", {
         id: lesson.id,
-        draft: { title: w.title, goal: w.goal, objectives: w.objectives, blocks: w.blocks.map((x) => x.b), exercise: w.exercise, quizBank: w.quizBank },
+        draft: { title: w.title, goal: w.goal, objectives: w.objectives, blocks: w.blocks.map((x) => x.b), exercise: w.exercise, quizBank: w.quizBank, masteryQuiz: w.masteryQuiz },
       });
       setSaveState("draft saved ✓");
     }, 800);
@@ -10358,7 +11415,7 @@ export default function Editor() {
     if (saveTimer.current) {
       clearTimeout(saveTimer.current);
       const w = workingRef.current!;
-      await api("PUT", { id: lesson.id, draft: { title: w.title, goal: w.goal, objectives: w.objectives, blocks: w.blocks.map((x) => x.b), exercise: w.exercise, quizBank: w.quizBank } });
+      await api("PUT", { id: lesson.id, draft: { title: w.title, goal: w.goal, objectives: w.objectives, blocks: w.blocks.map((x) => x.b), exercise: w.exercise, quizBank: w.quizBank, masteryQuiz: w.masteryQuiz } });
     }
     await api("POST", { action: "publish", lessonId: lesson.id });
     await reload(sel);
@@ -10728,7 +11785,7 @@ function EditableBlock({ block: b, uid: key, onChange }: { block: Block; uid: st
 /* ── graded exercise + quiz bank (structured, also drafted) ────────────── */
 function ExerciseAndQuiz({ working, mutate }: { working: Working; mutate: (fn: (w: Working) => void) => void }) {
   const ex = working.exercise || {};
-  const bank = working.quizBank || [];
+  const mq = working.masteryQuiz || [];
   return (
     <>
       <details className="histpanel" style={{ marginTop: 24 }} open={Boolean(ex.prompt)}>
@@ -10751,136 +11808,32 @@ function ExerciseAndQuiz({ working, mutate }: { working: Working; mutate: (fn: (
         </div>
       </details>
 
-      <details className="histpanel" open={bank.length > 0}>
+      <details className="histpanel" open={mq.length > 0}>
         <summary style={{ cursor: "pointer", fontWeight: 700 }}>
-          Quiz bank — {bank.length} questions {bank.length === 0 ? "(practice + clean quiz hidden)" : "(feeds practice + clean quiz)"}
+          🔒 Mastery quiz — {mq.length} question{mq.length === 1 ? "" : "s"} {mq.length === 0 ? "(clean quiz hidden)" : "· passing this → MASTERED"}
         </summary>
         <div style={{ marginTop: 10 }}>
-          {bank.map((q: any, qi: number) => (
-            <div key={qi} style={{ borderBottom: "1px dashed var(--line)", paddingBottom: 12, marginBottom: 12 }}>
-              <div className="itemrow">
-                <input className="f" style={{ flex: 1 }} defaultValue={q.q} placeholder="Question (HTML ok)" onChange={(e) => mutate((w) => (w.quizBank[qi].q = e.target.value))} />
-                <button onClick={() => mutate((w) => w.quizBank.splice(qi, 1))}>✕</button>
+          <p className="meta" style={{ marginTop: 0 }}>Any question type. Auto-graded ones (MCQ / T-F / short / code) decide the pass mark; the clean quiz opens full-screen.</p>
+          {mq.map((q, qi) => (
+            <div key={q.id} style={{ border: "1px solid var(--line)", borderRadius: 10, padding: 10, margin: "8px 0" }}>
+              <div className="qbuild-head">
+                <span className="qtype">{QUESTION_TYPES.find((t) => t.type === q.type)?.label}</span>
+                <span style={{ flex: 1 }} />
+                <button className="tbtn2" disabled={qi === 0} onClick={() => mutate((w) => { const a = w.masteryQuiz; [a[qi - 1], a[qi]] = [a[qi], a[qi - 1]]; })}>↑</button>
+                <button className="tbtn2" disabled={qi === mq.length - 1} onClick={() => mutate((w) => { const a = w.masteryQuiz; [a[qi + 1], a[qi]] = [a[qi], a[qi + 1]]; })}>↓</button>
+                <button className="tbtn2 danger" onClick={() => mutate((w) => w.masteryQuiz.splice(qi, 1))}>✕</button>
               </div>
-              {(q.opts || []).map((opt: string, oi: number) => (
-                <div className="itemrow" key={oi}>
-                  <input type="radio" style={{ width: 20, flex: "0 0 20px" }} checked={q.correct === oi} onChange={() => mutate((w) => (w.quizBank[qi].correct = oi))} title="Correct answer" />
-                  <input className="f" defaultValue={opt} placeholder={`Option ${"ABCD"[oi] || oi + 1}`} onChange={(e) => mutate((w) => (w.quizBank[qi].opts[oi] = e.target.value))} />
-                </div>
-              ))}
-              <input className="f" defaultValue={q.why || ""} placeholder="Why (one-line explanation)" onChange={(e) => mutate((w) => (w.quizBank[qi].why = e.target.value))} />
+              <QuestionEditor q={q} onChange={(nq) => mutate((w) => (w.masteryQuiz[qi] = nq))} />
             </div>
           ))}
-          <button className="addbtn" onClick={() => mutate((w) => w.quizBank.push({ q: "", opts: ["", "", "", ""], correct: 0, why: "" }))}>+ question</button>
+          <div className="addbar" style={{ margin: "8px 0" }}>
+            <div className="lbl">Add question</div>
+            {QUESTION_TYPES.map((t) => (
+              <button key={t.type} onClick={() => mutate((w) => w.masteryQuiz.push(blankQuestion(t.type)))}>{t.label}</button>
+            ))}
+          </div>
         </div>
       </details>
-    </>
-  );
-}
-</file>
-
-<file path="app/lessons/[code]/page.tsx">
-import { notFound, redirect } from "next/navigation";
-import { prisma } from "@/lib/db";
-import { currentUser } from "@/lib/auth";
-import { getSetting } from "@/lib/settings";
-import LessonRenderer from "@/components/LessonRenderer";
-import LessonWorkspace from "@/components/LessonWorkspace";
-import StudentTools from "@/components/student/StudentTools";
-import HighlightOnLoad from "@/components/lesson/HighlightOnLoad";
-import type { Block, Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
-import { stripAnswers } from "@/lib/curriculum/questions";
-
-export default async function LessonPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ code: string }>;
-  searchParams: Promise<{ highlight?: string }>;
-}) {
-  const { code } = await params;
-  const { highlight } = await searchParams;
-  const me = await currentUser();
-  if (!me) redirect("/join");
-  const lesson = await prisma.lesson.findUnique({ where: { code }, include: { chapter: true } });
-  if (!lesson) notFound();
-
-  const progress = await prisma.progress.findUnique({
-    where: { userId_lessonId: { userId: me.id, lessonId: lesson.id } },
-  });
-  const status = progress?.status ?? "NOT_STARTED";
-  const readiness = Math.round((progress?.readiness ?? 0) * 100);
-  const pill = status === "MASTERED" ? "m" : status === "IN_PROGRESS" ? "p" : "n";
-  const pillText = status === "MASTERED" ? "● MASTERED" : status === "IN_PROGRESS" ? "● IN PROGRESS" : "○ NOT STARTED";
-
-  // Strip answer keys out of any inline quiz blocks before they reach the browser.
-  const blocks = (lesson.blocks as unknown as Block[]).map((b) =>
-    b.type === "quiz" ? { ...b, questions: b.questions.map(stripAnswers) } : b
-  ) as Block[];
-  const exercise = lesson.exercise as unknown as Exercise;
-  const objectives = (lesson.objectives as unknown as string[]) || [];
-
-  // "Ask teacher" on highlight is opt-in per teacher (their prefs).
-  let askTeacher: { id: string; name: string } | null = null;
-  if (me.classId) {
-    const cls = await prisma.class.findUnique({ where: { id: me.classId }, include: { teacher: true } });
-    if (cls?.teacher) {
-      const prefs = await getSetting<{ askTeacher?: boolean }>(`prefs:${cls.teacher.id}`, {});
-      if (prefs.askTeacher) askTeacher = { id: cls.teacher.id, name: cls.teacher.name };
-    }
-  }
-  // Only the small formative subset (with answers) ships to the browser; the
-  // full bank — the clean quiz's answer key — stays server-side (/api/quiz).
-  const bank = (lesson.quizBank as unknown as QuizQuestion[]) || [];
-  const practiceQuestions = bank.slice(0, 3);
-  const hasBank = bank.length > 0;
-
-  return (
-    <>
-      <div className="crumb">
-        {lesson.chapter.title.toUpperCase()} · LESSON {lesson.code}
-      </div>
-      <h1 className="title">{lesson.title}</h1>
-      <div>
-        <span className={`status-pill ${pill}`}>{pillText}</span>
-      </div>
-      <div className="ready">
-        <div className="barwrap">
-          <div className="bar" style={{ width: `${readiness}%` }} />
-        </div>
-        <div className="lbl">
-          readiness {readiness}% — the average of your last 5 attempts; only the 🔒 clean quiz sets MASTERED
-        </div>
-      </div>
-
-      <div className="panel lesson">
-        <h2>
-          Lesson <span className="tag k">SET CONTENT — NOT AI</span>
-        </h2>
-        {lesson.goal && <div className="goalbox" dangerouslySetInnerHTML={{ __html: lesson.goal }} />}
-        {objectives.length > 0 && (
-          <div className="objectives">
-            <div className="ch">🎯 IN THIS LESSON</div>
-            <ul>
-              {objectives.map((o, i) => (
-                <li key={i}>{o}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <LessonRenderer blocks={blocks} lessonCode={lesson.code} />
-      </div>
-      {highlight && <HighlightOnLoad text={highlight} />}
-
-      <LessonWorkspace
-        lessonCode={lesson.code}
-        lessonTitle={lesson.title}
-        exercise={exercise}
-        practiceQuestions={practiceQuestions}
-        hasBank={hasBank}
-        mastered={status === "MASTERED"}
-      />
-      <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />
     </>
   );
 }
@@ -10983,256 +11936,111 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
 }
 </file>
 
-<file path="prisma/schema.prisma">
-// classOS data model.
-//
-// Prototype phase uses SQLite (file-based, zero setup). To mature to Postgres:
-//   1. change `provider` below to "postgresql"
-//   2. set DATABASE_URL to your Neon/Supabase connection string
-//   3. run `npm run db:push`
-// Nothing else changes — `Json` maps to JSONB on Postgres automatically.
+<file path="app/lessons/[code]/page.tsx">
+import { notFound, redirect } from "next/navigation";
+import { prisma } from "@/lib/db";
+import { currentUser } from "@/lib/auth";
+import { getSetting } from "@/lib/settings";
+import LessonRenderer from "@/components/LessonRenderer";
+import LessonWorkspace from "@/components/LessonWorkspace";
+import StudentTools from "@/components/student/StudentTools";
+import HighlightOnLoad from "@/components/lesson/HighlightOnLoad";
+import type { Block, Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
+import { stripAnswers } from "@/lib/curriculum/questions";
 
-generator client {
-  provider = "prisma-client-js"
-}
+export default async function LessonPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ code: string }>;
+  searchParams: Promise<{ highlight?: string }>;
+}) {
+  const { code } = await params;
+  const { highlight } = await searchParams;
+  const me = await currentUser();
+  if (!me) redirect("/join");
+  const lesson = await prisma.lesson.findUnique({ where: { code }, include: { chapter: true } });
+  if (!lesson) notFound();
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+  const progress = await prisma.progress.findUnique({
+    where: { userId_lessonId: { userId: me.id, lessonId: lesson.id } },
+  });
+  const status = progress?.status ?? "NOT_STARTED";
+  const readiness = Math.round((progress?.readiness ?? 0) * 100);
+  const pill = status === "MASTERED" ? "m" : status === "IN_PROGRESS" ? "p" : "n";
+  const pillText = status === "MASTERED" ? "● MASTERED" : status === "IN_PROGRESS" ? "● IN PROGRESS" : "○ NOT STARTED";
 
-// ─── Curriculum tree (the editable CMS) ──────────────────────────────────────
+  // Strip answer keys out of any inline quiz blocks before they reach the browser.
+  const blocks = (lesson.blocks as unknown as Block[]).map((b) =>
+    b.type === "quiz" ? { ...b, questions: b.questions.map(stripAnswers) } : b
+  ) as Block[];
+  const exercise = lesson.exercise as unknown as Exercise;
+  const objectives = (lesson.objectives as unknown as string[]) || [];
 
-model Chapter {
-  id        String   @id @default(cuid())
-  order     Int
-  title     String
-  lessons   Lesson[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+  // "Ask teacher" on highlight is opt-in per teacher (their prefs).
+  let askTeacher: { id: string; name: string } | null = null;
+  if (me.classId) {
+    const cls = await prisma.class.findUnique({ where: { id: me.classId }, include: { teacher: true } });
+    if (cls?.teacher) {
+      const prefs = await getSetting<{ askTeacher?: boolean }>(`prefs:${cls.teacher.id}`, {});
+      if (prefs.askTeacher) askTeacher = { id: cls.teacher.id, name: cls.teacher.name };
+    }
+  }
+  // Only the small formative subset (with answers) ships to the browser; the
+  // full bank — the clean quiz's answer key — stays server-side (/api/quiz).
+  const bank = (lesson.quizBank as unknown as QuizQuestion[]) || [];
+  const practiceQuestions = bank.slice(0, 3);
+  // The clean quiz exists if there's a typed mastery quiz OR a legacy bank.
+  const hasMastery = ((lesson.masteryQuiz as unknown as unknown[]) || []).length > 0 || bank.length > 0;
 
-model Lesson {
-  id        String  @id @default(cuid())
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  chapterId String
-  code      String  @unique // e.g. "2.10" — stable, human-facing, used in URLs
-  order     Int
-  title     String
-  goal      String  @default("")
+  return (
+    <>
+      <div className="crumb">
+        {lesson.chapter.title.toUpperCase()} · LESSON {lesson.code}
+      </div>
+      <h1 className="title">{lesson.title}</h1>
+      <div>
+        <span className={`status-pill ${pill}`}>{pillText}</span>
+      </div>
+      <div className="ready">
+        <div className="barwrap">
+          <div className="bar" style={{ width: `${readiness}%` }} />
+        </div>
+        <div className="lbl">
+          readiness {readiness}% — the average of your last 5 attempts; only the 🔒 clean quiz sets MASTERED
+        </div>
+      </div>
 
-  // Ordered array of typed blocks. See lib/curriculum/blocks.ts for the shape.
-  // No @default: Prisma's Json defaults are broken on SQLite (emits unquoted
-  // `DEFAULT []` -> invalid SQL). Every create site supplies these explicitly.
-  blocks    Json
-  // Graded coding exercise: { prompt, starter, expected, behaviour, stdin }
-  exercise  Json
-  // Pool the practice + summative quizzes draw from: [{ q, opts[], correct, why }]
-  quizBank  Json
+      <div className="panel lesson">
+        <h2>
+          Lesson <span className="tag k">SET CONTENT — NOT AI</span>
+        </h2>
+        {lesson.goal && <div className="goalbox" dangerouslySetInnerHTML={{ __html: lesson.goal }} />}
+        {objectives.length > 0 && (
+          <div className="objectives">
+            <div className="ch">🎯 IN THIS LESSON</div>
+            <ul>
+              {objectives.map((o, i) => (
+                <li key={i}>{o}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <LessonRenderer blocks={blocks} lessonCode={lesson.code} />
+      </div>
+      {highlight && <HighlightOnLoad text={highlight} />}
 
-  // Learning objectives: string[] — concepts to cover / skills to master.
-  // Shown to students, and fed to the AI tutor + question generator as scope.
-  objectives Json?
-
-  // Unpublished working copy: { title, goal, objectives, blocks, exercise, quizBank }.
-  // Students always read the live fields above; the editor edits this until
-  // the owner hits Publish.
-  draft    Json?
-  draftAt  DateTime?
-
-  attempts  Attempt[]
-  versions  LessonVersion[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([chapterId, order])
-}
-
-// Snapshot of the live lesson taken at each publish — the undo history.
-// Restoring copies a snapshot into the draft (never straight to live).
-model LessonVersion {
-  id          String   @id @default(cuid())
-  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  lessonId    String
-  snapshot    Json // { title, goal, blocks, exercise, quizBank }
-  publishedAt DateTime @default(now())
-
-  @@index([lessonId, publishedAt])
-}
-
-// ─── People & roles ──────────────────────────────────────────────────────────
-
-// Role: "ADMIN" | "TEACHER" | "STUDENT". Kept as String because SQLite has no
-// native enums; becomes a real Prisma enum when you move to Postgres.
-//
-// Auth model (decided): staff (ADMIN/TEACHER) sign in with email + password.
-// Students have NO email/password — they join a Class with its join code and a
-// display name, Kahoot/ClassDojo-style.
-model User {
-  id           String    @id @default(cuid())
-  name         String
-  email        String?   @unique // staff only
-  passwordHash String? // scrypt "salt:hash" — staff only
-  role         String    @default("STUDENT")
-  class        Class?    @relation("ClassStudents", fields: [classId], references: [id], onDelete: SetNull)
-  classId      String? // students only
-  classesOwned Class[]   @relation("ClassTeacher") // staff only
-  attempts     Attempt[]
-  aiCalls      AiCall[]
-  sent         Message[] @relation("MsgFrom")
-  inbox        Message[] @relation("MsgTo")
-  testsOwned   Test[]    @relation("TestOwner")
-  submissions  TestSubmission[]
-  boardPosts   BoardPost[]
-  avatar       String? // small image as a data URL (profile pic)
-  createdAt    DateTime  @default(now())
-
-  @@index([classId])
-}
-
-// A test/quiz assembled from typed questions (lib/curriculum/questions.ts).
-// Assign to a class; students take it full-screen; results feed grading.
-model Test {
-  id          String   @id @default(cuid())
-  title       String
-  owner       User?    @relation("TestOwner", fields: [ownerId], references: [id], onDelete: SetNull)
-  ownerId     String?
-  class       Class?   @relation(fields: [classId], references: [id], onDelete: SetNull)
-  classId     String?
-  questions   Json // Question[]
-  timeLimit   Int? // minutes, null = untimed
-  openAt      DateTime?
-  closeAt     DateTime?
-  published   Boolean  @default(false) // students can take it
-  resultsReleased Boolean @default(false) // students can see their marks + feedback
-  requireSeb  Boolean  @default(false) // must be opened in Safe Exam Browser
-  submissions TestSubmission[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([classId])
-}
-
-model TestSubmission {
-  id          String   @id @default(cuid())
-  test        Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
-  testId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  answers     Json // { [questionId]: answer }
-  results     Json? // QResult[] after grading
-  autoScore   Float    @default(0)
-  maxScore    Float    @default(0)
-  finalScore  Float? // teacher-confirmed total (overrides auto)
-  status      String   @default("submitted") // submitted | graded
-  submittedAt DateTime @default(now())
-  gradedAt    DateTime?
-
-  @@unique([testId, userId])
-  @@index([testId])
-}
-
-// Direct messages + system notifications share one inbox. kind="dm" is a
-// student↔staff message; kind="system" is a platform notice (fromId null).
-// Extensible: add kinds (e.g. "graded", "announcement") without schema change.
-model Message {
-  id         String    @id @default(cuid())
-  kind       String    @default("dm")
-  fromUser   User?     @relation("MsgFrom", fields: [fromId], references: [id], onDelete: SetNull)
-  fromId     String?
-  toUser     User      @relation("MsgTo", fields: [toId], references: [id], onDelete: Cascade)
-  toId       String
-  body       String
-  lessonCode String? // optional context (message sent from a lesson)
-  readAt     DateTime?
-  editedAt   DateTime?
-  createdAt  DateTime  @default(now())
-
-  @@index([toId, readAt])
-  @@index([fromId])
-}
-
-model Class {
-  id        String   @id @default(cuid())
-  name      String
-  joinCode  String   @unique // what students type to join
-  teacher   User?    @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
-  teacherId String?
-  students  User[]   @relation("ClassStudents")
-  tests     Test[]
-  boardPosts BoardPost[]
-  createdAt DateTime @default(now())
-}
-
-// Padlet-style class board. userId null = the AI participant.
-// reactions: { "👍": [userId, ...], ... }
-model BoardPost {
-  id        String   @id @default(cuid())
-  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  classId   String
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String?
-  body      String
-  parentId  String? // one level of replies
-  reactions Json?
-  createdAt DateTime @default(now())
-
-  @@index([classId, createdAt])
-}
-
-// ─── Tracking (the readiness/mastery engine, now durable) ────────────────────
-
-model Attempt {
-  id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  lessonId  String
-  // "QUIZ_PRACTICE" | "QUIZ_GENERATED" | "CODE_RUN" | "QUIZ_SUMMATIVE".
-  // Only a passing QUIZ_SUMMATIVE can set MASTERED (see lib/progress.ts).
-  kind      String
-  passed    Boolean
-  score     Float    @default(0) // 0..1
-  detail    Json     // per-question results, code, verdict, etc. — always supplied by callers
-  createdAt DateTime @default(now())
-
-  @@index([userId, lessonId])
-}
-
-// Mastery is derived state, updated only through the one honest chokepoint
-// (see lib/progress.ts). Kept as a row so the teacher dashboard reads it cheaply.
-model Progress {
-  id        String  @id @default(cuid())
-  userId    String
-  lessonId  String
-  status    String  @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | MASTERED
-  readiness Float   @default(0)             // 0..1 — evidence toward mastery
-  flag      String? // "stuck" | "coast" | null
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, lessonId])
-}
-
-model AiCall {
-  id        String   @id @default(cuid())
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userId    String?
-  feature   String   // tutor | grade | generate | runjava
-  provider  String
-  model     String
-  inTokens  Int      @default(0)
-  outTokens Int      @default(0)
-  cost      Float    @default(0)
-  createdAt DateTime @default(now())
-
-  @@index([createdAt])
-}
-
-// ─── Settings (DB-backed config — swap providers without redeploy) ───────────
-
-model Setting {
-  key   String @id
-  value Json
+      <LessonWorkspace
+        lessonCode={lesson.code}
+        lessonTitle={lesson.title}
+        exercise={exercise}
+        practiceQuestions={practiceQuestions}
+        hasBank={hasMastery}
+        mastered={status === "MASTERED"}
+      />
+      <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />
+    </>
+  );
 }
 </file>
 
@@ -11877,6 +12685,280 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
   .main, .dash, .edmain { padding: 20px; }
   .kpis { grid-template-columns: 1fr; }
   .diff { grid-template-columns: 1fr; }
+}
+</file>
+
+<file path="prisma/schema.prisma">
+// classOS data model.
+//
+// Prototype phase uses SQLite (file-based, zero setup). To mature to Postgres:
+//   1. change `provider` below to "postgresql"
+//   2. set DATABASE_URL to your Neon/Supabase connection string
+//   3. run `npm run db:push`
+// Nothing else changes — `Json` maps to JSONB on Postgres automatically.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Curriculum tree (the editable CMS) ──────────────────────────────────────
+
+model Chapter {
+  id        String   @id @default(cuid())
+  order     Int
+  title     String
+  lessons   Lesson[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lesson {
+  id        String  @id @default(cuid())
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
+  code      String  @unique // e.g. "2.10" — stable, human-facing, used in URLs
+  order     Int
+  title     String
+  goal      String  @default("")
+
+  // Ordered array of typed blocks. See lib/curriculum/blocks.ts for the shape.
+  // No @default: Prisma's Json defaults are broken on SQLite (emits unquoted
+  // `DEFAULT []` -> invalid SQL). Every create site supplies these explicitly.
+  blocks    Json
+  // Graded coding exercise: { prompt, starter, expected, behaviour, stdin }
+  exercise  Json
+  // Legacy MCQ pool ({q,opts,correct,why}) — still powers the old practice panel.
+  quizBank  Json
+  // The mastery quiz: typed Question[]. One per lesson. Passing it (server-graded)
+  // is the ONLY path to MASTERED. Falls back to quizBank if unset.
+  masteryQuiz Json?
+
+  // Learning objectives: string[] — concepts to cover / skills to master.
+  // Shown to students, and fed to the AI tutor + question generator as scope.
+  objectives Json?
+
+  // Unpublished working copy: { title, goal, objectives, blocks, exercise, quizBank }.
+  // Students always read the live fields above; the editor edits this until
+  // the owner hits Publish.
+  draft    Json?
+  draftAt  DateTime?
+
+  attempts  Attempt[]
+  versions  LessonVersion[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chapterId, order])
+}
+
+// Snapshot of the live lesson taken at each publish — the undo history.
+// Restoring copies a snapshot into the draft (never straight to live).
+model LessonVersion {
+  id          String   @id @default(cuid())
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId    String
+  snapshot    Json // { title, goal, blocks, exercise, quizBank }
+  publishedAt DateTime @default(now())
+
+  @@index([lessonId, publishedAt])
+}
+
+// ─── People & roles ──────────────────────────────────────────────────────────
+
+// Role: "ADMIN" | "TEACHER" | "STUDENT". Kept as String because SQLite has no
+// native enums; becomes a real Prisma enum when you move to Postgres.
+//
+// Auth model (decided): staff (ADMIN/TEACHER) sign in with email + password.
+// Students have NO email/password — they join a Class with its join code and a
+// display name, Kahoot/ClassDojo-style.
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String?   @unique
+  passwordHash String? // scrypt "salt:hash"
+  emailVerifiedAt DateTime?
+  totpSecret   String? // encrypted TOTP secret (Google Authenticator) — admin/staff 2FA
+  failedLogins Int       @default(0)
+  lockedAt     DateTime? // set after repeated failures; admin can unlock
+  role         String    @default("STUDENT")
+  class        Class?    @relation("ClassStudents", fields: [classId], references: [id], onDelete: SetNull)
+  classId      String? // students only
+  classesOwned Class[]   @relation("ClassTeacher") // staff only
+  attempts     Attempt[]
+  aiCalls      AiCall[]
+  sent         Message[] @relation("MsgFrom")
+  inbox        Message[] @relation("MsgTo")
+  testsOwned   Test[]    @relation("TestOwner")
+  submissions  TestSubmission[]
+  boardPosts   BoardPost[]
+  avatar       String? // small image as a data URL (profile pic)
+  createdAt    DateTime  @default(now())
+
+  @@index([classId])
+}
+
+// A test/quiz assembled from typed questions (lib/curriculum/questions.ts).
+// Assign to a class; students take it full-screen; results feed grading.
+model Test {
+  id          String   @id @default(cuid())
+  title       String
+  owner       User?    @relation("TestOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId     String?
+  class       Class?   @relation(fields: [classId], references: [id], onDelete: SetNull)
+  classId     String?
+  questions   Json // Question[]
+  timeLimit   Int? // minutes, null = untimed
+  openAt      DateTime?
+  closeAt     DateTime?
+  published   Boolean  @default(false) // students can take it
+  resultsReleased Boolean @default(false) // students can see their marks + feedback
+  requireSeb  Boolean  @default(false) // must be opened in Safe Exam Browser
+  submissions TestSubmission[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([classId])
+}
+
+model TestSubmission {
+  id          String   @id @default(cuid())
+  test        Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  testId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  answers     Json // { [questionId]: answer }
+  results     Json? // QResult[] after grading
+  autoScore   Float    @default(0)
+  maxScore    Float    @default(0)
+  finalScore  Float? // teacher-confirmed total (overrides auto)
+  status      String   @default("submitted") // submitted | graded
+  submittedAt DateTime @default(now())
+  gradedAt    DateTime?
+
+  @@unique([testId, userId])
+  @@index([testId])
+}
+
+// Direct messages + system notifications share one inbox. kind="dm" is a
+// student↔staff message; kind="system" is a platform notice (fromId null).
+// Extensible: add kinds (e.g. "graded", "announcement") without schema change.
+model Message {
+  id         String    @id @default(cuid())
+  kind       String    @default("dm")
+  fromUser   User?     @relation("MsgFrom", fields: [fromId], references: [id], onDelete: SetNull)
+  fromId     String?
+  toUser     User      @relation("MsgTo", fields: [toId], references: [id], onDelete: Cascade)
+  toId       String
+  body       String
+  lessonCode String? // optional context (message sent from a lesson)
+  readAt     DateTime?
+  editedAt   DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([toId, readAt])
+  @@index([fromId])
+}
+
+model Class {
+  id        String   @id @default(cuid())
+  name      String
+  joinCode  String   @unique // what students type to join
+  teacher   User?    @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
+  teacherId String?
+  students  User[]   @relation("ClassStudents")
+  tests     Test[]
+  boardPosts BoardPost[]
+  createdAt DateTime @default(now())
+}
+
+// Short-lived email verification codes. `payload` carries pending signup data
+// (the account is only created once the code checks out).
+model AuthCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  purpose   String // "join" | "verify" | "reset"
+  payload   Json?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, purpose])
+}
+
+// Padlet-style class board. userId null = the AI participant.
+// reactions: { "👍": [userId, ...], ... }
+model BoardPost {
+  id        String   @id @default(cuid())
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId   String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  body      String
+  parentId  String? // one level of replies
+  reactions Json?
+  createdAt DateTime @default(now())
+
+  @@index([classId, createdAt])
+}
+
+// ─── Tracking (the readiness/mastery engine, now durable) ────────────────────
+
+model Attempt {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId  String
+  // "QUIZ_PRACTICE" | "QUIZ_GENERATED" | "CODE_RUN" | "QUIZ_SUMMATIVE".
+  // Only a passing QUIZ_SUMMATIVE can set MASTERED (see lib/progress.ts).
+  kind      String
+  passed    Boolean
+  score     Float    @default(0) // 0..1
+  detail    Json     // per-question results, code, verdict, etc. — always supplied by callers
+  createdAt DateTime @default(now())
+
+  @@index([userId, lessonId])
+}
+
+// Mastery is derived state, updated only through the one honest chokepoint
+// (see lib/progress.ts). Kept as a row so the teacher dashboard reads it cheaply.
+model Progress {
+  id        String  @id @default(cuid())
+  userId    String
+  lessonId  String
+  status    String  @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | MASTERED
+  readiness Float   @default(0)             // 0..1 — evidence toward mastery
+  flag      String? // "stuck" | "coast" | null
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+}
+
+model AiCall {
+  id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
+  feature   String   // tutor | grade | generate | runjava
+  provider  String
+  model     String
+  inTokens  Int      @default(0)
+  outTokens Int      @default(0)
+  cost      Float    @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// ─── Settings (DB-backed config — swap providers without redeploy) ───────────
+
+model Setting {
+  key   String @id
+  value Json
 }
 </file>
 
