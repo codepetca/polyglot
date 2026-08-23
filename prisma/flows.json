@@ -6669,6 +6669,202 @@
       }
     },
     {
+      "code": "3.9",
+      "title": "Methods Quiz",
+      "objectives": [
+        "write a method that returns a value",
+        "loop through the characters of a String"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "m_open",
+            "kind": "teach",
+            "instruction": "Nothing new. Seven checks across the whole unit.",
+            "points": [
+              {
+                "label": "what it covers",
+                "text": "Methods, parameters, return values, Javadocs, String methods, characters and errors."
+              },
+              {
+                "label": "how to use it",
+                "text": "If one goes wrong, the lesson it came from is the one to reopen."
+              }
+            ]
+          },
+          {
+            "id": "m_ignored",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "What prints?",
+            "code": "public void run() {\n  String s = \"hello\";\n  s.toUpperCase();\n  System.out.println(s);\n}",
+            "opts": [
+              "HELLO",
+              "hello",
+              "An error",
+              "Hello"
+            ],
+            "correct": 1,
+            "why": "toUpperCase RETURNS a new String and changes nothing. The returned value was never caught, so it was thrown away. A String can never be modified in place - you have to assign the result: s = s.toUpperCase();",
+            "skills": [
+              "write a method that returns a value",
+              "use String methods to inspect text"
+            ]
+          },
+          {
+            "id": "m_order",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "Which sentence comes out?",
+            "code": "public void run() {\n  describe(\"cellar\", 3);\n}\n\npublic void describe(String room, int exits) {\n  System.out.println(\"The \" + room + \" has \" + exits + \" exits.\");\n}",
+            "opts": [
+              "It will not compile",
+              "The cellar has 3 exits.",
+              "The room has exits exits.",
+              "The 3 has cellar exits."
+            ],
+            "correct": 1,
+            "why": "Arguments fill parameters left to right: \"cellar\" goes into room, 3 into exits. Position decides, not meaning.",
+            "skills": [
+              "tell an argument apart from a parameter"
+            ]
+          },
+          {
+            "id": "m_str",
+            "kind": "trace",
+            "instruction": "Two on Strings.",
+            "code": "String word = \"dungeon\";",
+            "questions": [
+              {
+                "prompt": "What is word.substring(0, 3)?",
+                "opts": [
+                  "dung",
+                  "ung",
+                  "dun",
+                  "unge"
+                ],
+                "correct": 2,
+                "why": "From 0 up to but NOT including 3, so positions 0, 1, 2 - \"dun\". The end index is always excluded, which is why end - start is the length you get."
+              },
+              {
+                "prompt": "word.charAt(7) does what?",
+                "opts": [
+                  "Returns the last character",
+                  "Crashes at run time",
+                  "Returns an empty character",
+                  "Will not compile"
+                ],
+                "correct": 1,
+                "why": "\"dungeon\" has 7 characters at positions 0 to 6. Position 7 does not exist, so it throws at run time - it compiles fine, because Java cannot know the index in advance."
+              }
+            ],
+            "skills": [
+              "count positions from zero",
+              "use String methods to inspect text"
+            ]
+          },
+          {
+            "id": "m_err",
+            "kind": "bucket",
+            "instruction": "Which kind of error is each one?",
+            "buckets": [
+              "Compile error",
+              "Run-time error",
+              "Logic error"
+            ],
+            "items": [
+              {
+                "text": "A missing semicolon",
+                "bucket": 0
+              },
+              {
+                "text": "Passing an int where a String parameter is declared",
+                "bucket": 0
+              },
+              {
+                "text": "charAt(10) on a 4-character String",
+                "bucket": 1
+              },
+              {
+                "text": "Dividing by a variable that happens to be 0",
+                "bucket": 1
+              },
+              {
+                "text": "Averaging by dividing by 2 when there are 3 numbers",
+                "bucket": 2
+              }
+            ],
+            "why": "A compile error stops it before it starts. A run-time error compiles and then dies partway. A logic error does neither - it runs happily and gives you the wrong answer, which is why it is the hardest of the three to find.",
+            "skills": [
+              "tell compile, run-time and logic errors apart"
+            ]
+          },
+          {
+            "id": "m_fill",
+            "kind": "fill",
+            "wrap": "methods",
+            "instruction": "This method hands a number back. Complete it.",
+            "code": "public void run() {\n  System.out.println(damage(4));\n}\n\npublic ⟦1⟧ damage(int hits) {\n  ⟦2⟧ hits * 3;\n}",
+            "blanks": [
+              {
+                "chips": [
+                  "int",
+                  "String",
+                  "void"
+                ],
+                "answer": 0
+              },
+              {
+                "chips": [
+                  "give",
+                  "print",
+                  "return"
+                ],
+                "answer": 2
+              }
+            ],
+            "target": "12",
+            "hint": "The type on the left says what comes back, and one keyword actually hands it over.",
+            "after": "void would refuse to return anything, and without return the value is worked out and dropped.",
+            "skills": [
+              "write a method that returns a value"
+            ]
+          },
+          {
+            "id": "m_write1",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Write a method that takes a name and hands back a greeting.",
+            "code": "public void run() {\n  System.out.println(greet(\"Ada\"));\n}\n\n// write greet(String name) so it RETURNS \"Hello, Ada!\"",
+            "target": "Hello, Ada!",
+            "solution": "public void run() {\n  System.out.println(greet(\"Ada\"));\n}\n\npublic String greet(String name) {\n  return \"Hello, \" + name + \"!\";\n}",
+            "hint": "run() prints the result, so greet must return a String rather than print one itself.",
+            "after": "Returning rather than printing is what lets the caller decide what to do with it.",
+            "skills": [
+              "write a method that returns a value",
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "m_write2",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Count the capital letters.",
+            "code": "public void run() {\n  String s = \"Ada Lovelace\";\n  // print how many characters are upper case\n}",
+            "target": "2",
+            "solution": "public void run() {\n  String s = \"Ada Lovelace\";\n  int count = 0;\n  for (int i = 0; i < s.length(); i++) {\n    if (Character.isUpperCase(s.charAt(i))) {\n      count = count + 1;\n    }\n  }\n  System.out.println(count);\n}",
+            "hint": "Walk every position with charAt, and ask Character about each one.",
+            "after": "A and L. The loop plus a counter is the shape behind almost every String question on the test.",
+            "skills": [
+              "loop through the characters of a String",
+              "use Character methods to test a character"
+            ]
+          }
+        ]
+      }
+    },
+    {
       "code": "4.1",
       "title": "Introduction to Classes and Objects",
       "objectives": [
@@ -10481,6 +10677,186 @@
             "after": "A Torch and a Spell have nothing in common except the promise. That is what interfaces are for.",
             "skills": [
               "write an interface and implement it"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "4.18",
+      "title": "Classes and Object-Oriented Programming Quiz",
+      "objectives": [
+        "write a class with private instance variables and a constructor",
+        "explain which version of an overridden method runs"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "v_open",
+            "kind": "teach",
+            "instruction": "Nothing new. Seven checks across the whole unit.",
+            "points": [
+              {
+                "label": "what it covers",
+                "text": "Classes and objects, fields and constructors, getters, static, scope, inheritance, polymorphism and interfaces."
+              },
+              {
+                "label": "how to use it",
+                "text": "If one goes wrong, the lesson it came from is the one to reopen."
+              }
+            ]
+          },
+          {
+            "id": "v_this",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "The constructor takes a name. What prints?",
+            "code": "public void run() {\n  Potion p = new Potion(\"Elixir\");\n  System.out.println(p.getName());\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "opts": [
+              "An empty line",
+              "Elixir",
+              "null",
+              "It will not compile"
+            ],
+            "correct": 2,
+            "why": "Inside the constructor, plain name means the PARAMETER. It assigned the parameter to itself and never touched the field, so the field is still empty. this.name = name; is what fixes it - and note it compiled and ran, which is what makes this one dangerous.",
+            "skills": [
+              "use this to tell a field from a parameter of the same name"
+            ]
+          },
+          {
+            "id": "v_static",
+            "kind": "bucket",
+            "instruction": "One per object, or one for the whole class?",
+            "buckets": [
+              "One per object",
+              "One for the whole class"
+            ],
+            "items": [
+              {
+                "text": "private String name;",
+                "bucket": 0
+              },
+              {
+                "text": "private int value;",
+                "bucket": 0
+              },
+              {
+                "text": "private static int count = 0;",
+                "bucket": 1
+              },
+              {
+                "text": "public static int getCount()",
+                "bucket": 1
+              },
+              {
+                "text": "public String toString()",
+                "bucket": 0
+              }
+            ],
+            "why": "static means it belongs to the class, so there is exactly one no matter how many objects exist. Everything else gets its own copy per object, which is why toString can show different text for each one.",
+            "skills": [
+              "tell a class member apart from an instance member",
+              "write a static variable and a static method"
+            ]
+          },
+          {
+            "id": "v_poly",
+            "kind": "predict",
+            "wrap": "methods",
+            "instruction": "The variable says Animal. The object is a Dog. Which speak() runs?",
+            "code": "public void run() {\n  Animal a = new Dog(\"Rex\");\n  a.speak();\n}\n\nclass Animal {\n  private String name;\n\n  public Animal(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void speak() {\n    System.out.println(name + \" makes a sound.\");\n  }\n}\n\nclass Dog extends Animal {\n  public Dog(String name) {\n    super(name);\n  }\n\n  public void speak() {\n    System.out.println(getName() + \" says Woof.\");\n  }\n}",
+            "opts": [
+              "Both lines print",
+              "Rex says Woof.",
+              "Rex makes a sound.",
+              "It will not compile"
+            ],
+            "correct": 1,
+            "why": "Java picks the version the OBJECT has, not the one the variable type suggests, and it decides at run time. The declared type only limits which methods you are allowed to call.",
+            "skills": [
+              "explain which version of an overridden method runs",
+              "store a subclass object in a parent-typed variable"
+            ]
+          },
+          {
+            "id": "v_mcq",
+            "kind": "trace",
+            "instruction": "Two the test asks.",
+            "code": "abstract class Monster {\n  public abstract void attack();\n}",
+            "questions": [
+              {
+                "prompt": "What does new Monster() do?",
+                "opts": [
+                  "Builds an empty Monster",
+                  "Runs attack() with no body",
+                  "Throws at run time",
+                  "Will not compile"
+                ],
+                "correct": 3,
+                "why": "An abstract class is a category, not a thing. Java refuses to build one. A concrete subclass has to be named instead."
+              },
+              {
+                "prompt": "Two Potions both hold \"Healing\". What does a == b give, with equals overridden?",
+                "opts": [
+                  "It depends on the contents",
+                  "false",
+                  "true",
+                  "It will not compile"
+                ],
+                "correct": 1,
+                "why": "== asks whether they are the same object, and new was called twice. It is not a method and overriding equals does nothing to it. That is exactly why objects are compared with .equals()."
+              }
+            ],
+            "skills": [
+              "use abstract to stop a class being instantiated",
+              "compare objects with equals and primitives with =="
+            ]
+          },
+          {
+            "id": "v_fix",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Every Coin comes out worth nothing.",
+            "code": "public void run() {\n  Coin c = new Coin(5);\n  System.out.println(c.getValue());\n}\n\nclass Coin {\n  private int value;\n\n  public void Coin(int value) {\n    this.value = value;\n  }\n\n  public int getValue() {\n    return value;\n  }\n}",
+            "target": "5",
+            "solution": "public void run() {\n  Coin c = new Coin(5);\n  System.out.println(c.getValue());\n}\n\nclass Coin {\n  private int value;\n\n  public Coin(int value) {\n    this.value = value;\n  }\n\n  public int getValue() {\n    return value;\n  }\n}",
+            "hint": "Look at what sits between public and Coin.",
+            "after": "A constructor has no return type at all. With void it became an ordinary method named Coin, so new Coin(5) had no constructor to call.",
+            "skills": [
+              "write a class with private instance variables and a constructor"
+            ]
+          },
+          {
+            "id": "v_write1",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Write the whole Potion class.",
+            "code": "public void run() {\n  Potion p = new Potion(\"Elixir\", 40);\n  System.out.println(p.getName());\n  p.setStrength(60);\n  System.out.println(p.getStrength());\n}\n\n// write Potion: private name and strength, a constructor,\n// getName(), getStrength(), and setStrength(int)",
+            "target": "Elixir\n60",
+            "solution": "public void run() {\n  Potion p = new Potion(\"Elixir\", 40);\n  System.out.println(p.getName());\n  p.setStrength(60);\n  System.out.println(p.getStrength());\n}\n\nclass Potion {\n  private String name;\n  private int strength;\n\n  public Potion(String name, int strength) {\n    this.name = name;\n    this.strength = strength;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getStrength() {\n    return strength;\n  }\n\n  public void setStrength(int newStrength) {\n    strength = newStrength;\n  }\n}",
+            "hint": "Private fields, a constructor that uses this., one getter each, and a setter that stores what it is given.",
+            "after": "That is the whole shape of a class: state kept private, and methods that are the only way in or out.",
+            "skills": [
+              "write a class with private instance variables and a constructor",
+              "write a getter that hands a private field out",
+              "write a setter that controls what goes in"
+            ]
+          },
+          {
+            "id": "v_write2",
+            "kind": "write",
+            "wrap": "methods",
+            "instruction": "Give Dog its own speak().",
+            "code": "public void run() {\n  Animal a = new Dog(\"Rex\");\n  a.speak();\n}\n\n// write Dog: it extends Animal, passes the name up,\n// and overrides speak() to print \"Rex says Woof.\"\n\nclass Animal {\n  private String name;\n\n  public Animal(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void speak() {\n    System.out.println(name + \" makes a sound.\");\n  }\n}",
+            "target": "Rex says Woof.",
+            "solution": "public void run() {\n  Animal a = new Dog(\"Rex\");\n  a.speak();\n}\n\nclass Dog extends Animal {\n  public Dog(String name) {\n    super(name);\n  }\n\n  public void speak() {\n    System.out.println(getName() + \" says Woof.\");\n  }\n}\n\nclass Animal {\n  private String name;\n\n  public Animal(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void speak() {\n    System.out.println(name + \" makes a sound.\");\n  }\n}",
+            "hint": "extends Animal, super(name) as the first line of the constructor, and a speak() that replaces the inherited one. name is private, so reach it with getName().",
+            "after": "The variable is still an Animal and the Dog version ran anyway. Inheritance for the shared half, overriding for the part that differs.",
+            "skills": [
+              "write a subclass with extends and super",
+              "explain which version of an overridden method runs"
             ]
           }
         ]
