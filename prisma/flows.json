@@ -7369,6 +7369,17 @@
             ]
           },
           {
+            "id": "w_spot",
+            "kind": "spot",
+            "instruction": "This was meant to be a constructor. One line stops it being one. Tap it.",
+            "code": "class Treasure {\n  private String name;\n\n  public void Treasure(String name) {\n    this.name = name;\n  }\n}",
+            "correct": 3,
+            "why": "A constructor has NO return type at all. Adding void turns it into an ordinary method that merely happens to be called Treasure, so the class keeps only the automatic no-argument constructor and new Treasure(\"Crown\") will not compile.",
+            "skills": [
+              "write a class with private instance variables and a constructor"
+            ]
+          },
+          {
             "id": "w_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -8028,6 +8039,41 @@
             "why": "The counter is not reset per object. Building the second Treasure raises the same shared count from 1 to 2.",
             "skills": [
               "write a static variable and a static method"
+            ]
+          },
+          {
+            "id": "s_bucket",
+            "kind": "bucket",
+            "instruction": "What does each call go through - the class, or an object?",
+            "buckets": [
+              "Called on the class (static)",
+              "Called on an object (instance)"
+            ],
+            "items": [
+              {
+                "text": "Math.max(3, 7)",
+                "bucket": 0
+              },
+              {
+                "text": "Integer.parseInt(\"42\")",
+                "bucket": 0
+              },
+              {
+                "text": "Treasure.getCount()",
+                "bucket": 0
+              },
+              {
+                "text": "crown.getValue()",
+                "bucket": 1
+              },
+              {
+                "text": "loot.size()",
+                "bucket": 1
+              }
+            ],
+            "why": "A capital letter in front means the class does the work and no object is involved. A variable name in front means one particular object does it, using its own fields.",
+            "skills": [
+              "tell a class member apart from an instance member"
             ]
           },
           {
@@ -8858,6 +8904,20 @@
             ]
           },
           {
+            "id": "k_selfassign",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "This compiles, runs, and stores nothing.",
+            "code": "public void run() {\n  Potion p = new Potion(\"Healing\");\n  System.out.println(p);\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
+            "target": "Healing",
+            "solution": "public void run() {\n  Potion p = new Potion(\"Healing\");\n  System.out.println(p);\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
+            "hint": "Both sides say name, and inside the constructor plain name means the parameter.",
+            "after": "It assigned the parameter to itself, so the field was never touched and stayed empty. No error - just the wrong answer, which is what makes this one hard to see.",
+            "skills": [
+              "use this to tell a field from a parameter of the same name"
+            ]
+          },
+          {
             "id": "k_mcq",
             "kind": "trace",
             "instruction": "Two the test asks.",
@@ -9052,6 +9112,20 @@
             "why": "equals compares the characters, which match. == would be unreliable here for exactly the reason in the table.",
             "skills": [
               "compare objects with equals and primitives with =="
+            ]
+          },
+          {
+            "id": "q_npe",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "It compiles and then dies. The constructor takes a name and forgets it.",
+            "code": "public void run() {\n  Hero h = new Hero(\"Ada\");\n  System.out.println(h.nameLength());\n}\n\nclass Hero {\n  private String name;\n\n  public Hero(String n) {\n  }\n\n  public int nameLength() {\n    return name.length();\n  }\n}",
+            "target": "3",
+            "solution": "public void run() {\n  Hero h = new Hero(\"Ada\");\n  System.out.println(h.nameLength());\n}\n\nclass Hero {\n  private String name;\n\n  public Hero(String n) {\n    name = n;\n  }\n\n  public int nameLength() {\n    return name.length();\n  }\n}",
+            "hint": "An object field starts out pointing at nothing. Something has to put the value in.",
+            "after": "name still pointed at nothing, so name.length() had no object to run on - a NullPointerException. Setting every field in the constructor is what prevents it.",
+            "skills": [
+              "avoid a null pointer exception"
             ]
           },
           {
@@ -9304,6 +9378,20 @@
             ],
             "correct": 0,
             "why": "Boss inherited roar from Monster, so calling it on a Boss runs Monster's version using the Boss's own name.",
+            "skills": [
+              "write a subclass with extends and super"
+            ]
+          },
+          {
+            "id": "h_superfirst",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "Boss sets its own field before the parent has been built.",
+            "code": "public void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  b.attack();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    this.title = title;\n    super(name, hp);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n}",
+            "target": "Grendel the Terrible strikes!",
+            "solution": "public void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  b.attack();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n}",
+            "hint": "The inherited half has to exist before the subclass adds to it.",
+            "after": "super(...) must be the very first line of the constructor. Java builds a Boss from the Monster outwards.",
             "skills": [
               "write a subclass with extends and super"
             ]
@@ -9734,6 +9822,20 @@
             ],
             "correct": 3,
             "why": "The object is a Slime, so Slime's attack() runs. Declaring it as Monster changes nothing about that.",
+            "skills": [
+              "store a subclass object in a parent-typed variable"
+            ]
+          },
+          {
+            "id": "y_only",
+            "kind": "fix",
+            "wrap": "methods",
+            "instruction": "The object is a Boss, but the variable only promises a Monster.",
+            "code": "public void run() {\n  Monster m = new Boss(\"Grendel\", 90, \"Terrible\");\n  m.enrage();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" is enraged!\");\n  }\n}",
+            "target": "Grendel is enraged!",
+            "solution": "public void run() {\n  Boss m = new Boss(\"Grendel\", 90, \"Terrible\");\n  m.enrage();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" is enraged!\");\n  }\n}",
+            "hint": "Which methods you may CALL is decided by the declared type, not by the object.",
+            "after": "This is the cost of polymorphism. A Monster variable reaches only what every Monster has, and enrage is not one of them. Overridden methods still run the Boss version; extra methods need a Boss variable.",
             "skills": [
               "store a subclass object in a parent-typed variable"
             ]
