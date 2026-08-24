@@ -6150,6 +6150,146 @@
             "keypoint": "Make the result before the loop, decide inside it, return after it."
           },
           {
+            "id": "x_docs",
+            "kind": "teach",
+            "instruction": "The String methods you will reach for. Keep this screen in mind as you work.",
+            "facts": {
+              "columns": [
+                "Method",
+                "Gives back",
+                "Example"
+              ],
+              "rows": [
+                [
+                  "s.length()",
+                  "how many characters",
+                  "\"gold\".length() is 4"
+                ],
+                [
+                  "s.charAt(i)",
+                  "the char at position i",
+                  "\"gold\".charAt(0) is g"
+                ],
+                [
+                  "s.substring(a)",
+                  "from a to the end",
+                  "\"gold\".substring(2) is ld"
+                ],
+                [
+                  "s.substring(a, b)",
+                  "from a up to but not b",
+                  "\"gold\".substring(0, 2) is go"
+                ],
+                [
+                  "s.indexOf(x)",
+                  "where x starts, or -1",
+                  "\"gold\".indexOf(\"l\") is 2"
+                ],
+                [
+                  "s.equals(t)",
+                  "true when the text matches",
+                  "use this, never =="
+                ],
+                [
+                  "s.equalsIgnoreCase(t)",
+                  "true ignoring capitals",
+                  "\"Gold\".equalsIgnoreCase(\"gold\")"
+                ],
+                [
+                  "s.toUpperCase()",
+                  "a NEW String in capitals",
+                  "the original is unchanged"
+                ],
+                [
+                  "s.toLowerCase()",
+                  "a NEW String in small letters",
+                  "the original is unchanged"
+                ]
+              ]
+            },
+            "body": [
+              "Every one of these gives something back. None of them changes the String you called it on."
+            ],
+            "keypoint": "String methods give back a new value. They never change the String you called them on."
+          },
+          {
+            "id": "x_docs2",
+            "kind": "teach",
+            "instruction": "And the Character methods, called on the class Character.",
+            "facts": {
+              "columns": [
+                "Method",
+                "Gives back"
+              ],
+              "rows": [
+                [
+                  "Character.isLetter(c)",
+                  "true when c is a letter"
+                ],
+                [
+                  "Character.isDigit(c)",
+                  "true when c is 0 to 9"
+                ],
+                [
+                  "Character.isUpperCase(c)",
+                  "true when c is a capital"
+                ],
+                [
+                  "Character.isLowerCase(c)",
+                  "true when c is a small letter"
+                ],
+                [
+                  "Character.toUpperCase(c)",
+                  "the capital version of c"
+                ],
+                [
+                  "Character.toLowerCase(c)",
+                  "the small version of c"
+                ]
+              ]
+            },
+            "body": [
+              "These take a char, not a String, so they pair with charAt(i).",
+              "The full lists live in the java.lang.String and java.lang.Character documentation. Look them up rather than guessing a method name."
+            ],
+            "keypoint": "Character methods take a char, so they pair with s.charAt(i)."
+          },
+          {
+            "id": "x_pick",
+            "kind": "match",
+            "instruction": "Match each job to the method that does it.",
+            "pairs": [
+              [
+                "how long is it",
+                "s.length()"
+              ],
+              [
+                "the character at position 2",
+                "s.charAt(2)"
+              ],
+              [
+                "is this character a digit",
+                "Character.isDigit(c)"
+              ],
+              [
+                "does the text match",
+                "s.equals(t)"
+              ],
+              [
+                "where does \"cat\" start",
+                "s.indexOf(\"cat\")"
+              ],
+              [
+                "the first three characters",
+                "s.substring(0, 3)"
+              ]
+            ],
+            "why": "Knowing which method exists is most of the battle. When you are stuck on one of these problems, the missing piece is usually a method you did not know about.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
             "id": "x_spot",
             "kind": "spot",
             "instruction": "This should print gold and prints d. Tap the line to blame.",
