@@ -6942,28 +6942,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -6984,28 +6990,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -7020,28 +7032,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -7060,39 +7078,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7111,39 +7138,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7159,39 +7195,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7256,28 +7301,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -7298,39 +7349,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7352,28 +7412,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -7489,39 +7555,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7542,39 +7617,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7595,28 +7679,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -7674,39 +7764,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7726,39 +7825,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7780,39 +7888,48 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "a new Player object with 100 hp"
+                  "Player",
+                  "constructs a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "the name"
+                  "String",
+                  "returns the name"
                 ],
                 [
                   "getLevel()",
-                  "the level"
+                  "int",
+                  "returns the level"
                 ],
                 [
                   "getHp()",
-                  "the hp"
+                  "int",
+                  "returns the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "nothing. Lowers the hp"
+                  "void",
+                  "lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "nothing. Raises the hp"
+                  "void",
+                  "raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "nothing. Adds 1 to the level"
+                  "void",
+                  "adds 1 to the level"
                 ],
                 [
                   "isAlive()",
+                  "boolean",
                   "true if the hp is above 0"
                 ]
               ]
@@ -7919,28 +8036,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -7958,28 +8081,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -7994,28 +8123,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -8030,28 +8165,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -8076,28 +8217,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -8122,28 +8269,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -8164,28 +8317,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -8204,28 +8363,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -8242,28 +8407,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -8295,28 +8466,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "a new Room object"
+                  "Room",
+                  "constructs a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "the width"
+                  "int",
+                  "returns the width"
                 ],
                 [
                   "getHeight()",
-                  "the height"
+                  "int",
+                  "returns the height"
                 ],
                 [
                   "getArea()",
-                  "width times height"
+                  "int",
+                  "returns width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "the distance around the outside"
+                  "int",
+                  "returns the distance around the outside"
                 ]
               ]
             },
@@ -8349,28 +8526,34 @@
             "facts": {
               "columns": [
                 "Method",
-                "Returns"
+                "Return Type",
+                "Description"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "a new Chest object. It starts locked"
+                  "Chest",
+                  "constructs a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
+                  "boolean",
                   "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "nothing. Unlocks the chest if the key is \"brass\""
+                  "void",
+                  "unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "the gold. Returns 0 if the chest is locked"
+                  "int",
+                  "returns the gold, or 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "the gold inside, locked or not"
+                  "int",
+                  "returns the gold inside, locked or not"
                 ]
               ]
             },
@@ -8398,100 +8581,156 @@
           {
             "id": "w_task",
             "kind": "teach",
-            "instruction": "You have used Monster for three lessons. Now build your own.",
-            "points": [
-              {
-                "label": "Treasure",
-                "text": "A chest item with a name and a value in gold."
-              },
-              {
-                "label": "what it needs",
-                "text": "Somewhere to keep those two values, and a way to build one."
-              },
-              {
-                "label": "the client is written",
-                "text": "run() already makes a Crown worth 120 and prints it. Your job is the class it needs."
-              }
+            "instruction": "You have used the Player, Room and Chest classes without writing any of them. How do you write a class yourself?",
+            "body": [
+              "You already know how to use a class.",
+              "Now you build one."
             ]
           },
           {
-            "id": "w_shape",
+            "id": "w_questions",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A class has fields, then a constructor.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "output": "Crown (120 gold)",
-            "highlight": [
-              4,
-              5,
-              6,
-              7,
-              8,
-              9,
-              10,
-              11,
-              12
-            ],
-            "points": [
+            "instruction": "Ask four questions when you design a class.",
+            "rules": [
               {
-                "label": "private String name;",
-                "text": "An instance variable. Every Treasure gets its own copy of this."
+                "text": "What attributes does every object of this class have?"
               },
               {
-                "label": "private",
-                "text": "Only code inside Treasure can touch it. The client cannot reach in."
+                "text": "What are the types and names of those attributes?"
               },
               {
-                "label": "public Treasure(String name, int value)",
-                "text": "The constructor. Same name as the class, and no return type at all."
+                "text": "How do you create an object? This is the constructor."
               },
               {
-                "label": "this.name = name;",
-                "text": "this.name is the field; name is the parameter. Without this. you would assign the parameter to itself."
+                "text": "What can objects of this class do? This is the behaviour."
               }
+            ],
+            "keypoint": "Every class design answers four questions: attributes, their types and names, the constructor, and the behaviour."
+          },
+          {
+            "id": "w_weapon",
+            "kind": "teach",
+            "instruction": "Design a Weapon class. A sword and a bow are both weapons.",
+            "body": [
+              "Every weapon has a name and a damage amount.",
+              "name is a String. damage is an int."
+            ],
+            "keypoint": "A Weapon has a name (String) and a damage (int)."
+          },
+          {
+            "id": "w_fields",
+            "kind": "teach",
+            "instruction": "An instance variable is a variable declared inside a class. Each object gets its own copy.",
+            "code": "private String name;\nprivate int damage;",
+            "annotate": [
+              {
+                "token": "private String name;",
+                "note": "instance variable holding the name"
+              },
+              {
+                "token": "private int damage;",
+                "note": "instance variable holding the damage"
+              }
+            ],
+            "body": [
+              "Instance variables are also called fields.",
+              "private means only code inside the class can read or change them."
+            ],
+            "keypoint": "An instance variable is declared private inside the class. Each object holds its own copy."
+          },
+          {
+            "id": "w_classdecl",
+            "kind": "teach",
+            "instruction": "Every class starts with a declaration.",
+            "code": "public class Weapon {\n\n}",
+            "annotate": [
+              {
+                "token": "public class Weapon",
+                "note": "the name of the class"
+              }
+            ],
+            "body": [
+              "In real Java, the name of a public class must match the name of its file, for example Weapon.java."
             ]
+          },
+          {
+            "id": "w_constructor",
+            "kind": "teach",
+            "instruction": "A constructor is a special method that builds an object and sets its initial values.",
+            "code": "public Weapon(String weaponName, int weaponDamage) {\n  name = weaponName;\n  damage = weaponDamage;\n}",
+            "annotate": [
+              {
+                "token": "public Weapon",
+                "note": "same name as the class, no return type"
+              },
+              {
+                "token": "String weaponName",
+                "note": "a parameter, not a field"
+              },
+              {
+                "token": "int weaponDamage",
+                "note": "a parameter, not a field"
+              }
+            ],
+            "body": [
+              "name = weaponName; copies the parameter into the field. The same happens for damage.",
+              "The parameters are named differently from the fields on purpose, so there is no confusion about which is which."
+            ],
+            "keypoint": "A constructor has the same name as the class and no return type, not even void."
+          },
+          {
+            "id": "w_defaults",
+            "kind": "teach",
+            "instruction": "If a class has no constructor, Java provides one for you.",
+            "code": "class Empty {\n  private int count;\n  private String name;\n\n  public String toString() {\n    return \"count=\" + count + \" name=\" + name;\n  }\n}\n\npublic void run() {\n  Empty e = new Empty();\n  System.out.println(e);\n}",
+            "wrap": "methods",
+            "output": "count=0 name=null",
+            "body": [
+              "No constructor was written for Empty.",
+              "Java made one that takes no arguments.",
+              "It set count to 0 and name to null, the default values for an int and an object."
+            ],
+            "keypoint": "A class with no constructor gets one from Java that sets numbers to 0, booleans to false, and objects to null."
           },
           {
             "id": "w_tostring",
             "kind": "teach",
+            "instruction": "println(object) calls the object toString method and prints what it returns.",
+            "code": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public String toString() {\n    return name + \" deals \" + damage + \" damage\";\n  }\n}\n\npublic void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  System.out.println(sword);\n}",
             "wrap": "methods",
-            "instruction": "println(object) calls toString().",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "output": "Crown (120 gold)",
-            "highlight": [
-              9,
-              10,
-              11
+            "output": "Sword deals 12 damage",
+            "body": [
+              "This is the complete Weapon class: the fields, the constructor, and toString."
             ],
-            "points": [
-              {
-                "label": "public String toString()",
-                "text": "Spelled exactly like that. Java looks for this name."
-              },
-              {
-                "label": "System.out.println(crown)",
-                "text": "No .toString() written anywhere, and yet it runs. println asks the object for its String."
-              },
-              {
-                "label": "without it",
-                "text": "You would get Treasure@1b6d3586 - the class name and a memory address."
-              }
-            ]
+            "keypoint": "toString returns the text that println shows for an object."
           },
           {
-            "id": "w_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "Two treasures, one class. What prints?",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  Treasure ring = new Treasure(\"Ring\", 45);\n  System.out.println(crown);\n  System.out.println(ring);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "opts": [
-              "(an error)",
-              "Crown (120 gold)\nRing (45 gold)",
-              "Treasure\nTreasure",
-              "Crown (120 gold)\nCrown (120 gold)"
+            "id": "w_bucket",
+            "kind": "bucket",
+            "instruction": "Which of these is a valid constructor for the class Weapon?",
+            "buckets": [
+              "Valid constructor",
+              "Not a constructor"
             ],
-            "correct": 1,
-            "why": "Each object holds its own name and value, and toString uses whichever object it was called on.",
+            "items": [
+              {
+                "text": "public Weapon(String name, int damage)",
+                "bucket": 0
+              },
+              {
+                "text": "public Weapon()",
+                "bucket": 0
+              },
+              {
+                "text": "public void Weapon(String name, int damage)",
+                "bucket": 1
+              },
+              {
+                "text": "public weapon(String name, int damage)",
+                "bucket": 1
+              }
+            ],
+            "why": "A return type, even void, makes it an ordinary method instead of a constructor. The name must match the class exactly, including the capital letter.",
             "skills": [
               "write a class with private instance variables and a constructor"
             ]
@@ -8499,74 +8738,90 @@
           {
             "id": "w_fix",
             "kind": "fix",
+            "instruction": "Fix this so it compiles.",
+            "code": "public void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  System.out.println(sword);\n}\n\nclass Weapon {\n  private String name;\n  private int damage;\n\n  public void Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public String toString() {\n    return name + \" deals \" + damage + \" damage\";\n  }\n}",
             "wrap": "methods",
-            "instruction": "The constructor forgot something. Fix it.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    name = name;\n    value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "target": "Crown (120 gold)",
-            "solution": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "hint": "name = name assigns the parameter to itself. The field needs this. in front.",
-            "after": "Without this., the fields stay null and 0 - which is why it printed \"null (0 gold)\".",
+            "target": "Sword deals 12 damage",
+            "solution": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public String toString() {\n    return name + \" deals \" + damage + \" damage\";\n  }\n}\n\npublic void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  System.out.println(sword);\n}",
+            "hint": "A constructor has no return type at all, not even void.",
+            "after": "With void, Weapon became an ordinary method instead of a constructor. Java had no constructor that takes two arguments, so new Weapon(\"Sword\", 12) failed to compile.",
             "skills": [
               "write a class with private instance variables and a constructor"
             ]
           },
           {
-            "id": "w_spot",
-            "kind": "spot",
-            "instruction": "This was meant to be a constructor. One line stops it being one. Tap it.",
-            "code": "class Treasure {\n  private String name;\n\n  public void Treasure(String name) {\n    this.name = name;\n  }\n}",
-            "correct": 3,
-            "why": "A constructor has NO return type at all. Adding void turns it into an ordinary method that merely happens to be called Treasure, so the class keeps only the automatic no-argument constructor and new Treasure(\"Crown\") will not compile.",
-            "skills": [
-              "write a class with private instance variables and a constructor"
-            ]
-          },
-          {
-            "id": "w_mcq",
+            "id": "w_trace",
             "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public Treasure(String name, int value) {\n  this.name = name;\n}",
+            "instruction": "Two questions.",
+            "code": "public Weapon(String name, int damage) { ... }",
             "questions": [
               {
-                "prompt": "What is different about a constructor?",
+                "prompt": "What does println(weapon) call automatically?",
                 "opts": [
-                  "It must be private",
-                  "It must return void",
-                  "It can only take one parameter",
-                  "It has the class name and no return type"
-                ],
-                "correct": 3,
-                "why": "Same name as the class, and no type before the name - not even void."
-              },
-              {
-                "prompt": "Why write toString()?",
-                "opts": [
-                  "So printing the object shows something readable",
-                  "So fields become public",
-                  "So the object can be created",
-                  "It is required by Java"
+                  "toString()",
+                  "equals()",
+                  "hashCode()",
+                  "nothing"
                 ],
                 "correct": 0,
-                "why": "println looks for toString(). Without one you get the class name and a memory address."
+                "why": "println calls the object toString method and prints the String it returns."
+              },
+              {
+                "prompt": "A class has no constructor written. What does the constructor Java provides do?",
+                "opts": [
+                  "Sets every field to 0, false, or null",
+                  "Refuses to let the class compile",
+                  "Makes every field private",
+                  "Copies values from another object"
+                ],
+                "correct": 0,
+                "why": "The default constructor sets each field to its default value: 0 for numbers, false for booleans, null for objects."
               }
             ],
             "skills": [
+              "write a class with private instance variables and a constructor"
+            ]
+          },
+          {
+            "id": "w_w1",
+            "kind": "write",
+            "instruction": "Write the Weapon class. It has a name and a damage. toString returns the name, then +, then the damage, then damage.",
+            "wrap": "methods",
+            "code": "public void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  System.out.println(sword);\n}\n\n// write the Weapon class below\n",
+            "target": "Sword +12 damage",
+            "solution": "public void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  System.out.println(sword);\n}\n\nclass Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public String toString() {\n    return name + \" +\" + damage + \" damage\";\n  }\n}",
+            "hint": "Two fields, a constructor that sets them, and a toString that reads them.",
+            "after": "The same shape as the class you just read: fields, constructor, toString.",
+            "skills": [
+              "write a class with private instance variables and a constructor",
               "write a toString so the object can be printed"
             ]
           },
           {
-            "id": "w_write",
-            "kind": "write",
+            "id": "w_final",
+            "kind": "workout",
+            "level": "standard",
+            "instruction": "Design and write a Potion class. It has a name and a healAmount. toString prints the name, then heals, then the healAmount, then hp.",
+            "plan": [
+              "decide the fields: what state does a Potion have?",
+              "write the private fields with their types",
+              "write the constructor that sets the fields from its parameters",
+              "write toString so println shows something useful"
+            ],
+            "methods": [
+              "private field",
+              "constructor",
+              "toString"
+            ],
+            "code": "public void run() {\n  Potion elixir = new Potion(\"Elixir\", 30);\n  System.out.println(elixir);\n}\n\n// write the Potion class below\n",
             "wrap": "methods",
-            "instruction": "Your turn: write the Potion class the client needs.",
-            "harness": "public void run() {\n  Potion small = new Potion(\"Small Potion\", 20);\n  Potion large = new Potion(\"Large Potion\", 75);\n  System.out.println(small);\n  System.out.println(large);\n}",
-            "code": "// write class Potion with a private name and healing, a constructor,\n// and a toString returning e.g. \"Small Potion heals 20\"\n",
-            "target": "Small Potion heals 20\nLarge Potion heals 75",
-            "solution": "class Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
-            "hint": "Two private fields, a constructor using this., and public String toString() returning name + \" heals \" + healing.",
-            "after": "You wrote a class and the client used it unchanged. That is both sides of 5.3 now.",
+            "target": "Elixir heals 30 hp",
+            "solution": "public void run() {\n  Potion elixir = new Potion(\"Elixir\", 30);\n  System.out.println(elixir);\n}\n\nclass Potion {\n  private String name;\n  private int healAmount;\n\n  public Potion(String potionName, int potionHealAmount) {\n    name = potionName;\n    healAmount = potionHealAmount;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healAmount + \" hp\";\n  }\n}",
+            "hint": "Same shape as Weapon: fields, then a constructor that sets them, then toString.",
+            "after": "You built this class from the four design questions, without a worked example to copy.",
             "skills": [
-              "write a class with private instance variables and a constructor"
+              "write a class with private instance variables and a constructor",
+              "write a toString so the object can be printed"
             ]
           }
         ]
