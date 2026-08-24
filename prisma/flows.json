@@ -8799,20 +8799,8 @@
           },
           {
             "id": "w_final",
-            "kind": "workout",
-            "level": "standard",
+            "kind": "write",
             "instruction": "Design and write a Potion class. It has a name and a healAmount. toString prints the name, then heals, then the healAmount, then hp.",
-            "plan": [
-              "decide the fields: what state does a Potion have?",
-              "write the private fields with their types",
-              "write the constructor that sets the fields from its parameters",
-              "write toString so println shows something useful"
-            ],
-            "methods": [
-              "private field",
-              "constructor",
-              "toString"
-            ],
             "code": "public void run() {\n  Potion elixir = new Potion(\"Elixir\", 30);\n  System.out.println(elixir);\n}\n\n// write the Potion class below\n",
             "wrap": "methods",
             "target": "Elixir heals 30 hp",
@@ -8822,6 +8810,9 @@
             "skills": [
               "write a class with private instance variables and a constructor",
               "write a toString so the object can be printed"
+            ],
+            "body": [
+              "Design and write a Potion class. Follow the four questions: what state it needs, the fields and their types, the constructor, then toString."
             ]
           }
         ]
@@ -9069,21 +9060,9 @@
           },
           {
             "id": "m_final",
-            "kind": "workout",
-            "level": "standard",
+            "kind": "write",
             "instruction": "Write a Shield class with two instance methods. blockAmount returns defense divided by 2. describe returns the name, then blocks, then blockAmount.",
             "wrap": "methods",
-            "plan": [
-              "decide what each method needs to know: its parameters",
-              "decide what each method gives back: its return type",
-              "write the body of each method",
-              "test both methods by calling them"
-            ],
-            "methods": [
-              "private field",
-              "return type",
-              "instance method"
-            ],
             "code": "class Shield {\n  private String name;\n  private int defense;\n\n  public Shield(String shieldName, int shieldDefense) {\n    name = shieldName;\n    defense = shieldDefense;\n  }\n\n  // write blockAmount and describe here\n}\n\npublic void run() {\n  Shield s = new Shield(\"Buckler\", 20);\n  System.out.println(s.blockAmount());\n  System.out.println(s.describe());\n}",
             "target": "10\nBuckler blocks 10",
             "solution": "class Shield {\n  private String name;\n  private int defense;\n\n  public Shield(String shieldName, int shieldDefense) {\n    name = shieldName;\n    defense = shieldDefense;\n  }\n\n  public int blockAmount() {\n    return defense / 2;\n  }\n\n  public String describe() {\n    return name + \" blocks \" + blockAmount();\n  }\n}\n\npublic void run() {\n  Shield s = new Shield(\"Buckler\", 20);\n  System.out.println(s.blockAmount());\n  System.out.println(s.describe());\n}",
@@ -9091,6 +9070,9 @@
             "after": "describe called blockAmount from inside the same class. Instance methods can use each other.",
             "skills": [
               "write instance methods that use and change the fields"
+            ],
+            "body": [
+              "A method needs to know what it needs (its parameters) and what it gives back (its return type). Write both methods, then call them to check."
             ]
           }
         ]
@@ -9288,28 +9270,15 @@
           },
           {
             "id": "w_final",
-            "kind": "workout",
-            "level": "olympic",
+            "kind": "write",
             "instruction": "Write a Dragon class. It has a name, a level, and canBreatheFire.",
             "body": [
               "The constructor takes the name first, then the level.",
               "canBreatheFire starts true only if the level is 70 or higher.",
               "getName, getLevel and isFireBreather are getters for the three fields.",
               "attack prints the fire breath if canBreatheFire is true, or ~ ~ ~ if it is false.",
-              "gainExperience adds 10 to the level, then updates canBreatheFire."
-            ],
-            "plan": [
-              "write the fields: name, level, canBreatheFire",
-              "write the constructor: set name and level, then set canBreatheFire from the level",
-              "write the getters: getName, getLevel, isFireBreather",
-              "write attack: print the fire breath if canBreatheFire, otherwise print ~ ~ ~",
-              "write gainExperience: add 10 to level, then update canBreatheFire"
-            ],
-            "methods": [
-              "constructor",
-              "boolean field",
-              "if / else",
-              "level >= 70"
+              "gainExperience adds 10 to the level, then updates canBreatheFire.",
+              "A name, a level, and canBreatheFire. The constructor sets all three. attack and gainExperience are separate methods — write them in whichever order you like."
             ],
             "code": "class Dragon {\n  // fields: name, level, canBreatheFire\n\n  // constructor: takes name then level, sets canBreatheFire when level >= 70\n\n  // getName, getLevel, isFireBreather\n\n  // attack: prints the fire breath if canBreatheFire, otherwise prints ~ ~ ~\n\n  // gainExperience: adds 10 to level, then updates canBreatheFire\n}\n\npublic void run() {\n  Dragon d = new Dragon(\"Smaug\", 50);\n  System.out.println(d.getName());\n  System.out.println(d.getLevel());\n  System.out.println(d.isFireBreather());\n  d.attack();\n  d.gainExperience();\n  d.gainExperience();\n  System.out.println(d.getLevel());\n  System.out.println(d.isFireBreather());\n  d.attack();\n}",
             "wrap": "methods",

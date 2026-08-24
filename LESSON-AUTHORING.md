@@ -213,6 +213,16 @@ act on. If a sentence would not change what they type, delete it.
 **Indent every snippet properly.** One statement per line, braces on their own
 lines, two-space indent. Students copy what they see.
 
+**Only use a template for what it is built to test.** `workout`'s ordering
+puzzle exists because some processes have a real required sequence — build a
+result String before the loop that fills it, or the code is wrong. Writing a
+class has no such requirement: fields, constructor, getters, methods all
+compile in any order Java allows. Do not shuffle an arbitrary task list into
+an ordering puzzle just because the workout template is available and the
+exercise is long. Before reaching for `workout`, `walk`, `card`, or
+`pipeline`, check the content actually has the property that template tests.
+If it does not, a plain `write` step with `body[]` is the honest choice.
+
 **Keep the documentation on screen during exercises.** `facts` renders on any
 step, not just teaching ones. A question about a class the student cannot see,
 with the method list hidden, is a memory test.
