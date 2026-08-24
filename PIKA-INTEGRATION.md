@@ -15,7 +15,7 @@ and it is the pattern he will review fastest.
 | Question | Answer |
 | --- | --- |
 | Integration shape | Minimal port between two services, Pal-style. classOS stays its own deploy. |
-| Identity | Pika owns it. classOS links by email — **but see 4a: 53 of 55 students have no email**, so a backfill has to come first. |
+| Identity | Pika owns it outright. classOS keeps no account system on this path — no login, no password, no join code. |
 | First slice | Full: lesson results reach Pika's gradebook as assignment grades. |
 | Art style | Theme boundary. Pika supplies semantic tokens, classOS keeps its layout. |
 
@@ -60,8 +60,9 @@ reason for going early.
 | The widget package | us to write, **teacher to publish** | Cannot publish under `@codepet`. Either he publishes, or it ships under our own scope, or Pika vendors it. |
 | Pika's read-token route, tab, feature flag, gradebook write | **teacher** | Needs a PR from a fork, and his review. |
 
-Nothing on the Pika side lands without him. Plan the classOS half as real work
-and the Pika half as a proposal.
+Nothing on the Pika side lands without him, but he is one text message away —
+this is a dependency with a short turnaround, not a blocker. The asks are in
+`docs/pika-ask.md`, written to be forwarded as-is.
 
 ---
 
@@ -105,51 +106,27 @@ Token rules, taken from Pal's client so the caching code is identical:
 classOS verifies signature, `aud`, `iss` and `exp` on every request. A token is
 a read credential for one student, nothing more.
 
-### 4. Identity linking, by email
+### 4. Identity — Pika owns it outright
 
-On first request bearing a valid token:
+classOS has **no account system** on this path. No login, no password, no join
+code, no session. The only way in is a valid Pika token.
 
-1. Find a `User` by `pikaSubject`. If found, use it. Done.
-2. Otherwise find a `User` by the token's `email`. If found, set its
-   `pikaSubject` and use it. **This is the step that saves existing progress.**
-3. Otherwise create a `User` with that email, name and `pikaSubject`.
+On a valid token:
 
-Two edge cases that will otherwise bite:
+1. Find the row with that `pikaSubject`. If it exists, use it.
+2. Otherwise create one, copying `name` and `email` for display only.
 
-- **Email reuse.** If a matched account already has a *different*
-  `pikaSubject`, do not steal it. Fail closed and log — that is either a
-  recycled school address or an attack. Implemented and tested.
-- **Null emails — and this one is not hypothetical.** Measured against
-  production on 2026-08-24:
+That row is not an account. It exists because `Progress` needs something to
+point at. classOS never authenticates against it.
 
-  | Role | Accounts | No email |
-  | --- | --- | --- |
-  | STUDENT | 55 | **53** |
-  | TEACHER | 3 | 0 |
-  | ADMIN | 1 | 0 |
+**No linking, no backfill, no migration.** Every account currently on classOS is
+the owner's own testing, so there is nothing to preserve. An earlier draft of
+this document specified matching by email to rescue existing progress, and
+flagged that 53 of 55 students had no email — both are moot. That branch has
+been deleted rather than left in to mis-fire later.
 
-  **53 of 55 students cannot be matched by email.** They were created by
-  join-code, which never collected one. Ship link-by-email as it stands and 96%
-  of the student body starts from zero with their progress orphaned.
-
-### 4a. So email alone is not enough
-
-Linking has to be solved before step 1 ships. Three options, cheapest first:
-
-1. **Backfill from Pika's roster.** Pika already holds a roster with real
-   emails, uploaded by CSV. Match classOS join-code accounts to it by name
-   within a classroom, have the teacher approve the mapping once, write the
-   emails in. One-off, done before launch, and after it the email path works
-   for everyone.
-2. **A one-time claim screen.** On first entry from the Pika tab, an unmatched
-   student is shown the join-code accounts in their classroom and picks their
-   own. Needs the teacher to confirm, or it is an invitation to grab someone
-   else's record.
-3. **Accept the loss** for the 53 and start them fresh. Only reasonable if
-   those accounts are test data.
-
-Option 1 is the recommendation: it is a migration, not a permanent code path,
-and it leaves the running system with one linking rule instead of two.
+`User.email` still carries a unique index from the old account system. Email is
+decoration now, so a collision drops the email instead of failing the request.
 
 ### 5. Results out — three endpoints
 
@@ -195,16 +172,44 @@ error should see the same thing they will see everywhere else.
 
 ---
 
+## Two modes, one codebase
+
+classOS runs in two shapes and must keep doing so.
+
+| | Embedded in Pika | Standalone |
+| --- | --- | --- |
+| Lives at | a tab inside Pika | `classos.arronwang.com` |
+| Who the student is | Pika token | nobody — anonymous |
+| Sign-in | none, Pika already did it | none, and none wanted |
+| Progress | `Progress` rows keyed to the Pika subject | the browser, local only |
+| Gradebook | pulled by Pika | none |
+
+The standalone version stays open to anyone with the link and asks for nothing.
+That is what it is for: a student, or a teacher evaluating it, can do a lesson
+without an account existing anywhere.
+
+**One deploy, not two.** `classos.arronwang.com` serves the standalone app *and*
+hosts the `/api/pika/*` endpoints the embedded widget calls. This is exactly how
+Pal does it — Pal runs on its own domain, and the tab inside Pika is a widget
+talking to that domain. There is no second build, no forked codebase, and no
+environment flag deciding which product this is. What differs is only how a
+request arrives: with a Pika bearer token, or without one.
+
+The consequence worth stating: **the current login, signup, password, join-code
+and session code serves neither mode.** 45 route files still call
+`currentUser()`, so it cannot be pulled out casually, but nothing new should be
+built on it and it should come out once both modes are real.
+
+---
+
 ## Build order
 
 Three shippable steps. Each one can break on its own, which is the point of
 going early.
 
-0. **Backfill emails** onto the 53 join-code accounts, from Pika's roster.
-   Blocks everything below — see 4a.
-1. **Identity.** Token verify, link by email, `/summary`. A student opens the
-   tab and sees their own lessons. Nothing writes back. Proves signing, CORS,
-   linking and theming in one go.
+1. **Identity.** Token verify, resolve the subject, `/summary`. A student opens
+   the tab and sees their own lessons. Nothing writes back. Proves signing,
+   CORS, identity and theming in one go.
 2. **Results.** `/results` plus Pika's pull. Lesson scores appear in the
    gradebook.
 3. **Polish.** Feature flag per classroom via Pika's existing
@@ -224,5 +229,4 @@ the rest is plumbing.
    Pal, or a per-integration salt?
 4. Is `classroom_feature_visibility` the right gate for a `lessons` tab, and
    does `ClassroomTabId` need a new member?
-5. **Can he export the Pika roster (name, email, classroom) so the 53
-   join-code accounts can be backfilled?** This blocks step 1.
+(No roster export needed. Identity comes from the token; nothing is migrated.)

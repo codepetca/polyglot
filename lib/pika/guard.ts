@@ -67,13 +67,8 @@ export async function requirePikaStudent(req: Request): Promise<PikaContext | Ne
     return NextResponse.json({ error: "unauthorized" }, { status: 401, headers });
   }
 
-  const resolved = await resolvePikaStudent(claims);
-  if (!resolved.ok) {
-    console.warn("[pika] identity unresolved:", resolved.reason, "sub:", claims.sub.slice(0, 12));
-    // 409, not 401. The token was good; the accounts are in a state a human has
-    // to sort out, and retrying will not fix it.
-    return NextResponse.json({ error: "account conflict", reason: resolved.reason }, { status: 409, headers });
-  }
-
-  return { userId: resolved.userId, claims, headers };
+  // Pika owns identity, so this only ever finds or creates the row Progress
+  // hangs off. There is no conflict case left to handle.
+  const { userId } = await resolvePikaStudent(claims);
+  return { userId, claims, headers };
 }
