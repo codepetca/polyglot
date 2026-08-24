@@ -3723,241 +3723,254 @@
         "v": 1,
         "steps": [
           {
-            "id": "n_task",
+            "id": "m_task",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "Every dungeon room prints the same divider above its name.",
-            "code": "public void run() {\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the cellar.\");\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the crypt.\");\n}",
-            "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt.",
-            "highlight": [
-              1,
-              3
-            ],
-            "points": [
-              {
-                "label": "two identical lines",
-                "text": "The same println, written twice. Ten rooms would mean ten copies."
-              },
-              {
-                "label": "changing it",
-                "text": "Make the divider longer and you have to edit every copy, and you will miss one."
-              },
-              {
-                "label": "what we want",
-                "text": "Write the divider once, give it a name, and use the name wherever it is needed."
-              }
+            "instruction": "Every dungeon room prints the same divider above and below its name. How do we write that line once and use it everywhere?",
+            "code": "System.out.println(\"--------\");\nSystem.out.println(\"Cellar\");\nSystem.out.println(\"--------\");\nSystem.out.println(\"--------\");\nSystem.out.println(\"Crypt\");\nSystem.out.println(\"--------\");",
+            "output": "--------\nCellar\n--------\n--------\nCrypt\n--------",
+            "body": [
+              "The divider is written four times already.",
+              "Twenty rooms would mean forty copies of the same line."
             ]
           },
           {
-            "id": "n_def",
+            "id": "m_define",
             "kind": "teach",
+            "instruction": "A method is a named piece of code you can run whenever you want.",
+            "code": "public void printLine() {\n  System.out.println(\"--------\");\n}",
             "wrap": "methods",
-            "instruction": "A method is a named block of code you can run by name.",
-            "code": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"------------------------\");\n}",
-            "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt.",
-            "highlight": [
-              6,
-              7,
-              8
-            ],
             "points": [
               {
-                "label": "public void banner()",
-                "text": "The definition. banner is the name you chose; the braces hold what it does."
+                "label": "public void",
+                "text": "The opening words of a method. You will meet both properly later."
               },
               {
-                "label": "banner();",
-                "text": "The call. It runs the block, then carries on with the next line."
-              },
-              {
-                "label": "called twice",
-                "text": "One definition, two calls, and the divider appears twice."
-              },
-              {
-                "label": "void",
-                "text": "This method hands nothing back. It just does something."
-              }
-            ]
-          },
-          {
-            "id": "n_cmp",
-            "kind": "compare",
-            "instruction": "Same output. One of them you can change in a single place.",
-            "sides": [
-              {
-                "label": "repeated",
-                "code": "public void run() {\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the cellar.\");\n  System.out.println(\"------------------------\");\n  System.out.println(\"You are in the crypt.\");\n}",
-                "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt."
-              },
-              {
-                "label": "with a method",
-                "code": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"------------------------\");\n}",
-                "output": "------------------------\nYou are in the cellar.\n------------------------\nYou are in the crypt."
-              }
-            ],
-            "points": [
-              {
-                "label": "repeated",
-                "text": "The divider text exists twice. Ten rooms means ten copies."
-              },
-              {
-                "label": "with a method",
-                "text": "It exists once, inside banner(). Ten rooms means ten calls and still one copy."
-              }
-            ],
-            "skills": [
-              "explain why a method is better than repeating code"
-            ]
-          },
-          {
-            "id": "n_fix",
-            "kind": "fix",
-            "wrap": "methods",
-            "instruction": "Make every divider say = instead of -. Change it in ONE place.",
-            "code": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"------------------------\");\n}",
-            "target": "========================\nYou are in the cellar.\n========================\nYou are in the crypt.",
-            "solution": "public void run() {\n  banner();\n  System.out.println(\"You are in the cellar.\");\n  banner();\n  System.out.println(\"You are in the crypt.\");\n}\n\npublic void banner() {\n  System.out.println(\"========================\");\n}",
-            "hint": "Only the line inside banner() needs editing. Both dividers come from it.",
-            "after": "One edit, both dividers. That is the whole reason methods exist.",
-            "skills": [
-              "create a method and call it"
-            ]
-          },
-          {
-            "id": "n_order",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "Defining a method does not run it.",
-            "code": "public void run() {\n  banner();\n  banner();\n  banner();\n}\n\npublic void banner() {\n  System.out.println(\"== ROOM ==\");\n}",
-            "output": "== ROOM ==\n== ROOM ==\n== ROOM ==",
-            "points": [
-              {
-                "label": "run()",
-                "text": "Java starts here. It is a method too - the one that runs automatically."
-              },
-              {
-                "label": "banner(); x3",
-                "text": "Three calls, so the block runs three times."
-              },
-              {
-                "label": "the definition",
-                "text": "Sitting below run() and never running on its own. It waits until something calls it."
-              },
-              {
-                "label": "order on the page",
-                "text": "Where you write the definition does not matter. Above or below run() both work."
-              }
-            ]
-          },
-          {
-            "id": "n_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  System.out.println(\"A\");\n  shout();\n  System.out.println(\"C\");\n}\n\npublic void shout() {\n  System.out.println(\"B\");\n}",
-            "opts": [
-              "B\nA\nC",
-              "A\nB\nC",
-              "A\nC\nB",
-              "A\nC"
-            ],
-            "correct": 1,
-            "why": "The call to shout() runs the whole method before the next line of run(). Java goes there, prints B, comes back, then prints C.",
-            "skills": [
-              "create a method and call it"
-            ]
-          },
-          {
-            "id": "n_sharp",
-            "kind": "teach",
-            "instruction": "public void name() { } to define. name(); to call.",
-            "points": [
-              {
-                "label": "public void banner()",
-                "text": "The header: who can use it, what it hands back, and its name."
-              },
-              {
-                "label": "void",
-                "text": "Hands nothing back. Later you will write methods that do."
+                "label": "printLine",
+                "text": "The name you give it."
               },
               {
                 "label": "()",
-                "text": "Empty brackets mean it needs no information. Parameters go there next lesson."
+                "text": "Empty brackets, because this one needs nothing to do its job."
               },
               {
-                "label": "banner();",
-                "text": "A call needs the brackets and a semicolon. Without brackets Java thinks you mean a variable."
+                "label": "{ }",
+                "text": "The code the method runs."
               }
             ]
           },
           {
-            "id": "n_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public void run() {\n  hello();\n}\n\npublic void hello() {\n  System.out.println(\"hi\");\n}",
-            "questions": [
-              {
-                "prompt": "Why do we write methods?",
-                "opts": [
-                  "To repeat something a fixed number of times",
-                  "To store a single value",
-                  "To name a block of code and reuse it without repeating it",
-                  "To compare two values"
-                ],
-                "correct": 2,
-                "why": "A method gives a block a name so it can be run from anywhere, as many times as needed, and changed in one place."
-              },
-              {
-                "prompt": "Which line CALLS a method named hello?",
-                "opts": [
-                  "hello();",
-                  "public void hello()",
-                  "hello",
-                  "void hello();"
-                ],
-                "correct": 0,
-                "why": "A call is the name, brackets, semicolon. The second is a definition header, and the others are neither."
-              }
-            ],
-            "skills": [
-              "create a method and call it"
-            ]
-          },
-          {
-            "id": "n_fill",
-            "kind": "fill",
+            "id": "m_call",
+            "kind": "teach",
+            "instruction": "Writing the name with brackets runs it.",
+            "code": "public void run() {\n  printLine();\n  System.out.println(\"Cellar\");\n  printLine();\n}\n\npublic void printLine() {\n  System.out.println(\"--------\");\n}",
             "wrap": "methods",
-            "instruction": "Finish the definition so the call works.",
-            "code": "public void run() {\n  cheer();\n}\n\npublic ⟦1⟧ cheer() {\n  System.out.println(\"Victory!\");\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "String",
-                  "void",
-                  "int"
-                ],
-                "answer": 1
-              }
-            ],
-            "target": "Victory!",
-            "hint": "The method prints something and hands nothing back.",
-            "after": "void means \"hands nothing back\". Methods that return a value come in 4.3.",
-            "skills": [
-              "create a method and call it"
+            "output": "--------\nCellar\n--------",
+            "body": [
+              "printLine(); is a call. Java goes and runs the method, then comes back.",
+              "The divider is written once and used twice."
             ]
           },
           {
-            "id": "n_write",
+            "id": "m_walk",
+            "kind": "walk",
+            "instruction": "Step through it and watch Java jump.",
+            "wrap": "methods",
+            "code": "public void run() {\n  printLine();\n  System.out.println(\"Cellar\");\n  printLine();\n}\n\npublic void printLine() {\n  System.out.println(\"--------\");\n}",
+            "frames": [
+              {
+                "line": 0,
+                "note": "Java always starts in run().",
+                "out": ""
+              },
+              {
+                "line": 1,
+                "note": "It reaches printLine(). This is a call, so it jumps to the method.",
+                "out": ""
+              },
+              {
+                "line": 6,
+                "note": "It arrives at the method definition.",
+                "out": ""
+              },
+              {
+                "line": 7,
+                "note": "Print the divider.",
+                "out": "--------"
+              },
+              {
+                "line": 2,
+                "note": "The method has finished, so Java goes back to where it was called and carries on.",
+                "out": "--------"
+              },
+              {
+                "line": 2,
+                "note": "Print the room name.",
+                "out": "--------\nCellar"
+              },
+              {
+                "line": 3,
+                "note": "printLine() again. Java jumps to the same method a second time.",
+                "out": "--------\nCellar"
+              },
+              {
+                "line": 7,
+                "note": "Print the divider again. The same one line of code did both.",
+                "out": "--------\nCellar\n--------"
+              },
+              {
+                "line": 4,
+                "note": "Back in run(), and there is nothing left. The program ends.",
+                "out": "--------\nCellar\n--------"
+              }
+            ]
+          },
+          {
+            "id": "m_why",
+            "kind": "teach",
+            "instruction": "Two reasons this is worth doing.",
+            "rules": [
+              {
+                "text": "You write the code once, so changing it means changing one place",
+                "example": "make the divider longer and every room changes"
+              },
+              {
+                "text": "The name says what the code does, so run() becomes readable",
+                "example": "printLine(); reads better than a println of dashes"
+              }
+            ]
+          },
+          {
+            "id": "m_w1",
             "kind": "write",
+            "instruction": "Write a method called gameOver that prints GAME OVER, then call it.",
             "wrap": "methods",
-            "instruction": "Your turn: write a method that prints the game over screen, and call it twice.",
-            "code": "public void run() {\n  // call your method twice\n}\n\n// define gameOver() below\n",
-            "target": "GAME OVER\nGAME OVER",
-            "solution": "public void run() {\n  gameOver();\n  gameOver();\n}\n\npublic void gameOver() {\n  System.out.println(\"GAME OVER\");\n}",
-            "hint": "Define public void gameOver() printing \"GAME OVER\", then call gameOver(); twice inside run().",
-            "after": "You defined a method and used it twice. That is the whole of this lesson.",
+            "code": "public void run() {\n  // call gameOver here\n}\n\n// write gameOver below\n",
+            "target": "GAME OVER",
+            "solution": "public void run() {\n  gameOver();\n}\n\npublic void gameOver() {\n  System.out.println(\"GAME OVER\");\n}",
+            "hint": "public void gameOver() { ... }, then gameOver(); inside run.",
+            "after": "Defining it is not enough. Nothing happens until you call it.",
             "skills": [
               "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_w2",
+            "kind": "write",
+            "instruction": "Write a method called drumroll that prints three dots on separate lines, and call it twice.",
+            "wrap": "methods",
+            "code": "public void run() {\n  // call drumroll twice\n}\n\n// write drumroll below\n",
+            "target": ".\n.\n.\n.\n.\n.",
+            "solution": "public void run() {\n  drumroll();\n  drumroll();\n}\n\npublic void drumroll() {\n  System.out.println(\".\");\n  System.out.println(\".\");\n  System.out.println(\".\");\n}",
+            "hint": "Three printlns inside the method, then two calls.",
+            "after": "Six lines of output from three lines of method.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_w3",
+            "kind": "write",
+            "instruction": "Write a method called banner that prints a row of stars, the word MENU, then another row of stars.",
+            "wrap": "methods",
+            "code": "public void run() {\n  banner();\n}\n\n// write banner so it prints:\n//   *****\n//   MENU\n//   *****\n",
+            "target": "*****\nMENU\n*****",
+            "solution": "public void run() {\n  banner();\n}\n\npublic void banner() {\n  System.out.println(\"*****\");\n  System.out.println(\"MENU\");\n  System.out.println(\"*****\");\n}",
+            "hint": "Three printlns in the method body.",
+            "after": "One call, three lines.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_order",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "wrap": "methods",
+            "code": "public void run() {\n  System.out.println(\"A\");\n  shout();\n  System.out.println(\"C\");\n}\n\npublic void shout() {\n  System.out.println(\"B\");\n}",
+            "opts": [
+              "A\nB\nC",
+              "A\nC\nB",
+              "B\nA\nC",
+              "A\nC"
+            ],
+            "correct": 0,
+            "why": "Java runs run() top to bottom. At the call it jumps into shout, prints B, then comes straight back for C.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_nocall",
+            "kind": "predict",
+            "instruction": "The method is written but never called. What comes out?",
+            "wrap": "methods",
+            "code": "public void run() {\n  System.out.println(\"Start\");\n}\n\npublic void secret() {\n  System.out.println(\"You found me!\");\n}",
+            "opts": [
+              "Start\nYou found me!",
+              "Start",
+              "You found me!",
+              "An error"
+            ],
+            "correct": 1,
+            "why": "Defining a method only describes it. Nothing runs until something calls it.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_fix",
+            "kind": "fix",
+            "instruction": "Fix this so it prints the banner.",
+            "wrap": "methods",
+            "code": "public void run() {\n  banner;\n}\n\npublic void banner() {\n  System.out.println(\"=====\");\n}",
+            "target": "=====",
+            "solution": "public void run() {\n  banner();\n}\n\npublic void banner() {\n  System.out.println(\"=====\");\n}",
+            "hint": "A call needs the brackets, even when there is nothing to put in them.",
+            "after": "Without the brackets Java thinks you meant a variable called banner.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_w4",
+            "kind": "write",
+            "instruction": "Write two methods, sunrise and sunset, and call them in that order.",
+            "wrap": "methods",
+            "code": "public void run() {\n  // call sunrise, then sunset\n}\n\n// sunrise prints:  The sun comes up.\n// sunset prints:   The sun goes down.\n",
+            "target": "The sun comes up.\nThe sun goes down.",
+            "solution": "public void run() {\n  sunrise();\n  sunset();\n}\n\npublic void sunrise() {\n  System.out.println(\"The sun comes up.\");\n}\n\npublic void sunset() {\n  System.out.println(\"The sun goes down.\");\n}",
+            "hint": "Two separate methods, two calls, in the order you want them to happen.",
+            "after": "The order of the calls decides the order of the output, not the order you defined them in.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_w5",
+            "kind": "write",
+            "instruction": "A method can call another method. Write countdown, which calls drumroll and then prints Go.",
+            "wrap": "methods",
+            "code": "public void run() {\n  countdown();\n}\n\npublic void drumroll() {\n  System.out.println(\"...\");\n}\n\n// write countdown below\n",
+            "target": "...\nGo!",
+            "solution": "public void run() {\n  countdown();\n}\n\npublic void drumroll() {\n  System.out.println(\"...\");\n}\n\npublic void countdown() {\n  drumroll();\n  System.out.println(\"Go!\");\n}",
+            "hint": "Call drumroll() from inside countdown, then print Go!",
+            "after": "run called countdown, and countdown called drumroll. Methods build on each other.",
+            "skills": [
+              "create a method and call it"
+            ]
+          },
+          {
+            "id": "m_final",
+            "kind": "write",
+            "instruction": "Build the room printer. Write printLine and use it to frame two rooms.",
+            "wrap": "methods",
+            "code": "public void run() {\n  // print Cellar and Crypt, each framed by a divider\n}\n\n// write printLine so it prints:  --------\n",
+            "target": "--------\nCellar\n--------\n--------\nCrypt\n--------",
+            "solution": "public void run() {\n  printLine();\n  System.out.println(\"Cellar\");\n  printLine();\n  printLine();\n  System.out.println(\"Crypt\");\n  printLine();\n}\n\npublic void printLine() {\n  System.out.println(\"--------\");\n}",
+            "hint": "Four calls to printLine, with a room name between each pair.",
+            "after": "The divider is written once. Change it there and every room changes with it.",
+            "skills": [
+              "explain why a method is better than repeating code"
             ]
           }
         ]
@@ -3976,264 +3989,174 @@
           {
             "id": "p_task",
             "kind": "teach",
+            "instruction": "Our divider is always eight dashes. How do we ask for one of any length?",
+            "code": "public void run() {\n  printLine();\n}\n\npublic void printLine() {\n  System.out.println(\"--------\");\n}",
             "wrap": "methods",
-            "instruction": "Every room needs the same sentence with a different word in it.",
-            "code": "public void run() {\n  cellar();\n  crypt();\n}\n\npublic void cellar() {\n  System.out.println(\"You enter the cellar.\");\n}\n\npublic void crypt() {\n  System.out.println(\"You enter the crypt.\");\n}",
-            "output": "You enter the cellar.\nYou enter the crypt.",
-            "highlight": [
-              5,
-              6,
-              7,
-              9,
-              10,
-              11
-            ],
-            "points": [
-              {
-                "label": "cellar() and crypt()",
-                "text": "Two methods that differ by one word."
-              },
-              {
-                "label": "a third room",
-                "text": "Would need a third method. Twenty rooms, twenty methods."
-              },
-              {
-                "label": "what we want",
-                "text": "One method, told which room to name when it is called."
-              }
+            "output": "--------",
+            "body": [
+              "A second method for a longer line would be the same code again.",
+              "We want to tell the method how long to make it."
             ]
           },
           {
             "id": "p_param",
             "kind": "teach",
+            "instruction": "A parameter lets you hand the method a value.",
+            "code": "public void run() {\n  printLine(3);\n  printLine(8);\n}\n\npublic void printLine(int length) {\n  for (int i = 0; i < length; i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n}",
             "wrap": "methods",
-            "instruction": "A parameter lets the caller hand the method a value.",
-            "code": "public void run() {\n  enter(\"cellar\");\n  enter(\"crypt\");\n}\n\npublic void enter(String room) {\n  System.out.println(\"You enter the \" + room + \".\");\n}",
-            "output": "You enter the cellar.\nYou enter the crypt.",
-            "highlight": [
-              1,
-              2,
-              5
-            ],
+            "output": "---\n--------",
             "points": [
               {
-                "label": "String room",
-                "text": "The parameter. Inside the method, room behaves like a variable holding whatever was passed in."
+                "label": "int length",
+                "text": "The parameter. Inside the method it works like a variable."
               },
               {
-                "label": "enter(\"cellar\")",
-                "text": "The call passes \"cellar\", so room is \"cellar\" for that run."
-              },
-              {
-                "label": "enter(\"crypt\")",
-                "text": "Same method, different value, different sentence."
-              },
-              {
-                "label": "one definition",
-                "text": "Twenty rooms now need twenty calls but still one method."
+                "label": "printLine(3)",
+                "text": "The call hands over a 3, so length is 3 for that run."
               }
-            ]
-          },
-          {
-            "id": "p_cmp",
-            "kind": "compare",
-            "instruction": "Same output. One of them scales.",
-            "sides": [
-              {
-                "label": "a method per room",
-                "code": "public void run() {\n  cellar();\n  crypt();\n}\n\npublic void cellar() {\n  System.out.println(\"You enter the cellar.\");\n}\n\npublic void crypt() {\n  System.out.println(\"You enter the crypt.\");\n}",
-                "output": "You enter the cellar.\nYou enter the crypt."
-              },
-              {
-                "label": "one method, a parameter",
-                "code": "public void run() {\n  enter(\"cellar\");\n  enter(\"crypt\");\n}\n\npublic void enter(String room) {\n  System.out.println(\"You enter the \" + room + \".\");\n}",
-                "output": "You enter the cellar.\nYou enter the crypt."
-              }
-            ],
-            "points": [
-              {
-                "label": "a method per room",
-                "text": "The sentence is written twice, so a wording change means editing both."
-              },
-              {
-                "label": "one method, a parameter",
-                "text": "The sentence exists once. Only the value changes."
-              }
-            ],
-            "skills": [
-              "write a method that takes a parameter"
             ]
           },
           {
             "id": "p_words",
             "kind": "teach",
-            "instruction": "Two words for the two halves.",
-            "points": [
+            "instruction": "The two halves have different names.",
+            "rules": [
               {
-                "label": "parameter",
-                "text": "The name in the definition: String room. It exists only inside the method."
+                "text": "A parameter is the name in the definition. It needs a type",
+                "example": "public void printLine(int length)"
               },
               {
-                "label": "argument",
-                "text": "The value in the call: \"cellar\". It is what the parameter is set to."
+                "text": "An argument is the value in the call. It needs no type",
+                "example": "printLine(3);"
               },
               {
-                "label": "in order",
-                "text": "The first argument fills the first parameter, the second fills the second."
-              },
-              {
-                "label": "the type must match",
-                "text": "A String parameter needs a String argument. Passing 7 to it will not compile."
+                "text": "The parameter only exists inside its own method",
+                "example": "run() cannot see length"
               }
-            ]
-          },
-          {
-            "id": "p_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  greet(\"Ada\");\n  greet(\"Grace\");\n}\n\npublic void greet(String name) {\n  System.out.println(\"Hello, \" + name);\n}",
-            "opts": [
-              "Hello, Ada",
-              "Hello, Grace\nHello, Ada",
-              "Hello, name\nHello, name",
-              "Hello, Ada\nHello, Grace"
-            ],
-            "correct": 3,
-            "why": "name takes the value of each argument in turn, so the method runs twice with different values.",
-            "skills": [
-              "write a method that takes a parameter"
             ]
           },
           {
             "id": "p_two",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A method can take more than one value.",
+            "instruction": "A method can take more than one.",
             "code": "public void run() {\n  attack(\"goblin\", 7);\n  attack(\"troll\", 12);\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
-            "output": "You hit the goblin for 7 damage.\nYou hit the troll for 12 damage.",
-            "points": [
-              {
-                "label": "(String enemy, int damage)",
-                "text": "Two parameters, separated by a comma. Each has its own type."
-              },
-              {
-                "label": "attack(\"goblin\", 7)",
-                "text": "enemy becomes \"goblin\", damage becomes 7. Order decides which is which."
-              },
-              {
-                "label": "attack(7, \"goblin\")",
-                "text": "Would not compile. The types are in the wrong order."
-              },
-              {
-                "label": "int damage",
-                "text": "A number, so it can be used in arithmetic inside the method."
-              }
-            ]
-          },
-          {
-            "id": "p_sharp",
-            "kind": "teach",
-            "instruction": "public void name(Type param) { } to define. name(value); to call.",
-            "points": [
-              {
-                "label": "the definition",
-                "text": "Each parameter needs a type and a name: (String room), (String enemy, int damage)."
-              },
-              {
-                "label": "the call",
-                "text": "Passes values in the same order, with no types: enter(\"cellar\")."
-              },
-              {
-                "label": "scope",
-                "text": "A parameter exists only inside its method. run() cannot see room."
-              },
-              {
-                "label": "no arguments",
-                "text": "Empty brackets mean the method needs nothing, like banner() last lesson."
-              }
-            ]
-          },
-          {
-            "id": "p_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public void run() {\n  show(\"hi\", 3);\n}\n\npublic void show(String text, int times) {\n  System.out.println(text + times);\n}",
-            "questions": [
-              {
-                "prompt": "In show(\"hi\", 3), what is \"hi\" called?",
-                "opts": [
-                  "A parameter",
-                  "A return value",
-                  "A variable type",
-                  "An argument"
-                ],
-                "correct": 3,
-                "why": "The value passed at the call is the argument. The name in the definition (String text) is the parameter."
-              },
-              {
-                "prompt": "Why write one method with a parameter instead of one method per value?",
-                "opts": [
-                  "Java requires it",
-                  "It runs faster",
-                  "It uses less memory",
-                  "The logic exists once, so a change happens in one place"
-                ],
-                "correct": 3,
-                "why": "The point is maintenance, not speed. Twenty rooms need twenty calls but still only one method to fix."
-              }
-            ],
-            "skills": [
-              "write a method that takes a parameter"
-            ]
-          },
-          {
-            "id": "p_fill",
-            "kind": "fill",
             "wrap": "methods",
-            "instruction": "Give the parameter the right type.",
-            "code": "public void run() {\n  heal(5);\n}\n\npublic void heal(⟦1⟧ amount) {\n  System.out.println(\"Healed \" + amount + \" HP.\");\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "void",
-                  "int",
-                  "String"
-                ],
-                "answer": 1
-              }
-            ],
-            "target": "Healed 5 HP.",
-            "hint": "The call passes 5, a whole number.",
-            "after": "The parameter type has to match what the call passes.",
-            "skills": [
-              "write a method that takes a parameter"
+            "output": "You hit the goblin for 7 damage.\nYou hit the troll for 12 damage.",
+            "body": [
+              "Separate them with a comma. Each one needs its own type.",
+              "They are filled left to right, so the order of the arguments decides which is which."
             ]
           },
           {
             "id": "p_order",
             "kind": "fix",
+            "instruction": "Fix this so it runs.",
             "wrap": "methods",
-            "instruction": "The values are right. Their order is not.",
             "code": "public void run() {\n  attack(7, \"goblin\");\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
             "target": "You hit the goblin for 7 damage.",
             "solution": "public void run() {\n  attack(\"goblin\", 7);\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
-            "hint": "The first argument fills the first parameter, whatever you meant it to do.",
-            "after": "Java matched 7 against String enemy and gave up. Arguments are matched by position, never by what looks sensible.",
+            "hint": "The first argument fills the first parameter, whatever you meant.",
+            "after": "Java matched a 7 against String enemy and gave up. Position decides, not meaning.",
             "skills": [
               "tell an argument apart from a parameter"
             ]
           },
           {
-            "id": "p_write",
+            "id": "p_w1",
             "kind": "write",
+            "instruction": "Write greet(String name) so it prints Hello, then the name.",
             "wrap": "methods",
-            "instruction": "Your turn: one method that reports any loot find.",
-            "code": "public void run() {\n  // call it twice: 3 gold, then 12 gold\n}\n\n// define found(int coins) below\n",
-            "target": "You found 3 gold.\nYou found 12 gold.",
-            "solution": "public void run() {\n  found(3);\n  found(12);\n}\n\npublic void found(int coins) {\n  System.out.println(\"You found \" + coins + \" gold.\");\n}",
-            "hint": "Define public void found(int coins) printing \"You found \" + coins + \" gold.\", then call found(3); and found(12);",
-            "after": "One method, two different results. That is what a parameter buys you.",
+            "code": "public void run() {\n  greet(\"Ada\");\n  greet(\"Grace\");\n}\n\n// write greet below\n",
+            "target": "Hello, Ada\nHello, Grace",
+            "solution": "public void run() {\n  greet(\"Ada\");\n  greet(\"Grace\");\n}\n\npublic void greet(String name) {\n  System.out.println(\"Hello, \" + name);\n}",
+            "hint": "One String parameter, and join it onto the text with a +.",
+            "after": "One method, two different greetings.",
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_w2",
+            "kind": "write",
+            "instruction": "Write shout(String word) so it prints the word in capitals with an exclamation mark.",
+            "wrap": "methods",
+            "code": "public void run() {\n  shout(\"help\");\n}\n\n// write shout so it prints:  HELP!\n",
+            "target": "HELP!",
+            "solution": "public void run() {\n  shout(\"help\");\n}\n\npublic void shout(String word) {\n  System.out.println(word.toUpperCase() + \"!\");\n}",
+            "hint": "toUpperCase() gives back the capitals, then join the ! on.",
+            "after": "The parameter can be used with any String method inside the body.",
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_w3",
+            "kind": "write",
+            "instruction": "Write repeat(String text, int times) so it prints the text that many times.",
+            "wrap": "methods",
+            "code": "public void run() {\n  repeat(\"Go\", 3);\n}\n\n// write repeat below\n",
+            "target": "Go\nGo\nGo",
+            "solution": "public void run() {\n  repeat(\"Go\", 3);\n}\n\npublic void repeat(String text, int times) {\n  for (int i = 0; i < times; i++) {\n    System.out.println(text);\n  }\n}",
+            "hint": "Two parameters, and a for loop that runs times times.",
+            "after": "A parameter can be the limit of a loop.",
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_w4",
+            "kind": "write",
+            "instruction": "Write box(String word) so it frames the word in dashes.",
+            "wrap": "methods",
+            "code": "public void run() {\n  box(\"MENU\");\n}\n\n// print:\n//   ----\n//   MENU\n//   ----\n// the dashes must be as long as the word\n",
+            "target": "----\nMENU\n----",
+            "solution": "public void run() {\n  box(\"MENU\");\n}\n\npublic void box(String word) {\n  for (int i = 0; i < word.length(); i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n  System.out.println(word);\n  for (int i = 0; i < word.length(); i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n}",
+            "hint": "word.length() tells you how many dashes to print.",
+            "after": "The frame fits any word, because its size came from the parameter.",
+            "skills": [
+              "write a method that takes a parameter"
+            ]
+          },
+          {
+            "id": "p_predict",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "wrap": "methods",
+            "code": "public void run() {\n  int n = 5;\n  bump(n);\n  System.out.println(n);\n}\n\npublic void bump(int value) {\n  value = value + 1;\n}",
+            "opts": [
+              "6",
+              "5",
+              "0",
+              "An error"
+            ],
+            "correct": 1,
+            "why": "The method got a copy of the 5. Changing the copy leaves the original alone. run()'s n never moved.",
+            "skills": [
+              "tell an argument apart from a parameter"
+            ]
+          },
+          {
+            "id": "p_scope",
+            "kind": "spot",
+            "instruction": "This does not compile. Tap the line that uses a name it cannot see.",
+            "code": "public void run() {\n  greet(\"Ada\");\n  System.out.println(name);\n}\n\npublic void greet(String name) {\n  System.out.println(\"Hi \" + name);\n}",
+            "correct": 2,
+            "why": "name is a parameter of greet, so it exists only inside greet. run() has never heard of it.",
+            "skills": [
+              "tell an argument apart from a parameter"
+            ]
+          },
+          {
+            "id": "p_final",
+            "kind": "write",
+            "instruction": "Ask the player for a room name, then print it framed by a divider of any length you pass in.",
+            "wrap": "methods",
+            "code": "public void run() {\n  String room = readLine(\"Room? \");\n  // call printLine(6), print the room, call printLine(6)\n}\n\n// write printLine(int length) below\n",
+            "stdin": "Cellar",
+            "target": "Room? Cellar\n------\nCellar\n------",
+            "solution": "public void run() {\n  String room = readLine(\"Room? \");\n  printLine(6);\n  System.out.println(room);\n  printLine(6);\n}\n\npublic void printLine(int length) {\n  for (int i = 0; i < length; i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n}",
+            "hint": "The loop inside printLine runs length times, printing one dash each pass.",
+            "after": "One method now draws a divider of any size you ask for.",
             "skills": [
               "write a method that takes a parameter"
             ]
