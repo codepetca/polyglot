@@ -180,6 +180,14 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
         </button>
       )}
       {flying && <span className="scrollfly" aria-hidden="true">📜</span>}
+      {/* PLACEHOLDER. Enough to tell the student something was earned; the real
+          motion comes with the Pika style pass. */}
+      {flying && (
+        <div className="unlocked" role="status">
+          <span className="unlockedicon">📜</span>
+          <span>Note unlocked</span>
+        </div>
+      )}
       {tomeOpen && (
         <div className="tomepanel">
           <h4>What this lesson taught</h4>
@@ -233,7 +241,7 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
             if (kp && !kept.includes(kp)) {
               setKept((prev) => [...prev, kp]);
               setFlying(true);
-              window.setTimeout(() => setFlying(false), 900);
+              window.setTimeout(() => setFlying(false), 1600);
             }
             setI(i + 1);
           }}

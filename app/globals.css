@@ -912,3 +912,18 @@ pre.flowcode.ro { margin: 0; }
 .guidepoints li { font-size: 14.5px; line-height: 1.5; }
 .noteunit h2 a { color: inherit; text-decoration: none; }
 .guidelink { display: inline-block; margin: 2px 0 14px; font-size: 13.5px; color: var(--accent); }
+
+/* "Note unlocked" — placeholder until the Pika style pass */
+.unlocked { position: fixed; right: 22px; bottom: 78px; z-index: 42; display: flex; align-items: center; gap: 9px;
+  background: var(--ink); color: var(--paper); border-radius: 999px; padding: 9px 17px 9px 13px;
+  font-family: var(--sans); font-size: 13.5px; font-weight: 600; box-shadow: 0 6px 20px rgba(0,0,0,.26);
+  animation: unlockpop 1.6s ease-out forwards; pointer-events: none; }
+.unlockedicon { font-size: 16px; }
+@keyframes unlockpop {
+  0%   { opacity: 0; transform: translateY(10px) scale(.92); }
+  14%  { opacity: 1; transform: translateY(0) scale(1); }
+  76%  { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-6px) scale(.98); }
+}
+@media (prefers-reduced-motion: reduce) { .unlocked { animation: none; opacity: 1; } }
+.notelocked { font-size: 13px; color: var(--muted); margin: 7px 0 0; font-style: italic; }
