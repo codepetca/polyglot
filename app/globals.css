@@ -998,23 +998,84 @@ pre.flowcode.ro { margin: 0; }
 .docsfold summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .docsfold .factswrap { margin-top: 8px; margin-bottom: 0; }
 
-/* scopes: lifetime bars beside the code, one lane per variable.
-   Scope is a shape — which lines a name exists on — so it is drawn, not
-   described. The lane is filled on exactly those lines. */
-.scopes { display: grid; align-items: stretch; width: max-content; min-width: 100%; font-family: var(--mono); font-size: 14px;
-  line-height: 1.7; background: #14171c; color: #e6e1d6; border: 1.5px solid #2a2f37; border-radius: 10px;
-  padding: 14px 16px; overflow-x: auto; }
-.scopeline { white-space: pre; padding-right: 18px; }
+/* scopes: one colour-coded BOX per variable, beside the code.
+   Lines were wrong — a 7px hairline reads as a bracket or a scrollbar. Scope
+   is a region, and a region needs an inside and an outside. Each box is
+   filled, bordered and headed with the variable's name, so "the variable
+   exists on these lines and nowhere else" is what the picture says. */
+.scopewrap { margin: 4px 0 2px; }
+.scopes { display: grid; align-items: stretch; justify-content: start; width: max-content; min-width: 100%;
+  font-family: var(--mono); font-size: 14px;
+  line-height: 1.9; background: #14171c; color: #e6e1d6; border: 1.5px solid #2a2f37; border-radius: 10px 10px 0 0;
+  padding: 16px 16px 14px; overflow-x: auto; }
+/* justify-content:start matters. Without it the min-width stretch is handed to
+   the max-content code column, which opens a dead gap between a line and the
+   box that is supposed to be pointing at it. */
+.scopeline { white-space: pre; padding-right: 14px; }
 .scopecell { position: relative; }
-.scopecell.in::before { content: ""; position: absolute; left: 50%; transform: translateX(-50%);
-  top: 0; bottom: 0; width: 7px; background: rgba(127,227,176,.30); }
-.scopecell.in.first::before { top: 40%; border-radius: 4px 4px 0 0; }
-.scopecell.in.last::before { bottom: 40%; border-radius: 0 0 4px 4px; }
-.scopecell.in.first.last::before { top: 40%; bottom: 40%; border-radius: 4px; }
-.scopecell.sk-instance.in::before { background: rgba(127,227,176,.34); }
-.scopecell.sk-local.in::before { background: rgba(146,180,255,.34); }
-.scopecell.sk-loop.in::before { background: rgba(240,190,110,.34); }
-.scopecell.sk-param.in::before { background: rgba(206,150,240,.34); }
-.scopename { position: absolute; left: 50%; transform: translateX(-50%); top: -2px; z-index: 1;
-  font-family: var(--sans); font-size: 11px; font-weight: 600; color: #e6e1d6; background: #14171c;
-  padding: 0 5px; white-space: nowrap; }
+
+/* The box body: full lane width, so it is unmistakably an area. */
+.scopecell.in::before { content: ""; position: absolute; left: 4px; right: 4px; top: 0; bottom: 0;
+  background: var(--sc-fill); border-left: 2px solid var(--sc-edge); border-right: 2px solid var(--sc-edge); }
+.scopecell.in.first::before { top: 2px; border-top: 2px solid var(--sc-edge); border-radius: 9px 9px 0 0; }
+.scopecell.in.last::before { bottom: 2px; border-bottom: 2px solid var(--sc-edge); border-radius: 0 0 9px 9px; }
+.scopecell.in.first.last::before { border-radius: 9px; }
+
+/* One hue per kind of variable, tinted for the fill and solid for the edge. */
+.scopecell.sk-instance, .scopekey.sk-instance { --sc-fill: rgba(127,227,176,.15); --sc-edge: rgba(127,227,176,.85); }
+.scopecell.sk-local,    .scopekey.sk-local    { --sc-fill: rgba(146,180,255,.15); --sc-edge: rgba(146,180,255,.85); }
+.scopecell.sk-loop,     .scopekey.sk-loop     { --sc-fill: rgba(240,190,110,.16); --sc-edge: rgba(240,190,110,.90); }
+.scopecell.sk-param,    .scopekey.sk-param    { --sc-fill: rgba(206,150,240,.15); --sc-edge: rgba(206,150,240,.85); }
+
+/* The name is the box's header bar, not a label floating over a line. */
+.scopename { position: absolute; left: 4px; right: 4px; top: 2px; z-index: 2;
+  font-family: var(--sans); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+  letter-spacing: -.01em; color: #14171c; background: var(--sc-edge); border-radius: 7px 7px 0 0;
+  padding: 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Legend. Four colours mean nothing without it. */
+.scopelegend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
+  background: #1a1e24; border: 1.5px solid #2a2f37; border-top: 0; border-radius: 0 0 10px 10px;
+  padding: 9px 16px; font-family: var(--sans); font-size: 11.5px; color: #b9b3a6; }
+.scopekey { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #e6e1d6; }
+.scopekey i { width: 13px; height: 13px; border-radius: 4px; background: var(--sc-fill);
+  border: 2px solid var(--sc-edge); flex-shrink: 0; }
+.scopekeynote { margin-left: auto; font-style: italic; }
+@media (max-width: 640px) { .scopekeynote { display: none; } }
+
+/* ── folds: units on the sidebar, units and lessons on the notes page ──
+   57 lessons and several hundred key points in flat columns meant scrolling
+   past everything you already knew to reach the thing you wanted. Native
+   <details>, so it costs no JavaScript and find-in-page still works. */
+.unitfold { margin-bottom: 6px; }
+.unitfold > summary { display: flex; align-items: center; gap: 7px; cursor: pointer; list-style: none;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700; padding: 8px 9px; border-radius: 8px; }
+.unitfold > summary::-webkit-details-marker { display: none; }
+.unitfold > summary::before { content: "\25B8"; font-size: 10px; letter-spacing: 0; transition: transform .12s; }
+.unitfold[open] > summary::before { transform: rotate(90deg); }
+.unitfold > summary:hover { background: #e9e5da; color: var(--ink); }
+.unitfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.unitfold .unitname { min-width: 0; }
+.unitfold .unitcount { margin-left: auto; font-size: 10px; letter-spacing: .04em; opacity: .8; }
+.unitfold .unitbody { padding: 2px 0 8px; }
+
+.notefold { border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); margin-bottom: 8px; }
+.notefold > summary { display: flex; align-items: center; gap: 10px; cursor: pointer; list-style: none;
+  padding: 13px 15px; font-family: var(--sans); font-weight: 600; }
+.notefold > summary::-webkit-details-marker { display: none; }
+.notefold > summary::before { content: "\25B8"; color: var(--muted); font-size: 11px; transition: transform .12s; }
+.notefold[open] > summary::before { transform: rotate(90deg); }
+.notefold > summary:hover { background: #f4f1e9; }
+.notefold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.notefold .foldtitle { min-width: 0; }
+.notefold .foldcount { margin-left: auto; flex-shrink: 0; font-family: var(--mono); font-size: 10.5px;
+  color: var(--muted); font-weight: 500; white-space: nowrap; }
+.notefold > .foldbody { padding: 0 15px 14px; }
+.notefold.unit > summary .foldtitle { font-family: var(--sans); font-size: 14px; text-transform: uppercase;
+  letter-spacing: .03em; }
+.notefold.lesson { border-radius: 8px; margin-bottom: 6px; background: transparent; }
+.notefold.lesson > summary { padding: 9px 12px; font-size: 14.5px; }
+.notefold.lesson > .foldbody { padding: 0 12px 12px; }
+.notefold.lesson ul { margin: 0 0 10px; padding-left: 19px; display: flex; flex-direction: column; gap: 6px; }
+.notefold.lesson li { font-size: 14.5px; line-height: 1.55; font-weight: 400; }

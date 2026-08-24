@@ -1,11 +1,13 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { excludeInternal } from "@/lib/curriculum/internal";
 import { studentCode } from "@/lib/curriculum/codehs";
+import LessonNav, { type NavUnit } from "@/components/lesson/LessonNav";
 
-// Prototype-v4 sidebar: topic rows with status dots, lesson code minis, legend.
+// Prototype-v4 sidebar: units that fold, topic rows with status dots, lesson
+// code minis. The folding lives in LessonNav because it needs the current
+// pathname to know which unit to open.
 export default async function LessonsLayout({ children }: { children: React.ReactNode }) {
   const me = await currentUser();
   if (!me) redirect("/join");
@@ -19,21 +21,20 @@ export default async function LessonsLayout({ children }: { children: React.Reac
   );
   const progress = await prisma.progress.findMany({ where: { userId: me.id } });
   const statusByLesson = new Map(progress.map((p) => [p.lessonId, p.status]));
-  const dot = (s?: string) => (s === "MASTERED" ? "m" : s === "IN_PROGRESS" ? "p" : "n");
+  const dot = (s?: string): "m" | "p" | "n" => (s === "MASTERED" ? "m" : s === "IN_PROGRESS" ? "p" : "n");
   const isInteractive = (l: { flow: unknown }) => (((l.flow as any)?.steps as unknown[]) || []).length > 0;
 
-  const lessonLink = (l: { id: string; code: string; title: string; flow: unknown }) => (
-    <Link key={l.id} href={`/lessons/${l.code}`} className="topic">
-      <span className={`dot ${dot(statusByLesson.get(l.id))}`} />
-      {l.title}
-      {/* Only some lessons are the do-first interactive experience yet; the
-          rest are still reading. Say which is which up front rather than
-          letting a student find out by landing in a wall of text. */}
-      {isInteractive(l) && <span className="playmark" title="Interactive — do it, don't read it">▶</span>}
-      {/* CodeHS's number, not ours — see studentCode(). */}
-      <span className="mini">{studentCode(l.code)}</span>
-    </Link>
-  );
+  const units: NavUnit[] = chapters.map((c) => ({
+    id: c.id,
+    title: c.title,
+    lessons: c.lessons.map((l) => ({
+      code: l.code,
+      shown: studentCode(l.code),
+      title: l.title,
+      dot: dot(statusByLesson.get(l.id)),
+      interactive: isInteractive(l),
+    })),
+  }));
 
   return (
     <div className="shell">
@@ -42,15 +43,12 @@ export default async function LessonsLayout({ children }: { children: React.Reac
           appears only there. */}
       <details className="lessonpicker">
         <summary>☰ All lessons</summary>
-        <div className="pickerbody">{chapters.map((c) => <div key={c.id}>{c.lessons.map(lessonLink)}</div>)}</div>
+        <div className="pickerbody">
+          <LessonNav units={units} />
+        </div>
       </details>
       <aside className="side">
-        {chapters.map((c) => (
-          <div key={c.id}>
-            <h3>{c.title}</h3>
-            {c.lessons.map(lessonLink)}
-          </div>
-        ))}
+        <LessonNav units={units} />
       </aside>
       <main className="main">{children}</main>
     </div>

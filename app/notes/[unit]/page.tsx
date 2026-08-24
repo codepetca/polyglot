@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ScopeDiagram from "@/components/lesson/ScopeDiagram";
 import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
@@ -96,21 +97,7 @@ export default async function UnitNotes({ params }: { params: Promise<{ unit: st
               )}
 
               {s.code && (s.scopes || []).length > 0 ? (
-                <div className="scopes" style={{ gridTemplateColumns: `max-content repeat(${(s.scopes || []).length}, 92px)` }}>
-                  {s.code.split("\n").map((ln, li) => (
-                    <div key={li} style={{ display: "contents" }}>
-                      <div className="scopeline">{ln || " "}</div>
-                      {(s.scopes || []).map((sc, si) => {
-                        const inScope = li >= sc.from && li <= sc.to;
-                        return (
-                          <div key={si} className={`scopecell ${inScope ? "in" : ""} ${li === sc.from ? "first" : ""} ${li === sc.to ? "last" : ""} sk-${sc.kind || "local"}`}>
-                            {li === sc.from && <span className="scopename">{sc.name}</span>}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
+                <ScopeDiagram code={s.code} scopes={s.scopes || []} />
               ) : s.code && (s.annotate || []).length > 0 ? (
                 <div className="flowcode ro anncode">
                   {s.code.split("\n").map((ln, li) => {

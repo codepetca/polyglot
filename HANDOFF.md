@@ -12,14 +12,15 @@ Everything a fresh session needs. Read this, then `LESSON-AUTHORING.md`
 | Unit 3 — Basic Java | 3.1–3.15 | Reworked, owner-reviewed |
 | Unit 4 — Methods | 4.0–4.9 | Reworked |
 | Unit 5 — Classes and OOP | 5.1–5.17 | Reworked |
-| **Unit 6 — Data Structures** | **6.1–6.14** | **NOT reworked. This is the job.** |
+| Unit 6 — Data Structures | 6.1–6.14 | Reworked, except 6.13 |
 
-Unit 6 lessons exist and are compiler-verified, but predate the current house
-style. They still use the deprecated `points[]` highlight template that the
-owner has asked to be rid of three times.
+Unit 6 was reworked in the session of 2026-08-24, to the plan in
+`UNIT6-PLAN.md`. Internal `5.1`–`5.12` and `5.14` now run 12–15 steps with 4–5
+typing steps each and no `points[]`. **`5.13` Ethical Issues was skipped on the
+owner's instruction** and still carries `points[]`.
 
-Also unfinished: `5.18`, `4.9` and a few Unit 3 lessons still carry `points[]`.
-`node scripts/flows.mjs audit` prints the exact list every run. Unit 6 first.
+Still unfinished: `5.13`, `4.18` and several Unit 3 lessons carry `points[]`.
+`node scripts/flows.mjs audit` prints the exact list every run.
 
 ---
 
@@ -151,8 +152,7 @@ full don't/do tables.
 
 ## Unit 6 — what each lesson covers
 
-The owner has not yet sent a detailed plan for Unit 6. **Ask for one before
-rewriting**, the way they supplied plans for Units 4 and 5. Current titles:
+Reworked. The plan and what shipped are both in `UNIT6-PLAN.md`. Titles:
 
 | Student | Internal | Title |
 | --- | --- | --- |
@@ -171,11 +171,14 @@ rewriting**, the way they supplied plans for Units 4 and 5. Current titles:
 | 6.13 | 5.13 | Ethical Issues Around Data Collection |
 | 6.14 | 5.14 | Data Structures Quiz |
 
-Two widgets are likely to earn their place here:
+`walk` earned its place in exactly three lessons — `5.3`, `5.7` and `5.10` —
+where the thing a beginner cannot picture is a moving index. It is not used
+anywhere else in the unit.
 
-- **`walk`** for array traversal and nested 2D loops — watching an index move is
-  exactly what beginners cannot picture.
-- **`scopes`** for the loop-variable lifetime question, already used in 5.10.
+**A HashMap has no reliable iteration order.** `Ada`, `Ben`, `Mia` come back as
+`Mia`, `Ben`, `Ada`. `5.11` teaches that from verified output, and every graded
+HashMap exercise in the unit has an order-independent answer. Do not write one
+that does not.
 
 ---
 
@@ -213,9 +216,12 @@ because random output cannot be checked against a fixed target.
 
 ## Known outstanding work
 
-- Unit 6 rework — the current job.
-- `5.18`, `4.9` and several Unit 3 lessons still use deprecated `points[]`.
+- `5.13` (student 6.13, Ethical Issues) — skipped on the owner's instruction,
+  still on the old template.
+- `4.18` and several Unit 3 lessons still use deprecated `points[]`.
   `node scripts/flows.mjs audit` lists them.
+- Unit 6 is written into `prisma/flows.json` but has **not** been pushed to the
+  database or deployed. Run `restore`, then build, commit and push.
 - Unit 4/5/6 exercise specs were never verified against CodeHS, which is
   login-gated. Concepts match; the drills are ours.
 - A student-built 2D game project was discussed and deferred. See the

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ScopeDiagram from "@/components/lesson/ScopeDiagram";
 import Link from "next/link";
 import CodeBox from "./CodeBox";
 import Docs from "./Docs";
@@ -564,27 +565,9 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         // across a lesson shows what just arrived rather than re-presenting
         // itself whole each time.
         (step.scopes || []).length ? (
-          // One lane per variable, filled on exactly the lines where it exists.
-          <div className="scopes" style={{ gridTemplateColumns: `max-content repeat(${(step.scopes || []).length}, 92px)` }}>
-            {step.code.split("\n").map((ln, li) => (
-              <div className="scoperow" key={li} style={{ display: "contents" }}>
-                <div className="scopeline">{ln || " "}</div>
-                {(step.scopes || []).map((sc, si) => {
-                  const inScope = li >= sc.from && li <= sc.to;
-                  const first = li === sc.from;
-                  const last = li === sc.to;
-                  return (
-                    <div
-                      key={si}
-                      className={`scopecell ${inScope ? "in" : ""} ${first ? "first" : ""} ${last ? "last" : ""} sk-${sc.kind || "local"}`}
-                    >
-                      {first && <span className="scopename">{sc.name}</span>}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+          // One colour-coded box per variable, covering exactly the lines it
+          // exists on. See components/lesson/ScopeDiagram.tsx.
+          <ScopeDiagram code={step.code} scopes={step.scopes || []} />
         ) : (step.annotate || []).length ? (
           // ONE GRID. The arrows only line up if the note rows are laid out in
           // the same monospace box as the code, from the same left edge — the
