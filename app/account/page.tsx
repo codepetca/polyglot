@@ -1,5 +1,4 @@
 import Link from "next/link";
-import EslSettings from "@/components/account/EslSettings";
 import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import ProfileForm from "@/components/account/ProfileForm";
@@ -51,7 +50,6 @@ export default async function AccountPage() {
           <Link className="btn" href="/admin/users" style={{ textDecoration: "none" }}>Open account control →</Link>
         </div>
       )}
-          <EslSettings />
-</div>
+    </div>
   );
 }

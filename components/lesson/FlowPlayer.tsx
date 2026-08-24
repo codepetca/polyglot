@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ScopeDiagram from "@/components/lesson/ScopeDiagram";
 import Link from "next/link";
 import CodeBox from "./CodeBox";
-import { readLang, LANG_EVENT } from "@/components/LanguagePicker";
+import { readPrefs, onPrefsChange, RTL, type EslPrefs } from "@/lib/i18n/prefs";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
 // text. 15 step kinds (see lib/curriculum/flow.ts, the canonical spec):
@@ -67,7 +67,6 @@ type Step = {
 type RunOut = { compiled: boolean; stdout: string; error: string };
 const norm = (s: string) => (s || "").replace(/\r\n/g, "\n").trimEnd();
 
-const RTL = new Set(["ur", "fa", "ar"]);
 
 // Each language names itself, so a student can find theirs without first
 
@@ -97,18 +96,20 @@ function Pair({
   en,
   zh,
   lang,
+  layout = "side",
   className = "",
   as: Tag = "div",
 }: {
   en: React.ReactNode;
   zh?: string;
   lang: string;
+  layout?: "side" | "under";
   className?: string;
   as?: "div" | "p";
 }) {
   if (!zh || !lang) return <Tag className={className}>{en}</Tag>;
   return (
-    <div className="pair">
+    <div className={`pair ${layout === "under" ? "stack" : ""}`}>
       <Tag className={className}>{en}</Tag>
       <Tag className={`${className} pairalt`} dir={RTL.has(lang) ? "rtl" : "ltr"} lang={lang}>
         {zh}
@@ -121,7 +122,8 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   const [steps, setSteps] = useState<Step[] | null>(null);
   // Language assist (ESL): English stays primary; this is shown UNDER it on
   // request. Never replaces the English — see lib/curriculum/translate.ts.
-  const [lang, setLang] = useState<string>("");
+  const [esl, setEsl] = useState<EslPrefs | null>(null);
+  const lang = esl?.esl ? esl.lang : "";
   const [assist, setAssist] = useState<Record<string, Record<string, any>> | null>(null);
   const [i, setI] = useState(0);
   const [firstTry, setFirstTry] = useState(0);
@@ -134,10 +136,8 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   // shouldn't have to re-pick it on every page.
   // Language help is a profile setting now (top bar), not a per-lesson control.
   useEffect(() => {
-    setLang(readLang());
-    const onChange = (e: Event) => setLang((e as CustomEvent).detail || "");
-    window.addEventListener(LANG_EVENT, onChange);
-    return () => window.removeEventListener(LANG_EVENT, onChange);
+    setEsl(readPrefs());
+    return onPrefsChange(setEsl);
   }, []);
 
   useEffect(() => {
@@ -263,6 +263,7 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
           step={step!}
           lessonCode={lessonCode}
           assist={assist?.[step!.id]}
+          layout={esl?.layout || "side"}
           lang={lang}
           onAttempt={(id) => (attemptsRef.current[id] = (attemptsRef.current[id] || 0) + 1)}
           attemptsOf={(id) => attemptsRef.current[id] || 0}
@@ -287,9 +288,10 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   );
 }
 
-function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAttempt, attemptsOf }: {
+function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGoto, onAttempt, attemptsOf }: {
   step: Step;
   assist?: Record<string, any>;
+  layout: "side" | "under";
   lang: string;
   lessonCode: string;
   onDone: (firstTry: boolean) => void;
@@ -513,11 +515,11 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
 
   return (
     <div className={`panel flowstep ${won ? "won" : ""}`}>
-      <Pair className="flowq" en={step.instruction} zh={assist?.instruction} lang={lang} />
+      <Pair className="flowq" en={step.instruction} zh={assist?.instruction} lang={lang} layout={layout} />
       {(step.body || []).length > 0 && (
         <div className="teachbody">
           {(step.body || []).map((line, j) => (
-            <Pair as="p" key={j} en={line} zh={assist?.body?.[j]} lang={lang} />
+            <Pair as="p" key={j} en={line} zh={assist?.body?.[j]} lang={lang} layout={layout} />
           ))}
         </div>
       )}

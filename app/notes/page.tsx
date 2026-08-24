@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { studentCode } from "@/lib/curriculum/codehs";
 import { excludeInternal } from "@/lib/curriculum/internal";
+import NoteList from "@/components/NoteList";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +42,10 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
       order: true,
       lessons: {
         orderBy: { order: "asc" },
-        select: { code: true, title: true, flow: true },
+        // flowI18n carries the translated keypoints, so the notes can be read
+        // in a second language without a second store — see
+        // lib/curriculum/i18n-extract.ts.
+        select: { code: true, title: true, flow: true, flowI18n: true },
       },
     },
   }));
@@ -57,8 +61,17 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
           shown: studentCode(l.code),
           title: l.title,
           points: (((l.flow as any)?.steps as any[]) || [])
-            .map((s) => s.keypoint)
-            .filter((k): k is string => typeof k === "string" && k.length > 0),
+            .filter((s) => typeof s.keypoint === "string" && s.keypoint.length > 0)
+            .map((s) => ({
+              en: s.keypoint as string,
+              // stepId -> locale -> keypoint. Sent whole; the client picks the
+              // language, because the preference lives in the browser.
+              alt: Object.fromEntries(
+                Object.entries(((l.flowI18n as any) || {}) as Record<string, any>)
+                  .map(([loc, t]) => [loc, t?.[s.id]?.keypoint])
+                  .filter(([, v]) => typeof v === "string" && v),
+              ) as Record<string, string>,
+            })),
         }))
         .filter((l) => l.points.length > 0),
     }))
@@ -96,11 +109,7 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
                       <span className="foldcount">{l.points.length}</span>
                     </summary>
                     <div className="foldbody">
-                      <ul>
-                        {l.points.map((p, j) => (
-                          <li key={j}>{p}</li>
-                        ))}
-                      </ul>
+                      <NoteList points={l.points} />
                       <Link className="guidelink" href={`/lessons/${l.code}`}>Open the lesson →</Link>
                     </div>
                   </details>

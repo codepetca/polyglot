@@ -79,7 +79,11 @@ button { font-family: inherit; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
 
 /* ─── Topbar ─── */
-.topbar { background: var(--ink); color: var(--paper); display: flex; align-items: center; gap: 14px; padding: 12px 22px; flex-wrap: wrap; position: sticky; top: 0; z-index: 30; }
+.topbar { background: var(--ink); color: var(--paper); display: flex; align-items: center; gap: 14px; padding: 12px 22px; flex-wrap: wrap; position: sticky; top: 0; z-index: 70; }
+/* STACKING ORDER, written down because it has already gone wrong twice:
+     modal .overlay 75  >  .topbar 70  >  floating .bench 60  >  .benchrail 59
+   The bar carries the profile menu, which drops DOWN over the workbench, so it
+   has to sit above it. A modal still covers everything. */
 .topbar .logo { font-family: var(--serif); font-weight: 900; font-size: 18px; }
 .topbar .logo em { color: #7fd6b8; font-style: normal; }
 .topbar .proto { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; color: #b9bcb2; border: 1px solid #4a4d47; border-radius: 99px; padding: 3px 10px; }
@@ -264,7 +268,7 @@ td.name { font-weight: 700; }
 .dashnote { margin-top: 16px; font-size: 13px; color: var(--muted); max-width: 75ch; }
 
 /* ─── Summative overlay (SEB) ─── */
-.overlay { position: fixed; inset: 0; background: rgba(26,28,30,.72); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 20px; }
+.overlay { position: fixed; inset: 0; background: rgba(26,28,30,.72); display: flex; align-items: center; justify-content: center; z-index: 75; padding: 20px; }
 .sebwin { background: var(--paper); border-radius: 16px; max-width: 680px; width: 100%; max-height: 92vh; overflow-y: auto; border: 2px solid var(--ink); }
 .sebbar { background: var(--bad); color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; padding: 10px 18px; display: flex; justify-content: space-between; border-radius: 13px 13px 0 0; flex-wrap: wrap; gap: 6px; }
 .sebbody { padding: 26px 28px; }
@@ -1233,6 +1237,8 @@ pre.flowcode.ro { margin: 0; }
    English first and never replaced. Below 900px there is no room for two
    columns, so they stack with English on top. */
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; align-items: start; }
+/* "A line underneath each line" — the other layout the student can pick. */
+.pair.stack { grid-template-columns: 1fr; gap: 2px; }
 .pair > .pairalt { color: var(--muted); }
 .pair > .pairalt::before { content: ""; position: absolute; }
 .pairalt { position: relative; padding-left: 14px; border-left: 2px solid var(--line); }
@@ -1249,3 +1255,36 @@ pre.flowcode.ro { margin: 0; }
   border-radius: 9px; background: var(--card); color: var(--ink); }
 .eslrow select:disabled { opacity: .5; }
 .eslnote { margin: 4px 0 0; font-size: 12.5px; }
+
+/* ── Profile menu: quick settings behind the name ── */
+.profilewrap { position: relative; }
+.profilebtn { cursor: pointer; border: 1.5px solid transparent; }
+.profilebtn:hover { border-color: rgba(233,228,216,.28); }
+.profilename { color: #e9e4d8; font-family: var(--sans); font-weight: 600; font-size: 13px; }
+.guesttag { color: #9a9488; font-size: 11px; }
+.profilecaret { color: #9a9488; font-size: 10px; margin-left: 2px; }
+.profilemenu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 80; width: 320px;
+  background: var(--card); color: var(--ink); border: 1.5px solid var(--line); border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(26,28,30,.26); overflow: hidden; }
+.pmhead { padding: 12px 14px; border-bottom: 1.5px solid var(--line); font-family: var(--sans);
+  font-weight: 700; font-size: 14px; display: flex; flex-direction: column; gap: 2px; }
+.pmhead span { font-weight: 400; font-size: 12px; color: var(--muted); }
+.pmsection { padding: 12px 14px; }
+.pmsection + .pmsection { border-top: 1.5px solid var(--line); }
+.pmrow { display: flex; align-items: center; gap: 9px; margin: 9px 0; font-size: 13.5px; cursor: pointer; }
+.pmrow .pmlabel { min-width: 68px; color: var(--muted); font-size: 12.5px; }
+.pmrow select { flex: 1; font-family: var(--sans); font-size: 13px; padding: 6px 9px;
+  border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); }
+.pmrow input[type="checkbox"]:disabled + span, .pmrow select:disabled { opacity: .45; }
+.pmnote { margin: 6px 0 10px; font-size: 11.5px; line-height: 1.5; color: var(--muted); }
+.pmnote code { font-family: var(--mono); font-size: 11px; }
+.pmlinks { display: flex; flex-direction: column; gap: 2px; padding: 8px; }
+.pmlinks a, .pmsignout { display: block; text-align: left; padding: 8px 10px; border-radius: 8px;
+  font-family: var(--sans); font-size: 13.5px; color: var(--ink); text-decoration: none;
+  background: transparent; border: 0; cursor: pointer; width: 100%; }
+.pmlinks a:hover, .pmsignout:hover { background: var(--paper); }
+.pmsignout { color: var(--bad); }
+.notelist { margin: 0 0 10px; padding-left: 19px; display: flex; flex-direction: column; gap: 8px; }
+.notelist li { font-size: 14.5px; line-height: 1.55; }
+.notealt { display: block; margin-top: 3px; padding-left: 10px; border-left: 2px solid var(--line);
+  color: var(--muted); font-size: 13.5px; }

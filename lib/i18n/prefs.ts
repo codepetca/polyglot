@@ -13,6 +13,7 @@
 
 export const LANG_KEY = "classos_assist_lang"; // kept: existing installs have it
 export const ESL_KEY = "classos_esl";
+export const OPTS_KEY = "classos_esl_opts";
 export const LANG_EVENT = "classos:langchange";
 
 /** Markham, Ontario. Each language names itself, so a student can find theirs
@@ -35,7 +36,28 @@ export const LANG_LABELS: Record<string, string> = {
 /** Right-to-left scripts. Only the translated column flips; code never does. */
 export const RTL = new Set(["ur", "fa", "ar"]);
 
-export type EslPrefs = { esl: boolean; lang: string };
+/**
+ * `layout` is how the second language sits against the English:
+ *   "side"  — two blocks side by side, English left
+ *   "under" — the translation on its own line beneath each English line
+ * Both keep the English first and visible; which reads better depends on the
+ * screen and on the student, so it is theirs to choose.
+ */
+export type EslPrefs = {
+  esl: boolean;
+  lang: string;
+  layout: "side" | "under";
+  reference: boolean;
+  notes: boolean;
+};
+
+export const DEFAULT_PREFS: EslPrefs = {
+  esl: false,
+  lang: "",
+  layout: "side",
+  reference: true,
+  notes: true,
+};
 
 export function readPrefs(): EslPrefs {
   try {
@@ -44,9 +66,15 @@ export function readPrefs(): EslPrefs {
     // language is set, they had the help on, so keep it on.
     const raw = localStorage.getItem(ESL_KEY);
     const esl = raw === null ? Boolean(lang) : raw === "1";
-    return { esl: esl && Boolean(lang), lang };
+    let opts: Partial<EslPrefs> = {};
+    try {
+      opts = JSON.parse(localStorage.getItem(OPTS_KEY) || "{}") || {};
+    } catch {
+      /* a corrupt entry falls back to defaults rather than breaking the page */
+    }
+    return { ...DEFAULT_PREFS, ...opts, esl: esl && Boolean(lang), lang };
   } catch {
-    return { esl: false, lang: "" };
+    return { ...DEFAULT_PREFS };
   }
 }
 
@@ -54,6 +82,7 @@ export function writePrefs(p: EslPrefs) {
   try {
     localStorage.setItem(LANG_KEY, p.lang);
     localStorage.setItem(ESL_KEY, p.esl ? "1" : "0");
+    localStorage.setItem(OPTS_KEY, JSON.stringify({ layout: p.layout, reference: p.reference, notes: p.notes }));
   } catch {
     /* private mode — the setting simply will not persist */
   }
