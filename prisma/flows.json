@@ -11009,132 +11009,84 @@
           {
             "id": "a_task",
             "kind": "teach",
-            "instruction": "You have never made a plain Monster. Only Bosses and Slimes.",
-            "points": [
-              {
-                "label": "new Monster(\"thing\")",
-                "text": "What would it even be? Monster is a category, not a creature."
-              },
-              {
-                "label": "every monster attacks",
-                "text": "But each one does it differently, so Monster cannot say how."
-              },
-              {
-                "label": "abstract",
-                "text": "Marks a class as \"a category only\". Java then refuses to let anyone build one."
-              }
-            ]
+            "instruction": "Every monster attacks, but each kind attacks differently. What should Monster.attack() do?",
+            "body": [
+              "A Slime splats. A Boss strikes.",
+              "Monster cannot say how, because it depends on which kind it is.",
+              "Nobody should ever build a plain Monster either."
+            ],
+            "keypoint": "An abstract class describes a category that should never be built directly."
           },
           {
-            "id": "a_abs",
+            "id": "a_abstract",
             "kind": "teach",
+            "instruction": "abstract on a class means it cannot be instantiated.",
+            "code": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\npublic void run() {\n  Slime s = new Slime(\"Blob\");\n  Boss b = new Boss(\"Grendel\");\n  s.attack();\n  b.attack();\n}",
             "wrap": "methods",
-            "instruction": "An abstract class cannot be instantiated, and can leave gaps.",
-            "code": "public void run() {\n  Slime s = new Slime(\"Green Slime\");\n  Boss b = new Boss(\"Grendel\");\n  s.attack();\n  b.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
-            "output": "Green Slime splatters you.\nGrendel unleashes a shockwave.",
-            "highlight": [
-              0
-            ],
-            "points": [
+            "output": "Blob splats!\nGrendel strikes!",
+            "annotate": [
               {
-                "label": "abstract class Monster",
-                "text": "A blueprint too vague to build. new Monster(...) will not compile."
-              },
-              {
-                "label": "public abstract void attack();",
-                "text": "A method with no body, ending in a semicolon. It states that every Monster attacks somehow."
-              },
-              {
-                "label": "each subclass",
-                "text": "Must supply its own attack(), or it will not compile either. The gap is compulsory."
-              },
-              {
-                "label": "getName() is normal",
-                "text": "An abstract class can hold ordinary methods too. Only the gaps are abstract."
+                "token": "abstract class Monster",
+                "note": "cannot be built directly"
               }
-            ]
+            ],
+            "body": [
+              "new Monster(\"thing\") does not compile.",
+              "Slime and Boss are concrete classes, so they can be built."
+            ],
+            "keypoint": "You cannot write new on an abstract class."
           },
           {
-            "id": "a_cmp",
-            "kind": "compare",
-            "instruction": "A Monster that should not exist, or one that cannot.",
-            "sides": [
-              {
-                "label": "not abstract",
-                "code": "public void run() {\n  Monster m = new Monster(\"???\");\n  m.attack();\n}\n\nclass Monster {\n  private String name;\n  public Monster(String name) { this.name = name; }\n  public void attack() { System.out.println(name + \" does something.\"); }\n}",
-                "output": "??? does something."
-              },
-              {
-                "label": "abstract",
-                "code": "public void run() {\n  Slime s = new Slime(\"Green Slime\");\n  s.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
-                "output": "Green Slime splatters you."
-              }
-            ],
-            "points": [
-              {
-                "label": "not abstract",
-                "text": "Nothing stops a meaningless Monster being built, and its attack has to be some vague default."
-              },
-              {
-                "label": "abstract",
-                "text": "The meaningless object is impossible, and every real monster must say how it attacks."
-              }
-            ],
-            "skills": [
-              "use abstract to stop a class being instantiated"
-            ]
-          },
-          {
-            "id": "a_why",
+            "id": "a_method",
             "kind": "teach",
-            "instruction": "Two jobs: forbid, and require.",
-            "points": [
+            "instruction": "An abstract method has no body. Every concrete subclass must supply one.",
+            "code": "public abstract void attack();",
+            "annotate": [
               {
-                "label": "abstract class",
-                "text": "Cannot be instantiated. It exists to be extended."
-              },
-              {
-                "label": "abstract method",
-                "text": "Has no body. Any concrete subclass must provide one."
-              },
-              {
-                "label": "not the same",
-                "text": "An abstract class can have zero abstract methods and still refuse to be built."
-              },
-              {
-                "label": "design",
-                "text": "Put in the parent what every child shares. Leave abstract what each must decide for itself."
+                "token": "abstract void attack();",
+                "note": "no body, ends with a semicolon"
               }
-            ]
+            ],
+            "body": [
+              "Monster states that every Monster can attack.",
+              "It does not say how. Each subclass fills that in."
+            ],
+            "keypoint": "An abstract method has no body and must be implemented by every concrete subclass."
           },
           {
-            "id": "a_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "Both are Monsters. What prints?",
-            "code": "public void run() {\n  Slime a = new Slime(\"Blob\");\n  Boss c = new Boss(\"Grendel\");\n  a.attack();\n  c.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
-            "opts": [
-              "(it does not compile)",
-              "Blob splatters you.\nBlob splatters you.",
-              "Blob splatters you.\nGrendel unleashes a shockwave.",
-              "Blob does something.\nGrendel does something."
-            ],
-            "correct": 2,
-            "why": "Each subclass supplied its own attack(), so each runs its own version. Monster never defined one.",
-            "skills": [
-              "force subclasses to supply a method"
+            "id": "a_two",
+            "kind": "teach",
+            "instruction": "abstract does two jobs.",
+            "facts": {
+              "columns": [
+                "",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "abstract class",
+                  "forbids new. It exists to be extended"
+                ],
+                [
+                  "abstract method",
+                  "requires every concrete subclass to supply a body"
+                ]
+              ]
+            },
+            "body": [
+              "A class can be abstract with no abstract methods at all. It still cannot be built."
             ]
           },
           {
             "id": "a_new",
             "kind": "fix",
+            "instruction": "Monster is abstract. Fix this so it runs.",
             "wrap": "methods",
-            "instruction": "Monster is abstract. This will not build.",
-            "code": "public void run() {\n  Monster m = new Monster(\"Blob\");\n  m.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}",
+            "code": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\npublic void run() {\n  Monster m = new Monster(\"Blob\");\n  m.attack();\n}",
             "target": "Blob splats!",
-            "solution": "public void run() {\n  Monster m = new Slime(\"Blob\");\n  m.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}",
-            "hint": "Monster is the category. Something concrete has to be built instead - and Slime already is one.",
-            "after": "The variable can still be a Monster. It is the new that has to name a real class.",
+            "solution": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\npublic void run() {\n  Monster m = new Slime(\"Blob\");\n  m.attack();\n}",
+            "hint": "The variable can stay a Monster. Only the new has to name a concrete class.",
+            "after": "A Monster variable is fine. Building a Monster object is not.",
             "skills": [
               "use abstract to stop a class being instantiated"
             ]
@@ -11165,61 +11117,28 @@
                 "bucket": 1
               },
               {
-                "text": "class Boss extends Monster, and Boss defines nothing",
+                "text": "class Ghost extends Monster, and Ghost defines nothing",
                 "bucket": 1
               }
             ],
-            "why": "abstract forbids building the category and requires every concrete subclass to fill the gaps. It does not stop the class holding finished methods, and it does not stop a Monster VARIABLE - only a Monster object.",
+            "why": "abstract forbids building the category and requires each concrete subclass to fill the gaps. It does not stop the class holding finished methods, and it does not stop a Monster variable.",
             "skills": [
               "force subclasses to supply a method"
             ]
           },
           {
-            "id": "a_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public abstract void attack();",
-            "questions": [
-              {
-                "prompt": "What can you NOT do with an abstract class?",
-                "opts": [
-                  "Give it a constructor",
-                  "Give it ordinary methods",
-                  "Extend it",
-                  "Create an object of it with new"
-                ],
-                "correct": 3,
-                "why": "It exists to be extended. Everything else about it works normally, including constructors called by super()."
-              },
-              {
-                "prompt": "What must a subclass of an abstract class do?",
-                "opts": [
-                  "Nothing special",
-                  "Be abstract too",
-                  "Have the same name",
-                  "Provide a body for every abstract method"
-                ],
-                "correct": 3,
-                "why": "Otherwise it still has a gap, and Java will not let it be built either."
-              }
-            ],
-            "skills": [
-              "force subclasses to supply a method"
-            ]
-          },
-          {
-            "id": "a_write",
+            "id": "a_final",
             "kind": "write",
+            "instruction": "Make Item abstract with an abstract use(), then write Sword.",
             "wrap": "methods",
-            "instruction": "Your turn: make Item abstract and give Sword its own use().",
-            "harness": "public void run() {\n  Sword s = new Sword(\"Excalibur\");\n  s.use();\n}",
-            "code": "// abstract class Item: private name, constructor, getName(),\n//   and an abstract void use();\n// class Sword extends Item: constructor calling super,\n//   use() printing e.g. \"You swing Excalibur.\"\n",
-            "target": "You swing Excalibur.",
-            "solution": "abstract class Item {\n  private String name;\n\n  public Item(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void use();\n}\n\nclass Sword extends Item {\n  public Sword(String name) {\n    super(name);\n  }\n\n  public void use() {\n    System.out.println(\"You swing \" + getName() + \".\");\n  }\n}",
-            "hint": "abstract on the class AND on use(), which ends in a semicolon with no body. Sword supplies the body.",
-            "after": "new Item(...) would not compile. That is the guarantee abstract buys.",
+            "code": "// make Item abstract, and give it an abstract method use()\nclass Item {\n  private String name;\n\n  public Item(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\n// write Sword extends Item. use() prints:  Sword slashes!\n\npublic void run() {\n  Item i = new Sword(\"Sword\");\n  i.use();\n}",
+            "target": "Sword slashes!",
+            "solution": "abstract class Item {\n  private String name;\n\n  public Item(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void use();\n}\n\nclass Sword extends Item {\n  public Sword(String name) {\n    super(name);\n  }\n\n  public void use() {\n    System.out.println(getName() + \" slashes!\");\n  }\n}\n\npublic void run() {\n  Item i = new Sword(\"Sword\");\n  i.use();\n}",
+            "hint": "abstract class Item, then public abstract void use(); with no body. Sword supplies the body.",
+            "after": "The Item variable held a Sword object, and use() ran the Sword version.",
             "skills": [
-              "use abstract to stop a class being instantiated"
+              "use abstract to stop a class being instantiated",
+              "force subclasses to supply a method"
             ]
           }
         ]
@@ -11238,203 +11157,106 @@
           {
             "id": "y_task",
             "kind": "teach",
-            "instruction": "A Boss can be stored in a Monster variable.",
-            "points": [
-              {
-                "label": "Monster m = new Boss(\"Grendel\");",
-                "text": "Legal, because a Boss IS A Monster."
-              },
-              {
-                "label": "the question",
-                "text": "m says Monster. The object is a Boss. Which attack() runs?"
-              },
-              {
-                "label": "polymorphism",
-                "text": "The name for one variable type standing in for many actual types."
-              }
-            ]
+            "instruction": "A fight scene should work for every kind of monster. How do you write one method that handles all of them?",
+            "body": [
+              "You could write fightSlime, fightBoss, fightGhost.",
+              "Every new monster would mean another method."
+            ],
+            "keypoint": "Polymorphism lets one variable type stand in for many actual types."
           },
           {
-            "id": "y_poly",
+            "id": "y_store",
             "kind": "teach",
+            "instruction": "A subclass object can be stored in a superclass variable.",
+            "code": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\npublic void run() {\n  Monster a = new Slime(\"Blob\");\n  Monster b = new Boss(\"Grendel\");\n  a.attack();\n  b.attack();\n}",
             "wrap": "methods",
-            "instruction": "The OBJECT decides, not the variable.",
-            "code": "public void run() {\n  Monster a = new Slime(\"Blob\");\n  Monster b = new Boss(\"Grendel\");\n  a.attack();\n  b.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
-            "output": "Blob splatters you.\nGrendel unleashes a shockwave.",
-            "highlight": [
-              1,
-              2
+            "output": "Blob splats!\nGrendel strikes!",
+            "body": [
+              "Both variables are declared Monster.",
+              "Java runs the version belonging to the object, not the variable."
             ],
-            "points": [
-              {
-                "label": "both are Monster",
-                "text": "The declared type is the same on both lines."
-              },
-              {
-                "label": "different output",
-                "text": "Because one object is a Slime and the other a Boss."
-              },
-              {
-                "label": "chosen at run time",
-                "text": "Java looks at what the object actually IS, not what the variable was declared as."
-              },
-              {
-                "label": "why it is useful",
-                "text": "Code can handle any Monster without knowing or caring which kind arrived."
-              }
-            ]
+            "keypoint": "Java picks the method version from the OBJECT, not from the variable type."
           },
           {
             "id": "y_param",
             "kind": "teach",
+            "instruction": "A method that takes the superclass accepts every subclass.",
+            "code": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\npublic void run() {\n  fight(new Slime(\"Blob\"));\n  fight(new Boss(\"Grendel\"));\n}\n\npublic void fight(Monster m) {\n  System.out.println(\"A wild \" + m.getName() + \" appears.\");\n  m.attack();\n}",
             "wrap": "methods",
-            "instruction": "One method that accepts any Monster.",
-            "code": "public void run() {\n  fight(new Slime(\"Blob\"));\n  fight(new Boss(\"Grendel\"));\n}\n\npublic void fight(Monster m) {\n  System.out.print(\"You face \" + m.getName() + \". \");\n  m.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
-            "output": "You face Blob. Blob splatters you.\nYou face Grendel. Grendel unleashes a shockwave.",
-            "highlight": [
-              5,
-              6,
-              7,
-              8
+            "output": "A wild Blob appears.\nBlob splats!\nA wild Grendel appears.\nGrendel strikes!",
+            "body": [
+              "fight takes a Monster, so it accepts a Slime or a Boss.",
+              "Adding a Ghost class later needs no change to fight at all."
             ],
-            "points": [
-              {
-                "label": "fight(Monster m)",
-                "text": "Takes the parent type, so it accepts every subclass."
-              },
-              {
-                "label": "m.attack()",
-                "text": "Runs whichever version the actual object has."
-              },
-              {
-                "label": "one method, any monster",
-                "text": "Adding a Dragon later needs no change to fight() at all."
-              },
-              {
-                "label": "this is the payoff",
-                "text": "Inheritance stops being about saving typing and starts being about writing code that does not need updating."
-              }
-            ]
+            "keypoint": "A superclass parameter accepts every subclass, so one method handles them all."
           },
           {
-            "id": "y_table",
-            "kind": "table",
-            "instruction": "Which version runs?",
-            "columns": [
-              "declared as",
-              "actual object",
-              "attack() that runs"
-            ],
-            "fillFrom": 2,
-            "chips": [
-              "Slime version",
-              "Boss version"
-            ],
-            "rows": [
-              [
-                "Monster",
-                "Slime",
-                "Slime version"
+            "id": "y_limit",
+            "kind": "teach",
+            "instruction": "The variable type decides which methods you may call.",
+            "facts": {
+              "columns": [
+                "",
+                "Decided by"
               ],
-              [
-                "Monster",
-                "Boss",
-                "Boss version"
-              ],
-              [
-                "Slime",
-                "Slime",
-                "Slime version"
-              ],
-              [
-                "Boss",
-                "Boss",
-                "Boss version"
+              "rows": [
+                [
+                  "Which methods you may call",
+                  "the declared type of the variable"
+                ],
+                [
+                  "Which version actually runs",
+                  "the actual object"
+                ]
               ]
-            ],
-            "why": "The actual object decides every time. The declared type only controls which methods you are allowed to call.",
+            },
+            "keypoint": "The declared type decides what you may call. The object decides which version runs."
+          },
+          {
+            "id": "y_only",
+            "kind": "fix",
+            "instruction": "Warlord has enrage(). Monster does not. Fix this so it runs.",
+            "wrap": "methods",
+            "code": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\nclass Warlord extends Monster {\n  public Warlord(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" charges!\");\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" is enraged!\");\n  }\n}\n\npublic void run() {\n  Monster m = new Warlord(\"Grendel\");\n  m.enrage();\n}",
+            "target": "Grendel is enraged!",
+            "solution": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\nclass Warlord extends Monster {\n  public Warlord(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" charges!\");\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" is enraged!\");\n  }\n}\n\npublic void run() {\n  Warlord m = new Warlord(\"Grendel\");\n  m.enrage();\n}",
+            "hint": "Which methods you may call is decided by the declared type, not by the object.",
+            "after": "A Monster variable reaches only what every Monster has. enrage is not one of them.",
             "skills": [
-              "explain which version of an overridden method runs"
+              "store a subclass object in a parent-typed variable"
             ]
           },
           {
             "id": "y_predict",
             "kind": "predict",
+            "instruction": "The variable says Monster. The object is a Boss. What comes out?",
             "wrap": "methods",
-            "instruction": "Declared Monster, built as Slime. What prints?",
-            "code": "public void run() {\n  Monster m = new Slime(\"Ooze\");\n  m.attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
+            "code": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\npublic void run() {\n  Monster m = new Boss(\"Grendel\");\n  m.attack();\n}",
             "opts": [
-              "(nothing)",
-              "(it does not compile)",
-              "Ooze unleashes a shockwave.",
-              "Ooze splatters you."
+              "Grendel strikes!",
+              "Grendel splats!",
+              "An error",
+              "Nothing"
             ],
-            "correct": 3,
-            "why": "The object is a Slime, so Slime's attack() runs. Declaring it as Monster changes nothing about that.",
+            "correct": 0,
+            "why": "Java looks at the object, which is a Boss, and runs the Boss version of attack.",
             "skills": [
-              "store a subclass object in a parent-typed variable"
+              "explain which version of an overridden method runs"
             ]
           },
           {
-            "id": "y_only",
-            "kind": "fix",
-            "wrap": "methods",
-            "instruction": "The object is a Boss, but the variable only promises a Monster.",
-            "code": "public void run() {\n  Monster m = new Boss(\"Grendel\", 90, \"Terrible\");\n  m.enrage();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" is enraged!\");\n  }\n}",
-            "target": "Grendel is enraged!",
-            "solution": "public void run() {\n  Boss m = new Boss(\"Grendel\", 90, \"Terrible\");\n  m.enrage();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" is enraged!\");\n  }\n}",
-            "hint": "Which methods you may CALL is decided by the declared type, not by the object.",
-            "after": "This is the cost of polymorphism. A Monster variable reaches only what every Monster has, and enrage is not one of them. Overridden methods still run the Boss version; extra methods need a Boss variable.",
-            "skills": [
-              "store a subclass object in a parent-typed variable"
-            ]
-          },
-          {
-            "id": "y_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "Monster m = new Boss(\"Grendel\");\nm.attack();",
-            "questions": [
-              {
-                "prompt": "Which attack() runs?",
-                "opts": [
-                  "Boss's, because the object is a Boss",
-                  "Neither",
-                  "Monster's, because the variable is a Monster",
-                  "Both"
-                ],
-                "correct": 0,
-                "why": "Java picks by the actual object at run time. The declared type does not decide."
-              },
-              {
-                "prompt": "Why write a method that takes the parent type?",
-                "opts": [
-                  "It then works for every subclass, including ones written later",
-                  "Java requires it",
-                  "It runs faster",
-                  "It uses less memory"
-                ],
-                "correct": 0,
-                "why": "Adding a new subclass needs no change to any method that already accepts the parent."
-              }
-            ],
-            "skills": [
-              "store a subclass object in a parent-typed variable"
-            ]
-          },
-          {
-            "id": "y_write",
+            "id": "y_final",
             "kind": "write",
+            "instruction": "Write one method that describes any Monster.",
             "wrap": "methods",
-            "instruction": "Your turn: one method that describes any Monster.",
-            "harness": "public void run() {\n  describe(new Slime(\"Blob\"));\n  describe(new Boss(\"Grendel\"));\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" unleashes a shockwave.\");\n  }\n}",
-            "code": "// write describe(Monster m): print \"Here comes NAME!\" then call its attack()\n",
-            "target": "Here comes Blob!\nBlob splatters you.\nHere comes Grendel!\nGrendel unleashes a shockwave.",
-            "solution": "public void describe(Monster m) {\n  System.out.println(\"Here comes \" + m.getName() + \"!\");\n  m.attack();\n}",
-            "hint": "Take Monster as the parameter type, then call getName() and attack() on it.",
-            "after": "One method, two kinds of monster, and it would take a third without being touched.",
+            "code": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\n// write describe(Monster m). It prints the name, then calls attack().\n\npublic void run() {\n  describe(new Slime(\"Blob\"));\n  describe(new Boss(\"Grendel\"));\n}",
+            "target": "Blob\nBlob splats!\nGrendel\nGrendel strikes!",
+            "solution": "abstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splats!\");\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" strikes!\");\n  }\n}\n\npublic void describe(Monster m) {\n  System.out.println(m.getName());\n  m.attack();\n}\n\npublic void run() {\n  describe(new Slime(\"Blob\"));\n  describe(new Boss(\"Grendel\"));\n}",
+            "hint": "Take a Monster parameter. Every subclass fits.",
+            "after": "One method, two kinds of monster, and it would work for a third without changing.",
             "skills": [
-              "store a subclass object in a parent-typed variable"
+              "store a subclass object in a parent-typed variable",
+              "explain which version of an overridden method runs"
             ]
           }
         ]
@@ -11453,119 +11275,81 @@
           {
             "id": "b_task",
             "kind": "teach",
-            "instruction": "println(potion) worked in 5.4 before anyone wrote toString.",
-            "points": [
-              {
-                "label": "it printed something",
-                "text": "Potion@1b6d3586 - useless, but not an error."
-              },
-              {
-                "label": "where did it come from",
-                "text": "Not from Potion. Nobody wrote it."
-              },
-              {
-                "label": "Object",
-                "text": "Every class in Java extends Object automatically, and Object already has a toString."
-              }
-            ]
+            "instruction": "println(potion) printed something before anyone wrote toString. Where did that come from?",
+            "body": [
+              "It printed something like Potion@1b6d3586.",
+              "Useless, but not an error. Some toString method existed already."
+            ],
+            "keypoint": "Every class in Java extends Object automatically."
+          },
+          {
+            "id": "b_object",
+            "kind": "teach",
+            "instruction": "Every class extends Object, whether you write it or not.",
+            "facts": {
+              "columns": [
+                "Method from Object",
+                "What the default version does"
+              ],
+              "rows": [
+                [
+                  "toString()",
+                  "returns the class name and a memory address"
+                ],
+                [
+                  "equals(Object other)",
+                  "returns true only if it is the same object"
+                ],
+                [
+                  "hashCode()",
+                  "returns a number based on the object"
+                ]
+              ]
+            },
+            "body": [
+              "You inherit all three without asking.",
+              "Overriding them replaces the default with your own."
+            ],
+            "keypoint": "toString, equals and hashCode come free from Object."
           },
           {
             "id": "b_default",
             "kind": "teach",
+            "instruction": "The default equals compares identity, exactly like ==.",
+            "code": "class Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n}\n\npublic void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}",
             "wrap": "methods",
-            "instruction": "Without your own, you get Object versions.",
-            "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n}",
             "output": "false",
-            "points": [
-              {
-                "label": "a.equals(b)",
-                "text": "Potion never defined equals, so Object's version runs."
-              },
-              {
-                "label": "Object's equals",
-                "text": "Compares identity - the same test as ==. Two separate objects are never equal to it."
-              },
-              {
-                "label": "false",
-                "text": "Even though both hold \"Healing\". Object cannot know that name is what matters."
-              },
-              {
-                "label": "write your own equals",
-                "text": "Then the class decides what \"the same\" means, instead of Object guessing."
-              }
-            ]
+            "body": [
+              "Both hold \"Healing\", and equals still says false.",
+              "Object cannot know that the name is what matters."
+            ],
+            "keypoint": "Object.equals compares identity. Override it to compare contents."
           },
           {
             "id": "b_over",
             "kind": "teach",
+            "instruction": "Override toString and equals so the class decides.",
+            "code": "class Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public String toString() {\n    return \"Potion of \" + name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.getName());\n  }\n}\n\npublic void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a);\n  System.out.println(a.equals(b));\n}",
             "wrap": "methods",
-            "instruction": "Override them and the class decides.",
-            "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a);\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String toString() {\n    return \"Potion of \" + name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.name);\n  }\n}",
             "output": "Potion of Healing\ntrue",
-            "highlight": [
-              7,
-              8,
-              9,
-              11,
-              12,
-              13,
-              14
-            ],
-            "points": [
+            "annotate": [
               {
-                "label": "public String toString()",
-                "text": "Replaces Object's. println finds yours instead."
-              },
-              {
-                "label": "public boolean equals(Object other)",
-                "text": "Must take Object to actually override it, not Potion."
-              },
-              {
-                "label": "(Potion) other",
-                "text": "A cast, from 3.5. It tells Java to treat the Object as a Potion so name can be read."
-              },
-              {
-                "label": "true",
-                "text": "Now equality means what Potion says it means."
-              }
-            ]
-          },
-          {
-            "id": "b_cmp",
-            "kind": "compare",
-            "instruction": "Inherited, or overridden.",
-            "sides": [
-              {
-                "label": "Object's versions",
-                "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n}",
-                "output": "false"
-              },
-              {
-                "label": "your versions",
-                "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String toString() {\n    return \"Potion of \" + name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.name);\n  }\n}",
-                "output": "true"
+                "token": "equals(Object other)",
+                "note": "must take Object to override"
               }
             ],
-            "points": [
-              {
-                "label": "Object's versions",
-                "text": "Identity only. Two objects with identical contents are still not equal."
-              },
-              {
-                "label": "your versions",
-                "text": "Contents. The class defines what counts as the same."
-              }
+            "body": [
+              "equals must take an Object parameter, or it does not override the inherited one.",
+              "The cast then tells Java to treat it as a Potion."
             ],
-            "skills": [
-              "override toString and equals from Object"
-            ]
+            "keypoint": "equals must take an Object parameter and cast it before reading fields."
           },
           {
             "id": "b_eqeq",
             "kind": "predict",
+            "instruction": "Both Potions say Healing, and equals is overridden. What comes out?",
             "wrap": "methods",
-            "instruction": "Both Potions say Healing, and equals is overridden. What prints?",
-            "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n  System.out.println(a == b);\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.name);\n  }\n}",
+            "code": "class Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public String toString() {\n    return \"Potion of \" + name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.getName());\n  }\n}\n\npublic void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n  System.out.println(a == b);\n}",
             "opts": [
               "true\ntrue",
               "true\nfalse",
@@ -11573,77 +11357,21 @@
               "false\ntrue"
             ],
             "correct": 1,
-            "why": "equals is yours, so it compares the names and says true. == is not a method and cannot be overridden - it asks whether these are the same object, and new was called twice, so false. This is why comparing objects with == is a bug.",
+            "why": "equals is yours, so it compares the names and says true. == is not a method and cannot be overridden. It asks whether these are the same object, and new was called twice.",
             "skills": [
               "override toString and equals from Object"
             ]
           },
           {
-            "id": "b_which",
-            "kind": "teach",
-            "instruction": "The two you will override in practice.",
-            "points": [
-              {
-                "label": "toString()",
-                "text": "What println shows. Override it in nearly every class you write."
-              },
-              {
-                "label": "equals(Object)",
-                "text": "What \"the same\" means. Override it when contents matter more than identity."
-              },
-              {
-                "label": "others exist",
-                "text": "Object also gives hashCode() and getClass(). Beyond this course."
-              },
-              {
-                "label": "the hierarchy",
-                "text": "Boss extends Monster extends Object. You wrote one link; Java supplied the last."
-              }
-            ]
-          },
-          {
-            "id": "b_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public String toString() { return \"Potion\"; }",
-            "questions": [
-              {
-                "prompt": "Which class does every Java class inherit from?",
-                "opts": [
-                  "None",
-                  "Main",
-                  "String",
-                  "Object"
-                ],
-                "correct": 3,
-                "why": "Automatically, without extends being written. It is why println works on anything."
-              },
-              {
-                "prompt": "Why does the default equals return false for two identical objects?",
-                "opts": [
-                  "It compares names",
-                  "It compares identity, not contents",
-                  "It is broken",
-                  "It always returns false"
-                ],
-                "correct": 1,
-                "why": "Object cannot know which fields matter, so it falls back to whether they are literally the same object."
-              }
-            ],
-            "skills": [
-              "explain what every class inherits automatically"
-            ]
-          },
-          {
             "id": "b_cast",
             "kind": "fix",
+            "instruction": "equals takes an Object. Object has no name. Fix it.",
             "wrap": "methods",
-            "instruction": "equals takes an Object. Object has no name.",
-            "code": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Object other) {\n    return name.equals(other.name);\n  }\n}",
+            "code": "class Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public boolean equals(Object other) {\n    return name.equals(other.getName());\n  }\n}\n\npublic void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}",
             "target": "true",
-            "solution": "public void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.name);\n  }\n}",
-            "hint": "The parameter must be Object to override at all, so you have to promise Java it really is a Potion before reading its fields.",
-            "after": "That is why every equals starts with a cast. The signature has to be wide, the body has to narrow it again.",
+            "solution": "class Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public boolean equals(Object other) {\n    Potion p = (Potion) other;\n    return name.equals(p.getName());\n  }\n}\n\npublic void run() {\n  Potion a = new Potion(\"Healing\");\n  Potion b = new Potion(\"Healing\");\n  System.out.println(a.equals(b));\n}",
+            "hint": "The parameter must be Object to override, so cast it to a Potion before reading its fields.",
+            "after": "That is why every equals starts with a cast. The signature has to be wide, the body narrows it again.",
             "skills": [
               "override toString and equals from Object"
             ]
@@ -11678,22 +11406,21 @@
                 "bucket": 1
               }
             ],
-            "why": "Every class extends Object whether you say so or not, so those three are always there - just with unhelpful default behaviour. Anything specific to Coin is yours to write.",
+            "why": "Every class extends Object whether you say so or not, so those three always exist, just with unhelpful defaults. Anything specific to Coin is yours to write.",
             "skills": [
               "explain what every class inherits automatically"
             ]
           },
           {
-            "id": "b_write",
+            "id": "b_final",
             "kind": "write",
+            "instruction": "Give Coin a toString and an equals.",
             "wrap": "methods",
-            "instruction": "Your turn: give Coin a toString and an equals.",
-            "harness": "public void run() {\n  Coin a = new Coin(5);\n  Coin b = new Coin(5);\n  System.out.println(a);\n  System.out.println(a.equals(b));\n}",
-            "code": "// class Coin: private int value, constructor,\n//   toString returning e.g. \"5 gold\",\n//   equals(Object other) comparing values\n",
+            "code": "class Coin {\n  private int value;\n\n  public Coin(int value) {\n    this.value = value;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  // write toString, returning:  5 gold\n  // write equals, comparing values\n}\n\npublic void run() {\n  Coin a = new Coin(5);\n  Coin b = new Coin(5);\n  System.out.println(a);\n  System.out.println(a.equals(b));\n}",
             "target": "5 gold\ntrue",
-            "solution": "class Coin {\n  private int value;\n\n  public Coin(int value) {\n    this.value = value;\n  }\n\n  public String toString() {\n    return value + \" gold\";\n  }\n\n  public boolean equals(Object other) {\n    Coin c = (Coin) other;\n    return value == c.value;\n  }\n}",
-            "hint": "equals must take Object, then cast it to Coin. Values are ints, so == is right for them.",
-            "after": "Note == is correct INSIDE equals here, because value is an int. Only objects needed .equals().",
+            "solution": "class Coin {\n  private int value;\n\n  public Coin(int value) {\n    this.value = value;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public String toString() {\n    return value + \" gold\";\n  }\n\n  public boolean equals(Object other) {\n    Coin c = (Coin) other;\n    return value == c.getValue();\n  }\n}\n\npublic void run() {\n  Coin a = new Coin(5);\n  Coin b = new Coin(5);\n  System.out.println(a);\n  System.out.println(a.equals(b));\n}",
+            "hint": "equals takes an Object, casts it to a Coin, then compares the values with == because they are ints.",
+            "after": "value is an int, so == is right inside equals. It is comparing primitives, not objects.",
             "skills": [
               "override toString and equals from Object"
             ]
@@ -11714,159 +11441,40 @@
           {
             "id": "f_task",
             "kind": "teach",
-            "instruction": "A Chest and a Door both open. They share no parent.",
-            "points": [
-              {
-                "label": "a Chest is not a Door",
-                "text": "And neither IS A the other, so inheritance does not apply."
-              },
-              {
-                "label": "but both open",
-                "text": "You want one method that can open either."
-              },
-              {
-                "label": "an interface",
-                "text": "A promise that a class provides certain methods, with no family relationship at all."
-              }
-            ]
+            "instruction": "A Chest and a Door both open, and they share no parent. How do you say two unrelated classes can both do the same thing?",
+            "body": [
+              "A Chest is not a Door, and a Door is not a Chest.",
+              "Neither IS A the other, so inheritance does not apply."
+            ],
+            "keypoint": "An interface says a class provides certain methods, with no family relationship."
           },
           {
             "id": "f_iface",
             "kind": "teach",
+            "instruction": "An interface lists method signatures. implements promises to supply them.",
+            "code": "interface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}\n\nclass Door implements Openable {\n  public void open() {\n    System.out.println(\"The door swings wide.\");\n  }\n}\n\npublic void run() {\n  Chest c = new Chest();\n  Door d = new Door();\n  c.open();\n  d.open();\n}",
             "wrap": "methods",
-            "instruction": "interface lists methods. implements promises to supply them.",
-            "code": "public void run() {\n  Chest c = new Chest();\n  Door d = new Door();\n  c.open();\n  d.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}\n\nclass Door implements Openable {\n  public void open() {\n    System.out.println(\"The door swings wide.\");\n  }\n}",
             "output": "The chest creaks open.\nThe door swings wide.",
-            "highlight": [
-              6,
-              7,
-              8
-            ],
-            "points": [
+            "annotate": [
               {
-                "label": "interface Openable",
-                "text": "A list of method signatures and nothing else. No fields, no bodies, no constructor."
-              },
-              {
-                "label": "void open();",
-                "text": "A semicolon, not a body. Every implementer must write one."
-              },
-              {
-                "label": "class Chest implements Openable",
-                "text": "implements, not extends. Chest promises to have open()."
-              },
-              {
-                "label": "unrelated classes",
-                "text": "Chest and Door share nothing except the promise."
-              }
-            ]
-          },
-          {
-            "id": "f_poly",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "An interface can be a parameter type, like a parent class.",
-            "code": "public void run() {\n  useIt(new Chest());\n  useIt(new Door());\n}\n\npublic void useIt(Openable thing) {\n  thing.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}\n\nclass Door implements Openable {\n  public void open() {\n    System.out.println(\"The door swings wide.\");\n  }\n}",
-            "output": "The chest creaks open.\nThe door swings wide.",
-            "highlight": [
-              4,
-              5,
-              6
-            ],
-            "points": [
-              {
-                "label": "useIt(Openable thing)",
-                "text": "Accepts anything that implements Openable, whatever its class."
-              },
-              {
-                "label": "the same payoff as 5.15",
-                "text": "Polymorphism again, but across unrelated classes rather than a family."
-              },
-              {
-                "label": "adding a Gate",
-                "text": "Would work with useIt immediately, as long as it implements Openable."
-              }
-            ]
-          },
-          {
-            "id": "f_cmp",
-            "kind": "compare",
-            "instruction": "Shared family, or shared promise.",
-            "sides": [
-              {
-                "label": "abstract class",
-                "code": "public void run() {\n  new Slime(\"Blob\").attack();\n}\n\nabstract class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public abstract void attack();\n}\n\nclass Slime extends Monster {\n  public Slime(String name) {\n    super(name);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" splatters you.\");\n  }\n}",
-                "output": "Blob splatters you."
-              },
-              {
-                "label": "interface",
-                "code": "public void run() {\n  new Chest().open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}\n\nclass Door implements Openable {\n  public void open() {\n    System.out.println(\"The door swings wide.\");\n  }\n}",
-                "output": "The chest creaks open."
+                "token": "interface Openable",
+                "note": "a list of methods, no bodies"
               }
             ],
-            "points": [
-              {
-                "label": "abstract class",
-                "text": "Can hold fields, constructors and finished methods. A class extends exactly one."
-              },
-              {
-                "label": "interface",
-                "text": "Only the method list. A class can implement as many as it likes."
-              }
+            "body": [
+              "void open(); ends with a semicolon and has no body.",
+              "implements, not extends. Chest and Door share nothing except the promise."
             ],
-            "skills": [
-              "compare an interface with an abstract class"
-            ]
-          },
-          {
-            "id": "f_table",
-            "kind": "table",
-            "instruction": "Which one allows it?",
-            "columns": [
-              "can it...",
-              "abstract class",
-              "interface"
-            ],
-            "fillFrom": 1,
-            "chips": [
-              "yes",
-              "no"
-            ],
-            "rows": [
-              [
-                "hold instance variables",
-                "yes",
-                "no"
-              ],
-              [
-                "have a constructor",
-                "yes",
-                "no"
-              ],
-              [
-                "be used several times by one class",
-                "no",
-                "yes"
-              ],
-              [
-                "declare a method with no body",
-                "yes",
-                "yes"
-              ]
-            ],
-            "why": "An abstract class is a partly-built parent, so it can hold state. An interface is only a promise, so a class can make several of them.",
-            "skills": [
-              "compare an interface with an abstract class"
-            ]
+            "keypoint": "A class implements an interface, and must supply every method it lists."
           },
           {
             "id": "f_missing",
             "kind": "fix",
+            "instruction": "Chest promised to be Openable and did not deliver. Fix it.",
             "wrap": "methods",
-            "instruction": "Chest promised to be Openable and then did not deliver.",
-            "code": "public void run() {\n  Chest c = new Chest();\n  c.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n}",
+            "code": "interface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n}\n\npublic void run() {\n  Chest c = new Chest();\n  c.open();\n}",
             "target": "The chest creaks open.",
-            "solution": "public void run() {\n  Chest c = new Chest();\n  c.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}",
+            "solution": "interface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}\n\npublic void run() {\n  Chest c = new Chest();\n  c.open();\n}",
             "hint": "implements is a promise. The interface lists what has to exist.",
             "after": "An interface is checked at compile time. You cannot claim to implement it and skip a method.",
             "skills": [
@@ -11874,74 +11482,102 @@
             ]
           },
           {
-            "id": "f_kw",
-            "kind": "fill",
+            "id": "f_poly",
+            "kind": "teach",
+            "instruction": "An interface can be a parameter type, like a superclass.",
+            "code": "interface Openable {\n  void open();\n}\n\nclass Chest implements Openable {\n  public void open() {\n    System.out.println(\"The chest creaks open.\");\n  }\n}\n\nclass Door implements Openable {\n  public void open() {\n    System.out.println(\"The door swings wide.\");\n  }\n}\n\npublic void run() {\n  useIt(new Chest());\n  useIt(new Door());\n}\n\npublic void useIt(Openable thing) {\n  thing.open();\n}",
             "wrap": "methods",
-            "instruction": "Openable is an interface. Which keyword?",
-            "code": "public void run() {\n  Door d = new Door();\n  d.open();\n}\n\ninterface Openable {\n  void open();\n}\n\nclass Door ⟦1⟧ Openable {\n  public void open() {\n    System.out.println(\"The door swings open.\");\n  }\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "implements",
-                  "extends",
-                  "uses"
-                ],
-                "answer": 0
-              }
+            "output": "The chest creaks open.\nThe door swings wide.",
+            "body": [
+              "useIt accepts anything that implements Openable, whatever its class.",
+              "This is polymorphism again, but across unrelated classes rather than a family."
             ],
-            "target": "The door swings open.",
-            "hint": "extends is for a parent class you inherit from. This is a promise to supply methods, not a family.",
-            "after": "A class extends one class and implements as many interfaces as it likes.",
-            "skills": [
-              "write an interface and implement it"
-            ]
+            "keypoint": "An interface can be used as a type, so one method accepts every implementer."
           },
           {
-            "id": "f_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "interface Openable {\n  void open();\n}",
-            "questions": [
-              {
-                "prompt": "What is the keyword for using an interface?",
-                "opts": [
-                  "interface",
-                  "implements",
-                  "abstract",
-                  "extends"
+            "id": "f_cmp",
+            "kind": "teach",
+            "instruction": "Interface or abstract class?",
+            "facts": {
+              "columns": [
+                "",
+                "Abstract class",
+                "Interface"
+              ],
+              "rows": [
+                [
+                  "Can hold fields",
+                  "yes",
+                  "no"
                 ],
-                "correct": 1,
-                "why": "A class extends one class and implements any number of interfaces."
+                [
+                  "Can hold finished methods",
+                  "yes",
+                  "no, in this course"
+                ],
+                [
+                  "Can hold a constructor",
+                  "yes",
+                  "no"
+                ],
+                [
+                  "How many can a class have",
+                  "extends exactly one",
+                  "implements as many as it likes"
+                ],
+                [
+                  "Use it for",
+                  "a family of related classes",
+                  "a shared ability across unrelated classes"
+                ]
+              ]
+            },
+            "keypoint": "A class extends one class but implements as many interfaces as it likes."
+          },
+          {
+            "id": "f_bucket",
+            "kind": "bucket",
+            "instruction": "Which one fits each job?",
+            "buckets": [
+              "Abstract class",
+              "Interface"
+            ],
+            "items": [
+              {
+                "text": "Slime and Boss are both a kind of Monster",
+                "bucket": 0
               },
               {
-                "prompt": "What can an abstract class do that an interface cannot?",
-                "opts": [
-                  "Hold instance variables and a constructor",
-                  "Be used as a parameter type",
-                  "Be extended",
-                  "Declare methods with no body"
-                ],
-                "correct": 0,
-                "why": "An abstract class is a partly-built parent with state. An interface is only a list of promised methods."
+                "text": "Every Monster shares a name field",
+                "bucket": 0
+              },
+              {
+                "text": "A Chest and a Door can both be opened",
+                "bucket": 1
+              },
+              {
+                "text": "A Bird and a Plane can both fly",
+                "bucket": 1
               }
             ],
+            "why": "Use an abstract class when the classes are a family and share state. Use an interface when unrelated classes share an ability.",
             "skills": [
               "compare an interface with an abstract class"
             ]
           },
           {
-            "id": "f_write",
+            "id": "f_final",
             "kind": "write",
+            "instruction": "Write an interface that two unrelated classes both keep.",
             "wrap": "methods",
-            "instruction": "Your turn: an interface two unrelated classes both keep.",
-            "harness": "public void run() {\n  Torch t = new Torch();\n  Spell s = new Spell();\n  t.light();\n  s.light();\n}",
-            "code": "// interface Lightable with void light();\n// class Torch implements it, printing \"The torch catches fire.\"\n// class Spell implements it, printing \"The spell glows.\"\n",
-            "target": "The torch catches fire.\nThe spell glows.",
-            "solution": "interface Lightable {\n  void light();\n}\n\nclass Torch implements Lightable {\n  public void light() {\n    System.out.println(\"The torch catches fire.\");\n  }\n}\n\nclass Spell implements Lightable {\n  public void light() {\n    System.out.println(\"The spell glows.\");\n  }\n}",
-            "hint": "interface Lightable { void light(); } then two classes using implements, each with a public void light().",
-            "after": "A Torch and a Spell have nothing in common except the promise. That is what interfaces are for.",
+            "code": "// write interface Breakable with one method: void breakIt();\n// write class Vase implements Breakable. breakIt() prints:  The vase shatters.\n// write class Window implements Breakable. breakIt() prints:  The window cracks.\n\npublic void run() {\n  smash(new Vase());\n  smash(new Window());\n}\n\npublic void smash(Breakable b) {\n  b.breakIt();\n}",
+            "target": "The vase shatters.\nThe window cracks.",
+            "solution": "interface Breakable {\n  void breakIt();\n}\n\nclass Vase implements Breakable {\n  public void breakIt() {\n    System.out.println(\"The vase shatters.\");\n  }\n}\n\nclass Window implements Breakable {\n  public void breakIt() {\n    System.out.println(\"The window cracks.\");\n  }\n}\n\npublic void run() {\n  smash(new Vase());\n  smash(new Window());\n}\n\npublic void smash(Breakable b) {\n  b.breakIt();\n}",
+            "hint": "The interface lists void breakIt(); with no body. Each class supplies its own.",
+            "after": "A Vase is not a Window. They share an ability, not a family.",
             "skills": [
-              "write an interface and implement it"
+              "write an interface and implement it",
+              "compare an interface with an abstract class"
             ]
           }
         ]
