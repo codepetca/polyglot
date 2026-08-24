@@ -819,10 +819,62 @@ pre.flowcode.ro { margin: 0; }
 .walkbar { display: flex; align-items: center; gap: 9px; }
 .walkcount { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: auto; }
 
-/* annotate: arrows under one line of code, each with two or three words.
-   Replaces the stack of highlighted labels, which asked the reader to match a
-   chip to a token by eye. */
-.annot { margin: 6px 0 4px; padding-left: 14px; }
-.annotrow { display: flex; align-items: baseline; gap: 8px; padding: 1px 0; }
-.annotarrow { font-family: var(--mono); font-size: 14px; color: var(--accent); flex: 0 0 auto; }
-.annotnote { font-size: 14px; color: var(--ink); }
+/* annotate: a note pinned under the exact characters it describes.
+   The code line and the note rows live in the SAME box and inherit the same
+   monospace metrics, so a width measured in `ch` lands on the right column. */
+.anncode { display: block; }
+.anncode .annline { white-space: pre; }
+.annrow { display: flex; align-items: baseline; white-space: pre; }
+.annpad { flex: 0 0 auto; }
+.anntick { color: var(--accent); flex: 0 0 auto; }
+.annnote { color: var(--accent); padding-left: .6ch; font-family: var(--sans); font-size: 12.5px; }
+
+/* ── The tome ────────────────────────────────────────────────────────────────
+   Key points roll into a scroll and drop in here as they are earned, so a
+   lesson leaves something behind that can be re-read in a minute. */
+.tome { position: fixed; right: 22px; bottom: 22px; z-index: 40; display: flex; align-items: center; gap: 7px;
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 999px; padding: 8px 15px 8px 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.14); font-family: var(--sans); }
+.tome:hover { border-color: var(--accent); }
+.tome:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tomeicon { font-size: 19px; line-height: 1; }
+.tomecount { font-size: 13px; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+.tome.catching { animation: tomebump .45s ease-out .45s; }
+@keyframes tomebump { 0%,100% { transform: scale(1); } 45% { transform: scale(1.18); } }
+
+/* the scroll flying into it */
+.scrollfly { position: fixed; z-index: 41; left: 50%; top: 45%; font-size: 30px; pointer-events: none;
+  animation: scrollfly .9s cubic-bezier(.5,-0.3,.7,1) forwards; }
+@keyframes scrollfly {
+  0%   { opacity: 0; transform: translate(-50%,-50%) scale(.4) rotate(-12deg); }
+  18%  { opacity: 1; transform: translate(-50%,-50%) scale(1.15) rotate(0deg); }
+  100% { opacity: 0; left: calc(100% - 40px); top: calc(100% - 40px);
+         transform: translate(-50%,-50%) scale(.35) rotate(22deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrollfly { animation: none; opacity: 0; }
+  .tome.catching { animation: none; }
+}
+
+.tomepanel { position: fixed; right: 22px; bottom: 74px; z-index: 41; width: min(360px, calc(100vw - 44px));
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 16px 18px;
+  box-shadow: 0 10px 34px rgba(0,0,0,.2); }
+.tomepanel h4 { margin: 0 0 10px; font-family: var(--serif); font-size: 16px; }
+.tomepanel ol { margin: 0 0 14px; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; }
+.tomepanel li { font-size: 14px; line-height: 1.5; }
+
+/* /notes — the unit scroll */
+.notes { max-width: 760px; margin: 0 auto; padding: 28px 20px 90px; }
+.noteshead { border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 26px; }
+.noteshead h1 { font-family: var(--serif); font-size: 30px; margin: 0 0 4px; }
+.noteunit { margin-bottom: 34px; }
+.noteunit h2 { font-family: var(--sans); font-size: 15px; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--muted); margin: 0 0 14px; }
+.notelesson { margin-bottom: 20px; padding-left: 14px; border-left: 2px solid var(--line); }
+.notelesson h3 { font-family: var(--sans); font-size: 15px; font-weight: 600; margin: 0 0 7px;
+  display: flex; gap: 9px; align-items: baseline; }
+.notecode { font-family: var(--mono); font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.notelesson h3 a { color: var(--ink); text-decoration: none; }
+.notelesson h3 a:hover { text-decoration: underline; }
+.notelesson ul { margin: 0; padding-left: 19px; display: flex; flex-direction: column; gap: 6px; }
+.notelesson li { font-size: 14.5px; line-height: 1.55; }

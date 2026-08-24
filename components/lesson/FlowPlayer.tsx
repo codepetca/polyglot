@@ -51,6 +51,7 @@ type Step = {
   body?: string[];
   rules?: { text: string; example?: string }[];
   annotate?: { token: string; note: string }[];
+  keypoint?: string;
   vars?: { type: string; name: string; placeholder?: string; label?: string }[];
   frames?: { line: number; note: string; vars?: Record<string, string>; out?: string }[];
   output?: string;
@@ -93,6 +94,9 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   const [assist, setAssist] = useState<Record<string, Record<string, any>> | null>(null);
   const [i, setI] = useState(0);
   const [firstTry, setFirstTry] = useState(0);
+  const [kept, setKept] = useState<string[]>([]);
+  const [flying, setFlying] = useState(false);
+  const [tomeOpen, setTomeOpen] = useState(false);
   const attemptsRef = useRef<Record<string, number>>({});
 
   // Remember the student's assist language across lessons — an ESL student
@@ -154,6 +158,29 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
           any dot you have reached is now a way back to it. The arrow is there
           because 9px dots are a poor target for the one move — one step back —
           that gets used most. */}
+      {/* THE TOME. A lesson is a performance; this is what survives it. Each
+          key point rolls into a scroll and drops in here, and the student
+          re-reads the tome later instead of replaying fifteen steps. */}
+      {kept.length > 0 && (
+        <button
+          className={`tome ${flying ? "catching" : ""}`}
+          onClick={() => setTomeOpen((o) => !o)}
+          aria-label={`Notes from this lesson, ${kept.length} collected`}
+          title="Notes from this lesson"
+        >
+          <span className="tomeicon">📕</span>
+          <span className="tomecount">{kept.length}</span>
+        </button>
+      )}
+      {flying && <span className="scrollfly" aria-hidden="true">📜</span>}
+      {tomeOpen && (
+        <div className="tomepanel">
+          <h4>What this lesson taught</h4>
+          <ol>{kept.map((k, j) => <li key={j}>{k}</li>)}</ol>
+          <button className="btn" onClick={() => setTomeOpen(false)}>Close</button>
+        </div>
+      )}
+
       <div className="flowbar">
         {(i > 0 || done) && (
           <button
@@ -193,7 +220,16 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
           lang={lang}
           onAttempt={(id) => (attemptsRef.current[id] = (attemptsRef.current[id] || 0) + 1)}
           attemptsOf={(id) => attemptsRef.current[id] || 0}
-          onDone={(wasFirstTry) => { completed(step!.id, wasFirstTry); setI(i + 1); }}
+          onDone={(wasFirstTry) => {
+            completed(step!.id, wasFirstTry);
+            const kp = step!.keypoint;
+            if (kp && !kept.includes(kp)) {
+              setKept((prev) => [...prev, kp]);
+              setFlying(true);
+              window.setTimeout(() => setFlying(false), 900);
+            }
+            setI(i + 1);
+          }}
           onSkip={() => setI(i + 1)}
           onGoto={(id) => {
             const j = steps.findIndex((s) => s.id === id);
@@ -486,7 +522,32 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         // Tint the lines that are NEW on this step, so a program that grows
         // across a lesson shows what just arrived rather than re-presenting
         // itself whole each time.
-        (step.highlight || []).length ? (
+        (step.annotate || []).length ? (
+          // ONE GRID. The arrows only line up if the note rows are laid out in
+          // the same monospace box as the code, from the same left edge — the
+          // previous version put them in a sibling element with its own
+          // padding, so every arrow sat a few characters off.
+          <div className="flowcode ro anncode">
+            {step.code.split("\n").map((ln, li) => {
+              const marks = (step.annotate || [])
+                .map((a) => ({ ...a, col: ln.indexOf(a.token) }))
+                .filter((a) => a.col >= 0)
+                .sort((x, y) => x.col - y.col);
+              return (
+                <div key={li}>
+                  <div className="annline">{ln || " "}</div>
+                  {marks.map((m, mi) => (
+                    <div className="annrow" key={mi}>
+                      <span className="annpad" style={{ width: `${m.col}ch` }} />
+                      <span className="anntick">└─</span>
+                      <span className="annnote">{m.note}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        ) : (step.highlight || []).length ? (
           <pre className="flowcode ro">
             {step.code.split("\n").map((ln, li) => (
               <span key={li} className={(step.highlight || []).includes(li) ? "cl new" : "cl"}>
@@ -941,26 +1002,6 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
               <pre>{step.output || "(nothing)"}</pre>
             </div>
           )}
-          {(step.annotate || []).length > 0 && (() => {
-            // Work out where each token sits so the arrow lands under it. The
-            // snippet is monospace, so a character offset IS an x position.
-            const src = step.code || "";
-            const marks = (step.annotate || [])
-              .map((a) => ({ ...a, at: src.indexOf(a.token) }))
-              .filter((a) => a.at >= 0)
-              .sort((x, y) => x.at - y.at);
-            const lineStart = (i: number) => src.lastIndexOf("\n", i - 1) + 1;
-            return (
-              <div className="annot">
-                {marks.map((m, j) => (
-                  <div className="annotrow" key={j}>
-                    <span className="annotarrow" style={{ marginLeft: `${m.at - lineStart(m.at)}ch` }}>↑</span>
-                    <span className="annotnote">{m.note}</span>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
           {(step.rules || []).length > 0 && (
             <ol className="rulelist">
               {(step.rules || []).map((r, j) => (

@@ -24,7 +24,8 @@
                 "label": "System.out.println",
                 "text": "This is the command that prints."
               }
-            ]
+            ],
+            "keypoint": "System.out.println(\"text\"); prints a line."
           },
           {
             "id": "p_parts",
@@ -49,7 +50,8 @@
                 "label": ";",
                 "text": "Ends the command."
               }
-            ]
+            ],
+            "keypoint": "Capital S on System. The message goes in the brackets, text goes in double quotes, and a semicolon ends the command."
           },
           {
             "id": "p_tweak",
@@ -71,7 +73,8 @@
                 "label": "ln",
                 "text": "The ln means: go to a new line after printing."
               }
-            ]
+            ],
+            "keypoint": "Each println starts a new line. That is what the ln means."
           },
           {
             "id": "p_cmp",
@@ -88,7 +91,8 @@
                 "code": "System.out.println(\"Hi\");\nSystem.out.println(\"Bye\");",
                 "output": "Hi\nBye"
               }
-            ]
+            ],
+            "keypoint": "print does not start a new line. println does."
           },
           {
             "id": "p_predict",
@@ -202,7 +206,8 @@
             "body": [
               "We need somewhere to keep the values.",
               "A variable is a box that holds one value."
-            ]
+            ],
+            "keypoint": "A variable is a box that holds one value."
           },
           {
             "id": "v_anatomy",
@@ -222,7 +227,8 @@
                 "label": "5",
                 "text": "The value. What goes in the box."
               }
-            ]
+            ],
+            "keypoint": "Every variable has a type, a name and a value: int level = 5;"
           },
           {
             "id": "v_declare",
@@ -232,7 +238,8 @@
             "body": [
               "Write the type, then a name.",
               "The box is empty until you put something in."
-            ]
+            ],
+            "keypoint": "Declaring makes the box: int level;"
           },
           {
             "id": "v_init",
@@ -242,7 +249,8 @@
             "body": [
               "The = puts the value into the box.",
               "Most of the time you do both at once, like this."
-            ]
+            ],
+            "keypoint": "Initializing makes the box and fills it: int level = 5;"
           },
           {
             "id": "v_assign",
@@ -256,7 +264,8 @@
             "body": [
               "The box already exists, so you do not write the type again.",
               "The old value is gone."
-            ]
+            ],
+            "keypoint": "Assigning changes the value with no type: level = 0;"
           },
           {
             "id": "v_side",
@@ -269,7 +278,8 @@
             "after": "Read it as: put the right side into the left side.",
             "skills": [
               "use = to put a value in, and change it later"
-            ]
+            ],
+            "keypoint": "The box goes on the left of the =. The value goes on the right."
           },
           {
             "id": "v_int",
@@ -279,7 +289,8 @@
               "-2, -1, 0, 1, 2, 3. No decimal point.",
               "Use it to count things."
             ],
-            "code": "int level = 7;"
+            "code": "int level = 7;",
+            "keypoint": "int holds whole numbers, used to count."
           },
           {
             "id": "v_dbl",
@@ -289,7 +300,8 @@
               "6.74, 363.3111, 5.0.",
               "Use it to measure things."
             ],
-            "code": "double health = 2.5;"
+            "code": "double health = 2.5;",
+            "keypoint": "double holds numbers with decimals."
           },
           {
             "id": "v_bool",
@@ -298,7 +310,8 @@
             "body": [
               "Nothing else fits in the box."
             ],
-            "code": "boolean online = true;"
+            "code": "boolean online = true;",
+            "keypoint": "boolean holds only true or false."
           },
           {
             "id": "v_char",
@@ -313,7 +326,8 @@
                 "label": "' '",
                 "text": "A char goes in single quotes."
               }
-            ]
+            ],
+            "keypoint": "char holds one character, in single quotes."
           },
           {
             "id": "v_types",
@@ -373,7 +387,8 @@
                 "label": "\" \"",
                 "text": "Text goes in double quotes."
               }
-            ]
+            ],
+            "keypoint": "String is not a primitive type. Capital S, double quotes."
           },
           {
             "id": "v_quotes",
@@ -409,7 +424,8 @@
                 "text": "Write names in lowerCamelCase: start lowercase, then a capital for each new word",
                 "example": "playerLevel, maxHealth"
               }
-            ]
+            ],
+            "keypoint": "Names start with a letter, $ or _, are case sensitive, and are written in lowerCamelCase."
           },
           {
             "id": "v_names",
@@ -629,7 +645,8 @@
               "A real game asks the player who they are.",
               "We need a way to get a value from whoever is playing."
             ],
-            "code": "String name = \"Ada\";"
+            "code": "String name = \"Ada\";",
+            "keypoint": "readLine, readInt, readDouble and readBoolean get a value from the player."
           },
           {
             "id": "k_readers",
@@ -652,7 +669,8 @@
                 "text": "readBoolean hands back a boolean",
                 "example": "boolean ready = readBoolean(\"Ready? \");"
               }
-            ]
+            ],
+            "keypoint": "There is one reader per type, and the box in front must match it."
           },
           {
             "id": "k_shape",
@@ -668,7 +686,8 @@
                 "label": "String name =",
                 "text": "The answer comes back and goes into the box."
               }
-            ]
+            ],
+            "keypoint": "The prompt goes inside the brackets, and the answer comes back into a variable."
           },
           {
             "id": "k_try1",
@@ -839,7 +858,8 @@
             "output": "17",
             "body": [
               "The + works out the answer, then println shows it."
-            ]
+            ],
+            "keypoint": "Java works out + - * / and % for you."
           },
           {
             "id": "m_calc",
@@ -883,7 +903,8 @@
                 "text": "% gives the remainder",
                 "example": "12 % 5   is 2"
               }
-            ]
+            ],
+            "keypoint": "The five arithmetic operators are + - * / and %."
           },
           {
             "id": "m_opsrun",
@@ -902,7 +923,8 @@
               "12 / 5 is the 2 each. 12 % 5 is the 2 left over."
             ],
             "code": "System.out.println(12 / 5);\nSystem.out.println(12 % 5);",
-            "output": "2\n2"
+            "output": "2\n2",
+            "keypoint": "% gives the remainder. x % 2 is 0 for even and 1 for odd."
           },
           {
             "id": "m_modq",
@@ -963,7 +985,8 @@
                 "text": "*= and /= work the same way",
                 "example": "gold *= 2   is the same as   gold = gold * 2"
               }
-            ]
+            ],
+            "keypoint": "++ and -- change a number by one. += -= *= /= change it by an amount."
           },
           {
             "id": "m_shortq",
@@ -1016,7 +1039,8 @@
                 "text": "Same level goes left to right",
                 "example": "12 / 2 * 3   is 18"
               }
-            ]
+            ],
+            "keypoint": "Brackets first, then * / %, then + -, left to right at the same level."
           },
           {
             "id": "m_orderq",
@@ -1045,7 +1069,8 @@
               "This is called truncation."
             ],
             "code": "System.out.println(7 / 2);",
-            "output": "3"
+            "output": "3",
+            "keypoint": "Two whole numbers divided give a whole number. 7 / 2 is 3, not 3.5."
           },
           {
             "id": "m_trunc",
@@ -1073,7 +1098,8 @@
               "You only need one of the two numbers to be a double."
             ],
             "code": "System.out.println(7 / 2);\nSystem.out.println(7.0 / 2);\nSystem.out.println(7 / 2.0);",
-            "output": "3\n3.5\n3.5"
+            "output": "3\n3.5\n3.5",
+            "keypoint": "One double anywhere makes the answer a double."
           },
           {
             "id": "m_mixq",
@@ -1107,7 +1133,8 @@
             "why": "7 / 2 is worked out FIRST, and both are whole numbers, so it gives 3. Storing 3 in a double only makes it 3.0. The decimal was lost before the box ever saw it.",
             "skills": [
               "predict the result of whole-number division"
-            ]
+            ],
+            "keypoint": "double half = 7 / 2; gives 3.0. The division finished before the box saw it."
           },
           {
             "id": "m_proj1",
@@ -1206,7 +1233,8 @@
                 "label": "(double)",
                 "text": "Treat a as a double, just for this line."
               }
-            ]
+            ],
+            "keypoint": "A cast tells Java to treat a value as another type: (double) a / 2"
           },
           {
             "id": "c_two",
@@ -1225,7 +1253,8 @@
                 "text": "(int) chops. It never rounds",
                 "example": "(int) 5.9   is 5, not 6"
               }
-            ]
+            ],
+            "keypoint": "int to double happens on its own. double to int needs a cast, and (int) chops rather than rounds."
           },
           {
             "id": "c_chop",
@@ -1270,7 +1299,8 @@
               "Without the cast the division finishes first and gives 0."
             ],
             "code": "int xp = 7;\nint need = 20;\nSystem.out.println(xp / need * 100);\nSystem.out.println((double) xp / need * 100);",
-            "output": "0\n35.0"
+            "output": "0\n35.0",
+            "keypoint": "Cast before dividing to keep the decimal part."
           },
           {
             "id": "c_divw",
@@ -1294,7 +1324,8 @@
               "Adding 0.5 first turns chopping into rounding."
             ],
             "code": "System.out.println((int) 3.4);\nSystem.out.println((int) (3.4 + 0.5));\nSystem.out.println((int) (3.6 + 0.5));",
-            "output": "3\n3\n4"
+            "output": "3\n3\n4",
+            "keypoint": "Add 0.5 then cast to int to round to the nearest whole number."
           },
           {
             "id": "c_roundf",
@@ -1327,7 +1358,8 @@
               "Java will tell you what they are."
             ],
             "code": "System.out.println(Integer.MAX_VALUE);\nSystem.out.println(Integer.MIN_VALUE);",
-            "output": "2147483647\n-2147483648"
+            "output": "2147483647\n-2147483648",
+            "keypoint": "An int is 32 bits, so it has a largest and smallest value."
           },
           {
             "id": "c_over",
@@ -1338,7 +1370,8 @@
               "Java does not warn you. It just keeps counting from the other end."
             ],
             "code": "System.out.println(Integer.MAX_VALUE + 1);",
-            "output": "-2147483648"
+            "output": "-2147483648",
+            "keypoint": "Going past the top wraps round to the bottom. That is overflow, and Java gives no warning."
           },
           {
             "id": "c_overrun",
@@ -1415,7 +1448,8 @@
             "output": "true",
             "body": [
               "Use it for any fact that is a yes or a no."
-            ]
+            ],
+            "keypoint": "A boolean holds true or false and nothing else."
           },
           {
             "id": "o_uses",
@@ -1490,7 +1524,8 @@
             "why": "\"true\" in double quotes is a String. Java is also case sensitive, so True is not the keyword true.",
             "skills": [
               "tell a boolean apart from text, a character and a number"
-            ]
+            ],
+            "keypoint": "\"true\" in quotes is a String, and True is not the keyword."
           },
           {
             "id": "o_fix",
@@ -1584,7 +1619,8 @@
                 "text": "&& is true only when both sides are true",
                 "example": "true && false   is false"
               }
-            ]
+            ],
+            "keypoint": "Logical operators connect and modify boolean expressions."
           },
           {
             "id": "g_not",
@@ -1594,7 +1630,8 @@
             "output": "false",
             "body": [
               "Read it as \"not\"."
-            ]
+            ],
+            "keypoint": "! reverses a boolean."
           },
           {
             "id": "g_tnot",
@@ -1635,7 +1672,8 @@
             "output": "true",
             "body": [
               "Read it as \"or\". Either one will do."
-            ]
+            ],
+            "keypoint": "|| is true when at least one side is true."
           },
           {
             "id": "g_tor",
@@ -1689,7 +1727,8 @@
             "output": "false",
             "body": [
               "Read it as \"and\". Both must hold."
-            ]
+            ],
+            "keypoint": "&& is true only when both sides are true."
           },
           {
             "id": "g_tand",
@@ -1888,7 +1927,8 @@
                 "text": "<= is less than or equal to",
                 "example": "3 <= 5   is true"
               }
-            ]
+            ],
+            "keypoint": "The six comparison operators are == != > < >= and <=."
           },
           {
             "id": "p_run",
@@ -1906,7 +1946,8 @@
             "body": [
               "One equals sign stores. Two equals signs compare.",
               "Mixing them up is the commonest mistake in this lesson."
-            ]
+            ],
+            "keypoint": "One = stores a value. Two == ask a question."
           },
           {
             "id": "p_eqfix",
@@ -1930,7 +1971,8 @@
               "String is not a primitive type, so == does not compare its text. That comes later."
             ],
             "code": "System.out.println(3 < 4);\nSystem.out.println(2.5 > 1.0);\nSystem.out.println('a' < 'b');",
-            "output": "true\ntrue\ntrue"
+            "output": "true\ntrue\ntrue",
+            "keypoint": "Comparison operators work on primitive types. String needs .equals()."
           },
           {
             "id": "p_bucket",
@@ -2074,7 +2116,8 @@
             "output": "Hello\nHello\nHello",
             "body": [
               "One line of code, three lines of output."
-            ]
+            ],
+            "keypoint": "A for loop repeats a set number of times."
           },
           {
             "id": "f_walk1",
@@ -2220,7 +2263,8 @@
             "body": [
               "i changes every time round.",
               "Starting at 1 and testing <= 3 counts 1, 2, 3."
-            ]
+            ],
+            "keypoint": "The counter is a variable, so the body can use it and get a different result each pass."
           },
           {
             "id": "f_walk2",
@@ -2335,7 +2379,8 @@
                 "text": "The third part runs after every pass",
                 "example": "i++"
               }
-            ]
+            ],
+            "keypoint": "for (init; test; increment). The init runs once, the test runs before every pass, the increment after every pass."
           },
           {
             "id": "f_count",
@@ -2363,7 +2408,8 @@
             "body": [
               "i += 2 counts up in twos.",
               "Anything that changes the counter works."
-            ]
+            ],
+            "keypoint": "The increment does not have to be i++. i += 2 counts in twos."
           },
           {
             "id": "f_stepw",
@@ -2448,7 +2494,8 @@
             "output": "Boss hp 3\nBoss hp 2\nBoss hp 1",
             "body": [
               "It checks the condition, runs the body, then checks again."
-            ]
+            ],
+            "keypoint": "A while loop repeats for as long as its condition stays true."
           },
           {
             "id": "w_walk",
@@ -2559,7 +2606,8 @@
                 "text": "Change it inside the loop, or the condition never turns false",
                 "example": "hp--;"
               }
-            ]
+            ],
+            "keypoint": "Set the variable up before the loop, and change it inside, or it never ends."
           },
           {
             "id": "w_inf",
@@ -2570,7 +2618,8 @@
               "hp stays 3 forever, so the condition stays true forever.",
               "This is an infinite loop. The program never finishes and never gets to the code below it.",
               "Do not run this one. Every while loop needs something inside it that moves towards stopping."
-            ]
+            ],
+            "keypoint": "A loop whose condition never turns false is an infinite loop. It never reaches the code below it."
           },
           {
             "id": "w_spot",
@@ -2633,7 +2682,8 @@
             "why": "Use a for loop when you know the count before you start. Use a while loop when the stopping point depends on something that happens along the way.",
             "skills": [
               "choose between a for loop and a while loop"
-            ]
+            ],
+            "keypoint": "Use for when you know the count. Use while when you do not."
           },
           {
             "id": "w_predict",
@@ -2732,7 +2782,8 @@
                 "label": "{ }",
                 "text": "Only the lines inside are skipped when it is false."
               }
-            ]
+            ],
+            "keypoint": "if runs a block only when its condition is true."
           },
           {
             "id": "i_else",
@@ -2742,7 +2793,8 @@
             "output": "You collapse.",
             "body": [
               "Exactly one block runs. Never both, and never neither."
-            ]
+            ],
+            "keypoint": "else covers the other case. Exactly one block runs."
           },
           {
             "id": "i_walk",
@@ -2826,7 +2878,8 @@
             "body": [
               "Java stops at the first condition that is true.",
               "Order matters. Put >= 80 first and every score above 90 would print B as well."
-            ]
+            ],
+            "keypoint": "else if is checked only when the ones above it failed, and the first match wins."
           },
           {
             "id": "i_mod",
@@ -2837,7 +2890,8 @@
             "body": [
               "n % 2 is 0 for an even number and 1 for an odd one.",
               "So n % 2 == 0 asks whether n is even."
-            ]
+            ],
+            "keypoint": "if (n % 2 == 0) asks whether n is even."
           },
           {
             "id": "i_fix",
@@ -2861,7 +2915,8 @@
             "why": "The semicolon right after the brackets ends the if there and then. The block below it is no longer attached to anything, so it always runs.",
             "skills": [
               "run a block of code only when a condition is true"
-            ]
+            ],
+            "keypoint": "A semicolon straight after the brackets ends the if, so the block below always runs."
           },
           {
             "id": "i_w1",
@@ -2952,7 +3007,8 @@
                 "label": "break;",
                 "text": "Leaves the loop at once, skipping the rest of the body."
               }
-            ]
+            ],
+            "keypoint": "while (true) runs forever, and break is the way out."
           },
           {
             "id": "h_walk",
@@ -3049,7 +3105,8 @@
                 "text": "Act at the bottom, only when you did not break",
                 "example": "System.out.println(\"Try again!\");"
               }
-            ]
+            ],
+            "keypoint": "The shape is ask at the top, check in the middle and break, act at the bottom."
           },
           {
             "id": "h_spot",
@@ -3072,7 +3129,8 @@
             "body": [
               "The prompt says what the sentinel is, so the player is not guessing.",
               "Pick a value that cannot be real data."
-            ]
+            ],
+            "keypoint": "A sentinel is the value that ends the loop. Say what it is in the prompt."
           },
           {
             "id": "h_fill",
@@ -3158,7 +3216,8 @@
               "hits != 0 is false. Once one side of && is false the answer is false whatever the other side says.",
               "So Java never looks at the right side, and the division never runs.",
               "This is not a speed trick. It is the only reason the program survives."
-            ]
+            ],
+            "keypoint": "&& stops at the first false, so the right side is never worked out."
           },
           {
             "id": "z_table",
@@ -3213,7 +3272,8 @@
             "body": [
               "hits == 0 is true, so the answer is true whatever follows.",
               "The division on the right is skipped."
-            ]
+            ],
+            "keypoint": "|| stops at the first true, for the same reason."
           },
           {
             "id": "z_side",
@@ -3232,7 +3292,8 @@
                 "text": "Put it second and the crash happens before the check",
                 "example": "(100 / hits > 5) && (hits != 0)   crashes"
               }
-            ]
+            ],
+            "keypoint": "Put the guard on the left, or the crash happens before the check."
           },
           {
             "id": "z_predict",
@@ -3333,7 +3394,8 @@
             "body": [
               "The ! moves onto each part, and the && flips to ||.",
               "\"Not both\" means \"at least one is missing\"."
-            ]
+            ],
+            "keypoint": "!(A && B) is the same as !A || !B."
           },
           {
             "id": "d_table_and",
@@ -3394,7 +3456,8 @@
             "body": [
               "Same recipe. The ! moves onto each part, and this time the || flips to &&.",
               "\"Neither\" means \"not this and not that\"."
-            ]
+            ],
+            "keypoint": "!(A || B) is the same as !A && !B."
           },
           {
             "id": "d_flip",
@@ -3413,7 +3476,8 @@
                 "text": "Leaving the operator alone gives a different answer",
                 "example": "!A && !B is not the same as !(A && B)"
               }
-            ]
+            ],
+            "keypoint": "The ! moves onto each part AND the operator flips."
           },
           {
             "id": "d_predict",
@@ -3512,7 +3576,8 @@
             "body": [
               "With no quotes, Java prints what is inside the box.",
               "With quotes, it prints the four letters w o r d."
-            ]
+            ],
+            "keypoint": "A String is a sequence of characters in double quotes."
           },
           {
             "id": "t_notprim",
@@ -3531,7 +3596,8 @@
                 "text": "It starts with a capital S, which is how Java writes an object",
                 "example": "String, not string"
               }
-            ]
+            ],
+            "keypoint": "String is not a primitive type. The capital S means it is an object."
           },
           {
             "id": "t_obj",
@@ -3552,7 +3618,8 @@
             "body": [
               "The + sign glues them into one String.",
               "Nothing is added up. The characters are placed end to end."
-            ]
+            ],
+            "keypoint": "Concatenation joins Strings with +. Spaces are yours to add."
           },
           {
             "id": "t_space",
@@ -3573,7 +3640,8 @@
             "body": [
               "The number, the decimal and the boolean are all turned into text and joined on.",
               "This is why every card in this unit was printed with a +."
-            ]
+            ],
+            "keypoint": "A String can be joined to any other type."
           },
           {
             "id": "t_joinw",
@@ -3598,7 +3666,8 @@
             "body": [
               "Both hold the word mellon, and == says false.",
               "It fails because String is not a primitive type."
-            ]
+            ],
+            "keypoint": "== does not compare the text of a String."
           },
           {
             "id": "t_good",
@@ -3611,7 +3680,8 @@
                 "label": ".equals(b)",
                 "text": "Tests whether the two hold the same characters."
               }
-            ]
+            ],
+            "keypoint": ".equals() tests whether two Strings hold the same characters."
           },
           {
             "id": "t_memory",
@@ -3622,7 +3692,8 @@
               "On objects, == asks whether the two names point at the same place.",
               ".equals() ignores where they are kept and compares the characters directly.",
               "For int, double, char and boolean there is no place to compare. == looks at the value itself, which is why it works on those."
-            ]
+            ],
+            "keypoint": "On objects == asks whether two names point at the same place in memory. .equals() compares the characters."
           },
           {
             "id": "t_shape",

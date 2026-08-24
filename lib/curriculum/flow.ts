@@ -135,6 +135,14 @@ export type FlowStep = {
    * annotation.
    */
   annotate?: { token: string; note: string }[];
+  /**
+   * The one idea this step is worth remembering. When the student clears the
+   * step it rolls into a scroll and drops into the lesson's tome, which is
+   * what they re-read later instead of replaying the whole lesson. Keep it to
+   * a single sentence a student would actually write in their notes — this is
+   * revision material, not a restatement of the instruction.
+   */
+  keypoint?: string;
   // PLAIN PROSE. Short lines, rendered as ordinary sentences with no label and
   // no highlight. This exists because `points` was the only way to say anything,
   // so every explanation got forced into a highlighted label — including ones
@@ -196,6 +204,7 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       if (!s.code) errors.push(`${at}: highlight needs code`);
       else if (h < 0 || h >= lines) errors.push(`${at}: highlight line ${h} is outside the ${lines}-line snippet`);
     }
+    if (s.keypoint !== undefined && !String(s.keypoint).trim()) errors.push(`${at}: keypoint is empty`);
     for (const a of s.annotate || []) {
       if (!s.code) errors.push(`${at}: annotate needs code`);
       else if (!s.code.includes(a.token)) errors.push(`${at}: annotate token ${JSON.stringify(a.token)} is not in the snippet`);
@@ -311,7 +320,7 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
 // ─── Client stripping (the answer-key invariant) ─────────────────────────────
 
 export function stripStepForClient(s: FlowStep): Record<string, unknown> {
-  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight, wrap: s.wrap, harness: s.harness };
+  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight, wrap: s.wrap, harness: s.harness, keypoint: s.keypoint };
   switch (s.kind) {
     case "predict": return { ...base, opts: s.opts };
     case "spot": return base;
