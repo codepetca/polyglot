@@ -180,3 +180,32 @@ And two the other way, where a story would be padding:
   not a scene.
 - **5.17 Interfaces** — technical, though the Chest and Door do the work of a
   story without needing one built around them.
+
+---
+
+# Unit 5 — the cast
+
+Five classes carry the whole unit. They are introduced as things to *use*
+(5.1–5.3), then taken apart and rebuilt (5.4 onward), so a student meets each
+one twice: first as a client, later as its author.
+
+Chosen so the later lessons have somewhere to go, not just to fill the early
+ones.
+
+| Class | State | Behaviour | Earns its place because |
+| --- | --- | --- | --- |
+| `Player` | name, level, hp | `takeDamage`, `heal`, `levelUp`, `isAlive`, getters | The main worked example. Mutable state makes getters and setters obvious in 5.6. |
+| `Monster` | name, hp, power | `attack`, `takeDamage`, `isAlive`, getters | Becomes the parent in 5.13. `Boss extends Monster` and `Slime extends Monster` are the inheritance, abstract and polymorphism examples. |
+| `Weapon` | name, damage | `getName`, `getDamage` | A `Player` HAS A `Weapon`. That is the HAS-A against IS-A contrast in 5.13, with a real object rather than a sentence. |
+| `Room` | width, height | `getArea`, `getPerimeter` | Our Rectangle. Two numbers in, a computed answer out, so a method that returns something has an obvious job in 5.5. |
+| `Chest` | gold, locked | `isLocked`, `unlock`, `open`, `getGold` | Written by someone else on purpose: the client example in 5.3. Deterministic, because a class that rolls dice cannot have its output checked, and a Dice that always returns the same number would be a lie told to make the tests pass. |
+
+Rules for using them:
+
+- A student never sees the source of a class until the lesson that writes it.
+  5.3 is about reading documentation, so the implementation is hidden and only
+  the docs are on screen.
+- Class names are capitalised, instance names are lowercase, every time. 5.2
+  tests exactly that.
+- Game framing, but the shapes are the CodeHS shapes. `Room` is Rectangle;
+  `Player` is their Student.

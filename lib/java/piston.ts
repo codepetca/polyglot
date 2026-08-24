@@ -102,9 +102,15 @@ class LaneDown extends Error {}
 export async function runJava(
   code: string,
   stdin = "",
-  opts: { wrapBeginner?: boolean; mode?: WrapMode } = {}
+  opts: { wrapBeginner?: boolean; mode?: WrapMode; append?: string } = {}
 ): Promise<RunResult> {
-  const { source, offset } = opts.wrapBeginner ? wrapAs(code, opts.mode || "beginner") : { source: code, offset: 0 };
+  const wrapped = opts.wrapBeginner ? wrapAs(code, opts.mode || "beginner") : { source: code, offset: 0 };
+  // `append` goes AFTER the wrapper closes, so it lands as a sibling top-level
+  // class. Folding it in with the student's code instead would nest it inside
+  // main() or inside Main, which changes what it means and usually will not
+  // compile. The offset is unaffected, since nothing was added above their code.
+  const source = opts.append ? `${wrapped.source}\n\n${opts.append}` : wrapped.source;
+  const offset = wrapped.offset;
   const all = lanes();
   // Healthy lanes first, but still fall back to cooling-down ones rather than
   // give up — a 60s cooldown shouldn't hard-fail a student if it's recovered.

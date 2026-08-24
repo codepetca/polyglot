@@ -158,6 +158,16 @@ export type FlowStep = {
    */
   pipeline?: { label: string; note?: string; kind?: "file" | "tool" | "end" }[];
   /**
+   * Classes the snippet may USE but never sees. Compiled in behind the
+   * student's code and never sent to the browser.
+   *
+   * `harness` is the wrong tool here: it is displayed, and being a client means
+   * working from the documentation because the implementation is not available
+   * to you. Showing the source turns the exercise into reading code, which is
+   * the opposite of the skill 5.3 exists to teach.
+   */
+  library?: string;
+  /**
    * workout: a problem solved in two moves — plan it, then write it.
    *
    * WHY IT IS TWO MOVES. The owner's own account of learning this unit: the

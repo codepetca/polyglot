@@ -354,6 +354,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           code: assembled,
           wrap: true,
           lessonCode,
+          stepId: step.id,
           stdin: step.kind === "ask" ? typed.join("\n") : step.stdin || "",
           wrapMode: step.wrap || "beginner",
         }),
@@ -388,7 +389,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       r = await fetch("/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: assembled, wrap: true, lessonCode, stdin: lines.join("\n"), wrapMode: step.wrap || "beginner" }),
+        body: JSON.stringify({ code: assembled, wrap: true, lessonCode, stepId: step.id, stdin: lines.join("\n"), wrapMode: step.wrap || "beginner" }),
       }).then((x) => x.json());
     } catch {
       r = { compiled: false, stdout: "", error: "Lost connection while running. Check your internet and try again." };

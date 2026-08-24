@@ -39,7 +39,7 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           // the side-by-side teaches a difference that may not exist.
           let bad = 0;
           for (const [i, sd] of (s.sides || []).entries()) {
-            const r = await runJava(sd.code, sd.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+            const r = await runJava(sd.code, sd.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
             if (!r.compiled || r.error) { failures.push(`${name}: side ${i + 1} (${sd.label}) does not run: ${(r.error || "").slice(0, 80)}`); bad++; }
             else if (norm(r.stdout) !== norm(sd.output)) { failures.push(`${name}: side ${i + 1} (${sd.label}) prints ${JSON.stringify(norm(r.stdout))}, step claims ${JSON.stringify(norm(sd.output))}`); bad++; }
           }
@@ -50,14 +50,14 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           // A teach step may claim "this is what it prints". That claim must be
           // machine-checked like any other, or the no-lying guarantee has a hole.
           if (!s.code || s.output === undefined) { results.push(`${name}: – no output claimed`); break; }
-          const r = await runJava(s.code, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(s.code, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || r.error) failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`);
           else if (norm(r.stdout) !== norm(s.output)) failures.push(`${name}: prints ${JSON.stringify(norm(r.stdout))}, but the step claims ${JSON.stringify(norm(s.output))}`);
           else results.push(`${name}: ✓ shown output verified`);
           break;
         }
         case "run": {
-          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || r.error) failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`);
           else results.push(`${name}: ✓ runs, prints ${JSON.stringify(norm(r.stdout)).slice(0, 60)}`);
           break;
@@ -69,19 +69,19 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           // student would be asked for a value the program never reads, or the
           // program would block waiting for one they were never asked for.
           const stdin = (s.fields || []).map((fl) => fl.sample).join("\n");
-          const r = await runJava(s.code!, stdin, { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(s.code!, stdin, { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || r.error) failures.push(`${name}: does not run clean with the sample answers: ${(r.error || "").slice(0, 100)}`);
           else results.push(`${name}: ✓ runs with ${(s.fields || []).length} typed value(s)`);
           break;
         }
         case "tweak": {
-          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: original output ${JSON.stringify(norm(r.stdout))} ≠ target ${JSON.stringify(norm(s.target!))}`);
           else results.push(`${name}: ✓ original verified`);
           break;
         }
         case "predict": {
-          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           const claimed = s.opts![s.correct!];
           if (looksLikeError(claimed)) {
             if (r.compiled && !r.error) failures.push(`${name}: claims error but it runs fine, prints ${JSON.stringify(norm(r.stdout))}`);
@@ -116,7 +116,7 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
               })
               .join("\n");
             const prints = s.exprs.map((e) => `System.out.println(${e});`).join("\n");
-            const r = await runJava(`${decls}\n${prints}`, "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+            const r = await runJava(`${decls}\n${prints}`, "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
             const want = row.slice(from).join("\n");
             if (!r.compiled || r.error) { failures.push(`${name}: row ${ri + 1} does not run: ${(r.error || "").slice(0, 90)}`); bad++; }
             else if (norm(r.stdout) !== norm(want)) { failures.push(`${name}: row ${ri + 1} — Java gives ${JSON.stringify(norm(r.stdout))}, table says ${JSON.stringify(want)}`); bad++; }
@@ -126,18 +126,18 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
         }
         case "fix": case "write": case "workout": {
           const withHarness = s.harness ? `${s.harness}\n\n${s.solution}` : s.solution!;
-          const r = await runJava(withHarness, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(withHarness, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: solution gives ${JSON.stringify(norm(r.stdout || r.error))} ≠ target ${JSON.stringify(norm(s.target!))}`);
           else results.push(`${name}: ✓ solution reaches target`);
           if (s.kind === "fix" && s.code) {
-            const broken = await runJava(s.code, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+            const broken = await runJava(s.code, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
             if (broken.compiled && !broken.error && norm(broken.stdout) === norm(s.target!)) failures.push(`${name}: the "broken" code already matches the target`);
           }
           break;
         }
         case "walk": {
           // The walkthrough claims what the program prints. Check the claim.
-          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(s.code!, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || r.error) { failures.push(`${name}: does not run clean: ${(r.error || "").slice(0, 100)}`); break; }
           const last = (s.frames || [])[(s.frames || []).length - 1];
           const claimed = last?.out ?? "";
@@ -146,7 +146,7 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
           break;
         }
         case "arrange": {
-          const r = await runJava(s.lines!.join("\n"), s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(s.lines!.join("\n"), s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || norm(r.stdout) !== norm(s.target!)) failures.push(`${name}: correct order gives ${JSON.stringify(norm(r.stdout || r.error))} ≠ target ${JSON.stringify(norm(s.target!))}`);
           else results.push(`${name}: ✓ correct order reaches target`);
           break;
@@ -154,7 +154,7 @@ export async function verifyFlow(flow: Flow): Promise<{ ok: boolean; results: st
         case "fill": {
           let assembled = s.code!;
           s.blanks!.forEach((b, i) => { assembled = assembled.split(`⟦${i + 1}⟧`).join(b.chips[b.answer]); });
-          const r = await runJava(assembled, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner" });
+          const r = await runJava(assembled, s.stdin || "", { wrapBeginner: true, mode: s.wrap || "beginner", append: s.library });
           if (!r.compiled || r.error) failures.push(`${name}: correct chips don't run: ${(r.error || "").slice(0, 100)}`);
           else if (s.target !== undefined && norm(r.stdout) !== norm(s.target)) failures.push(`${name}: correct chips print ${JSON.stringify(norm(r.stdout))} ≠ target`);
           else results.push(`${name}: ✓ correct chips verified`);
