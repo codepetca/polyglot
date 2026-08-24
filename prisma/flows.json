@@ -3730,43 +3730,42 @@
             "output": "--------\nCellar\n--------\n--------\nCrypt\n--------",
             "body": [
               "The divider is written four times already.",
-              "Twenty rooms would mean forty copies of the same line."
+              "Twenty rooms would mean forty copies."
+            ]
+          },
+          {
+            "id": "m_why",
+            "kind": "teach",
+            "instruction": "Two reasons for writing methods.",
+            "rules": [
+              {
+                "text": "We can avoid writing repeated code"
+              },
+              {
+                "text": "We can reuse the same code anywhere we want"
+              }
             ]
           },
           {
             "id": "m_define",
             "kind": "teach",
-            "instruction": "A method is a named piece of code you can run whenever you want.",
+            "instruction": "Defining a method.",
             "code": "public void printLine() {\n  System.out.println(\"--------\");\n}",
             "wrap": "methods",
-            "points": [
-              {
-                "label": "public void",
-                "text": "The opening words of a method. You will meet both properly later."
-              },
-              {
-                "label": "printLine",
-                "text": "The name you give it."
-              },
-              {
-                "label": "()",
-                "text": "Empty brackets, because this one needs nothing to do its job."
-              },
-              {
-                "label": "{ }",
-                "text": "The code the method runs."
-              }
+            "body": [
+              "The code inside the braces is what the method does.",
+              "Writing it does not run it."
             ]
           },
           {
             "id": "m_call",
             "kind": "teach",
-            "instruction": "Writing the name with brackets runs it.",
+            "instruction": "Calling a method runs it.",
             "code": "public void run() {\n  printLine();\n  System.out.println(\"Cellar\");\n  printLine();\n}\n\npublic void printLine() {\n  System.out.println(\"--------\");\n}",
             "wrap": "methods",
             "output": "--------\nCellar\n--------",
             "body": [
-              "printLine(); is a call. Java goes and runs the method, then comes back.",
+              "Write the name with brackets and a semicolon.",
               "The divider is written once and used twice."
             ]
           },
@@ -3779,17 +3778,17 @@
             "frames": [
               {
                 "line": 0,
-                "note": "Java always starts in run().",
+                "note": "Java starts in run().",
                 "out": ""
               },
               {
                 "line": 1,
-                "note": "It reaches printLine(). This is a call, so it jumps to the method.",
+                "note": "It reaches printLine() and jumps to the method.",
                 "out": ""
               },
               {
                 "line": 6,
-                "note": "It arrives at the method definition.",
+                "note": "It arrives at the method.",
                 "out": ""
               },
               {
@@ -3799,7 +3798,7 @@
               },
               {
                 "line": 2,
-                "note": "The method has finished, so Java goes back to where it was called and carries on.",
+                "note": "The method is finished, so Java goes back to where it was called.",
                 "out": "--------"
               },
               {
@@ -3809,46 +3808,31 @@
               },
               {
                 "line": 3,
-                "note": "printLine() again. Java jumps to the same method a second time.",
+                "note": "printLine() again. Java jumps to the same method.",
                 "out": "--------\nCellar"
               },
               {
                 "line": 7,
-                "note": "Print the divider again. The same one line of code did both.",
+                "note": "Print the divider again.",
                 "out": "--------\nCellar\n--------"
               },
               {
                 "line": 4,
-                "note": "Back in run(), and there is nothing left. The program ends.",
+                "note": "Back in run(), with nothing left to do.",
                 "out": "--------\nCellar\n--------"
-              }
-            ]
-          },
-          {
-            "id": "m_why",
-            "kind": "teach",
-            "instruction": "Two reasons this is worth doing.",
-            "rules": [
-              {
-                "text": "You write the code once, so changing it means changing one place",
-                "example": "make the divider longer and every room changes"
-              },
-              {
-                "text": "The name says what the code does, so run() becomes readable",
-                "example": "printLine(); reads better than a println of dashes"
               }
             ]
           },
           {
             "id": "m_w1",
             "kind": "write",
-            "instruction": "Write a method called gameOver that prints GAME OVER, then call it.",
+            "instruction": "Write gameOver, which prints GAME OVER. Then call it.",
             "wrap": "methods",
             "code": "public void run() {\n  // call gameOver here\n}\n\n// write gameOver below\n",
             "target": "GAME OVER",
             "solution": "public void run() {\n  gameOver();\n}\n\npublic void gameOver() {\n  System.out.println(\"GAME OVER\");\n}",
             "hint": "public void gameOver() { ... }, then gameOver(); inside run.",
-            "after": "Defining it is not enough. Nothing happens until you call it.",
+            "after": "Nothing happens until you call it.",
             "skills": [
               "create a method and call it"
             ]
@@ -3856,7 +3840,7 @@
           {
             "id": "m_w2",
             "kind": "write",
-            "instruction": "Write a method called drumroll that prints three dots on separate lines, and call it twice.",
+            "instruction": "Write drumroll, which prints three dots on separate lines. Call it twice.",
             "wrap": "methods",
             "code": "public void run() {\n  // call drumroll twice\n}\n\n// write drumroll below\n",
             "target": ".\n.\n.\n.\n.\n.",
@@ -3870,9 +3854,9 @@
           {
             "id": "m_w3",
             "kind": "write",
-            "instruction": "Write a method called banner that prints a row of stars, the word MENU, then another row of stars.",
+            "instruction": "Write banner, which prints a row of stars, then MENU, then another row of stars.",
             "wrap": "methods",
-            "code": "public void run() {\n  banner();\n}\n\n// write banner so it prints:\n//   *****\n//   MENU\n//   *****\n",
+            "code": "public void run() {\n  banner();\n}\n\n// banner prints:\n//   *****\n//   MENU\n//   *****\n",
             "target": "*****\nMENU\n*****",
             "solution": "public void run() {\n  banner();\n}\n\npublic void banner() {\n  System.out.println(\"*****\");\n  System.out.println(\"MENU\");\n  System.out.println(\"*****\");\n}",
             "hint": "Three printlns in the method body.",
@@ -3894,7 +3878,7 @@
               "A\nC"
             ],
             "correct": 0,
-            "why": "Java runs run() top to bottom. At the call it jumps into shout, prints B, then comes straight back for C.",
+            "why": "At the call Java jumps into shout, prints B, then comes straight back for C.",
             "skills": [
               "create a method and call it"
             ]
@@ -3925,8 +3909,8 @@
             "code": "public void run() {\n  banner;\n}\n\npublic void banner() {\n  System.out.println(\"=====\");\n}",
             "target": "=====",
             "solution": "public void run() {\n  banner();\n}\n\npublic void banner() {\n  System.out.println(\"=====\");\n}",
-            "hint": "A call needs the brackets, even when there is nothing to put in them.",
-            "after": "Without the brackets Java thinks you meant a variable called banner.",
+            "hint": "A call needs brackets.",
+            "after": "Without brackets Java looks for a variable called banner.",
             "skills": [
               "create a method and call it"
             ]
@@ -3934,13 +3918,13 @@
           {
             "id": "m_w4",
             "kind": "write",
-            "instruction": "Write two methods, sunrise and sunset, and call them in that order.",
+            "instruction": "Write sunrise and sunset. Call them in that order.",
             "wrap": "methods",
             "code": "public void run() {\n  // call sunrise, then sunset\n}\n\n// sunrise prints:  The sun comes up.\n// sunset prints:   The sun goes down.\n",
             "target": "The sun comes up.\nThe sun goes down.",
             "solution": "public void run() {\n  sunrise();\n  sunset();\n}\n\npublic void sunrise() {\n  System.out.println(\"The sun comes up.\");\n}\n\npublic void sunset() {\n  System.out.println(\"The sun goes down.\");\n}",
-            "hint": "Two separate methods, two calls, in the order you want them to happen.",
-            "after": "The order of the calls decides the order of the output, not the order you defined them in.",
+            "hint": "Two methods, two calls.",
+            "after": "The order of the calls decides the order of the output.",
             "skills": [
               "create a method and call it"
             ]
@@ -3948,13 +3932,13 @@
           {
             "id": "m_w5",
             "kind": "write",
-            "instruction": "A method can call another method. Write countdown, which calls drumroll and then prints Go.",
+            "instruction": "A method can call another method. Write countdown, which calls drumroll and then prints Go!",
             "wrap": "methods",
             "code": "public void run() {\n  countdown();\n}\n\npublic void drumroll() {\n  System.out.println(\"...\");\n}\n\n// write countdown below\n",
             "target": "...\nGo!",
             "solution": "public void run() {\n  countdown();\n}\n\npublic void drumroll() {\n  System.out.println(\"...\");\n}\n\npublic void countdown() {\n  drumroll();\n  System.out.println(\"Go!\");\n}",
-            "hint": "Call drumroll() from inside countdown, then print Go!",
-            "after": "run called countdown, and countdown called drumroll. Methods build on each other.",
+            "hint": "Call drumroll() from inside countdown.",
+            "after": "run called countdown, and countdown called drumroll.",
             "skills": [
               "create a method and call it"
             ]
@@ -3962,13 +3946,13 @@
           {
             "id": "m_final",
             "kind": "write",
-            "instruction": "Build the room printer. Write printLine and use it to frame two rooms.",
+            "instruction": "Write printLine and use it to frame two rooms.",
             "wrap": "methods",
-            "code": "public void run() {\n  // print Cellar and Crypt, each framed by a divider\n}\n\n// write printLine so it prints:  --------\n",
+            "code": "public void run() {\n  // print Cellar and Crypt, each framed by a divider\n}\n\n// printLine prints:  --------\n",
             "target": "--------\nCellar\n--------\n--------\nCrypt\n--------",
             "solution": "public void run() {\n  printLine();\n  System.out.println(\"Cellar\");\n  printLine();\n  printLine();\n  System.out.println(\"Crypt\");\n  printLine();\n}\n\npublic void printLine() {\n  System.out.println(\"--------\");\n}",
             "hint": "Four calls to printLine, with a room name between each pair.",
-            "after": "The divider is written once. Change it there and every room changes with it.",
+            "after": "Change the divider in one place and every room changes.",
             "skills": [
               "explain why a method is better than repeating code"
             ]
@@ -3987,50 +3971,57 @@
         "v": 1,
         "steps": [
           {
-            "id": "p_task",
+            "id": "p_recap",
             "kind": "teach",
             "instruction": "Our divider is always eight dashes. How do we ask for one of any length?",
-            "code": "public void run() {\n  printLine();\n}\n\npublic void printLine() {\n  System.out.println(\"--------\");\n}",
-            "wrap": "methods",
-            "output": "--------",
             "body": [
-              "A second method for a longer line would be the same code again.",
-              "We want to tell the method how long to make it."
+              "Methods let us avoid repeated code and reuse it anywhere.",
+              "A second method for a longer line would be the same code again."
             ]
           },
           {
             "id": "p_param",
             "kind": "teach",
-            "instruction": "A parameter lets you hand the method a value.",
+            "instruction": "A method can take an input, called a parameter.",
+            "code": "public void printLine(int length) {\n  for (int i = 0; i < length; i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n}",
+            "wrap": "methods",
+            "annotate": [
+              {
+                "token": "int length",
+                "note": "the parameter, with its type"
+              }
+            ],
+            "body": [
+              "Inside the method, length works like a variable."
+            ]
+          },
+          {
+            "id": "p_calling",
+            "kind": "teach",
+            "instruction": "The call decides what the parameter holds.",
             "code": "public void run() {\n  printLine(3);\n  printLine(8);\n}\n\npublic void printLine(int length) {\n  for (int i = 0; i < length; i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n}",
             "wrap": "methods",
             "output": "---\n--------",
-            "points": [
-              {
-                "label": "int length",
-                "text": "The parameter. Inside the method it works like a variable."
-              },
-              {
-                "label": "printLine(3)",
-                "text": "The call hands over a 3, so length is 3 for that run."
-              }
+            "body": [
+              "printLine(3) makes length 3 for that run.",
+              "One method, two different dividers."
             ]
           },
           {
             "id": "p_words",
             "kind": "teach",
-            "instruction": "The two halves have different names.",
+            "instruction": "The word for the input changes depending on where you are looking.",
             "rules": [
               {
-                "text": "A parameter is the name in the definition. It needs a type",
+                "text": "In the definition it is a parameter, and it needs a type",
                 "example": "public void printLine(int length)"
               },
               {
-                "text": "An argument is the value in the call. It needs no type",
+                "text": "In the call it is an argument, and it needs no type",
                 "example": "printLine(3);"
               },
               {
-                "text": "The parameter only exists inside its own method",
+                "text": "A parameter only exists inside its own method",
                 "example": "run() cannot see length"
               }
             ]
@@ -4038,13 +4029,13 @@
           {
             "id": "p_two",
             "kind": "teach",
-            "instruction": "A method can take more than one.",
+            "instruction": "A method can take more than one parameter.",
             "code": "public void run() {\n  attack(\"goblin\", 7);\n  attack(\"troll\", 12);\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
             "wrap": "methods",
             "output": "You hit the goblin for 7 damage.\nYou hit the troll for 12 damage.",
             "body": [
               "Separate them with a comma. Each one needs its own type.",
-              "They are filled left to right, so the order of the arguments decides which is which."
+              "They are filled left to right."
             ]
           },
           {
@@ -4055,8 +4046,8 @@
             "code": "public void run() {\n  attack(7, \"goblin\");\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
             "target": "You hit the goblin for 7 damage.",
             "solution": "public void run() {\n  attack(\"goblin\", 7);\n}\n\npublic void attack(String enemy, int damage) {\n  System.out.println(\"You hit the \" + enemy + \" for \" + damage + \" damage.\");\n}",
-            "hint": "The first argument fills the first parameter, whatever you meant.",
-            "after": "Java matched a 7 against String enemy and gave up. Position decides, not meaning.",
+            "hint": "The first argument fills the first parameter.",
+            "after": "Java matched a 7 against String enemy and gave up. Position decides.",
             "skills": [
               "tell an argument apart from a parameter"
             ]
@@ -4064,13 +4055,13 @@
           {
             "id": "p_w1",
             "kind": "write",
-            "instruction": "Write greet(String name) so it prints Hello, then the name.",
+            "instruction": "Write greet(String name), which prints Hello and the name.",
             "wrap": "methods",
             "code": "public void run() {\n  greet(\"Ada\");\n  greet(\"Grace\");\n}\n\n// write greet below\n",
             "target": "Hello, Ada\nHello, Grace",
             "solution": "public void run() {\n  greet(\"Ada\");\n  greet(\"Grace\");\n}\n\npublic void greet(String name) {\n  System.out.println(\"Hello, \" + name);\n}",
-            "hint": "One String parameter, and join it onto the text with a +.",
-            "after": "One method, two different greetings.",
+            "hint": "One String parameter, joined onto the text with a +.",
+            "after": "One method, two greetings.",
             "skills": [
               "write a method that takes a parameter"
             ]
@@ -4078,13 +4069,13 @@
           {
             "id": "p_w2",
             "kind": "write",
-            "instruction": "Write shout(String word) so it prints the word in capitals with an exclamation mark.",
+            "instruction": "Write shout(String word), which prints the word in capitals with an exclamation mark.",
             "wrap": "methods",
-            "code": "public void run() {\n  shout(\"help\");\n}\n\n// write shout so it prints:  HELP!\n",
+            "code": "public void run() {\n  shout(\"help\");\n}\n\n// shout(\"help\") prints:  HELP!\n",
             "target": "HELP!",
             "solution": "public void run() {\n  shout(\"help\");\n}\n\npublic void shout(String word) {\n  System.out.println(word.toUpperCase() + \"!\");\n}",
-            "hint": "toUpperCase() gives back the capitals, then join the ! on.",
-            "after": "The parameter can be used with any String method inside the body.",
+            "hint": "toUpperCase() gives back the capitals.",
+            "after": "The parameter can be used like any other String.",
             "skills": [
               "write a method that takes a parameter"
             ]
@@ -4092,12 +4083,12 @@
           {
             "id": "p_w3",
             "kind": "write",
-            "instruction": "Write repeat(String text, int times) so it prints the text that many times.",
+            "instruction": "Write repeat(String text, int times), which prints the text that many times.",
             "wrap": "methods",
             "code": "public void run() {\n  repeat(\"Go\", 3);\n}\n\n// write repeat below\n",
             "target": "Go\nGo\nGo",
             "solution": "public void run() {\n  repeat(\"Go\", 3);\n}\n\npublic void repeat(String text, int times) {\n  for (int i = 0; i < times; i++) {\n    System.out.println(text);\n  }\n}",
-            "hint": "Two parameters, and a for loop that runs times times.",
+            "hint": "Two parameters, and a loop that runs times times.",
             "after": "A parameter can be the limit of a loop.",
             "skills": [
               "write a method that takes a parameter"
@@ -4106,13 +4097,13 @@
           {
             "id": "p_w4",
             "kind": "write",
-            "instruction": "Write box(String word) so it frames the word in dashes.",
+            "instruction": "Write box(String word), which frames the word in dashes as long as the word.",
             "wrap": "methods",
-            "code": "public void run() {\n  box(\"MENU\");\n}\n\n// print:\n//   ----\n//   MENU\n//   ----\n// the dashes must be as long as the word\n",
+            "code": "public void run() {\n  box(\"MENU\");\n}\n\n// box(\"MENU\") prints:\n//   ----\n//   MENU\n//   ----\n",
             "target": "----\nMENU\n----",
             "solution": "public void run() {\n  box(\"MENU\");\n}\n\npublic void box(String word) {\n  for (int i = 0; i < word.length(); i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n  System.out.println(word);\n  for (int i = 0; i < word.length(); i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n}",
             "hint": "word.length() tells you how many dashes to print.",
-            "after": "The frame fits any word, because its size came from the parameter.",
+            "after": "The frame fits any word.",
             "skills": [
               "write a method that takes a parameter"
             ]
@@ -4130,7 +4121,7 @@
               "An error"
             ],
             "correct": 1,
-            "why": "The method got a copy of the 5. Changing the copy leaves the original alone. run()'s n never moved.",
+            "why": "The method got a copy of the 5. Changing the copy leaves the original alone.",
             "skills": [
               "tell an argument apart from a parameter"
             ]
@@ -4141,7 +4132,7 @@
             "instruction": "This does not compile. Tap the line that uses a name it cannot see.",
             "code": "public void run() {\n  greet(\"Ada\");\n  System.out.println(name);\n}\n\npublic void greet(String name) {\n  System.out.println(\"Hi \" + name);\n}",
             "correct": 2,
-            "why": "name is a parameter of greet, so it exists only inside greet. run() has never heard of it.",
+            "why": "name is a parameter of greet, so it exists only inside greet.",
             "skills": [
               "tell an argument apart from a parameter"
             ]
@@ -4149,14 +4140,14 @@
           {
             "id": "p_final",
             "kind": "write",
-            "instruction": "Ask the player for a room name, then print it framed by a divider of any length you pass in.",
+            "instruction": "Ask for a room name, then print it framed by a divider six dashes long.",
             "wrap": "methods",
             "code": "public void run() {\n  String room = readLine(\"Room? \");\n  // call printLine(6), print the room, call printLine(6)\n}\n\n// write printLine(int length) below\n",
             "stdin": "Cellar",
             "target": "Room? Cellar\n------\nCellar\n------",
             "solution": "public void run() {\n  String room = readLine(\"Room? \");\n  printLine(6);\n  System.out.println(room);\n  printLine(6);\n}\n\npublic void printLine(int length) {\n  for (int i = 0; i < length; i++) {\n    System.out.print(\"-\");\n  }\n  System.out.println();\n}",
-            "hint": "The loop inside printLine runs length times, printing one dash each pass.",
-            "after": "One method now draws a divider of any size you ask for.",
+            "hint": "The loop runs length times, printing one dash each pass.",
+            "after": "One method draws a divider of any size.",
             "skills": [
               "write a method that takes a parameter"
             ]
@@ -4183,29 +4174,35 @@
             "output": "13",
             "body": [
               "This prints 13 and then the 13 is gone.",
-              "You cannot add it to a total, or compare it, or print it later."
+              "You cannot add it to a total or compare it later."
             ]
           },
           {
             "id": "r_return",
             "kind": "teach",
-            "instruction": "A method can hand a value back. That value is called a return value.",
+            "instruction": "Methods take in parameters and can give back a result, called a return value.",
+            "code": "public int sum(int a, int b) {\n  return a + b;\n}",
+            "wrap": "methods",
+            "annotate": [
+              {
+                "token": "int sum",
+                "note": "gives back an int"
+              },
+              {
+                "token": "return a + b;",
+                "note": "hands the answer back"
+              }
+            ]
+          },
+          {
+            "id": "r_assign",
+            "kind": "teach",
+            "instruction": "Store the result in a variable.",
             "code": "public void run() {\n  int total = sum(5, 8);\n  System.out.println(total);\n}\n\npublic int sum(int a, int b) {\n  return a + b;\n}",
             "wrap": "methods",
             "output": "13",
-            "points": [
-              {
-                "label": "int",
-                "text": "The return type. It says what kind of value comes back."
-              },
-              {
-                "label": "return a + b;",
-                "text": "Works out the answer and hands it back."
-              },
-              {
-                "label": "int total =",
-                "text": "The value that came back is stored here."
-              }
+            "body": [
+              "sum(5, 8) becomes 13, and the 13 goes into total."
             ]
           },
           {
@@ -4240,7 +4237,7 @@
               },
               {
                 "line": 6,
-                "note": "a + b is 13. return hands that 13 back to whoever called.",
+                "note": "a + b is 13. return hands the 13 back.",
                 "vars": {
                   "a": "5",
                   "b": "8"
@@ -4249,7 +4246,7 @@
               },
               {
                 "line": 1,
-                "note": "Back in run(). The whole call sum(5, 8) has now become 13.",
+                "note": "Back in run(). The call sum(5, 8) has become 13.",
                 "vars": {
                   "total": "13"
                 },
@@ -4276,32 +4273,23 @@
           {
             "id": "r_use",
             "kind": "teach",
-            "instruction": "A call that returns a value can go anywhere a value can go.",
+            "instruction": "A call that returns a value can go wherever a value can go.",
             "code": "public void run() {\n  System.out.println(sum(5, 8));\n  System.out.println(sum(1, 2) + sum(3, 4));\n  int big = sum(100, 200);\n  System.out.println(big);\n}\n\npublic int sum(int a, int b) {\n  return a + b;\n}",
             "wrap": "methods",
             "output": "13\n10\n300",
             "body": [
-              "Inside a println, in the middle of a sum, or on the right of an =.",
               "Java runs the method first, then uses whatever came back."
             ]
           },
           {
             "id": "r_void",
             "kind": "teach",
-            "instruction": "void means nothing comes back.",
-            "rules": [
-              {
-                "text": "A method with a return type hands a value back",
-                "example": "public int sum(int a, int b)"
-              },
-              {
-                "text": "A method with void hands nothing back",
-                "example": "public void greet(String name)"
-              },
-              {
-                "text": "Storing a void method in a variable is an error, because there is nothing to store",
-                "example": "int x = greet(\"Ada\");   will not compile"
-              }
+            "instruction": "void means no return value.",
+            "code": "public void greet(String name) {\n  System.out.println(\"Hi \" + name);\n}",
+            "wrap": "methods",
+            "body": [
+              "A void method hands nothing back.",
+              "Storing one in a variable is an error, because there is nothing to store."
             ]
           },
           {
@@ -4312,8 +4300,8 @@
             "code": "public void run() {\n  int total = showSum(5, 8);\n  System.out.println(total);\n}\n\npublic void showSum(int a, int b) {\n  System.out.println(a + b);\n}",
             "target": "13",
             "solution": "public void run() {\n  int total = sum(5, 8);\n  System.out.println(total);\n}\n\npublic int sum(int a, int b) {\n  return a + b;\n}",
-            "hint": "The method has to give the number back instead of printing it, so it needs a return type and a return.",
-            "after": "void promises nothing, so there was nothing for total to hold.",
+            "hint": "The method has to give the number back instead of printing it.",
+            "after": "void promised nothing, so there was nothing for total to hold.",
             "skills": [
               "write a method that returns a value"
             ]
@@ -4321,47 +4309,49 @@
           {
             "id": "r_parts",
             "kind": "teach",
-            "instruction": "Every method has the same four parts, in this order.",
-            "rules": [
+            "instruction": "The parts of a method.",
+            "code": "public int sum(int a, int b) {",
+            "wrap": "methods",
+            "annotate": [
               {
-                "text": "The visibility, which is public for now and explained later",
-                "example": "public"
+                "token": "public",
+                "note": "visibility, taught later"
               },
               {
-                "text": "The return type, or void when nothing comes back",
-                "example": "int"
+                "token": "int",
+                "note": "return type"
               },
               {
-                "text": "The name",
-                "example": "sum"
+                "token": "sum",
+                "note": "method name"
               },
               {
-                "text": "The parameter list, in brackets",
-                "example": "(int a, int b)"
+                "token": "(int a, int b)",
+                "note": "parameter list"
               }
             ]
           },
           {
             "id": "r_sig",
             "kind": "teach",
-            "instruction": "The name and the parameter list together are called the method signature.",
+            "instruction": "The method signature is the name plus the parameter list.",
             "code": "public int sum(int a, int b) {\n  return a + b;\n}",
             "wrap": "methods",
             "body": [
               "Here the signature is sum(int, int).",
-              "The return type is not part of it. That matters in a later lesson."
+              "The return type is not part of it."
             ]
           },
           {
             "id": "r_w1",
             "kind": "write",
-            "instruction": "Write double(int n) so it gives back twice the number.",
+            "instruction": "Write twice(int n), which gives back double the number.",
             "wrap": "methods",
-            "code": "public void run() {\n  System.out.println(twice(6));\n}\n\n// write twice(int n) so it RETURNS n times 2\n",
+            "code": "public void run() {\n  System.out.println(twice(6));\n}\n\n// write twice(int n)\n",
             "target": "12",
             "solution": "public void run() {\n  System.out.println(twice(6));\n}\n\npublic int twice(int n) {\n  return n * 2;\n}",
             "hint": "The return type is int, and the body is one return.",
-            "after": "run() printed it. The method only handed the number back.",
+            "after": "run() printed it. The method only handed it back.",
             "skills": [
               "write a method that returns a value"
             ]
@@ -4369,13 +4359,13 @@
           {
             "id": "r_w2",
             "kind": "write",
-            "instruction": "Write square(int n) so it gives back n times itself.",
+            "instruction": "Write square(int n), which gives back n times itself.",
             "wrap": "methods",
             "code": "public void run() {\n  System.out.println(square(7));\n}\n\n// write square(int n)\n",
             "target": "49",
             "solution": "public void run() {\n  System.out.println(square(7));\n}\n\npublic int square(int n) {\n  return n * n;\n}",
-            "hint": "Same shape as twice, with a different sum inside.",
-            "after": "You are getting the shape by heart, which is the point.",
+            "hint": "Same shape as twice.",
+            "after": "The shape is always: return type, name, parameters, return.",
             "skills": [
               "write a method that returns a value"
             ]
@@ -4383,13 +4373,13 @@
           {
             "id": "r_w3",
             "kind": "write",
-            "instruction": "Write isEven(int n) so it gives back true or false.",
+            "instruction": "Write isEven(int n), which gives back true or false.",
             "wrap": "methods",
             "code": "public void run() {\n  System.out.println(isEven(10));\n  System.out.println(isEven(7));\n}\n\n// write isEven(int n)\n",
             "target": "true\nfalse",
             "solution": "public void run() {\n  System.out.println(isEven(10));\n  System.out.println(isEven(7));\n}\n\npublic boolean isEven(int n) {\n  return n % 2 == 0;\n}",
-            "hint": "The return type is boolean, and n % 2 == 0 is already a boolean.",
-            "after": "A return type can be any type, not just int.",
+            "hint": "The return type is boolean.",
+            "after": "A return type can be any type.",
             "skills": [
               "write a method that returns a value"
             ]
@@ -4397,13 +4387,13 @@
           {
             "id": "r_w4",
             "kind": "write",
-            "instruction": "Write initials(String first, String last) so it gives back the two capitals.",
+            "instruction": "Write initials(String first, String last), which gives back the two capitals.",
             "wrap": "methods",
-            "code": "public void run() {\n  System.out.println(initials(\"Ada\", \"Lovelace\"));\n}\n\n// write initials so it RETURNS  AL\n",
+            "code": "public void run() {\n  System.out.println(initials(\"Ada\", \"Lovelace\"));\n}\n\n// initials(\"Ada\", \"Lovelace\") returns  AL\n",
             "target": "AL",
             "solution": "public void run() {\n  System.out.println(initials(\"Ada\", \"Lovelace\"));\n}\n\npublic String initials(String first, String last) {\n  return first.charAt(0) + \"\" + last.charAt(0);\n}",
-            "hint": "charAt(0) gives the first character. Joining a char to a String needs a \"\" in between.",
-            "after": "A method can return a String just as easily as a number.",
+            "hint": "charAt(0) gives the first character. Join two chars with a \"\" between them.",
+            "after": "A method can return a String too.",
             "skills": [
               "write a method that returns a value"
             ]
@@ -4411,45 +4401,27 @@
           {
             "id": "r_w5",
             "kind": "write",
-            "instruction": "Write bigger(int a, int b) so it gives back whichever is larger.",
+            "instruction": "Write bigger(int a, int b), which gives back the larger one.",
             "wrap": "methods",
             "code": "public void run() {\n  System.out.println(bigger(3, 9));\n  System.out.println(bigger(12, 4));\n}\n\n// write bigger(int a, int b)\n",
             "target": "9\n12",
             "solution": "public void run() {\n  System.out.println(bigger(3, 9));\n  System.out.println(bigger(12, 4));\n}\n\npublic int bigger(int a, int b) {\n  if (a > b) {\n    return a;\n  } else {\n    return b;\n  }\n}",
             "hint": "An if inside the method, with a return in each branch.",
-            "after": "A method can have more than one return. The first one reached ends the method.",
+            "after": "The first return reached ends the method.",
             "skills": [
               "write a method that returns a value"
             ]
           },
           {
-            "id": "r_early",
-            "kind": "predict",
-            "instruction": "What comes out?",
-            "wrap": "methods",
-            "code": "public void run() {\n  System.out.println(test(5));\n}\n\npublic int test(int n) {\n  return n;\n  \n}",
-            "opts": [
-              "5",
-              "0",
-              "An error",
-              "nothing"
-            ],
-            "correct": 0,
-            "why": "return ends the method immediately and hands the value back. Anything written after it would never run.",
-            "skills": [
-              "use a returned value in the calling code"
-            ]
-          },
-          {
             "id": "r_chain",
             "kind": "write",
-            "instruction": "Use one method inside another. Write average(int a, int b) using your own sum.",
+            "instruction": "Write average(int a, int b) using the sum method that is already there.",
             "wrap": "methods",
             "code": "public void run() {\n  System.out.println(average(4, 10));\n}\n\npublic int sum(int a, int b) {\n  return a + b;\n}\n\n// write average(int a, int b) using sum\n",
             "target": "7",
             "solution": "public void run() {\n  System.out.println(average(4, 10));\n}\n\npublic int sum(int a, int b) {\n  return a + b;\n}\n\npublic int average(int a, int b) {\n  return sum(a, b) / 2;\n}",
-            "hint": "sum(a, b) becomes a number, so you can divide it by 2 right there.",
-            "after": "A call that returns a value is just a value, so it can sit inside another sum.",
+            "hint": "sum(a, b) becomes a number, so you can divide it right there.",
+            "after": "A call that returns a value is just a value.",
             "skills": [
               "use a returned value in the calling code"
             ]
@@ -4457,13 +4429,13 @@
           {
             "id": "r_final",
             "kind": "write",
-            "instruction": "Ask for two numbers, then use a method to print their sum and their average.",
+            "instruction": "Ask for two numbers, then use methods to print their sum and their average.",
             "wrap": "methods",
-            "code": "public void run() {\n  int a = readInt(\"First? \");\n  int b = readInt(\"Second? \");\n  // print the sum, then the average, using methods\n}\n\n// write sum(int, int) and average(int, int)\n",
+            "code": "public void run() {\n  int a = readInt(\"First? \");\n  int b = readInt(\"Second? \");\n  // print the sum, then the average\n}\n\n// write sum(int, int) and average(int, int)\n",
             "stdin": "4\n10",
             "target": "First? 4\nSecond? 10\n14\n7",
             "solution": "public void run() {\n  int a = readInt(\"First? \");\n  int b = readInt(\"Second? \");\n  System.out.println(sum(a, b));\n  System.out.println(average(a, b));\n}\n\npublic int sum(int a, int b) {\n  return a + b;\n}\n\npublic int average(int a, int b) {\n  return sum(a, b) / 2;\n}",
-            "hint": "Read both numbers, then print what each method hands back.",
+            "hint": "Print what each method hands back.",
             "after": "The methods do the working out. run() only asks and prints.",
             "skills": [
               "use a returned value in the calling code"
@@ -4490,53 +4462,41 @@
             "wrap": "methods",
             "body": [
               "Four what? Hits, seconds, enemies?",
-              "And 12 what? Hit points, gold, percent?",
-              "You can work it out by reading the body, but only by reading the whole body."
+              "And 12 what? Hit points, gold, percent?"
             ]
           },
           {
             "id": "j_what",
             "kind": "teach",
-            "instruction": "A Javadoc is a comment written in a set style, so people and tools can both read it.",
+            "instruction": "A Javadoc is the style of commenting Java code. It is a note that helps people understand it.",
             "rules": [
               {
-                "text": "It starts with /** and ends with */",
-                "example": "/**  ...  */"
+                "text": "It starts with /** and ends with */"
               },
               {
-                "text": "It is a multiline comment with one extra star at the front",
-                "example": "/* is an ordinary comment. /** is a Javadoc"
-              },
-              {
-                "text": "It sits directly above the method it describes",
-                "example": "nothing in between"
-              },
-              {
-                "text": "Java ignores it when running. It exists for whoever reads the code next",
-                "example": "including you, later"
+                "text": "It is like a multiline comment with an extra star"
               }
+            ]
+          },
+          {
+            "id": "j_real",
+            "kind": "teach",
+            "instruction": "Here is one on the damage method.",
+            "code": "/**\n * Works out the damage from a number of hits.\n *\n * @param hits how many hits landed\n * @return the total damage dealt\n */\npublic int damage(int hits) {\n  return hits * 3;\n}",
+            "wrap": "methods",
+            "body": [
+              "Now the header alone tells you what to pass and what you get back."
             ]
           },
           {
             "id": "j_shape",
             "kind": "teach",
             "instruction": "The general format.",
-            "code": "/**\n * Description of the method\n *\n * @param paramName1 description\n * @param paramName2 description\n * @return description of the return value\n */",
+            "code": "/**\n * Description of method\n *\n * @param paramName1 description\n * @param paramName2 description\n * @return Description of return value\n */\npublic int example(int paramName1, int paramName2) {\n  return paramName1 + paramName2;\n}",
             "wrap": "methods",
             "body": [
-              "A sentence saying what it does, then one @param line per parameter, then @return.",
-              "A void method has no @return, because nothing comes back."
-            ]
-          },
-          {
-            "id": "j_real",
-            "kind": "teach",
-            "instruction": "The same method, documented.",
-            "code": "/**\n * Works out the damage from a number of hits.\n *\n * @param hits how many hits landed\n * @return the total damage dealt\n */\npublic int damage(int hits) {\n  return hits * 3;\n}",
-            "wrap": "methods",
-            "body": [
-              "Now the header alone tells you what to pass and what you get.",
-              "You never have to read the body to call it safely."
+              "One @param line per parameter.",
+              "A void method has no @return."
             ]
           },
           {
@@ -4545,7 +4505,7 @@
             "instruction": "The tags are right and no tool will read them. Tap the line to blame.",
             "code": "/*\n * Works out damage from a number of hits.\n * @param hits how many hits landed\n * @return the damage dealt\n */\npublic int damage(int hits) {\n  return hits * 3;\n}",
             "correct": 0,
-            "why": "A Javadoc opens with two stars. With one it is an ordinary comment, so Java and every documentation tool skip straight past the tags. The content was never the problem.",
+            "why": "A Javadoc opens with two stars. With one it is an ordinary comment and the tags are skipped.",
             "skills": [
               "write a Javadoc comment for a method"
             ]
@@ -4580,7 +4540,7 @@
                 "bucket": 1
               }
             ],
-            "why": "@param names a PARAMETER. damage is the method, not a parameter. And the comment exists to save the reader from the body, so repeating it defeats the point.",
+            "why": "@param names a parameter. damage is the method, not a parameter.",
             "skills": [
               "use @param and @return correctly"
             ]
@@ -4588,13 +4548,13 @@
           {
             "id": "j_w1",
             "kind": "write",
-            "instruction": "Write inRange(int n, int low, int high), then put a Javadoc above it.",
+            "instruction": "Write inRange(int n, int low, int high), with a Javadoc above it.",
             "wrap": "methods",
-            "code": "public void run() {\n  System.out.println(inRange(5, 1, 10));\n  System.out.println(inRange(50, 1, 10));\n}\n\n// write a Javadoc, then inRange, which RETURNS true when n is between low and high\n",
+            "code": "public void run() {\n  System.out.println(inRange(5, 1, 10));\n  System.out.println(inRange(50, 1, 10));\n}\n\n// inRange returns true when n is between low and high\n",
             "target": "true\nfalse",
             "solution": "public void run() {\n  System.out.println(inRange(5, 1, 10));\n  System.out.println(inRange(50, 1, 10));\n}\n\n/**\n * Says whether a number falls inside a range.\n *\n * @param n the number to test\n * @param low the lowest allowed value\n * @param high the highest allowed value\n * @return true when n is between low and high\n */\npublic boolean inRange(int n, int low, int high) {\n  return n >= low && n <= high;\n}",
-            "hint": "Three parameters means three @param lines. The return type is boolean.",
-            "after": "Three @param lines, one @return, and a body of one comparison.",
+            "hint": "Three parameters means three @param lines.",
+            "after": "Three @param lines, one @return.",
             "skills": [
               "write a Javadoc comment for a method"
             ]
@@ -4602,13 +4562,13 @@
           {
             "id": "j_w2",
             "kind": "write",
-            "instruction": "Write perimeter(int width, int height) with a Javadoc above it.",
+            "instruction": "Write perimeter(int width, int height), with a Javadoc above it.",
             "wrap": "methods",
-            "code": "public void run() {\n  System.out.println(perimeter(3, 4));\n}\n\n// write a Javadoc, then perimeter, which RETURNS the distance round the outside\n",
+            "code": "public void run() {\n  System.out.println(perimeter(3, 4));\n}\n\n// perimeter returns the distance round the outside\n",
             "target": "14",
-            "solution": "public void run() {\n  System.out.println(perimeter(3, 4));\n}\n\n/**\n * Works out the distance round the outside of a rectangle.\n *\n * @param width the width of the rectangle\n * @param height the height of the rectangle\n * @return the total distance round the outside\n */\npublic int perimeter(int width, int height) {\n  return 2 * (width + height);\n}",
-            "hint": "Two sides of each, so 2 times width plus height.",
-            "after": "The Javadoc explains what perimeter means without anyone reading the sum.",
+            "solution": "public void run() {\n  System.out.println(perimeter(3, 4));\n}\n\n/**\n * Works out the distance round the outside of a rectangle.\n *\n * @param width the width of the rectangle\n * @param height the height of the rectangle\n * @return the distance round the outside\n */\npublic int perimeter(int width, int height) {\n  return 2 * (width + height);\n}",
+            "hint": "Two of each side.",
+            "after": "The Javadoc says what perimeter means without anyone reading the sum.",
             "skills": [
               "write a Javadoc comment for a method"
             ]
@@ -4616,29 +4576,15 @@
           {
             "id": "j_w3",
             "kind": "write",
-            "instruction": "Write a void method and document it. banner(String word) prints the word between two rows of stars.",
+            "instruction": "Write banner(String word), with a Javadoc above it. It returns nothing.",
             "wrap": "methods",
-            "code": "public void run() {\n  banner(\"MENU\");\n}\n\n// write a Javadoc, then banner. It prints:\n//   ****\n//   MENU\n//   ****\n",
+            "code": "public void run() {\n  banner(\"MENU\");\n}\n\n// banner prints:\n//   ****\n//   MENU\n//   ****\n",
             "target": "****\nMENU\n****",
             "solution": "public void run() {\n  banner(\"MENU\");\n}\n\n/**\n * Prints a word framed by two rows of stars.\n *\n * @param word the word to show inside the frame\n */\npublic void banner(String word) {\n  System.out.println(\"****\");\n  System.out.println(word);\n  System.out.println(\"****\");\n}",
-            "hint": "This one returns nothing, so it has no @return line.",
-            "after": "A void method gets a description and its @param lines, and stops there.",
+            "hint": "No @return on a void method.",
+            "after": "A description and its @param lines, and nothing else.",
             "skills": [
               "use @param and @return correctly"
-            ]
-          },
-          {
-            "id": "j_w4",
-            "kind": "write",
-            "instruction": "Write initials(String first, String last), documented, and use it.",
-            "wrap": "methods",
-            "code": "public void run() {\n  System.out.println(initials(\"Ada\", \"Lovelace\"));\n}\n\n// write a Javadoc, then initials, which RETURNS the two capitals\n",
-            "target": "AL",
-            "solution": "public void run() {\n  System.out.println(initials(\"Ada\", \"Lovelace\"));\n}\n\n/**\n * Builds a two letter tag from a person's name.\n *\n * @param first the first name\n * @param last the last name\n * @return the first letter of each, joined together\n */\npublic String initials(String first, String last) {\n  return first.charAt(0) + \"\" + last.charAt(0);\n}",
-            "hint": "charAt(0) on each name, joined with a \"\" in between.",
-            "after": "The @return line says what comes back without describing how.",
-            "skills": [
-              "write a Javadoc comment for a method"
             ]
           },
           {
@@ -4646,12 +4592,12 @@
             "kind": "write",
             "instruction": "Ask for a score out of a total, then use a documented method to print the percentage.",
             "wrap": "methods",
-            "code": "public void run() {\n  int got = readInt(\"Correct? \");\n  int total = readInt(\"Total? \");\n  // print the percentage using your method\n}\n\n// write a Javadoc, then percent(int got, int total), which RETURNS the percentage\n",
+            "code": "public void run() {\n  int got = readInt(\"Correct? \");\n  int total = readInt(\"Total? \");\n  // print the percentage using your method\n}\n\n// write a Javadoc, then percent(int got, int total)\n",
             "stdin": "17\n20",
             "target": "Correct? 17\nTotal? 20\n85",
-            "solution": "public void run() {\n  int got = readInt(\"Correct? \");\n  int total = readInt(\"Total? \");\n  System.out.println(percent(got, total));\n}\n\n/**\n * Works out a score as a percentage.\n *\n * @param got how many were correct\n * @param total how many there were altogether\n * @return the percentage, rounded down to a whole number\n */\npublic int percent(int got, int total) {\n  return got * 100 / total;\n}",
-            "hint": "Multiply by 100 before dividing, or whole-number division gives 0.",
-            "after": "The @return line even warns the caller that it rounds down. That is the kind of thing a Javadoc is for.",
+            "solution": "public void run() {\n  int got = readInt(\"Correct? \");\n  int total = readInt(\"Total? \");\n  System.out.println(percent(got, total));\n}\n\n/**\n * Works out a score as a percentage.\n *\n * @param got how many were correct\n * @param total how many there were altogether\n * @return the percentage, rounded down\n */\npublic int percent(int got, int total) {\n  return got * 100 / total;\n}",
+            "hint": "Multiply by 100 before dividing.",
+            "after": "The @return line even warns that it rounds down.",
             "skills": [
               "use @param and @return correctly"
             ]

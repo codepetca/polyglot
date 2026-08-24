@@ -818,3 +818,11 @@ pre.flowcode.ro { margin: 0; }
   padding: 8px 13px; font-family: var(--mono); font-size: 13.5px; white-space: pre-wrap; min-height: 1.6em; }
 .walkbar { display: flex; align-items: center; gap: 9px; }
 .walkcount { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: auto; }
+
+/* annotate: arrows under one line of code, each with two or three words.
+   Replaces the stack of highlighted labels, which asked the reader to match a
+   chip to a token by eye. */
+.annot { margin: 6px 0 4px; padding-left: 14px; }
+.annotrow { display: flex; align-items: baseline; gap: 8px; padding: 1px 0; }
+.annotarrow { font-family: var(--mono); font-size: 14px; color: var(--accent); flex: 0 0 auto; }
+.annotnote { font-size: 14px; color: var(--ink); }

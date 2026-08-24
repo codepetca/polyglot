@@ -120,7 +120,21 @@ export type FlowStep = {
   chips?: string[];
   exprs?: string[];
   // teach: short labelled explanation lines shown beside/below the code.
+  /**
+   * DEPRECATED. A stack of highlighted labels above a wall of prose. The owner
+   * has asked for it gone twice. Use `annotate` to point at parts of a line,
+   * `body` for sentences, `rules` for an enumerated set. New lessons must not
+   * use this; `flows.mjs audit` counts what is left.
+   */
   points?: { label: string; text: string }[];
+  /**
+   * Arrows pointing at parts of ONE line of code, with a short note under each.
+   * This is what a stack of labels was always trying to be: the reader sees
+   * which characters are meant, instead of matching a chip to a token by eye.
+   * Notes are two or three words. If it needs a sentence, it is not an
+   * annotation.
+   */
+  annotate?: { token: string; note: string }[];
   // PLAIN PROSE. Short lines, rendered as ordinary sentences with no label and
   // no highlight. This exists because `points` was the only way to say anything,
   // so every explanation got forced into a highlighted label — including ones
@@ -181,6 +195,11 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       const lines = (s.code || "").split("\n").length;
       if (!s.code) errors.push(`${at}: highlight needs code`);
       else if (h < 0 || h >= lines) errors.push(`${at}: highlight line ${h} is outside the ${lines}-line snippet`);
+    }
+    for (const a of s.annotate || []) {
+      if (!s.code) errors.push(`${at}: annotate needs code`);
+      else if (!s.code.includes(a.token)) errors.push(`${at}: annotate token ${JSON.stringify(a.token)} is not in the snippet`);
+      if (!a.note) errors.push(`${at}: annotation for ${JSON.stringify(a.token)} needs a note`);
     }
     switch (s.kind) {
       case "run": if (!s.code) errors.push(`${at}: needs code`); break;
@@ -312,7 +331,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       for (let i = rights.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rights[i], rights[j]] = [rights[j], rights[i]]; }
       return { ...base, lefts, rights };
     }
-    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, output: s.output };
+    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, annotate: s.annotate, output: s.output };
     case "card": return { ...base, vars: s.vars };
     case "walk": return { ...base, frames: s.frames };
     case "compare": return { ...base, sides: s.sides, points: s.points };

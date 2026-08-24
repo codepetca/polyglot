@@ -213,6 +213,14 @@ function doAudit() {
 
   if (filler.length) { console.log(`\n✗ ${filler.length} point label(s) that name nothing:`); for (const x of filler.slice(0, 12)) console.log("   " + x); problems++; }
 
+  // The deprecated highlight stack. The owner has asked for it gone twice, so
+  // count it every run rather than rediscovering it lesson by lesson.
+  const stacks = [];
+  for (const l of file.lessons) for (const s of l.flow.steps) if ((s.points || []).length) stacks.push(l.code);
+  const stackLessons = [...new Set(stacks)];
+  console.log(`\nDeprecated points[] highlight stacks: ${stacks.length} step(s) across ${stackLessons.length} lesson(s)`);
+  if (stackLessons.length) console.log("   " + stackLessons.join(" "));
+
   const steps = file.lessons.reduce((n, l) => n + l.flow.steps.length, 0);
   console.log(`\n${file.lessons.length} lessons, ${steps} steps`);
   console.log(problems ? `✗ ${problems} course-wide problem(s)` : "✓ no course-wide problems");

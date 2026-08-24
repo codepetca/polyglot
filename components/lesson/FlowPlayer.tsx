@@ -50,6 +50,7 @@ type Step = {
   points?: { label: string; text: string }[];
   body?: string[];
   rules?: { text: string; example?: string }[];
+  annotate?: { token: string; note: string }[];
   vars?: { type: string; name: string; placeholder?: string; label?: string }[];
   frames?: { line: number; note: string; vars?: Record<string, string>; out?: string }[];
   output?: string;
@@ -940,6 +941,26 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
               <pre>{step.output || "(nothing)"}</pre>
             </div>
           )}
+          {(step.annotate || []).length > 0 && (() => {
+            // Work out where each token sits so the arrow lands under it. The
+            // snippet is monospace, so a character offset IS an x position.
+            const src = step.code || "";
+            const marks = (step.annotate || [])
+              .map((a) => ({ ...a, at: src.indexOf(a.token) }))
+              .filter((a) => a.at >= 0)
+              .sort((x, y) => x.at - y.at);
+            const lineStart = (i: number) => src.lastIndexOf("\n", i - 1) + 1;
+            return (
+              <div className="annot">
+                {marks.map((m, j) => (
+                  <div className="annotrow" key={j}>
+                    <span className="annotarrow" style={{ marginLeft: `${m.at - lineStart(m.at)}ch` }}>↑</span>
+                    <span className="annotnote">{m.note}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
           {(step.rules || []).length > 0 && (
             <ol className="rulelist">
               {(step.rules || []).map((r, j) => (
