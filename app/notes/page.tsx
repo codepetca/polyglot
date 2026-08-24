@@ -32,7 +32,8 @@ export default async function NotesPage() {
   });
 
   const units = chapters
-    .map((c) => ({
+    .map((c, ci) => ({
+      unit: ci + 1,
       title: c.title,
       lessons: c.lessons
         .map((l) => ({
@@ -64,6 +65,7 @@ export default async function NotesPage() {
         units.map((u) => (
           <section className="noteunit" key={u.title}>
             <h2>{u.title}</h2>
+            <Link className="guidelink" href={`/notes/${u.unit}`}>Read the whole unit written out →</Link>
             {u.lessons.map((l) => (
               <div className="notelesson" key={l.code}>
                 <h3>

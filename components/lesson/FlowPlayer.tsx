@@ -117,6 +117,13 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
       .then((d) => {
         if (!alive) return;
         setSteps(d.steps || []);
+        // Restore the tome. Scrolls are earned once and stay earned.
+        const already: string[] = d.cleared || [];
+        setKept(
+          (d.steps || [])
+            .filter((s: Step) => s.keypoint && already.includes(s.id))
+            .map((s: Step) => s.keypoint as string)
+        );
         setAssist(d.assist || null);
         // The translation for this language doesn't exist yet. Don't make the
         // student wait for it — the lesson is already on screen; fetch the

@@ -826,8 +826,11 @@ pre.flowcode.ro { margin: 0; }
 .anncode .annline { white-space: pre; }
 .annrow { display: flex; align-items: baseline; white-space: pre; }
 .annpad { flex: 0 0 auto; }
-.anntick { color: var(--accent); flex: 0 0 auto; }
-.annnote { color: var(--accent); padding-left: .6ch; font-family: var(--sans); font-size: 12.5px; }
+/* The code surface is dark in BOTH themes, so --accent (a deep green meant for
+   paper) all but vanishes on it. These two sit on #14171c and need the same
+   light green the walkthrough and the terminal already use. */
+.anntick { color: #7fe3b0; flex: 0 0 auto; }
+.annnote { color: #7fe3b0; padding-left: .6ch; font-family: var(--sans); font-size: 12.5px; }
 
 /* ── The tome ────────────────────────────────────────────────────────────────
    Key points roll into a scroll and drop in here as they are earned, so a
@@ -878,3 +881,34 @@ pre.flowcode.ro { margin: 0; }
 .notelesson h3 a:hover { text-decoration: underline; }
 .notelesson ul { margin: 0; padding-left: 19px; display: flex; flex-direction: column; gap: 6px; }
 .notelesson li { font-size: 14.5px; line-height: 1.55; }
+
+/* /notes/[unit] — the whole unit written out */
+.guide { max-width: 780px; }
+.guidetoc { display: flex; flex-direction: column; gap: 3px; margin-bottom: 34px; padding: 14px 16px;
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; }
+.guidetoc a { font-size: 14px; color: var(--ink); text-decoration: none; padding: 2px 0; }
+.guidetoc a:hover { text-decoration: underline; }
+.guidetoc a b { font-family: var(--mono); font-size: 12.5px; color: var(--accent); margin-right: 7px;
+  font-variant-numeric: tabular-nums; }
+.guidelesson { margin-bottom: 48px; scroll-margin-top: 16px; }
+.guidelesson h2 { font-family: var(--serif); font-size: 22px; margin: 0 0 8px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--ink); display: flex; gap: 10px; align-items: baseline; }
+.guideobj { margin: 0 0 18px; padding-left: 19px; color: var(--muted); font-size: 14px; }
+.guideblock { margin-bottom: 22px; }
+.guideblock h3 { font-family: var(--sans); font-size: 15.5px; font-weight: 600; margin: 0 0 7px; }
+.guideblock p { margin: 0 0 7px; font-size: 15px; line-height: 1.6; }
+.guideblock .flowcode { margin: 10px 0; }
+.guidetablewrap { overflow-x: auto; margin: 10px 0; }
+.guidetable { border-collapse: collapse; font-family: var(--mono); font-size: 13.5px; }
+.guidetable th { text-align: left; padding: 5px 16px 5px 0; border-bottom: 1.5px solid var(--line);
+  font-family: var(--sans); font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.guidetable td { padding: 4px 16px 4px 0; color: var(--muted); }
+.guidetable td.ans { color: var(--accent); font-weight: 500; }
+.guidepoints { background: var(--card); border: 1.5px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 10px; padding: 14px 18px; margin-top: 20px; }
+.guidepoints h4 { font-family: var(--sans); font-size: 12px; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--accent); margin: 0 0 9px; }
+.guidepoints ul { margin: 0; padding-left: 19px; display: flex; flex-direction: column; gap: 6px; }
+.guidepoints li { font-size: 14.5px; line-height: 1.5; }
+.noteunit h2 a { color: inherit; text-decoration: none; }
+.guidelink { display: inline-block; margin: 2px 0 14px; font-size: 13.5px; color: var(--accent); }

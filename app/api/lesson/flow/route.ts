@@ -33,6 +33,17 @@ export async function GET(req: Request) {
   // the primary text on screen (see lib/curriculum/translate.ts), so the client
   // renders the assist underneath on demand instead of replacing anything.
   const steps: any[] = flow.steps.map(stripStepForClient);
+
+  // Which steps this student has already cleared. The tome is built from these,
+  // so the scrolls they earned are still there tomorrow — a collection that
+  // empties on reload is worse than no collection at all.
+  const seen = await prisma.event.findMany({
+    where: { userId: me.id, type: EVENT.FLOW_STEP, payload: { path: ["lessonId"], equals: flow.lessonId } },
+    select: { payload: true },
+    take: 500,
+    orderBy: { at: "asc" },
+  });
+  const cleared = [...new Set(seen.map((e) => (e.payload as any)?.stepId).filter(Boolean))];
   const row = await prisma.lesson.findUnique({ where: { code: lessonCode }, select: { flowI18n: true } });
   const all = ((row?.flowI18n as any) || {}) as Record<string, unknown>;
 
@@ -60,7 +71,7 @@ export async function GET(req: Request) {
     }
   }
 
-  return NextResponse.json({ steps, assist: cached, assistPending, languages: Object.keys(LANGUAGES) });
+  return NextResponse.json({ steps, cleared, assist: cached, assistPending, languages: Object.keys(LANGUAGES) });
 }
 
 export async function POST(req: Request) {
