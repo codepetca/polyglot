@@ -3497,17 +3497,16 @@
           {
             "id": "t_task",
             "kind": "teach",
-            "instruction": "Two Strings can hold the same word. How do we ask Java whether their text matches?",
-            "code": "String a = \"cat\";\nString b = \"cat\";\nSystem.out.println(a == b);",
+            "instruction": "A gate should open only when the player types the magic word. How do we compare two pieces of text?",
             "body": [
-              "This looks like it should print true.",
-              "With Strings, == does not ask what you think it asks."
+              "Numbers are easy to compare. Text is not.",
+              "First we need to know what a String really is."
             ]
           },
           {
             "id": "t_str",
             "kind": "teach",
-            "instruction": "A String is a run of characters in double quotes.",
+            "instruction": "A String is a sequence of characters in double quotes.",
             "code": "String word = \"mellon\";\nSystem.out.println(word);\nSystem.out.println(\"word\");",
             "output": "mellon\nword",
             "body": [
@@ -3516,46 +3515,139 @@
             ]
           },
           {
-            "id": "t_why",
+            "id": "t_notprim",
             "kind": "teach",
-            "instruction": "== compares identity. .equals() compares the characters.",
-            "code": "String a = \"mellon\";\nString part = \"lon\";\nString b = \"mel\" + part;\nSystem.out.println(a == b);\nSystem.out.println(a.equals(b));",
-            "output": "false\ntrue",
-            "points": [
+            "instruction": "A String is not a primitive type.",
+            "rules": [
               {
-                "label": "==",
-                "text": "Asks whether they are the same object."
+                "text": "The primitive types are int, double, char and boolean",
+                "example": "int level = 7;"
               },
               {
-                "label": ".equals(b)",
-                "text": "Asks whether the text matches."
+                "text": "String is not one of them",
+                "example": "String name = \"Ada\";"
+              },
+              {
+                "text": "It starts with a capital S, which is how Java writes an object",
+                "example": "String, not string"
               }
+            ]
+          },
+          {
+            "id": "t_obj",
+            "kind": "teach",
+            "instruction": "That capital letter matters more than it looks.",
+            "body": [
+              "A capital S means String is an object rather than a plain value.",
+              "You will meet objects properly later in the course.",
+              "For now, one thing follows from it, and it is the whole point of this lesson."
+            ]
+          },
+          {
+            "id": "t_join",
+            "kind": "teach",
+            "instruction": "Joining two Strings is called concatenation.",
+            "code": "String first = \"pepper\";\nString second = \"mint\";\nSystem.out.println(first + second);",
+            "output": "peppermint",
+            "body": [
+              "The + sign glues them into one String.",
+              "Nothing is added up. The characters are placed end to end."
+            ]
+          },
+          {
+            "id": "t_space",
+            "kind": "teach",
+            "instruction": "Java joins exactly what you give it, so spaces are yours to add.",
+            "code": "String a = \"Ada\";\nString b = \"Lovelace\";\nSystem.out.println(a + b);\nSystem.out.println(a + \" \" + b);",
+            "output": "AdaLovelace\nAda Lovelace",
+            "body": [
+              "The space has to be a String of its own, in quotes."
+            ]
+          },
+          {
+            "id": "t_mixed",
+            "kind": "teach",
+            "instruction": "You can join a String to any other type.",
+            "code": "String name = \"Ada\";\nint level = 7;\ndouble health = 2.5;\nboolean online = true;\nSystem.out.println(name + \" is level \" + level);\nSystem.out.println(\"Health \" + health + \", online \" + online);",
+            "output": "Ada is level 7\nHealth 2.5, online true",
+            "body": [
+              "The number, the decimal and the boolean are all turned into text and joined on.",
+              "This is why every card in this unit was printed with a +."
+            ]
+          },
+          {
+            "id": "t_joinw",
+            "kind": "write",
+            "instruction": "Ask for a first and last name, then print them joined with a space.",
+            "code": "// ask \"First? \" and \"Last? \" with readLine\n// print them as one line:  Ada Lovelace\n",
+            "stdin": "Ada\nLovelace",
+            "target": "First? Ada\nLast? Lovelace\nAda Lovelace",
+            "solution": "String first = readLine(\"First? \");\nString last = readLine(\"Last? \");\nSystem.out.println(first + \" \" + last);",
+            "hint": "Join with + and put a space in the middle.",
+            "after": "The space had to be its own piece of text.",
+            "skills": [
+              "join Strings together with +"
+            ]
+          },
+          {
+            "id": "t_bad",
+            "kind": "teach",
+            "instruction": "Here is the bad way to compare them.",
+            "code": "String a = \"mellon\";\nString part = \"lon\";\nString b = \"mel\" + part;\nSystem.out.println(a == b);",
+            "output": "false",
+            "body": [
+              "Both hold the word mellon, and == says false.",
+              "It fails because String is not a primitive type."
+            ]
+          },
+          {
+            "id": "t_good",
+            "kind": "teach",
+            "instruction": "Here is the good way.",
+            "code": "String a = \"mellon\";\nString part = \"lon\";\nString b = \"mel\" + part;\nSystem.out.println(a.equals(b));",
+            "output": "true",
+            "points": [
+              {
+                "label": ".equals(b)",
+                "text": "Tests whether the two hold the same characters."
+              }
+            ]
+          },
+          {
+            "id": "t_memory",
+            "kind": "teach",
+            "instruction": "Why the two give different answers.",
+            "body": [
+              "Every object is kept somewhere in the computer memory.",
+              "On objects, == asks whether the two names point at the same place.",
+              ".equals() ignores where they are kept and compares the characters directly.",
+              "For int, double, char and boolean there is no place to compare. == looks at the value itself, which is why it works on those."
             ]
           },
           {
             "id": "t_shape",
             "kind": "teach",
-            "instruction": "The variable goes in front, and the thing you compare with goes inside.",
+            "instruction": "So the rule is short.",
             "rules": [
               {
-                "text": "Always use .equals() for text",
+                "text": "Compare text with .equals()",
                 "example": "typed.equals(\"mellon\")"
               },
               {
-                "text": "Keep using == for numbers and booleans",
-                "example": "age == 18"
+                "text": "Compare primitives with ==",
+                "example": "level == 7"
               },
               {
-                "text": "== on Strings can be true by accident, which is worse than always false",
-                "example": "it may work in tests and fail in the real program"
+                "text": "The variable goes in front and the thing you check against goes inside",
+                "example": "name.equals(\"Ada\")"
               }
             ]
           },
           {
             "id": "t_trap",
             "kind": "predict",
-            "instruction": "What comes out?",
-            "code": "String a = \"cat\";\nString b = \"c\" + \"at\";\nString c = \"at\";\nString d = \"c\" + c;\nSystem.out.println(a == d);",
+            "instruction": "Both hold cat. What comes out?",
+            "code": "String a = \"cat\";\nString c = \"at\";\nString d = \"c\" + c;\nSystem.out.println(a == d);",
             "opts": [
               "true",
               "false",
@@ -3563,31 +3655,20 @@
               "cat"
             ],
             "correct": 1,
-            "why": "Both hold \"cat\", but d was built while the program ran, so it is a different object. == says false. .equals() would say true.",
+            "why": "d was built while the program ran, so it sits in a different place in memory. == compares the place, not the letters, so it says false. .equals() would say true.",
             "skills": [
               "explain why == is the wrong way to compare text"
             ]
           },
           {
-            "id": "t_join",
-            "kind": "teach",
-            "instruction": "Join first, then compare the whole thing.",
-            "code": "String first = \"pepper\";\nString second = \"mint\";\nString third = \"peppermint\";\nSystem.out.println((first + second).equals(third));",
-            "output": "true",
-            "body": [
-              "The brackets join the two words into one String before the comparison.",
-              "Without them, .equals would attach to second alone."
-            ]
-          },
-          {
             "id": "t_fix",
             "kind": "fix",
-            "instruction": "Fix this so it prints true.",
+            "instruction": "Fix this so it compares the text properly.",
             "code": "String typed = \"mellon\";\nSystem.out.println(typed == \"mellon\");",
             "target": "true",
             "solution": "String typed = \"mellon\";\nSystem.out.println(typed.equals(\"mellon\"));",
             "hint": "Text is compared with a method, not with an operator.",
-            "after": "This one happened to work here, which is exactly what makes == dangerous.",
+            "after": "This one happened to print true anyway, which is exactly what makes == dangerous. It can be right by accident.",
             "skills": [
               "compare Strings with .equals()"
             ]
@@ -3598,7 +3679,7 @@
             "instruction": "Run the gate and type the magic word.",
             "code": "String password = readLine(\"Speak the magic word: \");\nif (password.equals(\"mellon\")) {\n  System.out.println(\"The gate opens.\");\n} else {\n  System.out.println(\"Nothing happens.\");\n}",
             "stdin": "mellon",
-            "after": "Run it again with something else and the gate stays shut."
+            "after": "Run it again with anything else and the gate stays shut."
           },
           {
             "id": "t_w1",
@@ -3609,27 +3690,13 @@
             "target": "Name? Ada\ntrue",
             "solution": "String name = readLine(\"Name? \");\nSystem.out.println(name.equals(\"Ada\"));",
             "hint": "Compare the box with the text using .equals().",
-            "after": "== would have compared objects, not letters.",
+            "after": "== would have compared memory, not letters.",
             "skills": [
               "compare Strings with .equals()"
             ]
           },
           {
             "id": "t_w2",
-            "kind": "write",
-            "instruction": "Ask for a first and last name, then print them joined with a space.",
-            "code": "// ask \"First? \" and \"Last? \" with readLine\n// print them as one line:  Ada Lovelace\n",
-            "stdin": "Ada\nLovelace",
-            "target": "First? Ada\nLast? Lovelace\nAda Lovelace",
-            "solution": "String first = readLine(\"First? \");\nString last = readLine(\"Last? \");\nSystem.out.println(first + \" \" + last);",
-            "hint": "Join with + and put a space in the middle.",
-            "after": "The space had to be a String of its own.",
-            "skills": [
-              "join Strings together with +"
-            ]
-          },
-          {
-            "id": "t_w3",
             "kind": "write",
             "instruction": "Ask for a password and let them in only if it is exactly opensesame.",
             "code": "// ask \"Password? \" with readLine\n// right:  Welcome in.\n// wrong:  Access denied.\n",
