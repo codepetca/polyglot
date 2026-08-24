@@ -8838,224 +8838,257 @@
         "v": 1,
         "steps": [
           {
-            "id": "i_task",
+            "id": "m_task",
             "kind": "teach",
-            "instruction": "Treasure can be printed. It cannot do anything.",
-            "points": [
-              {
-                "label": "what it has",
-                "text": "name and value. Instance variables - its state."
-              },
-              {
-                "label": "what it does",
-                "text": "Nothing yet, apart from describe itself."
-              },
-              {
-                "label": "what we want",
-                "text": "polish() to raise its value, and isRare() to answer a question about it."
-              }
-            ]
+            "instruction": "Instance variables hold an object's state. How do we define what an object can do?",
+            "body": [
+              "The answer is an instance method."
+            ],
+            "keypoint": "An instance method defines what an object can do."
           },
           {
-            "id": "i_meth",
+            "id": "m_form",
             "kind": "teach",
+            "instruction": "Every instance method has the same four parts.",
+            "code": "public void resize(int newWidth, int newHeight) {\n  width = newWidth;\n  height = newHeight;\n}",
+            "annotate": [
+              {
+                "token": "public",
+                "note": "visibility"
+              },
+              {
+                "token": "void",
+                "note": "return type"
+              },
+              {
+                "token": "resize",
+                "note": "method name"
+              },
+              {
+                "token": "(int newWidth, int newHeight)",
+                "note": "parameters"
+              }
+            ],
+            "body": [
+              "Visibility is usually public or private.",
+              "The return type is what the method gives back, or void if it gives nothing back.",
+              "Parameters are the values passed in when the method is called."
+            ],
+            "keypoint": "A method has a visibility, a return type, a name, and a list of parameters."
+          },
+          {
+            "id": "m_getarea",
+            "kind": "teach",
+            "instruction": "Here is the Room class with resize added. getArea is an instance method that returns a value.",
+            "code": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int roomWidth, int roomHeight) {\n    width = roomWidth;\n    height = roomHeight;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public void resize(int newWidth, int newHeight) {\n    width = newWidth;\n    height = newHeight;\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}\n\npublic void run() {\n  Room rect = new Room(5, 4);\n  System.out.println(rect.getArea());\n  System.out.println(rect.getPerimeter());\n}",
             "wrap": "methods",
-            "instruction": "An instance method can use the fields directly.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 95);\n  System.out.println(crown);\n  crown.polish();\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "output": "Crown (95 gold)\nCrown (105 gold)",
-            "highlight": [
-              3
-            ],
-            "points": [
-              {
-                "label": "public void polish()",
-                "text": "An instance method. No static, so it belongs to one object."
-              },
-              {
-                "label": "value = value + 10;",
-                "text": "No dot, no parameter. Inside the class, the fields are just there."
-              },
-              {
-                "label": "crown.polish()",
-                "text": "Runs it for the crown, so the crown's value changes and nothing else does."
-              },
-              {
-                "label": "95 then 105",
-                "text": "The same object printed twice, with a changed field in between."
-              }
+            "output": "20\n18",
+            "body": [
+              "getArea has a return type of int, no parameters, and returns width times height."
             ]
           },
           {
-            "id": "i_cmp",
-            "kind": "compare",
-            "instruction": "Data only, or data that can act.",
-            "sides": [
-              {
-                "label": "client does the work",
-                "code": "public void run() {\n  int value = 95;\n  value = value + 10;\n  System.out.println(\"Crown (\" + value + \" gold)\");\n}",
-                "output": "Crown (105 gold)"
-              },
-              {
-                "label": "object does the work",
-                "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 95);\n  crown.polish();\n  System.out.println(crown);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-                "output": "Crown (105 gold)"
-              }
-            ],
-            "points": [
-              {
-                "label": "client does the work",
-                "text": "Every client must know that polishing means +10. Change the rule and you change every client."
-              },
-              {
-                "label": "object does the work",
-                "text": "The rule lives in the class. Clients just ask."
-              }
-            ],
-            "skills": [
-              "write instance methods that use and change the fields"
-            ]
-          },
-          {
-            "id": "i_ret",
+            "id": "m_call",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "An instance method can answer a question too.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  Treasure ring = new Treasure(\"Ring\", 45);\n  System.out.println(crown.isRare());\n  System.out.println(ring.isRare());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "output": "true\nfalse",
-            "highlight": [
-              3,
-              4
-            ],
-            "points": [
+            "instruction": "Calling an instance method sends a message to the object that receives it.",
+            "code": "Room rect = new Room(20, 8);\nint area = rect.getArea();",
+            "annotate": [
               {
-                "label": "public boolean isRare()",
-                "text": "Returns a value, so it can go in a println or an if."
-              },
-              {
-                "label": "return value > 100;",
-                "text": "Uses the object's own value. The crown is 120, the ring is 45."
-              },
-              {
-                "label": "same method, two answers",
-                "text": "Which object you call it on decides the result."
+                "token": "rect.getArea()",
+                "note": "receiver . method name ( arguments )"
               }
-            ]
+            ],
+            "body": [
+              "rect is the receiver. getArea is the message being sent. There are no arguments here."
+            ],
+            "keypoint": "Calling an instance method sends a message to the object that receives it."
           },
           {
-            "id": "i_bucket",
+            "id": "m_general",
+            "kind": "teach",
+            "instruction": "The general form is receiver.methodName(argument).",
+            "facts": {
+              "columns": [
+                "Call",
+                "Receiver",
+                "Method name",
+                "Argument"
+              ],
+              "rows": [
+                [
+                  "rect.getArea()",
+                  "rect",
+                  "getArea",
+                  "none"
+                ],
+                [
+                  "sword.upgrade(5)",
+                  "sword",
+                  "upgrade",
+                  "5"
+                ],
+                [
+                  "chest.unlock(\"brass\")",
+                  "chest",
+                  "unlock",
+                  "\"brass\""
+                ]
+              ]
+            },
+            "keypoint": "A call has the form receiver.methodName(argument)."
+          },
+          {
+            "id": "m_bucket",
             "kind": "bucket",
-            "instruction": "Instance variable, or instance method?",
+            "instruction": "chest.unlock(\"brass\") — sort each part.",
             "buckets": [
-              "instance variable",
-              "instance method"
+              "Receiver",
+              "Method name",
+              "Argument"
             ],
             "items": [
               {
-                "text": "private int value;",
+                "text": "chest",
                 "bucket": 0
               },
               {
-                "text": "public void polish()",
+                "text": "unlock",
                 "bucket": 1
               },
               {
-                "text": "private String name;",
-                "bucket": 0
-              },
-              {
-                "text": "public boolean isRare()",
-                "bucket": 1
-              },
-              {
-                "text": "what the object HAS",
-                "bucket": 0
-              },
-              {
-                "text": "what the object DOES",
-                "bucket": 1
+                "text": "\"brass\"",
+                "bucket": 2
               }
             ],
-            "why": "Variables hold state and have a type and a name. Methods have brackets and a body.",
+            "why": "chest is the object receiving the message. unlock is the message. \"brass\" is the argument passed with it.",
             "skills": [
               "tell an instance variable apart from an instance method"
             ]
           },
           {
-            "id": "i_own",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "Only one of them gets polished. What prints?",
-            "code": "public void run() {\n  Treasure a = new Treasure(\"Crown\", 95);\n  Treasure b = new Treasure(\"Ring\", 95);\n  a.polish();\n  System.out.println(b);\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void polish() {\n    value = value + 10;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n\n  public String toString() {\n    return name + \" (\" + value + \" gold)\";\n  }\n}",
-            "opts": [
-              "Ring (95 gold)",
-              "Ring (105 gold)",
-              "Crown (105 gold)",
-              "Crown (95 gold)"
-            ],
-            "correct": 0,
-            "why": "polish() ran on a. Each object has its own value, so the ring never heard about it. That is what \"belongs to one object\" means.",
-            "skills": [
-              "write instance methods that use and change the fields"
-            ]
-          },
-          {
-            "id": "i_ret_fix",
-            "kind": "fix",
-            "wrap": "methods",
-            "instruction": "isRare works out the answer and then loses it.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.isRare());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public boolean isRare() {\n    value > 100;\n  }\n}",
-            "target": "true",
-            "solution": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.isRare());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public boolean isRare() {\n    return value > 100;\n  }\n}",
-            "hint": "The comparison happens, but nothing hands the answer back to whoever called it.",
-            "after": "A method with a type on the left MUST return that type. Working the answer out is not the same as giving it back.",
-            "skills": [
-              "write instance methods that use and change the fields"
-            ]
-          },
-          {
-            "id": "i_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public void polish() {\n  value = value + 10;\n}",
-            "questions": [
-              {
-                "prompt": "Why does polish() not need value as a parameter?",
-                "opts": [
-                  "It is static",
-                  "It does",
-                  "It is a field of the same object, so it is already in scope",
-                  "Java passes it automatically"
-                ],
-                "correct": 2,
-                "why": "An instance method runs on one object and can see that object's fields by name."
-              },
-              {
-                "prompt": "What is the difference between an instance variable and an instance method?",
-                "opts": [
-                  "A variable is private; a method is public",
-                  "Nothing",
-                  "A method is faster",
-                  "A variable is what the object has; a method is what it does"
-                ],
-                "correct": 3,
-                "why": "State versus behaviour - the same pair from 5.2."
-              }
-            ],
-            "skills": [
-              "tell an instance variable apart from an instance method"
-            ]
-          },
-          {
-            "id": "i_write",
+            "id": "m_w1",
             "kind": "write",
+            "instruction": "Add isSquare to Room. It returns true when width equals height.",
             "wrap": "methods",
-            "instruction": "Your turn: give Potion a drink() and a isStrong().",
-            "harness": "public void run() {\n  Potion p = new Potion(\"Elixir\", 60);\n  System.out.println(p.isStrong());\n  p.drink();\n  System.out.println(p.isStrong());\n}",
-            "code": "// class Potion: private name and healing, a constructor,\n// drink() halves healing, isStrong() returns healing > 50\n",
+            "code": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int roomWidth, int roomHeight) {\n    width = roomWidth;\n    height = roomHeight;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public void resize(int newWidth, int newHeight) {\n    width = newWidth;\n    height = newHeight;\n  }\n\n  // write isSquare here, then remove this comment\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}\n\npublic void run() {\n  Room a = new Room(5, 5);\n  Room b = new Room(5, 8);\n  System.out.println(a.isSquare());\n  System.out.println(b.isSquare());\n}",
             "target": "true\nfalse",
-            "solution": "class Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public void drink() {\n    healing = healing / 2;\n  }\n\n  public boolean isStrong() {\n    return healing > 50;\n  }\n}",
-            "hint": "drink() sets healing = healing / 2. isStrong() returns healing > 50. Neither takes a parameter.",
-            "after": "60 is strong; after drinking it is 30, which is not. One object, changing state.",
+            "solution": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int roomWidth, int roomHeight) {\n    width = roomWidth;\n    height = roomHeight;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public void resize(int newWidth, int newHeight) {\n    width = newWidth;\n    height = newHeight;\n  }\n\n  public boolean isSquare() {\n    return width == height;\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}\n\npublic void run() {\n  Room a = new Room(5, 5);\n  Room b = new Room(5, 8);\n  System.out.println(a.isSquare());\n  System.out.println(b.isSquare());\n}",
+            "hint": "public boolean isSquare() { return width == height; }",
+            "after": "A new instance method, added to a class that already existed.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "m_w2",
+            "kind": "write",
+            "instruction": "Call resize on a Room, then print its new area.",
+            "wrap": "methods",
+            "code": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int roomWidth, int roomHeight) {\n    width = roomWidth;\n    height = roomHeight;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public void resize(int newWidth, int newHeight) {\n    width = newWidth;\n    height = newHeight;\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}\n\npublic void run() {\n  Room r = new Room(4, 4);\n  // resize it to 10 by 3, then print the area\n}",
+            "target": "30",
+            "solution": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int roomWidth, int roomHeight) {\n    width = roomWidth;\n    height = roomHeight;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public void resize(int newWidth, int newHeight) {\n    width = newWidth;\n    height = newHeight;\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}\n\npublic void run() {\n  Room r = new Room(4, 4);\n  r.resize(10, 3);\n  System.out.println(r.getArea());\n}",
+            "hint": "r.resize(10, 3); changes the state of r.",
+            "after": "resize changed the fields of r. getArea then worked with the new values.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "m_w3",
+            "kind": "write",
+            "instruction": "Add upgrade to Weapon. It takes an int and adds it to damage.",
+            "wrap": "methods",
+            "code": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public int getDamage() {\n    return damage;\n  }\n\n  // write upgrade here\n\n  public String toString() {\n    return name + \" deals \" + damage + \" damage\";\n  }\n}\n\npublic void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  sword.upgrade(5);\n  System.out.println(sword.getDamage());\n}",
+            "target": "17",
+            "solution": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public int getDamage() {\n    return damage;\n  }\n\n  public void upgrade(int amount) {\n    damage = damage + amount;\n  }\n\n  public String toString() {\n    return name + \" deals \" + damage + \" damage\";\n  }\n}\n\npublic void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  sword.upgrade(5);\n  System.out.println(sword.getDamage());\n}",
+            "hint": "public void upgrade(int amount) { damage = damage + amount; }",
+            "after": "12 plus 5 is 17. upgrade changed the state, getDamage reported it.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "m_w4",
+            "kind": "write",
+            "instruction": "Add attackPower to Player. It returns the level times 10.",
+            "wrap": "methods",
+            "code": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String playerName, int playerLevel) {\n    name = playerName;\n    level = playerLevel;\n    hp = 100;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  // write attackPower here\n}\n\npublic void run() {\n  Player hero = new Player(\"Ada\", 4);\n  System.out.println(hero.attackPower());\n}",
+            "target": "40",
+            "solution": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String playerName, int playerLevel) {\n    name = playerName;\n    level = playerLevel;\n    hp = 100;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int attackPower() {\n    return level * 10;\n  }\n}\n\npublic void run() {\n  Player hero = new Player(\"Ada\", 4);\n  System.out.println(hero.attackPower());\n}",
+            "hint": "public int attackPower() { return level * 10; }",
+            "after": "attackPower does not just report a field. It computes a new value from the state.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "m_predict",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "wrap": "methods",
+            "code": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int w, int h) {\n    width = w;\n    height = h;\n  }\n\n  public boolean isSquare() {\n    return width == height;\n  }\n}\n\npublic void run() {\n  Room a = new Room(6, 6);\n  Room b = new Room(6, 9);\n  System.out.println(a.isSquare());\n  System.out.println(b.isSquare());\n}",
+            "opts": [
+              "true\ntrue",
+              "true\nfalse",
+              "false\nfalse",
+              "false\ntrue"
+            ],
+            "correct": 1,
+            "why": "Each object has its own width and height. a has matching values, b does not.",
+            "skills": [
+              "tell an instance variable apart from an instance method"
+            ]
+          },
+          {
+            "id": "m_w5",
+            "kind": "write",
+            "instruction": "Add isStrong to Potion. It returns true when healAmount is above 20.",
+            "wrap": "methods",
+            "code": "class Potion {\n  private String name;\n  private int healAmount;\n\n  public Potion(String potionName, int potionHealAmount) {\n    name = potionName;\n    healAmount = potionHealAmount;\n  }\n\n  // write isStrong here\n}\n\npublic void run() {\n  Potion a = new Potion(\"Elixir\", 30);\n  Potion b = new Potion(\"Sip\", 5);\n  System.out.println(a.isStrong());\n  System.out.println(b.isStrong());\n}",
+            "target": "true\nfalse",
+            "solution": "class Potion {\n  private String name;\n  private int healAmount;\n\n  public Potion(String potionName, int potionHealAmount) {\n    name = potionName;\n    healAmount = potionHealAmount;\n  }\n\n  public boolean isStrong() {\n    return healAmount > 20;\n  }\n}\n\npublic void run() {\n  Potion a = new Potion(\"Elixir\", 30);\n  Potion b = new Potion(\"Sip\", 5);\n  System.out.println(a.isStrong());\n  System.out.println(b.isStrong());\n}",
+            "hint": "public boolean isStrong() { return healAmount > 20; }",
+            "after": "Each Potion object answers isStrong for its own healAmount.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "m_w6",
+            "kind": "write",
+            "instruction": "Add battleCry to Player. It returns the name, then the level, in one sentence.",
+            "wrap": "methods",
+            "code": "class Player {\n  private String name;\n  private int level;\n\n  public Player(String playerName, int playerLevel) {\n    name = playerName;\n    level = playerLevel;\n  }\n\n  // write battleCry here. It returns:  Ada the level 4 hero!\n}\n\npublic void run() {\n  Player hero = new Player(\"Ada\", 4);\n  System.out.println(hero.battleCry());\n}",
+            "target": "Ada the level 4 hero!",
+            "solution": "class Player {\n  private String name;\n  private int level;\n\n  public Player(String playerName, int playerLevel) {\n    name = playerName;\n    level = playerLevel;\n  }\n\n  public String battleCry() {\n    return name + \" the level \" + level + \" hero!\";\n  }\n}\n\npublic void run() {\n  Player hero = new Player(\"Ada\", 4);\n  System.out.println(hero.battleCry());\n}",
+            "hint": "Join name, the text \" the level \", level, and \" hero!\" with +.",
+            "after": "battleCry combines two fields into one new String.",
+            "skills": [
+              "write instance methods that use and change the fields"
+            ]
+          },
+          {
+            "id": "m_final",
+            "kind": "workout",
+            "level": "standard",
+            "instruction": "Write a Shield class with two instance methods. blockAmount returns defense divided by 2. describe returns the name, then blocks, then blockAmount.",
+            "wrap": "methods",
+            "plan": [
+              "decide what each method needs to know: its parameters",
+              "decide what each method gives back: its return type",
+              "write the body of each method",
+              "test both methods by calling them"
+            ],
+            "methods": [
+              "private field",
+              "return type",
+              "instance method"
+            ],
+            "code": "class Shield {\n  private String name;\n  private int defense;\n\n  public Shield(String shieldName, int shieldDefense) {\n    name = shieldName;\n    defense = shieldDefense;\n  }\n\n  // write blockAmount and describe here\n}\n\npublic void run() {\n  Shield s = new Shield(\"Buckler\", 20);\n  System.out.println(s.blockAmount());\n  System.out.println(s.describe());\n}",
+            "target": "10\nBuckler blocks 10",
+            "solution": "class Shield {\n  private String name;\n  private int defense;\n\n  public Shield(String shieldName, int shieldDefense) {\n    name = shieldName;\n    defense = shieldDefense;\n  }\n\n  public int blockAmount() {\n    return defense / 2;\n  }\n\n  public String describe() {\n    return name + \" blocks \" + blockAmount();\n  }\n}\n\npublic void run() {\n  Shield s = new Shield(\"Buckler\", 20);\n  System.out.println(s.blockAmount());\n  System.out.println(s.describe());\n}",
+            "hint": "describe can call blockAmount() itself. One instance method can call another.",
+            "after": "describe called blockAmount from inside the same class. Instance methods can use each other.",
             "skills": [
               "write instance methods that use and change the fields"
             ]
@@ -9074,145 +9107,179 @@
         "v": 1,
         "steps": [
           {
-            "id": "g_task",
+            "id": "w_review",
             "kind": "teach",
-            "instruction": "The fields are private. The client cannot read them.",
-            "points": [
+            "instruction": "Review.",
+            "rules": [
               {
-                "label": "private int value;",
-                "text": "Only Treasure can touch it. That is what private means."
+                "text": "An instance method defines what an object can do."
               },
               {
-                "label": "crown.value",
-                "text": "Will not compile from run(). The client is locked out."
+                "text": "Calling an instance method sends a message to an object."
               },
               {
-                "label": "but it needs the number",
-                "text": "To add up a haul, or compare two treasures."
-              },
-              {
-                "label": "the way in",
-                "text": "A method inside the class that hands the value out. That is all a getter is."
+                "text": "An object has state, held by instance variables, and behaviour, defined by instance methods."
               }
             ]
           },
           {
-            "id": "g_get",
+            "id": "w_task",
             "kind": "teach",
+            "instruction": "Instance variables are private. How does a client read one?",
+            "body": [
+              "The answer is a getter method."
+            ]
+          },
+          {
+            "id": "w_getter",
+            "kind": "teach",
+            "instruction": "A getter returns the value of a private field. It is also called an accessor method.",
+            "code": "public String getName() {\n  return name;\n}",
+            "annotate": [
+              {
+                "token": "getName",
+                "note": "starts with get, by convention"
+              },
+              {
+                "token": "return name;",
+                "note": "gives back the field"
+              }
+            ],
+            "keypoint": "A getter returns the value of a private field. Name it getXxx."
+          },
+          {
+            "id": "w_setter",
+            "kind": "teach",
+            "instruction": "A setter changes the value of a private field. It is also called a modifier method.",
+            "code": "public void setName(String newName) {\n  name = newName;\n}",
+            "annotate": [
+              {
+                "token": "setName",
+                "note": "starts with set, by convention"
+              },
+              {
+                "token": "void",
+                "note": "a setter returns nothing"
+              }
+            ],
+            "keypoint": "A setter changes the value of a private field. Name it setXxx."
+          },
+          {
+            "id": "w_why",
+            "kind": "teach",
+            "instruction": "Why use getters and setters instead of a public field?",
+            "rules": [
+              {
+                "text": "Validation: a setter can reject a bad value."
+              },
+              {
+                "text": "Abstraction: a getter can hide how the value is stored."
+              },
+              {
+                "text": "Control: the class decides what a client is allowed to change."
+              }
+            ],
+            "keypoint": "Getters and setters allow validation, abstraction, and control over a field."
+          },
+          {
+            "id": "w_validate",
+            "kind": "teach",
+            "instruction": "A setter can refuse a bad value.",
+            "code": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public int getDamage() {\n    return damage;\n  }\n\n  public void setDamage(int newDamage) {\n    if (newDamage >= 0) {\n      damage = newDamage;\n    }\n  }\n}\n\npublic void run() {\n  Weapon sword = new Weapon(\"Sword\", 12);\n  sword.setDamage(20);\n  System.out.println(sword.getDamage());\n  sword.setDamage(-5);\n  System.out.println(sword.getDamage());\n}",
             "wrap": "methods",
-            "instruction": "A getter returns a private field.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getName());\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
-            "output": "Crown\n120",
-            "highlight": [
-              2,
-              3
+            "output": "20\n20",
+            "body": [
+              "setDamage(20) is accepted. The damage becomes 20.",
+              "setDamage(-5) is refused. The damage stays 20."
             ],
-            "points": [
+            "keypoint": "A setter can check a value before storing it, and refuse a bad one."
+          },
+          {
+            "id": "w_bucket",
+            "kind": "bucket",
+            "instruction": "Getter or setter?",
+            "buckets": [
+              "Getter",
+              "Setter"
+            ],
+            "items": [
               {
-                "label": "public int getValue()",
-                "text": "public so the client can call it; int because that is what it hands back."
+                "text": "public String getName()",
+                "bucket": 0
               },
               {
-                "label": "return value;",
-                "text": "The whole body. A getter does nothing else."
+                "text": "public void setLevel(int newLevel)",
+                "bucket": 1
               },
               {
-                "label": "the name",
-                "text": "getSomething is a convention, not a rule. Everyone follows it, so follow it."
+                "text": "public int getHp()",
+                "bucket": 0
               },
               {
-                "label": "read-only",
-                "text": "The client can now SEE value but still cannot change it."
+                "text": "public void setLocked(boolean isLocked)",
+                "bucket": 1
               }
+            ],
+            "why": "A getter returns a value and takes no parameters. A setter returns void and takes the new value as a parameter.",
+            "skills": [
+              "write a getter that hands a private field out"
             ]
           },
           {
-            "id": "g_set",
-            "kind": "teach",
+            "id": "w_w1",
+            "kind": "write",
+            "instruction": "Add getWidth and setWidth to Room. setWidth refuses a value of 0 or less.",
             "wrap": "methods",
-            "instruction": "A setter controls what is allowed in.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  crown.setValue(200);\n  System.out.println(crown.getValue());\n  crown.setValue(-50);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
-            "output": "200\n200",
-            "highlight": [
-              2,
-              4
-            ],
-            "points": [
-              {
-                "label": "setValue(200)",
-                "text": "Accepted. value becomes 200."
-              },
-              {
-                "label": "setValue(-50)",
-                "text": "Refused. A treasure cannot be worth minus fifty, so the setter ignores it."
-              },
-              {
-                "label": "still 200",
-                "text": "The second print proves the bad value never got in."
-              },
-              {
-                "label": "if (newValue >= 0)",
-                "text": "This is the whole point of a setter. A public field could not have refused."
-              }
-            ]
-          },
-          {
-            "id": "g_cmp",
-            "kind": "compare",
-            "instruction": "A public field cannot say no.",
-            "sides": [
-              {
-                "label": "public field",
-                "code": "public void run() {\n  Loot l = new Loot();\n  l.value = -50;\n  System.out.println(l.value);\n}\n\nclass Loot {\n  public int value = 100;\n}",
-                "output": "-50"
-              },
-              {
-                "label": "private + setter",
-                "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 100);\n  crown.setValue(-50);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
-                "output": "100"
-              }
-            ],
-            "points": [
-              {
-                "label": "public field",
-                "text": "Anyone can put anything in it, including nonsense."
-              },
-              {
-                "label": "private + setter",
-                "text": "The class decides what counts as a legal value, and keeps deciding forever."
-              }
-            ],
+            "code": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int roomWidth, int roomHeight) {\n    width = roomWidth;\n    height = roomHeight;\n  }\n\n  // write getWidth and setWidth here\n}\n\npublic void run() {\n  Room r = new Room(5, 4);\n  r.setWidth(9);\n  System.out.println(r.getWidth());\n  r.setWidth(-2);\n  System.out.println(r.getWidth());\n}",
+            "target": "9\n9",
+            "solution": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int roomWidth, int roomHeight) {\n    width = roomWidth;\n    height = roomHeight;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public void setWidth(int newWidth) {\n    if (newWidth > 0) {\n      width = newWidth;\n    }\n  }\n}\n\npublic void run() {\n  Room r = new Room(5, 4);\n  r.setWidth(9);\n  System.out.println(r.getWidth());\n  r.setWidth(-2);\n  System.out.println(r.getWidth());\n}",
+            "hint": "setWidth only assigns width when newWidth is greater than 0.",
+            "after": "The second setWidth call was refused, so width stayed 9.",
             "skills": [
               "write a setter that controls what goes in"
             ]
           },
           {
-            "id": "g_mcq",
+            "id": "w_w2",
+            "kind": "write",
+            "instruction": "Add getLevel and setLevel to Player. setLevel refuses a negative level.",
+            "wrap": "methods",
+            "code": "class Player {\n  private String name;\n  private int level;\n\n  public Player(String playerName, int playerLevel) {\n    name = playerName;\n    level = playerLevel;\n  }\n\n  // write getLevel and setLevel here\n}\n\npublic void run() {\n  Player hero = new Player(\"Ada\", 3);\n  hero.setLevel(7);\n  System.out.println(hero.getLevel());\n  hero.setLevel(-1);\n  System.out.println(hero.getLevel());\n}",
+            "target": "7\n7",
+            "solution": "class Player {\n  private String name;\n  private int level;\n\n  public Player(String playerName, int playerLevel) {\n    name = playerName;\n    level = playerLevel;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public void setLevel(int newLevel) {\n    if (newLevel >= 0) {\n      level = newLevel;\n    }\n  }\n}\n\npublic void run() {\n  Player hero = new Player(\"Ada\", 3);\n  hero.setLevel(7);\n  System.out.println(hero.getLevel());\n  hero.setLevel(-1);\n  System.out.println(hero.getLevel());\n}",
+            "hint": "setLevel only assigns level when newLevel is 0 or more.",
+            "after": "A negative level was refused.",
+            "skills": [
+              "write a setter that controls what goes in"
+            ]
+          },
+          {
+            "id": "w_trace",
             "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public int getValue() { return value; }\npublic void setValue(int v) { value = v; }",
+            "instruction": "Two questions.",
+            "code": "private int damage;\n\npublic void setDamage(int newDamage) {\n  if (newDamage >= 0) {\n    damage = newDamage;\n  }\n}",
             "questions": [
               {
-                "prompt": "What is the difference between a getter and a setter?",
+                "prompt": "Why not just make damage public instead of writing a setter?",
                 "opts": [
-                  "A getter is faster",
-                  "There is none",
-                  "A getter returns a field; a setter changes one",
-                  "A getter is private; a setter is public"
+                  "A public field cannot be validated before it is changed",
+                  "A public field is slower",
+                  "A public field cannot be printed",
+                  "There is no difference"
                 ],
-                "correct": 2,
-                "why": "Getter reads and returns. Setter takes a value in and writes it. Hence the return type on one and the parameter on the other."
+                "correct": 0,
+                "why": "A public field can be set to anything, including a negative number. A setter can check the value first."
               },
               {
-                "prompt": "Why keep fields private and use methods instead?",
+                "prompt": "What does a getter return?",
                 "opts": [
-                  "It saves memory",
-                  "The class can then control what values are allowed",
-                  "Java requires it",
-                  "It runs faster"
+                  "The value of a private field",
+                  "Nothing",
+                  "A new object",
+                  "The name of the field"
                 ],
-                "correct": 1,
-                "why": "A public field accepts anything. A setter can check first, and can keep checking as the rules change."
+                "correct": 0,
+                "why": "A getter reads and returns the value stored in a private field."
               }
             ],
             "skills": [
@@ -9220,81 +9287,39 @@
             ]
           },
           {
-            "id": "g_fill",
-            "kind": "fill",
-            "wrap": "methods",
-            "instruction": "Complete the getter.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public ⟦1⟧ getValue() {\n    ⟦2⟧ value;\n  }\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "void",
-                  "int",
-                  "String"
-                ],
-                "answer": 1
-              },
-              {
-                "chips": [
-                  "print",
-                  "return",
-                  "get"
-                ],
-                "answer": 1
-              }
+            "id": "w_final",
+            "kind": "workout",
+            "level": "olympic",
+            "instruction": "Write a Dragon class. It has a name, a level, and canBreatheFire.",
+            "body": [
+              "The constructor takes the name first, then the level.",
+              "canBreatheFire starts true only if the level is 70 or higher.",
+              "getName, getLevel and isFireBreather are getters for the three fields.",
+              "attack prints the fire breath if canBreatheFire is true, or ~ ~ ~ if it is false.",
+              "gainExperience adds 10 to the level, then updates canBreatheFire."
             ],
-            "target": "120",
-            "hint": "It hands back the number, so the type is int and the keyword is return.",
-            "after": "A getter is a return type, a name, and one return line.",
-            "skills": [
-              "write a getter that hands a private field out"
-            ]
-          },
-          {
-            "id": "g_read",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "Reading a value and changing it are not the same thing.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue() + 100);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getValue() {\n    return value;\n  }\n\n  public void setValue(int newValue) {\n    if (newValue >= 0) {\n      value = newValue;\n    }\n  }\n}",
-            "opts": [
-              "220\n220",
-              "120\n120",
-              "220\n120",
-              "120\n220"
+            "plan": [
+              "write the fields: name, level, canBreatheFire",
+              "write the constructor: set name and level, then set canBreatheFire from the level",
+              "write the getters: getName, getLevel, isFireBreather",
+              "write attack: print the fire breath if canBreatheFire, otherwise print ~ ~ ~",
+              "write gainExperience: add 10 to level, then update canBreatheFire"
             ],
-            "correct": 2,
-            "why": "getValue() hands back a copy of the number. Adding 100 to it makes a new number to print and never touches the field, so the second read is still 120.",
-            "skills": [
-              "write a getter that hands a private field out"
-            ]
-          },
-          {
-            "id": "g_void",
-            "kind": "fix",
+            "methods": [
+              "constructor",
+              "boolean field",
+              "if / else",
+              "level >= 70"
+            ],
+            "code": "class Dragon {\n  // fields: name, level, canBreatheFire\n\n  // constructor: takes name then level, sets canBreatheFire when level >= 70\n\n  // getName, getLevel, isFireBreather\n\n  // attack: prints the fire breath if canBreatheFire, otherwise prints ~ ~ ~\n\n  // gainExperience: adds 10 to level, then updates canBreatheFire\n}\n\npublic void run() {\n  Dragon d = new Dragon(\"Smaug\", 50);\n  System.out.println(d.getName());\n  System.out.println(d.getLevel());\n  System.out.println(d.isFireBreather());\n  d.attack();\n  d.gainExperience();\n  d.gainExperience();\n  System.out.println(d.getLevel());\n  System.out.println(d.isFireBreather());\n  d.attack();\n}",
             "wrap": "methods",
-            "instruction": "This getter promises nothing and then tries to return something.",
-            "code": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public void getValue() {\n    return value;\n  }\n}",
-            "target": "120",
-            "solution": "public void run() {\n  Treasure crown = new Treasure(\"Crown\", 120);\n  System.out.println(crown.getValue());\n}\n\nclass Treasure {\n  private String name;\n  private int value;\n\n  public Treasure(String name, int value) {\n    this.name = name;\n    this.value = value;\n  }\n\n  public int getValue() {\n    return value;\n  }\n}",
-            "hint": "What does the field hold, and what does the method claim to give back?",
-            "after": "void and return value contradict each other. The type on the left has to match what you hand back.",
+            "target": "Smaug\n50\nfalse\n~ ~ ~\n70\ntrue\n>>>>>>>>>>\n>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>\n>>>>>>>>>>",
+            "solution": "class Dragon {\n  private String name;\n  private int level;\n  private boolean canBreatheFire;\n\n  public Dragon(String dragonName, int dragonLevel) {\n    name = dragonName;\n    level = dragonLevel;\n    canBreatheFire = level >= 70;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public boolean isFireBreather() {\n    return canBreatheFire;\n  }\n\n  public void attack() {\n    if (canBreatheFire) {\n      System.out.println(\">>>>>>>>>>\");\n      System.out.println(\">>>>>>>>>>>>>>\");\n      System.out.println(\">>>>>>>>>>>>>>\");\n      System.out.println(\">>>>>>>>>>\");\n    } else {\n      System.out.println(\"~ ~ ~\");\n    }\n  }\n\n  public void gainExperience() {\n    level = level + 10;\n    canBreatheFire = level >= 70;\n  }\n}\n\npublic void run() {\n  Dragon d = new Dragon(\"Smaug\", 50);\n  System.out.println(d.getName());\n  System.out.println(d.getLevel());\n  System.out.println(d.isFireBreather());\n  d.attack();\n  d.gainExperience();\n  d.gainExperience();\n  System.out.println(d.getLevel());\n  System.out.println(d.isFireBreather());\n  d.attack();\n}",
+            "hint": "canBreatheFire is set in two places: the constructor, and again at the end of gainExperience.",
+            "after": "A level 50 Dragon cannot breathe fire. Two calls to gainExperience take it to 70, and canBreatheFire becomes true.",
             "skills": [
+              "write a class with private instance variables and a constructor",
               "write a getter that hands a private field out"
-            ]
-          },
-          {
-            "id": "g_write",
-            "kind": "write",
-            "wrap": "methods",
-            "instruction": "Your turn: getters and a guarded setter for Potion.",
-            "harness": "public void run() {\n  Potion p = new Potion(\"Elixir\", 60);\n  System.out.println(p.getName());\n  p.setHealing(80);\n  System.out.println(p.getHealing());\n  p.setHealing(-10);\n  System.out.println(p.getHealing());\n}",
-            "code": "// class Potion: private name and healing, a constructor,\n// getName(), getHealing(), and setHealing() that ignores negatives\n",
-            "target": "Elixir\n80\n80",
-            "solution": "class Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getHealing() {\n    return healing;\n  }\n\n  public void setHealing(int newHealing) {\n    if (newHealing >= 0) {\n      healing = newHealing;\n    }\n  }\n}",
-            "hint": "Two getters returning the fields, and setHealing wrapping the assignment in if (newHealing >= 0).",
-            "after": "The -10 was refused, so it still prints 80. That refusal is the reason setters exist.",
-            "skills": [
-              "write a setter that controls what goes in"
             ]
           }
         ]
