@@ -18,6 +18,12 @@ export default function ScratchpadPanel({
   setCode: (v: string) => void;
   lessonCode: string;
 }) {
+  // WRAP MODE. "beginner" puts the code inside main(); "methods" puts it at
+  // class level so a student can DEFINE methods and classes, which Java forbids
+  // inside another method. The course teaches methods from Unit 4 and classes
+  // from Unit 5, so a scratchpad locked to beginner cannot run two thirds of
+  // what it is sitting next to.
+  const [methods, setMethods] = useState(false);
   const [stdinOpen, setStdinOpen] = useState(false);
   const [stdin, setStdin] = useState("");
   const [out, setOut] = useState<{ text: string; err: boolean } | null>(null);
@@ -38,7 +44,12 @@ export default function ScratchpadPanel({
     const r = await fetch("/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, stdin: stdin.replace(/\\n/g, "\n"), wrap: true }),
+      body: JSON.stringify({
+        code,
+        stdin: stdin.replace(/\\n/g, "\n"),
+        wrap: true,
+        wrapMode: methods ? "methods" : "beginner",
+      }),
     }).then((x) => x.json());
     setOut({ text: r.compiled === false ? r.error : r.stdout || "(no output)", err: r.compiled === false });
     setMeta(r.compiled === false ? "compile error" : "done");
@@ -83,7 +94,14 @@ export default function ScratchpadPanel({
         </button>
         <span className="runnote">⌘/Ctrl + Enter</span>
         <span style={{ flex: 1 }} />
-        <button className={`tbtn2 ${stdinOpen ? "" : ""}`} title="Program input (stdin)" onClick={() => setStdinOpen(!stdinOpen)}>
+        <button
+          className={`tbtn2 ${methods ? "on" : ""}`}
+          title={methods ? "Class level: you can define methods and classes. run() is called for you." : "Inside main(): plain statements. Switch on to define methods or classes."}
+          onClick={() => setMethods(!methods)}
+        >
+          {methods ? "{ } methods" : "{ } main"}
+        </button>
+        <button className={`tbtn2 ${stdinOpen ? "on" : ""}`} title="Program input (stdin)" onClick={() => setStdinOpen(!stdinOpen)}>
           ⌨ input
         </button>
         <button
@@ -106,7 +124,7 @@ export default function ScratchpadPanel({
 
       {stdinOpen && (
         <div className="stdinrow" style={{ margin: 0 }}>
-          <label>stdin (for input() — one value per line, \n ok):</label>
+          <label>input (one value per line, for readLine / readInt — \n ok):</label>
           <input value={stdin} onChange={(e) => setStdin(e.target.value)} placeholder="e.g. 7" style={{ minWidth: 100, flex: 1 }} />
         </div>
       )}

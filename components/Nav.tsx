@@ -54,6 +54,9 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
               <Link href="/class" className={on("/class") || on("/teacher") || on("/tests") || on("/gradebook")}>Classes</Link>
             )}
             <Link href="/notes" className={on("/notes")}>Notes</Link>
+            {/* Reference needs no account and no class, so it sits beside Notes
+                for everyone rather than behind a role check. */}
+            <Link href="/docs" className={on("/docs")}>Reference</Link>
             {me.role === "ADMIN" && (
               <>
                 <Link href="/admin/editor" className={on("/admin/editor")}>Editor</Link>

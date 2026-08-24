@@ -12,7 +12,11 @@ import ScratchpadPanel from "./ScratchpadPanel";
 import TutorPanel from "./TutorPanel";
 
 const SCRATCH_KEY = "classos_scratchpad";
-const DEFAULT_CODE = 'String name = input("Your name? ");\nSystem.out.println("Hi, " + name + "!");';
+// CODEHS PARITY: this course teaches readLine/readInt/readDouble/readBoolean,
+// never input() or Scanner. The old default here called input(), which does not
+// exist in the wrapper — so the very first thing a student saw in the
+// scratchpad failed to compile.
+const DEFAULT_CODE = 'String name = readLine("Your name? ");\nSystem.out.println("Hi, " + name + "!");';
 
 export default function StudentTools({
   lessonCode,
@@ -46,8 +50,11 @@ export default function StudentTools({
       const sel = window.getSelection();
       const text = sel?.toString().trim() ?? "";
       if (!sel || sel.isCollapsed || text.length < 3) return setPopup(null);
+      // .lesson-body is the classic reading layout; .flowplay is the
+      // interactive player. Only matching the first meant highlight-to-ask was
+      // dead on every lesson that had been converted to a flow.
       const anchor = sel.anchorNode?.parentElement;
-      if (!anchor || !anchor.closest(".lesson-body")) return setPopup(null);
+      if (!anchor || !anchor.closest(".lesson-body, .flowplay")) return setPopup(null);
       const r = sel.getRangeAt(0).getBoundingClientRect();
       setPopup({ x: Math.min(r.left + r.width / 2, window.innerWidth - 190), y: r.bottom + 8, text: text.slice(0, 500) });
       setPrompt("");

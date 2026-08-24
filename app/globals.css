@@ -1079,3 +1079,28 @@ pre.flowcode.ro { margin: 0; }
 .notefold.lesson > .foldbody { padding: 0 12px 12px; }
 .notefold.lesson ul { margin: 0 0 10px; padding-left: 19px; display: flex; flex-direction: column; gap: 6px; }
 .notefold.lesson li { font-size: 14.5px; line-height: 1.55; font-weight: 400; }
+
+/* ── /docs: the whole reference on one page ──
+   The inline panel puts THIS lesson's syntax in front of a student unasked.
+   This page is for when they already know what they are looking for. */
+.docspage { max-width: 820px; margin: 0 auto; padding: 28px 20px 90px; }
+.docsearch { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+.docsearch input { flex: 1; font-family: var(--sans); font-size: 15px; padding: 11px 14px;
+  border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
+.docsearch input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.docscount { margin: 0 0 16px; }
+.docsjump { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 26px; }
+.docsjump a { font-family: var(--mono); font-size: 11.5px; padding: 5px 10px; border: 1.5px solid var(--line);
+  border-radius: 99px; color: var(--muted); text-decoration: none; background: var(--card); }
+.docsjump a:hover { border-color: var(--ink); color: var(--ink); }
+.docsec { margin-bottom: 34px; scroll-margin-top: 70px; }
+.docsec h2 { font-family: var(--sans); font-size: 15px; text-transform: uppercase; letter-spacing: .07em;
+  border-bottom: 2px solid var(--ink); padding-bottom: 7px; margin: 0 0 14px;
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.docwhere { margin-left: auto; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0;
+  text-transform: none; color: var(--muted); font-weight: 400; }
+/* The panel renders name and note in separate places; here they share a cell,
+   so without this they read as one run-on word: "Print a linePrints, then…". */
+.docspage .docs-item dd strong { display: block; color: var(--ink); font-size: 13.5px; margin-bottom: 2px; }
+.docspage .docs-item { padding: 9px 0; border-bottom: 1px solid var(--line); }
+.docspage .docs-item:last-child { border-bottom: 0; }

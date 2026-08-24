@@ -137,7 +137,12 @@ export default async function LessonPage({
           {classic}
         </>
       )}
-      {!hasFlow && <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />}
+      {/* ON EVERY LESSON, flow or not. This used to be gated to !hasFlow, so as
+          lessons were converted to the interactive player the scratchpad and the
+          tutor silently disappeared from all of them — which is not a decision
+          anyone made, just the gate outliving its reason. A student mid-flow is
+          exactly who needs somewhere to try a line of Java. */}
+      <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />
     </>
   );
 }
