@@ -191,6 +191,32 @@ like "differs by one thing".
 | `Tap the lines in order to make the output below.` | `Tap the lines in order.` |
 | `Two the test always asks.` | *(delete it)* |
 
+**Name the thing.** Use the technical word: class, object, method, state,
+behaviour, field. Do not describe around it. Substituting a vague phrase for
+the word a student needs to learn is the single most damaging habit in this
+repo, and it has been corrected more than once.
+
+| Don't | Do |
+| --- | --- |
+| `Once it exists, you can ask it things.` | `rect.getWidth() returns the width of the object rect.` |
+| `A dot means "ask this object".` | `A method is called on an object.` |
+| `The dot says which instance you are talking to.` | `A method changes only the object it is called on.` |
+| `The capital letter tells you which is which.` | `Capitalise the name of a class.` |
+| `Three words, and they get used constantly from here on.` | `Review.` |
+| `One class, many objects, each with its own state.` | `One class can create many objects. Each object holds its own state.` |
+| `The class was written once. Three instances exist, each holding its own name and level.` | `The Player class was written once. a, b and c are three Player objects. Each object holds its own name and level.` |
+
+**Cut sentences that carry no information.** `That is a convention, not a rule
+Java enforces. Everyone follows it, so follow it.` says nothing a student can
+act on. If a sentence would not change what they type, delete it.
+
+**Indent every snippet properly.** One statement per line, braces on their own
+lines, two-space indent. Students copy what they see.
+
+**Keep the documentation on screen during exercises.** `facts` renders on any
+step, not just teaching ones. A question about a class the student cannot see,
+with the method list hidden, is a memory test.
+
 **One highlight per screen.** Point labels render as highlights. A screen with
 three labels pointing at three different kinds of thing has no focus at all.
 Every label must be a literal token from the code — `System.out.println`, `;`,

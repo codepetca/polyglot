@@ -6855,179 +6855,347 @@
           {
             "id": "o_task",
             "kind": "teach",
-            "instruction": "Object oriented programming is programming that focuses on objects, and the data and actions that belong to them.",
+            "instruction": "Object oriented programming focuses on objects, and the data and actions that belong to them.",
             "body": [
               "A room in a dungeon is an object.",
-              "It has a width and a height. Different rooms have different ones.",
-              "It can work out its own area."
+              "A room has a width and a height.",
+              "A room can work out its own area."
             ],
             "keypoint": "Object oriented programming focuses on objects, and the data and actions that belong to them."
           },
           {
             "id": "o_state",
             "kind": "teach",
-            "instruction": "An object has state and behaviour. Those two words carry the whole unit.",
+            "instruction": "An object has state and behaviour.",
             "facts": {
               "columns": [
-                "",
-                "What it means",
-                "For a room"
+                "Term",
+                "Meaning",
+                "Room example"
               ],
               "rows": [
                 [
                   "State",
-                  "the data about the object",
+                  "the data an object holds",
                   "width is 20, height is 8"
                 ],
                 [
                   "Behaviour",
-                  "the actions that can be performed on it",
-                  "it can give you its area"
+                  "the actions an object can perform",
+                  "it can return its area"
                 ]
               ]
             },
-            "keypoint": "An object has STATE, which is its data, and BEHAVIOUR, which is what it can do."
+            "keypoint": "State is the data an object holds. Behaviour is the actions an object can perform."
           },
           {
             "id": "o_class",
             "kind": "teach",
             "instruction": "A class is a template for creating objects.",
             "body": [
-              "The Room template says every room has a width and a height.",
-              "It does not say what they are. Each room made from it gets its own."
+              "The Room class says every Room object has a width and a height.",
+              "Each Room object gets its own width and height."
             ],
             "keypoint": "A class is a template for creating objects."
           },
           {
             "id": "o_preview",
             "kind": "teach",
-            "instruction": "Here is the whole Room class. You will be writing one of these by the end of the unit.",
-            "code": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "instruction": "This is the Room class. You will write a class like this by the end of the unit.",
+            "code": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
             "body": [
-              "You are not expected to follow all of it yet.",
-              "Look at the shape: some data at the top, then a way to build one, then things it can do."
+              "The fields at the top are the state.",
+              "The methods below them are the behaviour."
             ]
           },
           {
             "id": "o_make",
             "kind": "teach",
-            "instruction": "Making an object.",
+            "instruction": "This line creates a Room object.",
             "code": "Room rect = new Room(20, 8);",
             "annotate": [
               {
                 "token": "Room",
-                "note": "the class, capitalised"
+                "note": "the class"
               },
               {
                 "token": "rect",
-                "note": "the object name, lowercase"
+                "note": "the object"
               },
               {
                 "token": "new",
-                "note": "builds it"
+                "note": "creates the object"
               },
               {
                 "token": "(20, 8)",
-                "note": "the state it starts with"
+                "note": "the width and height"
               }
             ],
-            "keypoint": "Room rect = new Room(20, 8); makes one object from the class."
+            "keypoint": "Room rect = new Room(20, 8); creates a Room object called rect."
           },
           {
             "id": "o_use",
             "kind": "teach",
-            "instruction": "Once it exists, you can ask it things.",
+            "instruction": "An object method is called on an object.",
             "code": "Room rect = new Room(20, 8);\nSystem.out.println(rect.getWidth());\nSystem.out.println(rect.getArea());\nSystem.out.println(rect);",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
             "output": "20\n160\n20x8 room",
             "body": [
-              "A dot means \"ask this object\".",
-              "Printing the object itself gives a readable description, because the class decides how it should look."
-            ]
+              "rect.getWidth() returns the width of the object rect, which is 20.",
+              "rect.getArea() returns 20 times 8, which is 160.",
+              "Printing rect prints the text that the toString method returns."
+            ],
+            "keypoint": "rect.getWidth() calls the method getWidth on the object rect."
           },
           {
             "id": "o_run",
             "kind": "run",
-            "instruction": "Run it, then change the numbers and run it again.",
+            "instruction": "Run it. Then change the width and height and run it again.",
             "code": "Room rect = new Room(20, 8);\nSystem.out.println(rect.getArea());\nSystem.out.println(rect.getPerimeter());",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
-            "after": "One class, and every room made from it works out its own answer."
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
+            "after": "Each Room object returns an answer for its own width and height."
           },
           {
             "id": "o_many",
             "kind": "teach",
-            "instruction": "One class, many objects, each with its own state.",
+            "instruction": "One class can create many objects.",
             "code": "Room hall = new Room(20, 8);\nRoom closet = new Room(3, 3);\nSystem.out.println(hall.getArea());\nSystem.out.println(closet.getArea());",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
             "output": "160\n9",
             "body": [
-              "Both were built from the same template.",
-              "Changing one does not touch the other."
+              "hall and closet are two Room objects.",
+              "Each object holds its own width and height.",
+              "Changing one object does not change the other."
             ],
-            "keypoint": "Every object made from a class has its own state."
+            "keypoint": "Each object holds its own state."
           },
           {
             "id": "o_player",
             "kind": "teach",
-            "instruction": "Here is a second class. A Player has a name, a level and hp.",
+            "instruction": "Here is a second class. A Player object holds a name, a level and hp.",
             "facts": {
               "columns": [
                 "Method",
-                "What it does"
+                "Returns"
               ],
               "rows": [
                 [
                   "new Player(String name, int level)",
-                  "builds one, starting at 100 hp"
+                  "a new Player object with 100 hp"
                 ],
                 [
                   "getName()",
-                  "gives back the name"
+                  "the name"
                 ],
                 [
                   "getLevel()",
-                  "gives back the level"
+                  "the level"
                 ],
                 [
                   "getHp()",
-                  "gives back the hp"
+                  "the hp"
                 ],
                 [
                   "takeDamage(int amount)",
-                  "lowers the hp"
+                  "nothing. Lowers the hp"
                 ],
                 [
                   "heal(int amount)",
-                  "raises the hp"
+                  "nothing. Raises the hp"
                 ],
                 [
                   "levelUp()",
-                  "adds one to the level"
+                  "nothing. Adds 1 to the level"
                 ],
                 [
                   "isAlive()",
-                  "true while hp is above 0"
+                  "true if the hp is above 0"
                 ]
               ]
             },
             "body": [
-              "State: name, level, hp. Behaviour: everything below it."
+              "The state is the name, the level and the hp.",
+              "The behaviour is every method in the table."
             ]
           },
           {
             "id": "o_prun",
             "kind": "run",
-            "instruction": "Run it and watch one object change.",
+            "instruction": "Run it. The methods change the state of the object.",
             "code": "Player hero = new Player(\"Ada\", 3);\nSystem.out.println(hero);\nhero.takeDamage(30);\nSystem.out.println(hero);\nhero.levelUp();\nSystem.out.println(hero);",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
-            "after": "The same object, printed three times, with different state each time."
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
+            "after": "One object, printed three times. takeDamage lowered the hp and levelUp raised the level."
           },
           {
             "id": "o_predict",
             "kind": "predict",
             "instruction": "What comes out?",
             "code": "Player a = new Player(\"Ada\", 1);\nPlayer b = new Player(\"Ben\", 1);\na.levelUp();\nSystem.out.println(a.getLevel());\nSystem.out.println(b.getLevel());",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
             "opts": [
               "2\n2",
               "2\n1",
@@ -7035,7 +7203,7 @@
               "1\n2"
             ],
             "correct": 1,
-            "why": "levelUp was called on a, so only a changed. Each object keeps its own state.",
+            "why": "levelUp was called on the object a. Only a changed. The object b holds its own level.",
             "skills": [
               "create an object from a class"
             ]
@@ -7050,31 +7218,31 @@
             ],
             "items": [
               {
-                "text": "a player name",
+                "text": "the name of a Player",
                 "bucket": 0
               },
               {
-                "text": "a player hp",
+                "text": "the hp of a Player",
                 "bucket": 0
               },
               {
-                "text": "the width of a room",
+                "text": "the width of a Room",
                 "bucket": 0
               },
               {
-                "text": "taking damage",
+                "text": "takeDamage",
                 "bucket": 1
               },
               {
-                "text": "working out an area",
+                "text": "getArea",
                 "bucket": 1
               },
               {
-                "text": "levelling up",
+                "text": "levelUp",
                 "bucket": 1
               }
             ],
-            "why": "State is what the object holds. Behaviour is what it can do. Nouns tend to be state and verbs tend to be behaviour.",
+            "why": "State is the data. Behaviour is the methods.",
             "skills": [
               "create an object from a class"
             ]
@@ -7082,13 +7250,41 @@
           {
             "id": "o_w1",
             "kind": "write",
-            "instruction": "Make a room 5 by 12 and print its area.",
-            "code": "// make a Room and print its area\n",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "instruction": "Create a Room object 5 by 12. Print its area.",
+            "code": "// create a Room object and print its area\n",
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
             "target": "60",
             "solution": "Room r = new Room(5, 12);\nSystem.out.println(r.getArea());",
-            "hint": "Room name = new Room(width, height); then call getArea() on it.",
-            "after": "You used the class without ever writing it.",
+            "hint": "Room r = new Room(5, 12); then call getArea on r.",
+            "after": "You used the Room class without writing it.",
             "skills": [
               "create an object from a class"
             ]
@@ -7096,13 +7292,53 @@
           {
             "id": "o_w2",
             "kind": "write",
-            "instruction": "Make a player called Ada at level 2, hurt her for 40, then print her.",
-            "code": "// make a Player, call takeDamage, then print the player\n",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
+            "instruction": "Create a Player called Ada at level 2. Take 40 hp off her. Print the object.",
+            "code": "// create a Player, call takeDamage, then print the object\n",
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
             "target": "Ada (level 2, 60 hp)",
             "solution": "Player hero = new Player(\"Ada\", 2);\nhero.takeDamage(40);\nSystem.out.println(hero);",
-            "hint": "Build it, call the method on it, then print the object itself.",
-            "after": "100 hp minus 40 is 60. The object remembered the change.",
+            "hint": "Create the object, call takeDamage on it, then print it.",
+            "after": "A Player starts with 100 hp. 100 minus 40 is 60.",
             "skills": [
               "call a method on an object"
             ]
@@ -7110,13 +7346,41 @@
           {
             "id": "o_final",
             "kind": "write",
-            "instruction": "Make two rooms and print which has the bigger area.",
-            "code": "// a hall 20 by 8, and a vault 12 by 12\n// print the bigger area\n",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "instruction": "Create two Room objects. Print the larger area.",
+            "code": "// a hall 20 by 8, and a vault 12 by 12\n// print the larger area\n",
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
             "target": "160",
             "solution": "Room hall = new Room(20, 8);\nRoom vault = new Room(12, 12);\nif (hall.getArea() > vault.getArea()) {\n  System.out.println(hall.getArea());\n} else {\n  System.out.println(vault.getArea());\n}",
-            "hint": "Two objects, then compare what each one gives back.",
-            "after": "160 against 144. Two objects from one template, each answering for itself.",
+            "hint": "Create both objects, then compare what getArea returns for each.",
+            "after": "160 is larger than 144.",
             "skills": [
               "call a method on an object"
             ]
@@ -7137,56 +7401,53 @@
           {
             "id": "v_review",
             "kind": "teach",
-            "instruction": "Three words, and they get used constantly from here on.",
+            "instruction": "Review.",
             "facts": {
               "columns": [
-                "Word",
-                "What it means"
+                "Term",
+                "Meaning"
               ],
               "rows": [
                 [
                   "Object",
-                  "something that has both state and behaviour. It is an instance of a class."
+                  "something that has state and behaviour. An object is an instance of a class."
                 ],
                 [
                   "Class",
-                  "a template for creating an object"
+                  "a template for creating objects."
                 ],
                 [
                   "Instance",
-                  "a specific version made from a class. Instance and object mean the same thing."
+                  "one object created from a class. Instance and object mean the same thing."
                 ]
               ]
             },
-            "keypoint": "An object is an instance of a class. A class is the template; the object is the thing made from it."
+            "keypoint": "An object is an instance of a class. A class is a template for creating objects."
           },
           {
             "id": "v_naming",
             "kind": "teach",
-            "instruction": "The capital letter tells you which is which.",
+            "instruction": "Capitalise the name of a class. Do not capitalise the name of an object.",
             "code": "Player hero = new Player(\"Ada\", 3);",
             "annotate": [
               {
                 "token": "Player",
-                "note": "class, capitalised"
+                "note": "class"
               },
               {
                 "token": "hero",
-                "note": "instance, lowercase"
+                "note": "object"
               }
             ],
-            "body": [
-              "That is a convention, not a rule Java enforces. Everyone follows it, so follow it."
-            ],
-            "keypoint": "Class names are capitalised. Instance names are lowercase."
+            "keypoint": "Class names are capitalised. Object names are not."
           },
           {
             "id": "v_bucket",
             "kind": "bucket",
-            "instruction": "Class or instance?",
+            "instruction": "Class or object?",
             "buckets": [
               "A class",
-              "An instance"
+              "An object"
             ],
             "items": [
               {
@@ -7214,7 +7475,7 @@
                 "bucket": 1
               }
             ],
-            "why": "\"Ada\" is an instance of String. Every piece of text you have written all year was an object.",
+            "why": "\"Ada\" is an object. It is an instance of the String class.",
             "skills": [
               "tell a class apart from an object"
             ]
@@ -7222,33 +7483,143 @@
           {
             "id": "v_one",
             "kind": "teach",
-            "instruction": "One class, many instances.",
+            "instruction": "One class can create many objects.",
             "code": "Player a = new Player(\"Ada\", 3);\nPlayer b = new Player(\"Ben\", 5);\nPlayer c = new Player(\"Cy\", 1);\nSystem.out.println(a);\nSystem.out.println(b);\nSystem.out.println(c);",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
             "output": "Ada (level 3, 100 hp)\nBen (level 5, 100 hp)\nCy (level 1, 100 hp)",
             "body": [
-              "The class was written once. Three instances exist, each holding its own name and level."
+              "The Player class was written once.",
+              "a, b and c are three Player objects.",
+              "Each object holds its own name and level."
             ]
           },
           {
             "id": "v_state",
             "kind": "teach",
-            "instruction": "Calling a method changes the state of ONE instance.",
+            "instruction": "A method changes the state of the object it is called on.",
             "code": "Player a = new Player(\"Ada\", 3);\nPlayer b = new Player(\"Ben\", 3);\na.takeDamage(40);\nSystem.out.println(a);\nSystem.out.println(b);",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
             "output": "Ada (level 3, 60 hp)\nBen (level 3, 100 hp)",
             "body": [
-              "The dot says which instance you are talking to.",
-              "Ben was never mentioned, so Ben did not change."
+              "takeDamage was called on the object a, so the hp of a changed.",
+              "The object b was not called, so the hp of b did not change."
             ],
-            "keypoint": "The dot picks which instance a method acts on. Others are untouched."
+            "keypoint": "A method changes only the object it is called on."
           },
           {
             "id": "v_predict",
             "kind": "predict",
             "instruction": "What comes out?",
             "code": "Room a = new Room(4, 5);\nRoom b = new Room(4, 5);\nSystem.out.println(a.getArea());\nSystem.out.println(b.getArea());\nSystem.out.println(a == b);",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
             "opts": [
               "20\n20\ntrue",
               "20\n20\nfalse",
@@ -7256,7 +7627,7 @@
               "400\n400\nfalse"
             ],
             "correct": 1,
-            "why": "They hold the same numbers, so both areas are 20. But new was called twice, so they are two separate objects, and == asks whether they are the same object.",
+            "why": "Both objects hold the same width and height, so both areas are 20. new was called twice, so a and b are two different objects. == returns false because they are not the same object.",
             "skills": [
               "tell a class apart from an object"
             ]
@@ -7264,11 +7635,11 @@
           {
             "id": "v_trace",
             "kind": "trace",
-            "instruction": "Two on the words.",
+            "instruction": "Two questions.",
             "code": "Room hall = new Room(20, 8);",
             "questions": [
               {
-                "prompt": "In that line, which is the class?",
+                "prompt": "Which name is the class?",
                 "opts": [
                   "hall",
                   "Room",
@@ -7276,10 +7647,10 @@
                   "20"
                 ],
                 "correct": 1,
-                "why": "Room is the template. hall is the instance made from it."
+                "why": "Room is the class. hall is the object created from it."
               },
               {
-                "prompt": "How many objects exist after that line runs?",
+                "prompt": "How many objects exist after this line runs?",
                 "opts": [
                   "0",
                   "1",
@@ -7287,7 +7658,7 @@
                   "It depends"
                 ],
                 "correct": 1,
-                "why": "One new means one object. The class itself is not an object."
+                "why": "One new creates one object. A class is not an object."
               }
             ],
             "skills": [
@@ -7297,25 +7668,105 @@
           {
             "id": "v_change",
             "kind": "teach",
-            "instruction": "An object keeps its changes.",
+            "instruction": "An object keeps its state between method calls.",
             "code": "Player hero = new Player(\"Ada\", 1);\nhero.levelUp();\nhero.levelUp();\nhero.takeDamage(25);\nhero.heal(10);\nSystem.out.println(hero);",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
             "output": "Ada (level 3, 85 hp)",
             "body": [
-              "Four calls, one object, and every change stuck.",
-              "That is what makes it state rather than just a value."
+              "Four methods were called on hero.",
+              "Every change was kept. The level went 1, 2, 3 and the hp went 100, 75, 85."
             ]
           },
           {
             "id": "v_w1",
             "kind": "write",
-            "instruction": "Make two players and print which one is at the higher level.",
+            "instruction": "Create two Player objects. Print the higher level.",
             "code": "// Ada at level 3, Ben at level 5\n// print the higher level\n",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
             "target": "5",
             "solution": "Player ada = new Player(\"Ada\", 3);\nPlayer ben = new Player(\"Ben\", 5);\nif (ada.getLevel() > ben.getLevel()) {\n  System.out.println(ada.getLevel());\n} else {\n  System.out.println(ben.getLevel());\n}",
-            "hint": "Two instances, then ask each one for its level.",
-            "after": "Two instances of one class, each answering for itself.",
+            "hint": "Create both objects, then call getLevel on each.",
+            "after": "Two objects of the same class, each holding its own level.",
             "skills": [
               "tell a class apart from an object"
             ]
@@ -7323,13 +7774,53 @@
           {
             "id": "v_final",
             "kind": "write",
-            "instruction": "Hit one of two players and show the other is untouched.",
-            "code": "// Ada and Ben, both level 1\n// take 30 off Ada only, then print both\n",
-            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n  public Player(String name, int level) { this.name = name; this.level = level; this.hp = 100; }\n  public String getName() { return name; }\n  public int getLevel() { return level; }\n  public int getHp() { return hp; }\n  public void takeDamage(int amount) { hp = hp - amount; }\n  public void heal(int amount) { hp = hp + amount; }\n  public void levelUp() { level = level + 1; }\n  public boolean isAlive() { return hp > 0; }\n  public String toString() { return name + \" (level \" + level + \", \" + hp + \" hp)\"; }\n}",
+            "instruction": "Create two Player objects. Take 30 hp off one. Print both.",
+            "code": "// Ada and Ben, both level 1\n// take 30 hp off Ada only, then print both objects\n",
+            "library": "class Player {\n  private String name;\n  private int level;\n  private int hp;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n    this.hp = 100;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getLevel() {\n    return level;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void takeDamage(int amount) {\n    hp = hp - amount;\n  }\n\n  public void heal(int amount) {\n    hp = hp + amount;\n  }\n\n  public void levelUp() {\n    level = level + 1;\n  }\n\n  public boolean isAlive() {\n    return hp > 0;\n  }\n\n  public String toString() {\n    return name + \" (level \" + level + \", \" + hp + \" hp)\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Player(String name, int level)",
+                  "a new Player object with 100 hp"
+                ],
+                [
+                  "getName()",
+                  "the name"
+                ],
+                [
+                  "getLevel()",
+                  "the level"
+                ],
+                [
+                  "getHp()",
+                  "the hp"
+                ],
+                [
+                  "takeDamage(int amount)",
+                  "nothing. Lowers the hp"
+                ],
+                [
+                  "heal(int amount)",
+                  "nothing. Raises the hp"
+                ],
+                [
+                  "levelUp()",
+                  "nothing. Adds 1 to the level"
+                ],
+                [
+                  "isAlive()",
+                  "true if the hp is above 0"
+                ]
+              ]
+            },
             "target": "Ada (level 1, 70 hp)\nBen (level 1, 100 hp)",
             "solution": "Player ada = new Player(\"Ada\", 1);\nPlayer ben = new Player(\"Ben\", 1);\nada.takeDamage(30);\nSystem.out.println(ada);\nSystem.out.println(ben);",
-            "hint": "Call takeDamage on one of them only.",
-            "after": "Same class, same starting state, and only the one you named changed.",
+            "hint": "Call takeDamage on ada only.",
+            "after": "Only the object the method was called on changed.",
             "skills": [
               "call methods that change an object's state"
             ]
@@ -7349,12 +7840,12 @@
           {
             "id": "y_task",
             "kind": "teach",
-            "instruction": "In object oriented programming, everything is a class.",
+            "instruction": "In Java, everything is a class.",
             "facts": {
               "columns": [
                 "Class",
-                "Its state",
-                "Some of its behaviour"
+                "State",
+                "Behaviour"
               ],
               "rows": [
                 [
@@ -7370,7 +7861,7 @@
                 [
                   "Room",
                   "width, height",
-                  "give its area"
+                  "return its area"
                 ],
                 [
                   "Player",
@@ -7380,118 +7871,190 @@
               ]
             },
             "body": [
-              "Once you see it, it is everywhere. Every String you have written was an object."
+              "Every String you have used is an object of the String class."
             ]
           },
           {
             "id": "y_client",
             "kind": "teach",
-            "instruction": "Being a client means using a class someone else wrote, without knowing how it works.",
+            "instruction": "A client is code that uses a class without knowing how the class works.",
             "body": [
               "You have been a client all year.",
-              "You called length() on a String without ever seeing the code inside String.",
-              "This is the normal way to program, and it is heavily tested."
+              "You called length() on a String without reading the code inside the String class."
             ],
-            "keypoint": "A client uses a class without knowing how it is implemented."
+            "keypoint": "A client uses a class without knowing how it is written."
           },
           {
             "id": "y_need",
             "kind": "teach",
-            "instruction": "So what do you actually need in order to use a class?",
-            "facts": {
-              "columns": [
-                "You need",
-                "You do not need"
-              ],
-              "rows": [
-                [
-                  "the name of the class",
-                  "the code inside it"
-                ],
-                [
-                  "what to pass to new",
-                  "how it stores anything"
-                ],
-                [
-                  "the names of the methods",
-                  "how any method works"
-                ],
-                [
-                  "what each method takes and gives back",
-                  ""
-                ]
-              ]
-            },
-            "body": [
-              "That list is exactly what documentation gives you."
+            "instruction": "A client needs four things.",
+            "rules": [
+              {
+                "text": "The name of the class",
+                "example": "Room"
+              },
+              {
+                "text": "What to pass to the constructor",
+                "example": "new Room(int width, int height)"
+              },
+              {
+                "text": "The names of the methods",
+                "example": "getArea()"
+              },
+              {
+                "text": "What each method takes and returns",
+                "example": "getArea() returns an int"
+              }
             ],
-            "keypoint": "To use a class you need its name, its constructor, and what each method takes and gives back."
+            "body": [
+              "A client does not need the code inside the class.",
+              "Documentation gives a client all four."
+            ],
+            "keypoint": "A client needs the class name, the constructor, the method names, and what each method takes and returns."
           },
           {
             "id": "y_docs",
             "kind": "teach",
-            "instruction": "Here is the documentation for a class called Chest. You will not see its code.",
+            "instruction": "This is the documentation for the Chest class. You will not see its code.",
             "facts": {
               "columns": [
                 "Method",
-                "Takes",
-                "Gives back"
+                "Returns"
               ],
               "rows": [
                 [
                   "new Chest(int gold)",
-                  "the gold inside",
-                  "a new Chest, which starts locked"
+                  "a new Chest object. It starts locked"
                 ],
                 [
                   "isLocked()",
-                  "nothing",
-                  "true while it is still locked"
+                  "true if the chest is locked"
                 ],
                 [
                   "unlock(String key)",
-                  "a key",
-                  "nothing. It unlocks only if the key is right"
+                  "nothing. Unlocks the chest if the key is \"brass\""
                 ],
                 [
                   "open()",
-                  "nothing",
-                  "the gold, or 0 if it is still locked"
+                  "the gold. Returns 0 if the chest is locked"
                 ],
                 [
                   "getGold()",
-                  "nothing",
-                  "how much gold is inside"
+                  "the gold inside, locked or not"
                 ]
               ]
             },
             "body": [
               "The key is the word brass.",
-              "That is everything you get, and it is enough."
+              "This documentation is everything you get."
             ]
           },
           {
             "id": "y_first",
             "kind": "run",
-            "instruction": "Run it. A locked chest gives you nothing.",
+            "instruction": "Run it. A locked Chest returns 0.",
             "code": "Chest chest = new Chest(500);\nSystem.out.println(chest.isLocked());\nSystem.out.println(chest.open());",
-            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n  public Chest(int gold) { this.gold = gold; this.locked = true; }\n  public boolean isLocked() { return locked; }\n  public void unlock(String key) { if (key.equals(\"brass\")) { locked = false; } }\n  public int open() { if (locked) { return 0; } return gold; }\n  public int getGold() { return gold; }\n  public String toString() { return \"Chest of \" + gold + \" gold\"; }\n}",
-            "after": "open() gave 0, exactly as the documentation said it would while locked."
+            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n\n  public Chest(int gold) {\n    this.gold = gold;\n    this.locked = true;\n  }\n\n  public boolean isLocked() {\n    return locked;\n  }\n\n  public void unlock(String key) {\n    if (key.equals(\"brass\")) {\n      locked = false;\n    }\n  }\n\n  public int open() {\n    if (locked) {\n      return 0;\n    }\n    return gold;\n  }\n\n  public int getGold() {\n    return gold;\n  }\n\n  public String toString() {\n    return \"Chest of \" + gold + \" gold\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Chest(int gold)",
+                  "a new Chest object. It starts locked"
+                ],
+                [
+                  "isLocked()",
+                  "true if the chest is locked"
+                ],
+                [
+                  "unlock(String key)",
+                  "nothing. Unlocks the chest if the key is \"brass\""
+                ],
+                [
+                  "open()",
+                  "the gold. Returns 0 if the chest is locked"
+                ],
+                [
+                  "getGold()",
+                  "the gold inside, locked or not"
+                ]
+              ]
+            },
+            "after": "open() returned 0, because the chest was locked. The documentation said it would."
           },
           {
             "id": "y_unlock",
             "kind": "run",
-            "instruction": "Now unlock it first, then run it.",
+            "instruction": "Now unlock the Chest first. Run it.",
             "code": "Chest chest = new Chest(500);\nchest.unlock(\"brass\");\nSystem.out.println(chest.isLocked());\nSystem.out.println(chest.open());",
-            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n  public Chest(int gold) { this.gold = gold; this.locked = true; }\n  public boolean isLocked() { return locked; }\n  public void unlock(String key) { if (key.equals(\"brass\")) { locked = false; } }\n  public int open() { if (locked) { return 0; } return gold; }\n  public int getGold() { return gold; }\n  public String toString() { return \"Chest of \" + gold + \" gold\"; }\n}",
-            "after": "You made that work from the documentation alone. You still have not seen a line of the Chest code."
+            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n\n  public Chest(int gold) {\n    this.gold = gold;\n    this.locked = true;\n  }\n\n  public boolean isLocked() {\n    return locked;\n  }\n\n  public void unlock(String key) {\n    if (key.equals(\"brass\")) {\n      locked = false;\n    }\n  }\n\n  public int open() {\n    if (locked) {\n      return 0;\n    }\n    return gold;\n  }\n\n  public int getGold() {\n    return gold;\n  }\n\n  public String toString() {\n    return \"Chest of \" + gold + \" gold\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Chest(int gold)",
+                  "a new Chest object. It starts locked"
+                ],
+                [
+                  "isLocked()",
+                  "true if the chest is locked"
+                ],
+                [
+                  "unlock(String key)",
+                  "nothing. Unlocks the chest if the key is \"brass\""
+                ],
+                [
+                  "open()",
+                  "the gold. Returns 0 if the chest is locked"
+                ],
+                [
+                  "getGold()",
+                  "the gold inside, locked or not"
+                ]
+              ]
+            },
+            "after": "You wrote that from the documentation. You have not seen the Chest code."
           },
           {
             "id": "y_predict",
             "kind": "predict",
             "instruction": "The key is brass. What comes out?",
             "code": "Chest chest = new Chest(300);\nchest.unlock(\"iron\");\nSystem.out.println(chest.open());",
-            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n  public Chest(int gold) { this.gold = gold; this.locked = true; }\n  public boolean isLocked() { return locked; }\n  public void unlock(String key) { if (key.equals(\"brass\")) { locked = false; } }\n  public int open() { if (locked) { return 0; } return gold; }\n  public int getGold() { return gold; }\n  public String toString() { return \"Chest of \" + gold + \" gold\"; }\n}",
+            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n\n  public Chest(int gold) {\n    this.gold = gold;\n    this.locked = true;\n  }\n\n  public boolean isLocked() {\n    return locked;\n  }\n\n  public void unlock(String key) {\n    if (key.equals(\"brass\")) {\n      locked = false;\n    }\n  }\n\n  public int open() {\n    if (locked) {\n      return 0;\n    }\n    return gold;\n  }\n\n  public int getGold() {\n    return gold;\n  }\n\n  public String toString() {\n    return \"Chest of \" + gold + \" gold\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Chest(int gold)",
+                  "a new Chest object. It starts locked"
+                ],
+                [
+                  "isLocked()",
+                  "true if the chest is locked"
+                ],
+                [
+                  "unlock(String key)",
+                  "nothing. Unlocks the chest if the key is \"brass\""
+                ],
+                [
+                  "open()",
+                  "the gold. Returns 0 if the chest is locked"
+                ],
+                [
+                  "getGold()",
+                  "the gold inside, locked or not"
+                ]
+              ]
+            },
             "opts": [
               "300",
               "0",
@@ -7499,7 +8062,7 @@
               "true"
             ],
             "correct": 1,
-            "why": "unlock only works with the right key, so the chest stayed locked, and open gives 0 while locked. The documentation told you both of those.",
+            "why": "unlock only unlocks the chest if the key is brass. The key was iron, so the chest stayed locked. open() returns 0 on a locked chest.",
             "skills": [
               "use a class from its documentation alone"
             ]
@@ -7507,9 +8070,37 @@
           {
             "id": "y_getgold",
             "kind": "predict",
-            "instruction": "Read the documentation carefully. What comes out?",
+            "instruction": "Read the documentation. What comes out?",
             "code": "Chest chest = new Chest(250);\nSystem.out.println(chest.getGold());\nSystem.out.println(chest.open());",
-            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n  public Chest(int gold) { this.gold = gold; this.locked = true; }\n  public boolean isLocked() { return locked; }\n  public void unlock(String key) { if (key.equals(\"brass\")) { locked = false; } }\n  public int open() { if (locked) { return 0; } return gold; }\n  public int getGold() { return gold; }\n  public String toString() { return \"Chest of \" + gold + \" gold\"; }\n}",
+            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n\n  public Chest(int gold) {\n    this.gold = gold;\n    this.locked = true;\n  }\n\n  public boolean isLocked() {\n    return locked;\n  }\n\n  public void unlock(String key) {\n    if (key.equals(\"brass\")) {\n      locked = false;\n    }\n  }\n\n  public int open() {\n    if (locked) {\n      return 0;\n    }\n    return gold;\n  }\n\n  public int getGold() {\n    return gold;\n  }\n\n  public String toString() {\n    return \"Chest of \" + gold + \" gold\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Chest(int gold)",
+                  "a new Chest object. It starts locked"
+                ],
+                [
+                  "isLocked()",
+                  "true if the chest is locked"
+                ],
+                [
+                  "unlock(String key)",
+                  "nothing. Unlocks the chest if the key is \"brass\""
+                ],
+                [
+                  "open()",
+                  "the gold. Returns 0 if the chest is locked"
+                ],
+                [
+                  "getGold()",
+                  "the gold inside, locked or not"
+                ]
+              ]
+            },
             "opts": [
               "250\n250",
               "250\n0",
@@ -7517,7 +8108,7 @@
               "0\n250"
             ],
             "correct": 1,
-            "why": "getGold says how much is inside whatever the lock is doing. open gives 0 while locked. Two methods that sound similar and are not, which is why you read rather than guess.",
+            "why": "getGold() returns the gold whether the chest is locked or not. open() returns 0 while the chest is locked. Two methods with different rules.",
             "skills": [
               "use a class from its documentation alone"
             ]
@@ -7525,13 +8116,41 @@
           {
             "id": "y_w1",
             "kind": "write",
-            "instruction": "Open a chest of 750 gold and print what you get.",
-            "code": "// make a Chest with 750 gold, unlock it, then print what open gives\n",
-            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n  public Chest(int gold) { this.gold = gold; this.locked = true; }\n  public boolean isLocked() { return locked; }\n  public void unlock(String key) { if (key.equals(\"brass\")) { locked = false; } }\n  public int open() { if (locked) { return 0; } return gold; }\n  public int getGold() { return gold; }\n  public String toString() { return \"Chest of \" + gold + \" gold\"; }\n}",
+            "instruction": "Create a Chest with 750 gold. Unlock it. Print what open() returns.",
+            "code": "// create the Chest, unlock it, print what open returns\n",
+            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n\n  public Chest(int gold) {\n    this.gold = gold;\n    this.locked = true;\n  }\n\n  public boolean isLocked() {\n    return locked;\n  }\n\n  public void unlock(String key) {\n    if (key.equals(\"brass\")) {\n      locked = false;\n    }\n  }\n\n  public int open() {\n    if (locked) {\n      return 0;\n    }\n    return gold;\n  }\n\n  public int getGold() {\n    return gold;\n  }\n\n  public String toString() {\n    return \"Chest of \" + gold + \" gold\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Chest(int gold)",
+                  "a new Chest object. It starts locked"
+                ],
+                [
+                  "isLocked()",
+                  "true if the chest is locked"
+                ],
+                [
+                  "unlock(String key)",
+                  "nothing. Unlocks the chest if the key is \"brass\""
+                ],
+                [
+                  "open()",
+                  "the gold. Returns 0 if the chest is locked"
+                ],
+                [
+                  "getGold()",
+                  "the gold inside, locked or not"
+                ]
+              ]
+            },
             "target": "750",
             "solution": "Chest chest = new Chest(750);\nchest.unlock(\"brass\");\nSystem.out.println(chest.open());",
-            "hint": "Three lines: build it, unlock it with the right key, print what open hands back.",
-            "after": "Written entirely from the documentation.",
+            "hint": "Three lines. Create, unlock with the key brass, print.",
+            "after": "Written from the documentation only.",
             "skills": [
               "use a class from its documentation alone"
             ]
@@ -7539,13 +8158,41 @@
           {
             "id": "y_w2",
             "kind": "write",
-            "instruction": "Print whether a fresh chest is locked, then open it, then print whether it is locked now.",
+            "instruction": "Print whether a new Chest is locked. Unlock it. Print whether it is locked now.",
             "code": "// a Chest with 100 gold\n// print isLocked, unlock it, print isLocked again\n",
-            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n  public Chest(int gold) { this.gold = gold; this.locked = true; }\n  public boolean isLocked() { return locked; }\n  public void unlock(String key) { if (key.equals(\"brass\")) { locked = false; } }\n  public int open() { if (locked) { return 0; } return gold; }\n  public int getGold() { return gold; }\n  public String toString() { return \"Chest of \" + gold + \" gold\"; }\n}",
+            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n\n  public Chest(int gold) {\n    this.gold = gold;\n    this.locked = true;\n  }\n\n  public boolean isLocked() {\n    return locked;\n  }\n\n  public void unlock(String key) {\n    if (key.equals(\"brass\")) {\n      locked = false;\n    }\n  }\n\n  public int open() {\n    if (locked) {\n      return 0;\n    }\n    return gold;\n  }\n\n  public int getGold() {\n    return gold;\n  }\n\n  public String toString() {\n    return \"Chest of \" + gold + \" gold\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Chest(int gold)",
+                  "a new Chest object. It starts locked"
+                ],
+                [
+                  "isLocked()",
+                  "true if the chest is locked"
+                ],
+                [
+                  "unlock(String key)",
+                  "nothing. Unlocks the chest if the key is \"brass\""
+                ],
+                [
+                  "open()",
+                  "the gold. Returns 0 if the chest is locked"
+                ],
+                [
+                  "getGold()",
+                  "the gold inside, locked or not"
+                ]
+              ]
+            },
             "target": "true\nfalse",
             "solution": "Chest chest = new Chest(100);\nSystem.out.println(chest.isLocked());\nchest.unlock(\"brass\");\nSystem.out.println(chest.isLocked());",
-            "hint": "isLocked before and after the unlock.",
-            "after": "The state changed, and you watched it change from outside.",
+            "hint": "Call isLocked before and after unlock.",
+            "after": "The state of the object changed from locked to unlocked.",
             "skills": [
               "use a class from its documentation alone"
             ]
@@ -7553,55 +8200,77 @@
           {
             "id": "y_room",
             "kind": "teach",
-            "instruction": "A second class, documented the same way.",
+            "instruction": "Here is a second class you have not read. This is its documentation.",
             "facts": {
               "columns": [
                 "Method",
-                "Takes",
-                "Gives back"
+                "Returns"
               ],
               "rows": [
                 [
                   "new Room(int width, int height)",
-                  "two numbers",
-                  "a new Room"
+                  "a new Room object"
                 ],
                 [
                   "getWidth()",
-                  "nothing",
                   "the width"
                 ],
                 [
                   "getHeight()",
-                  "nothing",
                   "the height"
                 ],
                 [
                   "getArea()",
-                  "nothing",
                   "width times height"
                 ],
                 [
                   "getPerimeter()",
-                  "nothing",
-                  "the distance round the outside"
+                  "the distance around the outside"
                 ]
               ]
             },
             "body": [
-              "You have never seen inside Room either. You do not need to."
+              "You do not need the code inside Room to use it."
             ]
           },
           {
             "id": "y_w3",
             "kind": "write",
-            "instruction": "Print the area and the perimeter of a room 7 by 4.",
+            "instruction": "Create a Room 7 by 4. Print its area, then its perimeter.",
             "code": "// print the area, then the perimeter\n",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
             "target": "28\n22",
             "solution": "Room r = new Room(7, 4);\nSystem.out.println(r.getArea());\nSystem.out.println(r.getPerimeter());",
-            "hint": "One object, two questions asked of it.",
-            "after": "You did not work out either number yourself. The class did.",
+            "hint": "One object. Call two methods on it.",
+            "after": "The Room object worked out both numbers.",
             "skills": [
               "use a class from its documentation alone"
             ]
@@ -7610,23 +8279,51 @@
             "id": "y_w4",
             "kind": "workout",
             "level": "standard",
-            "instruction": "Three rooms: 5x5, 8x2 and 3x9. Print the total floor area.",
+            "instruction": "Create Rooms 5x5, 8x2 and 3x9. Print the total area.",
             "plan": [
-              "make the three rooms",
-              "make a total, starting at 0",
-              "add each room area to the total",
+              "create the three Room objects",
+              "create a total, starting at 0",
+              "add the area of each Room to the total",
               "print the total"
             ],
             "methods": [
               "new Room(w, h)",
               "getArea()"
             ],
-            "code": "// rooms 5x5, 8x2 and 3x9\n// print the total area\n",
-            "library": "class Room {\n  private int width;\n  private int height;\n  public Room(int width, int height) { this.width = width; this.height = height; }\n  public int getWidth() { return width; }\n  public int getHeight() { return height; }\n  public int getArea() { return width * height; }\n  public int getPerimeter() { return 2 * (width + height); }\n  public String toString() { return width + \"x\" + height + \" room\"; }\n}",
+            "code": "// Rooms 5x5, 8x2 and 3x9\n// print the total area\n",
+            "library": "class Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public int getWidth() {\n    return width;\n  }\n\n  public int getHeight() {\n    return height;\n  }\n\n  public int getArea() {\n    return width * height;\n  }\n\n  public int getPerimeter() {\n    return 2 * (width + height);\n  }\n\n  public String toString() {\n    return width + \"x\" + height + \" room\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Room(int width, int height)",
+                  "a new Room object"
+                ],
+                [
+                  "getWidth()",
+                  "the width"
+                ],
+                [
+                  "getHeight()",
+                  "the height"
+                ],
+                [
+                  "getArea()",
+                  "width times height"
+                ],
+                [
+                  "getPerimeter()",
+                  "the distance around the outside"
+                ]
+              ]
+            },
             "target": "68",
             "solution": "Room a = new Room(5, 5);\nRoom b = new Room(8, 2);\nRoom c = new Room(3, 9);\nint total = a.getArea() + b.getArea() + c.getArea();\nSystem.out.println(total);",
-            "hint": "Each object works out its own area. You only add them up.",
-            "after": "25 plus 16 plus 27. Three objects, one template, and you never saw the code.",
+            "hint": "Each object returns its own area. Add the three results.",
+            "after": "25 plus 16 plus 27 is 68.",
             "skills": [
               "use a class from its documentation alone"
             ]
@@ -7635,11 +8332,11 @@
             "id": "y_final",
             "kind": "workout",
             "level": "hard",
-            "instruction": "You find two chests, 400 and 900 gold. You only have the brass key. Print the total gold you actually walk away with.",
+            "instruction": "Create two Chests, 400 and 900 gold. You have the brass key. Print the total gold you get.",
             "plan": [
-              "make both chests",
-              "unlock each one with the key",
-              "add up what each open gives",
+              "create both Chest objects",
+              "unlock each Chest",
+              "add what open returns for each",
               "print the total"
             ],
             "methods": [
@@ -7647,12 +8344,40 @@
               "unlock(String)",
               "open()"
             ],
-            "code": "// two chests: 400 and 900\n// unlock both with \"brass\", print the total you get\n",
-            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n  public Chest(int gold) { this.gold = gold; this.locked = true; }\n  public boolean isLocked() { return locked; }\n  public void unlock(String key) { if (key.equals(\"brass\")) { locked = false; } }\n  public int open() { if (locked) { return 0; } return gold; }\n  public int getGold() { return gold; }\n  public String toString() { return \"Chest of \" + gold + \" gold\"; }\n}",
+            "code": "// two Chests: 400 and 900\n// unlock both, print the total gold\n",
+            "library": "class Chest {\n  private int gold;\n  private boolean locked;\n\n  public Chest(int gold) {\n    this.gold = gold;\n    this.locked = true;\n  }\n\n  public boolean isLocked() {\n    return locked;\n  }\n\n  public void unlock(String key) {\n    if (key.equals(\"brass\")) {\n      locked = false;\n    }\n  }\n\n  public int open() {\n    if (locked) {\n      return 0;\n    }\n    return gold;\n  }\n\n  public int getGold() {\n    return gold;\n  }\n\n  public String toString() {\n    return \"Chest of \" + gold + \" gold\";\n  }\n}",
+            "facts": {
+              "columns": [
+                "Method",
+                "Returns"
+              ],
+              "rows": [
+                [
+                  "new Chest(int gold)",
+                  "a new Chest object. It starts locked"
+                ],
+                [
+                  "isLocked()",
+                  "true if the chest is locked"
+                ],
+                [
+                  "unlock(String key)",
+                  "nothing. Unlocks the chest if the key is \"brass\""
+                ],
+                [
+                  "open()",
+                  "the gold. Returns 0 if the chest is locked"
+                ],
+                [
+                  "getGold()",
+                  "the gold inside, locked or not"
+                ]
+              ]
+            },
             "target": "1300",
             "solution": "Chest a = new Chest(400);\nChest b = new Chest(900);\na.unlock(\"brass\");\nb.unlock(\"brass\");\nSystem.out.println(a.open() + b.open());",
-            "hint": "Each chest has its own lock, so each one needs unlocking.",
-            "after": "Forget one unlock and that chest contributes 0. Reading the documentation is what tells you that in advance.",
+            "hint": "Each Chest object has its own lock. Unlock both.",
+            "after": "If you unlock only one Chest, the other returns 0.",
             "skills": [
               "use a class from its documentation alone"
             ]

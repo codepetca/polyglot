@@ -375,7 +375,7 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
 // ─── Client stripping (the answer-key invariant) ─────────────────────────────
 
 export function stripStepForClient(s: FlowStep): Record<string, unknown> {
-  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight, wrap: s.wrap, harness: s.harness, keypoint: s.keypoint };
+  const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight, wrap: s.wrap, harness: s.harness, keypoint: s.keypoint, facts: s.facts, body: s.body };
   switch (s.kind) {
     case "predict": return { ...base, opts: s.opts };
     case "spot": return base;
@@ -395,7 +395,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       for (let i = rights.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rights[i], rights[j]] = [rights[j], rights[i]]; }
       return { ...base, lefts, rights };
     }
-    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, annotate: s.annotate, facts: s.facts, pipeline: s.pipeline, output: s.output };
+    case "teach": return { ...base, points: s.points, rules: s.rules, annotate: s.annotate, pipeline: s.pipeline, output: s.output };
     case "card": return { ...base, vars: s.vars };
     case "walk": return { ...base, frames: s.frames };
     case "workout": {

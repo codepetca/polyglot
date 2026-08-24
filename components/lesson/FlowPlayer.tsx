@@ -494,6 +494,21 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
           {(step.body || []).map((line, j) => <p key={j}>{line}</p>)}
         </div>
       )}
+      {/* The documentation stays on screen while the student works. Hiding it
+          the moment an exercise starts is the whole reason 5.3 felt unfair. */}
+      {step.facts && step.kind !== "teach" && (
+        <details className="docsfold" open>
+          <summary>Documentation</summary>
+          <div className="factswrap">
+            <table className="facts">
+              <thead><tr>{step.facts.columns.map((c, j) => <th key={j}>{c}</th>)}</tr></thead>
+              <tbody>{step.facts.rows.map((r, ri) => (
+                <tr key={ri}>{r.map((c, ci) => <td key={ci}>{c}</td>)}</tr>
+              ))}</tbody>
+            </table>
+          </div>
+        </details>
+      )}
 
       {/* ── code surface ── */}
       {step.kind === "spot" ? (
