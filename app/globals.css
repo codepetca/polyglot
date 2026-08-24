@@ -1288,3 +1288,23 @@ pre.flowcode.ro { margin: 0; }
 .notelist li { font-size: 14.5px; line-height: 1.55; }
 .notealt { display: block; margin-top: 3px; padding-left: 10px; border-left: 2px solid var(--line);
   color: var(--muted); font-size: 13.5px; }
+
+/* ── Admin: translate lessons ── */
+.trwrap { max-width: 900px; margin: 0 auto; padding: 28px 20px 90px; }
+.trbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.trbar label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.trbar select { font-family: var(--sans); font-size: 14px; padding: 7px 10px; border: 1.5px solid var(--line);
+  border-radius: 9px; background: var(--card); color: var(--ink); }
+.trcount { font-size: 12.5px; color: var(--muted); }
+.trerr { color: var(--bad); font-size: 13.5px; }
+.trtable { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.trtable th { text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); border-bottom: 2px solid var(--ink); padding: 8px 6px; }
+.trtable td { border-bottom: 1px solid var(--line); padding: 9px 6px; vertical-align: middle; }
+.trtable code { font-family: var(--mono); color: var(--accent); margin-right: 6px; }
+.trtable tr.bad td { background: rgba(176,72,58,.07); }
+.trhave { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.trstate { font-size: 12.5px; color: var(--muted); }
+.trstate.done { color: var(--ok); font-weight: 600; }
+.trstate.failed { color: var(--bad); font-weight: 600; }
+.trstate.running { color: var(--warn); font-weight: 600; }
