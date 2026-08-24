@@ -970,3 +970,17 @@ pre.flowcode.ro { margin: 0; }
 .workplan .lbl { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; color: var(--muted); }
 .workplan ol { margin: 7px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
 .workplan li { font-size: 14px; line-height: 1.5; }
+
+/* pipeline: a process the student has to be able to recite in order */
+.pipe { display: flex; flex-direction: column; align-items: stretch; margin: 14px 0 6px; max-width: 460px; }
+.pipestage { display: flex; flex-direction: column; align-items: center; }
+.pipebox { width: 100%; border-radius: 10px; padding: 10px 15px; display: flex; flex-direction: column; gap: 2px;
+  border: 1.5px solid var(--line); background: var(--card); }
+.pipebox.pb-file { border-style: dashed; }
+.pipebox.pb-tool { border-color: var(--accent); }
+.pipebox.pb-end { background: var(--accent); border-color: var(--accent); }
+.pipebox.pb-end .pipelabel, .pipebox.pb-end .pipenote { color: #fff; }
+.pipelabel { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--ink); }
+.pipebox.pb-tool .pipelabel { color: var(--accent); }
+.pipenote { font-family: var(--sans); font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.pipearrow { color: var(--muted); font-size: 17px; line-height: 1; padding: 5px 0; }

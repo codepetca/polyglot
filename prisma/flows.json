@@ -3784,6 +3784,288 @@
       }
     },
     {
+      "code": "3.0",
+      "title": "Introduction to Programming and Java",
+      "objectives": [
+        "explain how Java source code becomes a running program",
+        "tell the programmer and the user apart"
+      ],
+      "flow": {
+        "v": 1,
+        "steps": [
+          {
+            "id": "i_task",
+            "kind": "teach",
+            "instruction": "Programming is writing instructions in a language a computer understands.",
+            "body": [
+              "That is the whole idea.",
+              "The rest of this lesson is the words people use around it, and one thing you will be tested on."
+            ]
+          },
+          {
+            "id": "i_words",
+            "kind": "teach",
+            "instruction": "Two words that get used constantly.",
+            "facts": {
+              "columns": [
+                "Word",
+                "What it means"
+              ],
+              "rows": [
+                [
+                  "Code",
+                  "the instructions you have written"
+                ],
+                [
+                  "Syntax",
+                  "the grammar those instructions have to follow"
+                ]
+              ]
+            },
+            "body": [
+              "A syntax error means you broke the grammar, not that your idea was wrong."
+            ]
+          },
+          {
+            "id": "i_langs",
+            "kind": "teach",
+            "instruction": "There is more than one way to talk to a computer.",
+            "body": [
+              "Those different ways are called programming languages.",
+              "Java is one. Python, JavaScript, C++ and dozens of others exist too.",
+              "Search for \"list of programming languages\" and see how many there are."
+            ]
+          },
+          {
+            "id": "i_roles",
+            "kind": "teach",
+            "instruction": "Two roles, and you are usually both.",
+            "facts": {
+              "columns": [
+                "Role",
+                "What they do",
+                "What they need to know"
+              ],
+              "rows": [
+                [
+                  "Programmer",
+                  "writes the program, with the user in mind, and documents it",
+                  "the code"
+                ],
+                [
+                  "User",
+                  "runs the program and interacts with it",
+                  "nothing about the code"
+                ]
+              ]
+            },
+            "body": [
+              "When you write a program and then run it yourself, you are playing both parts."
+            ]
+          },
+          {
+            "id": "i_how",
+            "kind": "teach",
+            "instruction": "How Java actually runs. This is the part you will be tested on.",
+            "pipeline": [
+              {
+                "label": "Hello.java",
+                "note": "the source code you write",
+                "kind": "file"
+              },
+              {
+                "label": "the compiler",
+                "note": "turns source code into bytecode",
+                "kind": "tool"
+              },
+              {
+                "label": "Hello.class",
+                "note": "the bytecode",
+                "kind": "file"
+              },
+              {
+                "label": "the JVM",
+                "note": "the Java Virtual Machine reads the bytecode",
+                "kind": "tool"
+              },
+              {
+                "label": "your program runs",
+                "kind": "end"
+              }
+            ],
+            "keypoint": "Java source code (.java) is compiled into bytecode (.class), which the JVM interprets and runs."
+          },
+          {
+            "id": "i_files",
+            "kind": "teach",
+            "instruction": "Two file endings worth remembering.",
+            "facts": {
+              "columns": [
+                "File",
+                "Holds",
+                "Made by"
+              ],
+              "rows": [
+                [
+                  ".java",
+                  "the source code you write",
+                  "you"
+                ],
+                [
+                  ".class",
+                  "the bytecode",
+                  "the compiler"
+                ]
+              ]
+            },
+            "keypoint": ".java holds your source code. .class holds the bytecode the compiler made."
+          },
+          {
+            "id": "i_order",
+            "kind": "workout",
+            "level": "warm-up",
+            "instruction": "Put the four stages of running a Java program in order.",
+            "plan": [
+              "you write source code in a .java file",
+              "the compiler turns it into bytecode",
+              "the bytecode is saved in a .class file",
+              "the JVM reads the bytecode and runs the program"
+            ],
+            "code": "// no code needed here. just print the word done\n",
+            "target": "done",
+            "solution": "System.out.println(\"done\");",
+            "hint": "Source first, then the compiler, then the file it makes, then the thing that runs it.",
+            "after": "Source, compiler, bytecode, JVM. That order is the answer to the exam question.",
+            "skills": [
+              "explain how Java source code becomes a running program"
+            ]
+          },
+          {
+            "id": "i_mcq",
+            "kind": "trace",
+            "instruction": "Two you will be asked.",
+            "code": "Hello.java  ->  Hello.class",
+            "questions": [
+              {
+                "prompt": "What does the compiler turn your source code into?",
+                "opts": [
+                  "Bytecode",
+                  "Machine code",
+                  "A .java file",
+                  "Another language"
+                ],
+                "correct": 0,
+                "why": "The compiler produces bytecode, which is saved in a .class file."
+              },
+              {
+                "prompt": "What reads the bytecode and runs it?",
+                "opts": [
+                  "The compiler",
+                  "The Java Virtual Machine",
+                  "The code editor",
+                  "The operating system"
+                ],
+                "correct": 1,
+                "why": "The JVM interprets the bytecode. That is why compiled Java runs on any machine with a JVM."
+              }
+            ],
+            "skills": [
+              "explain how Java source code becomes a running program"
+            ]
+          },
+          {
+            "id": "i_text",
+            "kind": "teach",
+            "instruction": "A .java file is just a text file.",
+            "body": [
+              "You really could write Java in Notepad and it would compile.",
+              "So why does nobody do that?",
+              "Because a plain text editor will not colour your code, will not spot a missing semicolon, and will not run anything for you."
+            ]
+          },
+          {
+            "id": "i_ide",
+            "kind": "teach",
+            "instruction": "A code editor helps you write code. A full one is called an IDE.",
+            "body": [
+              "IDE stands for Integrated Development Environment.",
+              "It puts the editor, the compiler and the runner in one place.",
+              "codehs.com, BlueJ and repl.it are all examples. So is the editor you are typing into now."
+            ],
+            "keypoint": "A code editor helps you write code. A full coding environment is called an IDE."
+          },
+          {
+            "id": "i_bucket",
+            "kind": "bucket",
+            "instruction": "Who does each one?",
+            "buckets": [
+              "The programmer",
+              "The user"
+            ],
+            "items": [
+              {
+                "text": "Writes the code",
+                "bucket": 0
+              },
+              {
+                "text": "Writes documentation so others understand it",
+                "bucket": 0
+              },
+              {
+                "text": "Decides what the program should do for people",
+                "bucket": 0
+              },
+              {
+                "text": "Runs the program",
+                "bucket": 1
+              },
+              {
+                "text": "Does not need to understand any code",
+                "bucket": 1
+              }
+            ],
+            "why": "You are usually both. The point of the split is that a programmer writes for someone who will never read the code.",
+            "skills": [
+              "tell the programmer and the user apart"
+            ]
+          },
+          {
+            "id": "i_final",
+            "kind": "trace",
+            "instruction": "Last two.",
+            "code": "javac Hello.java   ->   java Hello",
+            "questions": [
+              {
+                "prompt": "Which file do YOU write?",
+                "opts": [
+                  "The .class file",
+                  "The .java file",
+                  "The bytecode",
+                  "Neither"
+                ],
+                "correct": 1,
+                "why": "You write the .java file. The compiler makes the .class file from it."
+              },
+              {
+                "prompt": "Why can compiled Java run on Windows, Mac and Linux without changing?",
+                "opts": [
+                  "Java is a text file",
+                  "Each machine has its own JVM to read the bytecode",
+                  "The compiler runs everywhere",
+                  "It cannot"
+                ],
+                "correct": 1,
+                "why": "Bytecode is not built for one kind of machine. Any machine with a JVM can read it, which is the whole point of the design."
+              }
+            ],
+            "skills": [
+              "explain how Java source code becomes a running program"
+            ]
+          }
+        ]
+      }
+    },
+    {
       "code": "3.1",
       "title": "Java Methods",
       "objectives": [

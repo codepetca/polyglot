@@ -53,6 +53,7 @@ type Step = {
   annotate?: { token: string; note: string }[];
   keypoint?: string;
   facts?: { columns: string[]; rows: string[][] };
+  pipeline?: { label: string; note?: string; kind?: string }[];
   plan?: string[];
   methods?: string[];
   level?: string;
@@ -1070,6 +1071,19 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
             <div className="flowout" style={{ marginTop: 10 }}>
               <div className="lbl">WHAT IT PRINTS</div>
               <pre>{step.output || "(nothing)"}</pre>
+            </div>
+          )}
+          {(step.pipeline || []).length > 0 && (
+            <div className="pipe">
+              {(step.pipeline || []).map((st, j) => (
+                <div className="pipestage" key={j}>
+                  <div className={`pipebox pb-${st.kind || "tool"}`}>
+                    <span className="pipelabel">{st.label}</span>
+                    {st.note && <span className="pipenote">{st.note}</span>}
+                  </div>
+                  {j < (step.pipeline || []).length - 1 && <span className="pipearrow" aria-hidden="true">↓</span>}
+                </div>
+              ))}
             </div>
           )}
           {step.facts && (

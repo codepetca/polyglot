@@ -14,6 +14,7 @@ type Step = {
   sides?: { label: string; code: string; output: string }[];
   columns?: string[]; rows?: string[][]; fillFrom?: number;
   facts?: { columns: string[]; rows: string[][] };
+  pipeline?: { label: string; note?: string; kind?: string }[];
 };
 
 /**
@@ -132,6 +133,19 @@ export default async function UnitNotes({ params }: { params: Promise<{ unit: st
                 </div>
               )}
 
+              {(s.pipeline || []).length > 0 && (
+                <div className="pipe">
+                  {(s.pipeline || []).map((st, j) => (
+                    <div className="pipestage" key={j}>
+                      <div className={`pipebox pb-${st.kind || "tool"}`}>
+                        <span className="pipelabel">{st.label}</span>
+                        {st.note && <span className="pipenote">{st.note}</span>}
+                      </div>
+                      {j < (s.pipeline || []).length - 1 && <span className="pipearrow">↓</span>}
+                    </div>
+                  ))}
+                </div>
+              )}
               {s.facts && (
                 <div className="guidetablewrap">
                   <table className="facts">

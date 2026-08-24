@@ -372,6 +372,19 @@ export const CODEHS_BASIC_JAVA: CodeHSLesson[] = [
 // 4.x for the student.
 export const CODEHS_METHODS: CodeHSLesson[] = [
   {
+    // NOT a CodeHS lesson. The teacher delivers this one from their own slides,
+    // partway through the course rather than at the start, because as a wall of
+    // text up front it lands on nobody. It sits at 4.0 so every CodeHS-matching
+    // number after it stays exactly where CodeHS put it.
+    code: "3.0",
+    codehsCode: "4.0",
+    title: "Introduction to Programming and Java",
+    objectives: ["Explain how Java source code becomes a running program", "Tell the programmer and the user apart"],
+    teaches: ["code and syntax", "programming languages", "programmer and user roles", "source code compiled to bytecode", "the JVM", ".java and .class files", "code editors and IDEs"],
+    exercises: [],
+    cfu: ["the one thing explicitly tested: .java source is compiled into .class bytecode, which the JVM interprets"],
+  },
+  {
     code: "3.1",
     codehsCode: "4.1",
     title: "Java Methods",

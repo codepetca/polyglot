@@ -151,6 +151,13 @@ export type FlowStep = {
    */
   facts?: { columns: string[]; rows: string[][] };
   /**
+   * A chain of stages with arrows between them, for a process the student has
+   * to be able to recite in order — source to bytecode to JVM being the one
+   * this was built for. A prose paragraph describing three arrows is the kind
+   * of thing nobody remembers; the shape is the memorable part.
+   */
+  pipeline?: { label: string; note?: string; kind?: "file" | "tool" | "end" }[];
+  /**
    * workout: a problem solved in two moves — plan it, then write it.
    *
    * WHY IT IS TWO MOVES. The owner's own account of learning this unit: the
@@ -228,6 +235,8 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       else if (h < 0 || h >= lines) errors.push(`${at}: highlight line ${h} is outside the ${lines}-line snippet`);
     }
     if (s.keypoint !== undefined && !String(s.keypoint).trim()) errors.push(`${at}: keypoint is empty`);
+    for (const st of s.pipeline || []) if (!st.label) errors.push(`${at}: every pipeline stage needs a label`);
+    if (s.pipeline && s.pipeline.length < 2) errors.push(`${at}: a pipeline needs 2+ stages`);
     if (s.facts) {
       if (!s.facts.columns?.length) errors.push(`${at}: facts needs columns`);
       if (!s.facts.rows?.length) errors.push(`${at}: facts needs rows`);
@@ -244,8 +253,8 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       case "run": if (!s.code) errors.push(`${at}: needs code`); break;
       case "tweak": if (!s.code || s.target === undefined) errors.push(`${at}: needs code + target (the ORIGINAL output)`); break;
       case "teach":
-        if (!s.code && !(s.points || []).length && !(s.body || []).length && !(s.rules || []).length && !s.facts) {
-          errors.push(`${at}: needs code, points[], body[], rules[] or facts`);
+        if (!s.code && !(s.points || []).length && !(s.body || []).length && !(s.rules || []).length && !s.facts && !(s.pipeline || []).length) {
+          errors.push(`${at}: needs code, points[], body[], rules[], facts or pipeline`);
         }
         break;
       case "workout": {
@@ -376,7 +385,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       for (let i = rights.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rights[i], rights[j]] = [rights[j], rights[i]]; }
       return { ...base, lefts, rights };
     }
-    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, annotate: s.annotate, facts: s.facts, output: s.output };
+    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, annotate: s.annotate, facts: s.facts, pipeline: s.pipeline, output: s.output };
     case "card": return { ...base, vars: s.vars };
     case "walk": return { ...base, frames: s.frames };
     case "workout": {
