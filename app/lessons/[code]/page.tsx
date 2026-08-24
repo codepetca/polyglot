@@ -7,7 +7,6 @@ import LessonRenderer from "@/components/LessonRenderer";
 import LessonWorkspace from "@/components/LessonWorkspace";
 import FlowPlayer from "@/components/lesson/FlowPlayer";
 import Docs from "@/components/lesson/Docs";
-import StudentTools from "@/components/student/StudentTools";
 import HighlightOnLoad from "@/components/lesson/HighlightOnLoad";
 import type { Block, Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
 import { stripAnswers } from "@/lib/curriculum/questions";
@@ -48,15 +47,6 @@ export default async function LessonPage({
   const exercise = lesson.exercise as unknown as Exercise;
   const objectives = (lesson.objectives as unknown as string[]) || [];
 
-  // "Ask teacher" on highlight is opt-in per teacher (their prefs).
-  let askTeacher: { id: string; name: string } | null = null;
-  if (me.classId) {
-    const cls = await prisma.class.findUnique({ where: { id: me.classId }, include: { teacher: true } });
-    if (cls?.teacher) {
-      const prefs = await getSetting<{ askTeacher?: boolean }>(`prefs:${cls.teacher.id}`, {});
-      if (prefs.askTeacher) askTeacher = { id: cls.teacher.id, name: cls.teacher.name };
-    }
-  }
   // Only the small formative subset (with answers) ships to the browser; the
   // full bank — the clean quiz's answer key — stays server-side (/api/quiz).
   const bank = (lesson.quizBank as unknown as QuizQuestion[]) || [];
@@ -137,12 +127,7 @@ export default async function LessonPage({
           {classic}
         </>
       )}
-      {/* ON EVERY LESSON, flow or not. This used to be gated to !hasFlow, so as
-          lessons were converted to the interactive player the scratchpad and the
-          tutor silently disappeared from all of them — which is not a decision
-          anyone made, just the gate outliving its reason. A student mid-flow is
-          exactly who needs somewhere to try a line of Java. */}
-      <StudentTools lessonCode={lesson.code} askTeacher={askTeacher} />
+
     </>
   );
 }

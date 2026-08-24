@@ -15,29 +15,37 @@ import type { Section } from "@/lib/curriculum/reference";
 // on this page can be pasted straight into the scratchpad and run.
 
 type Where = Record<string, string[]>;
+type Group = { unit: number; title: string; sections: Section[] };
 
-export default function DocsBrowser({ sections, where }: { sections: Section[]; where: Where }) {
+export default function DocsBrowser({ groups, where }: { groups: Group[]; where: Where }) {
   const [q, setQ] = useState("");
 
   const shown = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    if (!needle) return sections;
-    return sections
-      .map((s) => ({
-        ...s,
-        entries: s.entries.filter(
-          (e) =>
-            e.name.toLowerCase().includes(needle) ||
-            e.code.toLowerCase().includes(needle) ||
-            e.note.toLowerCase().includes(needle) ||
-            s.title.toLowerCase().includes(needle),
-        ),
+    if (!needle) return groups;
+    return groups
+      .map((g) => ({
+        ...g,
+        sections: g.sections
+          .map((s) => ({
+            ...s,
+            entries: s.entries.filter(
+              (e) =>
+                e.name.toLowerCase().includes(needle) ||
+                e.code.toLowerCase().includes(needle) ||
+                e.note.toLowerCase().includes(needle) ||
+                s.title.toLowerCase().includes(needle),
+            ),
+          }))
+          .filter((s) => s.entries.length > 0),
       }))
-      .filter((s) => s.entries.length > 0);
-  }, [q, sections]);
+      .filter((g) => g.sections.length > 0);
+  }, [q, groups]);
 
-  const total = sections.reduce((n, s) => n + s.entries.length, 0);
-  const found = shown.reduce((n, s) => n + s.entries.length, 0);
+  const count = (gs: Group[]) => gs.reduce((n, g) => n + g.sections.reduce((m, s) => m + s.entries.length, 0), 0);
+  const total = count(groups);
+  const found = count(shown);
+  const topicCount = groups.reduce((n, g) => n + g.sections.length, 0);
 
   return (
     <>
@@ -56,23 +64,31 @@ export default function DocsBrowser({ sections, where }: { sections: Section[]; 
         )}
       </div>
       <p className="meta docscount">
-        {q ? `${found} of ${total} entries` : `${total} entries across ${sections.length} topics`}
+        {q ? `${found} of ${total} entries` : `${total} entries across ${topicCount} topics, by unit`}
       </p>
 
       {/* Jump links. Hidden while filtering, when they would point at nothing. */}
       {!q && (
         <nav className="docsjump" aria-label="Topics">
-          {sections.map((s) => (
-            <a key={s.id} href={`#${s.id}`}>
-              {s.title}
-            </a>
+          {groups.map((g) => (
+            <span className="jumpgroup" key={g.unit}>
+              <b>Unit {g.unit}</b>
+              {g.sections.map((s) => (
+                <a key={s.id} href={`#${s.id}`}>
+                  {s.title}
+                </a>
+              ))}
+            </span>
           ))}
         </nav>
       )}
 
       {shown.length === 0 && <p className="meta">Nothing matches that. Try a shorter word.</p>}
 
-      {shown.map((s) => (
+      {shown.map((g) => (
+        <div key={g.unit}>
+          <h2 className="docunit">{g.title}</h2>
+          {g.sections.map((s) => (
         <section className="docsec" id={s.id} key={s.id}>
           <h2>
             {s.title}
@@ -96,6 +112,8 @@ export default function DocsBrowser({ sections, where }: { sections: Section[]; 
             ))}
           </dl>
         </section>
+          ))}
+        </div>
       ))}
     </>
   );

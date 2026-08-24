@@ -1104,3 +1104,90 @@ pre.flowcode.ro { margin: 0; }
 .docspage .docs-item dd strong { display: block; color: var(--ink); font-size: 13.5px; margin-bottom: 2px; }
 .docspage .docs-item { padding: 9px 0; border-bottom: 1px solid var(--line); }
 .docspage .docs-item:last-child { border-bottom: 0; }
+
+/* ── The workbench: scratchpad, reference and tutor in one right-hand rail ──
+   Formerly floating windows, which covered the very lesson you opened them to
+   work against. These are flex siblings of .main, so the lesson NARROWS. */
+.benchrail { flex-shrink: 0; width: 46px; border-left: 1.5px solid var(--line); background: #f1eee6;
+  position: sticky; top: 57px; height: calc(100vh - 57px); display: flex; flex-direction: column;
+  align-items: center; gap: 6px; padding: 14px 0; }
+.benchrail button { writing-mode: vertical-rl; background: transparent; border: 1.5px solid transparent;
+  border-radius: 9px; padding: 12px 5px; color: var(--muted); font-family: var(--sans); font-size: 11.5px;
+  font-weight: 700; letter-spacing: .06em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.benchrail button:hover { background: #e9e5da; color: var(--ink); border-color: var(--line); }
+.benchrail .bicon { writing-mode: horizontal-tb; font-size: 13px; }
+
+.bench { flex-shrink: 0; width: min(46vw, 560px); border-left: 1.5px solid var(--line); background: var(--card);
+  position: sticky; top: 57px; height: calc(100vh - 57px); display: flex; flex-direction: column; overflow: hidden; }
+.benchhead { display: flex; align-items: center; gap: 4px; padding: 9px 10px; border-bottom: 1.5px solid var(--line);
+  background: #f1eee6; flex-shrink: 0; }
+.benchtitle { flex: 1; text-align: center; font-family: var(--sans); font-size: 12.5px; font-weight: 700;
+  letter-spacing: .05em; text-transform: uppercase; color: var(--ink); display: flex; align-items: center;
+  justify-content: center; gap: 7px; }
+.benchnav, .benchclose { background: transparent; border: 1.5px solid transparent; border-radius: 8px;
+  width: 28px; height: 28px; font-size: 17px; line-height: 1; color: var(--muted); cursor: pointer; flex-shrink: 0; }
+.benchnav:hover, .benchclose:hover { background: #e9e5da; color: var(--ink); border-color: var(--line); }
+.benchclose { font-size: 13px; }
+.benchdots { display: flex; gap: 4px; margin: 0 4px; flex-shrink: 0; }
+.benchdots i { width: 5px; height: 5px; border-radius: 99px; background: var(--line); display: block; }
+.benchdots i.on { background: var(--accent); }
+
+.benchbody { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+/* The swap animation. Direction comes from which arrow was used, so the pane
+   enters from the side you came from. */
+@keyframes benchin-r { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+@keyframes benchin-l { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+.benchbody.fromright { animation: benchin-r .17s ease-out; }
+.benchbody.fromleft { animation: benchin-l .17s ease-out; }
+@media (prefers-reduced-motion: reduce) { .benchbody { animation: none; } }
+
+/* Scratchpad: editor over a console you can type into. */
+.padwrap { display: flex; flex-direction: column; height: 100%; min-height: 0; gap: 8px; padding: 10px; }
+.padtop { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.padcode { flex: 1 1 55%; min-height: 120px; overflow: hidden; border: 1.5px solid var(--line); border-radius: 10px; }
+.padterm { flex: 1 1 45%; min-height: 90px; overflow-y: auto; background: #14171c; color: #e6e1d6;
+  border: 1.5px solid #2a2f37; border-radius: 10px; padding: 11px 13px; font-family: var(--mono);
+  font-size: 12.5px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; cursor: text; }
+.padterm.err { border-color: #6b3a34; }
+.padterm .termerr { color: #f0a89c; }
+.padterm .mutedtx { color: #8b8578; }
+/* The caret line. The input is bare so it reads as part of the transcript
+   rather than as a form field sitting in a terminal. */
+.padterm .termline { display: flex; align-items: baseline; gap: 7px; }
+.padterm .caret { color: var(--ok); font-weight: 700; }
+.padterm .termline input { flex: 1; background: transparent; border: 0; outline: none; color: #fff;
+  font-family: var(--mono); font-size: 12.5px; padding: 0; caret-color: #7fe3b0; }
+
+/* Reference pane: the same entries as /docs, sized for a rail. */
+.refpane { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 12px 20px; }
+.refsearch { width: 100%; font-family: var(--sans); font-size: 13px; padding: 8px 11px; margin-bottom: 12px;
+  border: 1.5px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink); }
+.refpane h4 { font-family: var(--sans); font-size: 11px; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--muted); margin: 16px 0 7px; padding-bottom: 5px; border-bottom: 1.5px solid var(--line); }
+.refpane .docs-item { grid-template-columns: 1fr; gap: 3px; padding: 7px 0; }
+.refpane .docs-item dd strong { display: block; color: var(--ink); font-size: 12.5px; }
+.refpane .docs-item dd { font-size: 12.5px; }
+
+/* Folding the lesson list. With the workbench open, a fixed 280px of contents
+   squeezes the lesson into the middle third of the screen. */
+.side.folded { width: 42px; padding: 14px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.sidespine { writing-mode: vertical-rl; font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+  color: var(--muted); }
+.sidetop { display: flex; align-items: center; justify-content: space-between; margin: 0 4px 10px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.sidefold { background: transparent; border: 1.5px solid transparent; border-radius: 8px; width: 26px; height: 26px;
+  color: var(--muted); font-size: 15px; line-height: 1; cursor: pointer; flex-shrink: 0; }
+.sidefold:hover { background: #e9e5da; color: var(--ink); border-color: var(--line); }
+
+@media (max-width: 900px) {
+  /* No room to push anything aside; fall back to covering the lesson. */
+  .bench { position: fixed; inset: 57px 0 0 auto; width: min(96vw, 460px); z-index: 60;
+    box-shadow: -8px 0 28px rgba(26,28,30,.18); }
+  .benchrail { position: fixed; right: 0; top: 57px; z-index: 59; }
+}
+.docunit { font-family: var(--serif); font-size: 21px; margin: 40px 0 18px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent); color: var(--ink); }
+.docunit:first-of-type { margin-top: 10px; }
+.jumpgroup { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.jumpgroup b { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin-left: 4px; }

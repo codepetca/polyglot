@@ -4,6 +4,9 @@ import { currentUser } from "@/lib/auth";
 import { excludeInternal } from "@/lib/curriculum/internal";
 import { studentCode } from "@/lib/curriculum/codehs";
 import LessonNav, { type NavUnit } from "@/components/lesson/LessonNav";
+import SideRail from "@/components/lesson/SideRail";
+import Workbench from "@/components/student/Workbench";
+import { getSetting } from "@/lib/settings";
 
 // Prototype-v4 sidebar: units that fold, topic rows with status dots, lesson
 // code minis. The folding lives in LessonNav because it needs the current
@@ -36,6 +39,18 @@ export default async function LessonsLayout({ children }: { children: React.Reac
     })),
   }));
 
+  // Highlight-to-ask can send a question to the teacher, when they have turned
+  // that on. Resolved here rather than in the page so the workbench can live
+  // beside the lesson instead of inside it.
+  let askTeacher: { id: string; name: string } | null = null;
+  if (me.classId) {
+    const cls = await prisma.class.findUnique({ where: { id: me.classId }, include: { teacher: true } });
+    if (cls?.teacher) {
+      const prefs = await getSetting<{ askTeacher?: boolean }>(`prefs:${cls.teacher.id}`, {});
+      if (prefs.askTeacher) askTeacher = { id: cls.teacher.id, name: cls.teacher.name };
+    }
+  }
+
   return (
     <div className="shell">
       {/* On phones the sidebar is hidden, which used to leave a student stuck
@@ -47,10 +62,11 @@ export default async function LessonsLayout({ children }: { children: React.Reac
           <LessonNav units={units} />
         </div>
       </details>
-      <aside className="side">
-        <LessonNav units={units} />
-      </aside>
+      <SideRail units={units} />
       <main className="main">{children}</main>
+      {/* A flex SIBLING of the lesson, not an overlay: opening a tool narrows
+          the lesson instead of sitting on top of it. */}
+      <Workbench askTeacher={askTeacher} />
     </div>
   );
 }

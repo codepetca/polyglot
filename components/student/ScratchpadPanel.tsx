@@ -1,13 +1,29 @@
 "use client";
 
-// Scratchpad v2 — built for flow:
-//   · code LEFT, output RIGHT (stacks when the window is narrow)
-//   · Ctrl/Cmd+Enter runs · copy output · stdin tucked behind a toggle
-//   · a built-in AI strip at the bottom: ask about the code without switching
-//     windows (the full Tutor window remains for longer conversations)
+// The scratchpad: an editor, and a console you can type into.
+//
+// ONE BUTTON. It had five — run, main/methods, input, copy, clear — and every
+// one was a decision a student had to make before they could try a line of
+// Java. The wrapper mode is now worked out from the code (lib/java/detect.ts)
+// and input is typed where input belongs, in the console. What is left is Run.
+//
+// HOW TYPING IN THE CONSOLE WORKS. The Java runner is stateless: it takes a
+// program and a block of stdin and hands back the whole output. There is no
+// socket to type down. So the console REPLAYS — it keeps the lines typed so
+// far, and each new line re-runs the program with all of them. The programs
+// here are short and deterministic, so the transcript is identical to a real
+// terminal session, and the wrapper already echoes what it reads, so prompts
+// and answers interleave the way a student expects.
+//
+// Knowing when the program wants input is the trick: with nothing left on
+// stdin, Scanner.nextLine() throws NoSuchElementException. That exception is
+// the signal to show a caret rather than an error.
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CodeEditor from "../CodeEditor";
+import { needsMethodsMode, ensureRun } from "@/lib/java/detect";
+
+const WANTS_INPUT = /NoSuchElementException/;
 
 export default function ScratchpadPanel({
   code,
@@ -18,68 +34,64 @@ export default function ScratchpadPanel({
   setCode: (v: string) => void;
   lessonCode: string;
 }) {
-  // WRAP MODE. "beginner" puts the code inside main(); "methods" puts it at
-  // class level so a student can DEFINE methods and classes, which Java forbids
-  // inside another method. The course teaches methods from Unit 4 and classes
-  // from Unit 5, so a scratchpad locked to beginner cannot run two thirds of
-  // what it is sitting next to.
-  const [methods, setMethods] = useState(false);
-  const [stdinOpen, setStdinOpen] = useState(false);
-  const [stdin, setStdin] = useState("");
-  const [out, setOut] = useState<{ text: string; err: boolean } | null>(null);
-  const [meta, setMeta] = useState("idle");
+  const [out, setOut] = useState("");
+  const [error, setError] = useState("");
+  const [waiting, setWaiting] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [ran, setRan] = useState(false);
+  const [typed, setTyped] = useState("");
+  const linesRef = useRef<string[]>([]);
+  const consoleRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // mini AI strip
-  const [aiQ, setAiQ] = useState("");
-  const [aiMsgs, setAiMsgs] = useState<{ role: "u" | "a"; text: string }[]>([]);
-  const [aiBusy, setAiBusy] = useState(false);
-  const aiScroll = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    consoleRef.current?.scrollTo(0, consoleRef.current.scrollHeight);
+    if (waiting) inputRef.current?.focus();
+  }, [out, waiting]);
 
-  async function run() {
-    if (busy) return;
+  async function exec(lines: string[]) {
     setBusy(true);
-    setMeta("running…");
+    const methods = needsMethodsMode(code);
     const r = await fetch("/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        code,
-        stdin: stdin.replace(/\\n/g, "\n"),
+        code: methods ? ensureRun(code) : code,
+        stdin: lines.join("\n"),
         wrap: true,
         wrapMode: methods ? "methods" : "beginner",
+        lessonCode,
       }),
     }).then((x) => x.json());
-    setOut({ text: r.compiled === false ? r.error : r.stdout || "(no output)", err: r.compiled === false });
-    setMeta(r.compiled === false ? "compile error" : "done");
+
+    const err: string = r.error || "";
+    const wantsMore = WANTS_INPUT.test(err);
+    setOut(r.stdout || "");
+    // A program pausing for input is not a program that failed.
+    setError(wantsMore ? "" : r.compiled === false || err ? err : "");
+    setWaiting(wantsMore);
     setBusy(false);
+    setRan(true);
   }
 
-  async function askAi(q: string) {
-    const question = q.trim();
-    if (!question || aiBusy) return;
-    setAiQ("");
-    setAiMsgs((m) => [...m, { role: "u", text: question }]);
-    setAiBusy(true);
-    const r = await fetch("/api/ai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        feature: "tutor",
-        lessonCode,
-        code,
-        message: `${question}${out ? `\n\n(The program's last output was:\n${out.text})` : ""}`,
-      }),
-    }).then((x) => x.json());
-    setAiMsgs((m) => [...m, { role: "a", text: r.text || r.error || "…" }]);
-    setAiBusy(false);
-    setTimeout(() => aiScroll.current?.scrollTo(0, aiScroll.current.scrollHeight), 50);
+  function run() {
+    if (busy) return;
+    linesRef.current = [];
+    setTyped("");
+    setError("");
+    exec([]);
+  }
+
+  function submitLine() {
+    if (busy) return;
+    linesRef.current = [...linesRef.current, typed];
+    setTyped("");
+    exec(linesRef.current);
   }
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", height: "100%", gap: 10 }}
+      className="padwrap"
       onKeyDown={(e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
           e.preventDefault();
@@ -87,92 +99,45 @@ export default function ScratchpadPanel({
         }
       }}
     >
-      {/* toolbar */}
-      <div className="runrow" style={{ margin: 0 }}>
+      <div className="padtop">
         <button className="btn blue" onClick={run} disabled={busy}>
-          ▶ Run
+          {busy ? "Running…" : "▶ Run"}
         </button>
         <span className="runnote">⌘/Ctrl + Enter</span>
-        <span style={{ flex: 1 }} />
-        <button
-          className={`tbtn2 ${methods ? "on" : ""}`}
-          title={methods ? "Class level: you can define methods and classes. run() is called for you." : "Inside main(): plain statements. Switch on to define methods or classes."}
-          onClick={() => setMethods(!methods)}
-        >
-          {methods ? "{ } methods" : "{ } main"}
-        </button>
-        <button className={`tbtn2 ${stdinOpen ? "on" : ""}`} title="Program input (stdin)" onClick={() => setStdinOpen(!stdinOpen)}>
-          ⌨ input
-        </button>
-        <button
-          className="tbtn2"
-          title="Copy output"
-          onClick={() => {
-            if (out) {
-              navigator.clipboard?.writeText(out.text);
-              setCopied(true);
-              setTimeout(() => setCopied(false), 1000);
-            }
-          }}
-        >
-          {copied ? "✓" : "⧉"}
-        </button>
-        <button className="tbtn2" title="Clear code" onClick={() => setCode("// fresh start\n")}>
-          ↺
-        </button>
       </div>
 
-      {stdinOpen && (
-        <div className="stdinrow" style={{ margin: 0 }}>
-          <label>input (one value per line, for readLine / readInt — \n ok):</label>
-          <input value={stdin} onChange={(e) => setStdin(e.target.value)} placeholder="e.g. 7" style={{ minWidth: 100, flex: 1 }} />
-        </div>
-      )}
-
-      {/* code | output side by side */}
-      <div className="padgrid">
-        <div className="padcode">
-          <CodeEditor value={code} onChange={setCode} height="100%" />
-        </div>
-        <div className="console" style={{ margin: 0, display: "flex", flexDirection: "column" }}>
-          <div className="chead">
-            <span>OUTPUT</span>
-            <span>{meta}</span>
-          </div>
-          <div className={`cbody ${out?.err ? "err" : ""}`} style={{ flex: 1, overflowY: "auto" }}>
-            {out ? out.text : <span className="mutedtx">▶ or ⌘Enter to run…</span>}
-          </div>
-        </div>
+      <div className="padcode">
+        <CodeEditor value={code} onChange={setCode} height="100%" />
       </div>
 
-      {/* built-in AI strip */}
-      <div className="padai">
-        {aiMsgs.length > 0 && (
-          <div className="padai-msgs" ref={aiScroll}>
-            {aiMsgs.map((m, i) => (
-              <div key={i} className={`msg ${m.role}`} style={{ fontSize: 13, padding: "8px 11px" }}>
-                {m.role === "a" && <span className="who">TUTOR</span>}
-                {m.text}
-              </div>
-            ))}
-            {aiBusy && <div className="msg a think" style={{ fontSize: 13, padding: "8px 11px" }}>thinking…</div>}
-          </div>
+      {/* The console. Click anywhere in it to type, when it is waiting. */}
+      <div
+        className={`padterm ${error ? "err" : ""}`}
+        ref={consoleRef}
+        onClick={() => waiting && inputRef.current?.focus()}
+      >
+        {!ran && !busy && (
+          <span className="mutedtx">▶ Run to see the output. If the program asks a question, type your answer here.</span>
         )}
-        <div className="askrow">
-          <input
-            value={aiQ}
-            onChange={(e) => setAiQ(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") askAi(aiQ);
-              e.stopPropagation(); // don't trigger the run shortcut while typing here
-            }}
-            placeholder="✦ Ask AI about this code… (sees code + output)"
-            disabled={aiBusy}
-          />
-          <button className="btn purple" style={{ padding: "8px 13px" }} onClick={() => askAi(aiQ)} disabled={aiBusy}>
-            Ask
-          </button>
-        </div>
+        {out && <span className="termout">{out}</span>}
+        {error && <span className="termerr">{error}</span>}
+        {waiting && (
+          <span className="termline">
+            <span className="caret">›</span>
+            <input
+              ref={inputRef}
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+                if (e.key === "Enter") submitLine();
+              }}
+              spellCheck={false}
+              autoComplete="off"
+              aria-label="Type your answer to the program"
+            />
+          </span>
+        )}
       </div>
     </div>
   );
