@@ -41,7 +41,6 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
             {me.role === "STUDENT" ? (
               <>
                 <Link href="/lessons" className={on("/lessons")}>My lessons</Link>
-                <Link href="/progress" className={on("/progress")}>My progress</Link>
                 {/* A guest has no class, so tests and grades are always empty
                     pages — offering them is just two more things to misread. */}
                 {!me.anonymous && (

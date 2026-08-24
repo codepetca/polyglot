@@ -16,14 +16,19 @@ export const dynamic = "force-dynamic";
  * they wrote down themselves, which for most of them is nothing. This is the
  * same material as the lessons, laid out to be read in a couple of minutes.
  */
-export default async function NotesPage() {
+export default async function NotesPage({ searchParams }: { searchParams: Promise<{ all?: string }> }) {
   const me = await currentUser();
   if (!me) redirect("/login");
+  const { all } = await searchParams;
+  // Reading ahead is allowed. The default is earned-only so the page fills up
+  // as they work, but nobody is ever locked out of the material itself — and
+  // anyone reviewing the course needs to see all of it in one go.
+  const showAll = all === "1";
 
   // EARNED ONLY, for students. A note appears once the step that taught it has
   // been cleared, so the page fills up as they work — same rule the tome uses.
   // Staff see everything: reviewing the course means reading all of it.
-  const isStaff = me.role !== "STUDENT";
+  const isStaff = me.role !== "STUDENT" || showAll;
   const cleared = isStaff
     ? null
     : new Set(
@@ -79,7 +84,12 @@ export default async function NotesPage() {
       <header className="noteshead">
         <h1>Your notes</h1>
         <p className="meta">
-          {total} note{total === 1 ? "" : "s"} unlocked{isStaff ? " (staff view: all notes shown)" : ""}.
+          {total} note{total === 1 ? "" : "s"} {showAll || me.role !== "STUDENT" ? "in the course" : "unlocked"}.{" "}
+          {me.role === "STUDENT" && (
+            showAll
+              ? <Link href="/notes">Show only what I have unlocked</Link>
+              : <Link href="/notes?all=1">Show every note in the course</Link>
+          )}
         </p>
       </header>
 
