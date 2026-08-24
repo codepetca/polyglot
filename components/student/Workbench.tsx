@@ -21,31 +21,41 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import ScratchpadPanel from "./ScratchpadPanel";
 import TutorPanel from "./TutorPanel";
-import { sectionsForLesson, type Section } from "@/lib/curriculum/reference";
+import BenchFrame, { type BenchMode, type BenchGeom } from "./BenchFrame";
+import BenchIcon from "./BenchIcon";
+import { allSections, sectionsForLesson, type Section } from "@/lib/curriculum/reference";
 
 const SCRATCH_KEY = "classos_scratchpad";
 const OPEN_KEY = "classos_bench_open";
 const PANE_KEY = "classos_bench_pane";
+const WIN_KEY = "classos_bench_win";
+
+const DEFAULT_GEOM: BenchGeom = { x: 200, y: 110, w: 520, h: 560 };
 
 // CODEHS PARITY: this course teaches readLine, never input() or Scanner.
 const DEFAULT_CODE = 'String name = readLine("Your name? ");\nSystem.out.println("Hi, " + name + "!");';
 
 type PaneId = "scratchpad" | "reference" | "tutor";
-const PANES: { id: PaneId; label: string; icon: string }[] = [
-  { id: "scratchpad", label: "Scratchpad", icon: "▶" },
-  { id: "reference", label: "Reference", icon: "❋" },
-  { id: "tutor", label: "AI Tutor", icon: "✦" },
+const PANES: { id: PaneId; label: string }[] = [
+  { id: "scratchpad", label: "Scratchpad" },
+  { id: "reference", label: "Reference" },
+  { id: "tutor", label: "AI Tutor" },
 ];
 
 export default function Workbench({ askTeacher }: { askTeacher: { id: string; name: string } | null }) {
   const path = usePathname() || "";
   const lessonCode = decodeURIComponent(path.split("/lessons/")[1] || "").split("/")[0];
-  // reference.ts is pure data, so the pane can pick the lesson's sections
-  // itself rather than having them threaded down from a server component.
-  const reference = sectionsForLesson(lessonCode);
+  // The reference pane carries the WHOLE course and scrolls to where you are,
+  // rather than showing only this lesson's slice. Same effect when you are
+  // following along, but looking something up from an earlier unit no longer
+  // means leaving the lesson.
+  const reference = allSections();
+  const here = sectionsForLesson(lessonCode).map((s) => s.id);
 
   const [open, setOpen] = useState(false);
   const [pane, setPane] = useState<PaneId>("scratchpad");
+  const [mode, setMode] = useState<BenchMode>("docked");
+  const [geom, setGeomState] = useState<BenchGeom>(DEFAULT_GEOM);
   const [dir, setDir] = useState<1 | -1>(1);
   const [code, setCode] = useState(DEFAULT_CODE);
   const [loaded, setLoaded] = useState(false);
@@ -60,6 +70,15 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
     setOpen(localStorage.getItem(OPEN_KEY) === "1");
     const p = localStorage.getItem(PANE_KEY) as PaneId | null;
     if (p && PANES.some((x) => x.id === p)) setPane(p);
+    try {
+      const w = JSON.parse(localStorage.getItem(WIN_KEY) || "null");
+      if (w) {
+        if (w.mode === "float" || w.mode === "docked") setMode(w.mode);
+        setGeomState({ ...DEFAULT_GEOM, ...w.geom });
+      }
+    } catch {
+      /* a corrupt entry is not worth failing the page over */
+    }
     setLoaded(true);
   }, []);
   useEffect(() => {
@@ -71,6 +90,11 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
   useEffect(() => {
     if (loaded) localStorage.setItem(PANE_KEY, pane);
   }, [pane, loaded]);
+  useEffect(() => {
+    if (loaded) localStorage.setItem(WIN_KEY, JSON.stringify({ mode, geom }));
+  }, [mode, geom, loaded]);
+
+  const setGeom = useCallback((g: Partial<BenchGeom>) => setGeomState((cur) => ({ ...cur, ...g })), []);
 
   const swap = useCallback((delta: 1 | -1) => {
     setDir(delta);
@@ -179,49 +203,92 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
               }}
               title={p.label}
             >
-              <span className="bicon">{p.icon}</span>
+              <span className="bicon">
+                <BenchIcon name={p.id} />
+              </span>
               <span className="blabel">{p.label}</span>
             </button>
           ))}
         </aside>
       ) : (
-        <aside className="bench" aria-label={current.label}>
-          <header className="benchhead">
-            <button className="benchnav" onClick={() => swap(-1)} title="Previous tool (←)" aria-label="Previous tool">
-              ‹
-            </button>
-            <div className="benchtitle">
-              <span className="bicon">{current.icon}</span>
-              {current.label}
-            </div>
-            <button className="benchnav" onClick={() => swap(1)} title="Next tool (→)" aria-label="Next tool">
-              ›
-            </button>
-            <span className="benchdots" aria-hidden>
-              {PANES.map((p) => (
-                <i key={p.id} className={p.id === pane ? "on" : ""} />
-              ))}
-            </span>
-            <button className="benchclose" onClick={() => setOpen(false)} title="Close" aria-label="Close tools">
-              ✕
-            </button>
-          </header>
-
+        <BenchFrame
+          mode={mode}
+          geom={geom}
+          setMode={setMode}
+          setGeom={setGeom}
+          label={current.label}
+          header={
+            <>
+              <button className="benchnav" onClick={() => swap(-1)} title="Previous tool (←)" aria-label="Previous tool">
+                ‹
+              </button>
+              <div className="benchtitle">
+                {/* The icon sits with the title so you can see what you have
+                    landed on without reading, which is the point of swapping
+                    with arrows in the first place. */}
+                <span className="bicon">
+                  <BenchIcon name={current.id} />
+                </span>
+                {current.label}
+              </div>
+              <button className="benchnav" onClick={() => swap(1)} title="Next tool (→)" aria-label="Next tool">
+                ›
+              </button>
+              <span className="benchdots" aria-hidden>
+                {PANES.map((p) => (
+                  <i key={p.id} className={p.id === pane ? "on" : ""} />
+                ))}
+              </span>
+              <button className="benchclose" onClick={() => setOpen(false)} title="Close" aria-label="Close tools">
+                ✕
+              </button>
+            </>
+          }
+        >
           {/* key on the pane id restarts the animation on every swap */}
           <div className={`benchbody ${dir > 0 ? "fromright" : "fromleft"}`} key={pane}>
             {pane === "scratchpad" && <ScratchpadPanel code={code} setCode={setCode} lessonCode={lessonCode} />}
-            {pane === "reference" && <ReferencePane sections={reference} />}
+            {pane === "reference" && <ReferencePane sections={reference} here={here} lessonCode={lessonCode} />}
             {pane === "tutor" && <TutorPanel lessonCode={lessonCode} scratchCode={code} seed={seed} />}
           </div>
-        </aside>
+        </BenchFrame>
       )}
     </>
   );
 }
 
-/** The lesson's own syntax, grouped by topic, filterable. */
-function ReferencePane({ sections }: { sections: Section[] }) {
+/**
+ * The WHOLE reference, scrolled to the part this lesson uses.
+ *
+ * It used to show only the current lesson's sections. That is fine while you
+ * are following along and useless the moment you need something from three
+ * units back — which is most of why anyone opens a reference. Showing
+ * everything and jumping to the right place gives the same "it is already on
+ * the right page" effect without the dead end.
+ */
+function ReferencePane({
+  sections,
+  here,
+  lessonCode,
+}: {
+  sections: Section[];
+  here: string[];
+  lessonCode: string;
+}) {
   const [q, setQ] = useState("");
+  const scroller = useRef<HTMLDivElement>(null);
+
+  // Jump to this lesson's first topic on open and whenever the lesson changes.
+  // Not smooth: this runs on mount, and animating a scroll the student did not
+  // ask for just delays them seeing where they are.
+  useEffect(() => {
+    if (q || !here.length) return;
+    const el = scroller.current?.querySelector(`[data-sec="${here[0]}"]`);
+    if (el && scroller.current) {
+      scroller.current.scrollTop = (el as HTMLElement).offsetTop - 8;
+    }
+  }, [lessonCode, here, q]);
+
   const needle = q.trim().toLowerCase();
   const shown = needle
     ? sections
@@ -234,26 +301,25 @@ function ReferencePane({ sections }: { sections: Section[] }) {
               e.note.toLowerCase().includes(needle),
           ),
         }))
-        .filter((s) => s.entries.length)
+        .filter((s) => s.entries.length || s.title.toLowerCase().includes(needle))
     : sections;
 
-  if (!sections.length) {
-    return <p className="meta" style={{ padding: 12 }}>No syntax reference for this lesson yet.</p>;
-  }
-
   return (
-    <div className="refpane">
+    <div className="refpane" ref={scroller}>
       <input
         className="refsearch"
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Filter…"
+        placeholder="Filter the whole reference…"
         aria-label="Filter the reference"
       />
       {shown.length === 0 && <p className="meta">Nothing matches that.</p>}
       {shown.map((s) => (
-        <section key={s.id}>
-          <h4>{s.title}</h4>
+        <section key={s.id} data-sec={s.id} className={here.includes(s.id) ? "refhere" : undefined}>
+          <h4>
+            {s.title}
+            {here.includes(s.id) && <span className="refbadge">this lesson</span>}
+          </h4>
           <dl>
             {s.entries.map((e) => (
               <div className="docs-item" key={e.name}>

@@ -1117,7 +1117,7 @@ pre.flowcode.ro { margin: 0; }
 .benchrail button:hover { background: #e9e5da; color: var(--ink); border-color: var(--line); }
 .benchrail .bicon { writing-mode: horizontal-tb; font-size: 13px; }
 
-.bench { flex-shrink: 0; width: min(46vw, 560px); border-left: 1.5px solid var(--line); background: var(--card);
+.bench { flex-shrink: 0; width: min(46vw, 560px); max-width: 78vw; border-left: 1.5px solid var(--line); background: var(--card);
   position: sticky; top: 57px; height: calc(100vh - 57px); display: flex; flex-direction: column; overflow: hidden; }
 .benchhead { display: flex; align-items: center; gap: 4px; padding: 9px 10px; border-bottom: 1.5px solid var(--line);
   background: #f1eee6; flex-shrink: 0; }
@@ -1191,3 +1191,33 @@ pre.flowcode.ro { margin: 0; }
 .jumpgroup { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 7px; }
 .jumpgroup b { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--muted); margin-left: 4px; }
+
+/* ── Floating mode. Docked pushes the lesson; floating overlays it, which is
+   what you want when the tool is the thing you are working in. ── */
+.bench.floating { border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 18px 44px rgba(26,28,30,.26); position: fixed; }
+.bench.floating .benchhead { cursor: grab; }
+.bench.floating .benchhead:active { cursor: grabbing; }
+.bench .benchinner { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+/* NO `position: relative` here. The docked rail is already `position: sticky`,
+   which is both a positioning context for the resize grip AND what keeps it
+   beside the lesson while the page scrolls. Overriding it to relative silently
+   un-sticks the panel. */
+
+/* Resize grips. Docked takes the left edge — that is the "drag the tab left and
+   right" handle; floating takes the bottom-right corner. */
+.benchgrip { position: absolute; z-index: 3; }
+.benchgrip.edge { left: -3px; top: 0; bottom: 0; width: 8px; cursor: col-resize; }
+.benchgrip.edge:hover { background: var(--accent); opacity: .35; }
+.benchgrip.corner { right: 0; bottom: 0; width: 18px; height: 18px; cursor: nwse-resize; }
+.benchgrip.corner::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 8px; height: 8px;
+  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); }
+
+/* The pane icon, beside the swap arrows. */
+.bicon { display: inline-flex; align-items: center; color: var(--accent); }
+.benchrail .bicon { writing-mode: horizontal-tb; }
+
+/* The section this lesson actually uses, inside the full reference. */
+.refpane .refhere > h4 { color: var(--accent); border-bottom-color: var(--accent); }
+.refbadge { float: right; font-family: var(--sans); font-size: 9.5px; letter-spacing: .06em;
+  background: var(--accent); color: #fff; border-radius: 99px; padding: 2px 7px; text-transform: uppercase; }

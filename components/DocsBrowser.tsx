@@ -5,11 +5,9 @@ import type { Section } from "@/lib/curriculum/reference";
 
 // The whole Java reference for this course, on one page, filterable.
 //
-// The inline panel (components/lesson/Docs.tsx) exists because students who
-// cannot help themselves will not go looking — so it puts the syntax for THIS
-// lesson in front of them, unasked. This page is the other half: somewhere to
-// go when you already know what you are looking for and just want the shape of
-// it. Neither replaces the other.
+// The Reference pane in the workbench carries the same entries beside a lesson,
+// scrolled to whatever that lesson uses. This page is the standalone view: no
+// sign-in, no lesson, somewhere to send a link to.
 //
 // Every code sample here is compiled by scripts/reference-check.ts, so anything
 // on this page can be pasted straight into the scratchpad and run.

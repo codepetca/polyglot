@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import ScopeDiagram from "@/components/lesson/ScopeDiagram";
 import Link from "next/link";
 import CodeBox from "./CodeBox";
-import Docs from "./Docs";
 import { readLang, LANG_EVENT } from "@/components/LanguagePicker";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
