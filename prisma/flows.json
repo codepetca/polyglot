@@ -9305,212 +9305,290 @@
         "v": 1,
         "steps": [
           {
+            "id": "s_review",
+            "kind": "teach",
+            "instruction": "Review.",
+            "body": [
+              "An instance method is called on an object, like rect.getArea().",
+              "An instance method depends on the state of that one object."
+            ]
+          },
+          {
             "id": "s_task",
             "kind": "teach",
-            "instruction": "How many treasures have been made? No single treasure knows.",
-            "points": [
-              {
-                "label": "each object knows itself",
-                "text": "The crown knows it is a crown. It has no idea the ring exists."
-              },
-              {
-                "label": "the count",
-                "text": "Belongs to all of them at once, or to none of them. It is a fact about the CLASS."
-              },
-              {
-                "label": "static",
-                "text": "The word for \"belongs to the class, not to any one object\"."
-              }
-            ]
+            "instruction": "How do you keep track of something across the whole class, not one object?",
+            "body": [
+              "How many Player objects have been created?",
+              "No single Player knows. Each one only holds its own name."
+            ],
+            "keypoint": "A class variable tracks something across the whole class, not one object."
           },
           {
-            "id": "s_var",
+            "id": "s_static",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A static variable is shared by every object.",
-            "code": "public void run() {\n  new Treasure(\"Crown\");\n  new Treasure(\"Ring\");\n  new Treasure(\"Cup\");\n  System.out.println(Treasure.getCount());\n}\n\nclass Treasure {\n  private static int count = 0;\n  private String name;\n\n  public Treasure(String name) {\n    this.name = name;\n    count = count + 1;\n  }\n\n  public static int getCount() {\n    return count;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
-            "output": "3",
-            "highlight": [
-              1,
-              2,
-              3,
-              4
-            ],
-            "points": [
+            "instruction": "A class variable is declared static. It is shared by every object of the class.",
+            "code": "private static int totalPlayers = 0;",
+            "annotate": [
               {
-                "label": "private static int count = 0;",
-                "text": "ONE count for the whole class, not one per object."
-              },
-              {
-                "label": "count = count + 1;",
-                "text": "In the constructor, so it rises every time any Treasure is built."
-              },
-              {
-                "label": "Treasure.getCount()",
-                "text": "Called on the CLASS NAME, not on an object. There is no single object that owns it."
-              },
-              {
-                "label": "3",
-                "text": "Three objects were built, and none of them individually knows that."
+                "token": "static",
+                "note": "one copy shared by the whole class"
               }
-            ]
+            ],
+            "body": [
+              "A class variable is also called a static variable.",
+              "There is one totalPlayers, no matter how many Player objects exist."
+            ],
+            "keypoint": "A static variable has one copy shared by the whole class."
           },
           {
-            "id": "s_table",
-            "kind": "table",
-            "instruction": "Which name goes in front?",
-            "columns": [
-              "member",
-              "called on"
+            "id": "s_counter",
+            "kind": "teach",
+            "instruction": "Increment the class variable in the constructor to count objects.",
+            "code": "class Player {\n  private String name;\n  private static int totalPlayers = 0;\n\n  public Player(String playerName) {\n    name = playerName;\n    totalPlayers = totalPlayers + 1;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public static int getTotalPlayers() {\n    return totalPlayers;\n  }\n}\n\npublic void run() {\n  System.out.println(Player.getTotalPlayers());\n  Player a = new Player(\"Ada\");\n  Player b = new Player(\"Ben\");\n  Player c = new Player(\"Cy\");\n  System.out.println(Player.getTotalPlayers());\n}",
+            "wrap": "methods",
+            "output": "0\n3",
+            "body": [
+              "The constructor runs once per object, so totalPlayers goes up by 1 each time.",
+              "getTotalPlayers is a static method. It is called on the class, not on an object."
             ],
-            "fillFrom": 1,
-            "chips": [
-              "the class",
-              "an object"
-            ],
-            "rows": [
-              [
-                "static int getCount()",
-                "the class"
+            "keypoint": "A static method is called on the class: Player.getTotalPlayers()."
+          },
+          {
+            "id": "s_noinstance",
+            "kind": "teach",
+            "instruction": "A static method does not need an object.",
+            "facts": {
+              "columns": [
+                "Kind",
+                "Called on",
+                "Example"
               ],
-              [
-                "String getName()",
-                "an object"
-              ],
-              [
-                "static int count",
-                "the class"
-              ],
-              [
-                "String name",
-                "an object"
+              "rows": [
+                [
+                  "Instance method",
+                  "an object",
+                  "rect.getArea()"
+                ],
+                [
+                  "Static method",
+                  "the class",
+                  "Player.getTotalPlayers()"
+                ]
               ]
+            },
+            "body": [
+              "Player.getTotalPlayers() worked before any Player object existed. It printed 0."
             ],
-            "why": "static means it belongs to the class, so you write Treasure.getCount(). Everything else belongs to one object, so you write crown.getName().",
+            "keypoint": "A static method is called without an instance."
+          },
+          {
+            "id": "s_bucket",
+            "kind": "bucket",
+            "instruction": "Instance or static?",
+            "buckets": [
+              "Instance method",
+              "Static method"
+            ],
+            "items": [
+              {
+                "text": "rect.getArea()",
+                "bucket": 0
+              },
+              {
+                "text": "hero.takeDamage(10)",
+                "bucket": 0
+              },
+              {
+                "text": "Math.abs(-4)",
+                "bucket": 1
+              },
+              {
+                "text": "Player.getTotalPlayers()",
+                "bucket": 1
+              },
+              {
+                "text": "Integer.parseInt(\"42\")",
+                "bucket": 1
+              }
+            ],
+            "why": "A lowercase name before the dot is an object, so the method is an instance method. A capitalised name before the dot is a class, so the method is static.",
             "skills": [
               "tell a class member apart from an instance member"
             ]
           },
           {
-            "id": "s_known",
+            "id": "s_random",
             "kind": "teach",
-            "instruction": "You have been calling class methods since 3.1.",
-            "points": [
-              {
-                "label": "Math.max(3, 7)",
-                "text": "Called on the class Math. There is no Math object anywhere."
-              },
-              {
-                "label": "Integer.parseInt(\"42\")",
-                "text": "Same shape. The class does the work."
-              },
-              {
-                "label": "Character.isDigit(c)",
-                "text": "From 4.6. You used a class method without noticing."
-              },
-              {
-                "label": "the pattern",
-                "text": "ClassName.method() means static. object.method() means instance."
-              }
+            "instruction": "The Randomizer class is all static methods. You never create a Randomizer object.",
+            "facts": {
+              "columns": [
+                "Method",
+                "Return Type",
+                "Description"
+              ],
+              "rows": [
+                [
+                  "Randomizer.nextInt(int low, int high)",
+                  "int",
+                  "a random int from low to high, both included"
+                ],
+                [
+                  "Randomizer.nextBoolean()",
+                  "boolean",
+                  "true or false, evenly"
+                ],
+                [
+                  "Randomizer.nextBoolean(double probability)",
+                  "boolean",
+                  "true with that probability, from 0.0 to 1.0"
+                ],
+                [
+                  "Randomizer.nextDouble(double low, double high)",
+                  "double",
+                  "a random double between low and high"
+                ]
+              ]
+            },
+            "body": [
+              "This is the same Randomizer class CodeHS uses."
+            ],
+            "keypoint": "Randomizer methods are static. Call them on the class: Randomizer.nextInt(1, 6)."
+          },
+          {
+            "id": "s_randrun",
+            "kind": "run",
+            "instruction": "Run it more than once. The numbers change.",
+            "code": "int roll = Randomizer.nextInt(1, 6);\nSystem.out.println(\"You rolled \" + roll);\nboolean coin = Randomizer.nextBoolean();\nSystem.out.println(\"Heads? \" + coin);",
+            "library": "class Randomizer {\n  private static Random rand = new Random();\n\n  public static int nextInt() {\n    return rand.nextInt();\n  }\n\n  public static int nextInt(int low, int high) {\n    return rand.nextInt(high - low + 1) + low;\n  }\n\n  public static boolean nextBoolean() {\n    return rand.nextBoolean();\n  }\n\n  public static boolean nextBoolean(double probability) {\n    return rand.nextDouble() < probability;\n  }\n\n  public static double nextDouble() {\n    return rand.nextDouble();\n  }\n\n  public static double nextDouble(double low, double high) {\n    return rand.nextDouble() * (high - low) + low;\n  }\n}",
+            "after": "No Randomizer object was ever created. Every call went to the class."
+          },
+          {
+            "id": "s_math",
+            "kind": "teach",
+            "instruction": "The Math class is static too. It has class variables and class methods.",
+            "facts": {
+              "columns": [
+                "Member",
+                "Return Type",
+                "Description"
+              ],
+              "rows": [
+                [
+                  "Math.PI",
+                  "double",
+                  "the value of pi, about 3.14159"
+                ],
+                [
+                  "Math.abs(int a)",
+                  "int",
+                  "the value without its sign"
+                ],
+                [
+                  "Math.pow(double a, double b)",
+                  "double",
+                  "a raised to the power b"
+                ],
+                [
+                  "Math.sqrt(double a)",
+                  "double",
+                  "the square root of a"
+                ],
+                [
+                  "Math.max(int a, int b)",
+                  "int",
+                  "the larger of the two"
+                ],
+                [
+                  "Math.min(int a, int b)",
+                  "int",
+                  "the smaller of the two"
+                ]
+              ]
+            },
+            "body": [
+              "Math.PI is a class variable. The rest are class methods."
             ]
+          },
+          {
+            "id": "s_mathrun",
+            "kind": "run",
+            "instruction": "Run it.",
+            "code": "System.out.println(Math.PI);\nSystem.out.println(Math.abs(-7));\nSystem.out.println(Math.pow(2, 5));\nSystem.out.println(Math.sqrt(81));\nSystem.out.println(Math.max(3, 11));",
+            "after": "You have never written new Math(). Every one of those is static."
           },
           {
             "id": "s_predict",
             "kind": "predict",
+            "instruction": "What comes out?",
             "wrap": "methods",
-            "instruction": "Two objects, one shared counter. What prints?",
-            "code": "public void run() {\n  Treasure a = new Treasure(\"Crown\");\n  System.out.println(Treasure.getCount());\n  Treasure b = new Treasure(\"Ring\");\n  System.out.println(Treasure.getCount());\n}\n\nclass Treasure {\n  private static int count = 0;\n  private String name;\n\n  public Treasure(String name) {\n    this.name = name;\n    count = count + 1;\n  }\n\n  public static int getCount() {\n    return count;\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
+            "code": "class Counter {\n  private static int count = 0;\n  private int myNumber;\n\n  public Counter() {\n    count = count + 1;\n    myNumber = count;\n  }\n\n  public int getMyNumber() {\n    return myNumber;\n  }\n\n  public static int getCount() {\n    return count;\n  }\n}\n\npublic void run() {\n  Counter a = new Counter();\n  Counter b = new Counter();\n  System.out.println(a.getMyNumber());\n  System.out.println(b.getMyNumber());\n  System.out.println(Counter.getCount());\n}",
             "opts": [
-              "1\n1",
-              "1\n2",
-              "2\n2",
-              "0\n0"
+              "1\n2\n2",
+              "1\n1\n2",
+              "2\n2\n2",
+              "1\n2\n1"
             ],
-            "correct": 1,
-            "why": "The counter is not reset per object. Building the second Treasure raises the same shared count from 1 to 2.",
+            "correct": 0,
+            "why": "count is static, so both constructors share it. myNumber is an instance variable, so each object keeps the value count had when that object was built.",
+            "skills": [
+              "tell a class member apart from an instance member"
+            ]
+          },
+          {
+            "id": "s_w1",
+            "kind": "write",
+            "instruction": "Write a static method circleArea that takes a radius and returns the area. Area is pi times radius squared.",
+            "wrap": "methods",
+            "code": "public void run() {\n  System.out.println(circleArea(3));\n}\n\n// write circleArea here. It is static and returns a double.\n",
+            "target": "28.274333882308138",
+            "solution": "public void run() {\n  System.out.println(circleArea(3));\n}\n\npublic static double circleArea(double radius) {\n  return Math.PI * radius * radius;\n}",
+            "hint": "public static double circleArea(double radius) { return Math.PI * radius * radius; }",
+            "after": "circleArea does not depend on any object state, so it is static.",
             "skills": [
               "write a static variable and a static method"
             ]
           },
           {
-            "id": "s_bucket",
-            "kind": "bucket",
-            "instruction": "What does each call go through - the class, or an object?",
-            "buckets": [
-              "Called on the class (static)",
-              "Called on an object (instance)"
-            ],
-            "items": [
-              {
-                "text": "Math.max(3, 7)",
-                "bucket": 0
-              },
-              {
-                "text": "Integer.parseInt(\"42\")",
-                "bucket": 0
-              },
-              {
-                "text": "Treasure.getCount()",
-                "bucket": 0
-              },
-              {
-                "text": "crown.getValue()",
-                "bucket": 1
-              },
-              {
-                "text": "loot.size()",
-                "bucket": 1
-              }
-            ],
-            "why": "A capital letter in front means the class does the work and no object is involved. A variable name in front means one particular object does it, using its own fields.",
-            "skills": [
-              "tell a class member apart from an instance member"
-            ]
-          },
-          {
-            "id": "s_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "private static int count = 0;\npublic static int getCount() { return count; }",
-            "questions": [
-              {
-                "prompt": "What does static mean?",
-                "opts": [
-                  "It cannot be changed",
-                  "It runs first",
-                  "It belongs to the class, not to any one object",
-                  "It is private"
-                ],
-                "correct": 2,
-                "why": "One copy shared by everything, reached through the class name."
-              },
-              {
-                "prompt": "When is a class variable the right choice?",
-                "opts": [
-                  "When the value is private",
-                  "When there is only one object",
-                  "Always",
-                  "When the value is about all objects at once, like a count"
-                ],
-                "correct": 3,
-                "why": "A count of how many exist cannot belong to any single one of them."
-              }
-            ],
-            "skills": [
-              "tell a class member apart from an instance member"
-            ]
-          },
-          {
-            "id": "s_write",
+            "id": "s_w2",
             "kind": "write",
+            "instruction": "Write a static method biggest that returns the largest of three ints.",
             "wrap": "methods",
-            "instruction": "Your turn: count how many Potions get brewed.",
-            "harness": "public void run() {\n  new Potion(\"Small\");\n  new Potion(\"Large\");\n  System.out.println(Potion.getBrewed());\n}",
-            "code": "// class Potion: a private static count, a constructor that raises it,\n// and a public static getBrewed() returning it\n",
-            "target": "2",
-            "solution": "class Potion {\n  private static int brewed = 0;\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n    brewed = brewed + 1;\n  }\n\n  public static int getBrewed() {\n    return brewed;\n  }\n}",
-            "hint": "private static int brewed = 0; raise it in the constructor; public static int getBrewed() returns it.",
-            "after": "Called as Potion.getBrewed() - on the class, because no single potion owns the total.",
+            "code": "public void run() {\n  System.out.println(biggest(4, 19, 11));\n  System.out.println(biggest(30, 2, 7));\n}\n\n// write biggest here\n",
+            "target": "19\n30",
+            "solution": "public void run() {\n  System.out.println(biggest(4, 19, 11));\n  System.out.println(biggest(30, 2, 7));\n}\n\npublic static int biggest(int a, int b, int c) {\n  return Math.max(a, Math.max(b, c));\n}",
+            "hint": "Math.max only takes two numbers. Use it twice.",
+            "after": "Math.max(a, Math.max(b, c)) compares b with c first, then the winner with a.",
+            "skills": [
+              "write a static variable and a static method"
+            ]
+          },
+          {
+            "id": "s_w3",
+            "kind": "write",
+            "instruction": "Add a static counter to the Weapon class. Count how many Weapon objects have been made.",
+            "wrap": "methods",
+            "code": "class Weapon {\n  private String name;\n  // add the static counter here\n\n  public Weapon(String weaponName) {\n    name = weaponName;\n    // increment the counter here\n  }\n\n  // write getTotalWeapons here\n}\n\npublic void run() {\n  new Weapon(\"Sword\");\n  new Weapon(\"Bow\");\n  new Weapon(\"Axe\");\n  System.out.println(Weapon.getTotalWeapons());\n}",
+            "target": "3",
+            "solution": "class Weapon {\n  private String name;\n  private static int totalWeapons = 0;\n\n  public Weapon(String weaponName) {\n    name = weaponName;\n    totalWeapons = totalWeapons + 1;\n  }\n\n  public static int getTotalWeapons() {\n    return totalWeapons;\n  }\n}\n\npublic void run() {\n  new Weapon(\"Sword\");\n  new Weapon(\"Bow\");\n  new Weapon(\"Axe\");\n  System.out.println(Weapon.getTotalWeapons());\n}",
+            "hint": "The counter is private static int, starting at 0. The constructor adds 1. getTotalWeapons is public static.",
+            "after": "Three objects, one shared counter.",
+            "skills": [
+              "write a static variable and a static method"
+            ]
+          },
+          {
+            "id": "s_final",
+            "kind": "write",
+            "instruction": "Write the logic for rock paper scissors. beats returns true when a beats b.",
+            "wrap": "methods",
+            "body": [
+              "rock beats scissors. scissors beats paper. paper beats rock."
+            ],
+            "code": "public void run() {\n  System.out.println(beats(\"rock\", \"scissors\"));\n  System.out.println(beats(\"paper\", \"rock\"));\n  System.out.println(beats(\"scissors\", \"rock\"));\n  System.out.println(beats(\"rock\", \"rock\"));\n}\n\n// write beats(String a, String b) here. It is static and returns a boolean.\n",
+            "target": "true\ntrue\nfalse\nfalse",
+            "solution": "public void run() {\n  System.out.println(beats(\"rock\", \"scissors\"));\n  System.out.println(beats(\"paper\", \"rock\"));\n  System.out.println(beats(\"scissors\", \"rock\"));\n  System.out.println(beats(\"rock\", \"rock\"));\n}\n\npublic static boolean beats(String a, String b) {\n  if (a.equals(\"rock\") && b.equals(\"scissors\")) {\n    return true;\n  }\n  if (a.equals(\"scissors\") && b.equals(\"paper\")) {\n    return true;\n  }\n  if (a.equals(\"paper\") && b.equals(\"rock\")) {\n    return true;\n  }\n  return false;\n}",
+            "hint": "Three winning combinations. Anything else returns false, including a draw.",
+            "after": "beats does not need an object, so it is static. Add Randomizer.nextInt to pick the computer move and you have the whole game.",
             "skills": [
               "write a static variable and a static method"
             ]
@@ -9529,216 +9607,287 @@
         "v": 1,
         "steps": [
           {
+            "id": "n_review",
+            "kind": "teach",
+            "instruction": "Review.",
+            "facts": {
+              "columns": [
+                "",
+                "Primitive type",
+                "Reference type"
+              ],
+              "rows": [
+                [
+                  "Examples",
+                  "int, double, char, boolean",
+                  "String, Room, Player"
+                ],
+                [
+                  "Holds",
+                  "the value itself",
+                  "a reference to an object"
+                ],
+                [
+                  "Compare with",
+                  "==",
+                  ".equals()"
+                ]
+              ]
+            }
+          },
+          {
             "id": "n_task",
             "kind": "teach",
-            "instruction": "int is not an object. Sometimes that is a problem.",
-            "points": [
-              {
-                "label": "int hp = 20;",
-                "text": "A primitive. It holds a number and nothing else - no methods, no dot."
-              },
-              {
-                "label": "hp.something()",
-                "text": "Will not compile. There is nothing to reach into."
-              },
-              {
-                "label": "Integer",
-                "text": "The object version of int. Same number, but it is a real object with methods."
-              },
-              {
-                "label": "why it exists",
-                "text": "Some parts of Java only accept objects. You will meet one in the next unit."
-              }
+            "instruction": "Objects only interact with other objects. How does a primitive value become an object?",
+            "body": [
+              "An ArrayList stores objects. It cannot store a primitive value like an int.",
+              "Java solves this with wrapper classes."
+            ],
+            "keypoint": "A wrapper class wraps a primitive type as an object."
+          },
+          {
+            "id": "n_four",
+            "kind": "teach",
+            "instruction": "Every primitive type has a wrapper class.",
+            "facts": {
+              "columns": [
+                "Primitive type",
+                "Wrapper class"
+              ],
+              "rows": [
+                [
+                  "int",
+                  "Integer"
+                ],
+                [
+                  "double",
+                  "Double"
+                ],
+                [
+                  "char",
+                  "Character"
+                ],
+                [
+                  "boolean",
+                  "Boolean"
+                ]
+              ]
+            },
+            "body": [
+              "We will only be studying Integer and Double."
+            ],
+            "keypoint": "int wraps to Integer. double wraps to Double."
+          },
+          {
+            "id": "n_help",
+            "kind": "teach",
+            "instruction": "A wrapper class carries useful values and methods.",
+            "body": [
+              "Each wrapper class holds the smallest and largest value its type can store.",
+              "Each one has methods for converting between types."
             ]
           },
           {
             "id": "n_make",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "Integer and Double wrap a primitive in an object.",
-            "code": "public void run() {\n  int plain = 20;\n  Integer wrapped = 20;\n  Double dw = 2.5;\n  System.out.println(plain);\n  System.out.println(wrapped);\n  System.out.println(dw);\n}",
-            "output": "20\n20\n2.5",
-            "highlight": [
-              2,
-              3
-            ],
-            "points": [
+            "instruction": "Creating a wrapper object.",
+            "code": "Integer num = new Integer(17);",
+            "annotate": [
               {
-                "label": "Integer wrapped = 20;",
-                "text": "Capital I. Java boxes the 20 into an Integer object automatically."
+                "token": "Integer",
+                "note": "the wrapper class, capitalised"
               },
               {
-                "label": "Double dw = 2.5;",
-                "text": "Capital D, for doubles. Same idea."
-              },
-              {
-                "label": "they print the same",
-                "text": "20 either way. The difference is what you can DO with it, not what it shows."
-              },
-              {
-                "label": "capital letters",
-                "text": "int and double are primitives; Integer and Double are classes. The capital is the tell."
+                "token": "num",
+                "note": "the object"
               }
+            ],
+            "body": [
+              "Integer with a capital I is a class. int with a small i is a primitive type."
+            ],
+            "keypoint": "Integer is a class. int is a primitive type. The capital letter is the difference."
+          },
+          {
+            "id": "n_methods",
+            "kind": "teach",
+            "instruction": "Integer class members.",
+            "facts": {
+              "columns": [
+                "Member",
+                "Return Type",
+                "Description"
+              ],
+              "rows": [
+                [
+                  "Integer.MIN_VALUE",
+                  "int",
+                  "the smallest value an int can hold"
+                ],
+                [
+                  "Integer.MAX_VALUE",
+                  "int",
+                  "the largest value an int can hold"
+                ],
+                [
+                  "Integer.parseInt(String s)",
+                  "int",
+                  "the String converted to an int"
+                ],
+                [
+                  "intValue()",
+                  "int",
+                  "the primitive int inside an Integer object"
+                ],
+                [
+                  "Double.MIN_VALUE",
+                  "double",
+                  "the smallest positive value a double can hold"
+                ],
+                [
+                  "Double.MAX_VALUE",
+                  "double",
+                  "the largest value a double can hold"
+                ],
+                [
+                  "doubleValue()",
+                  "double",
+                  "the primitive double inside a Double object"
+                ]
+              ]
+            },
+            "body": [
+              "MIN_VALUE and MAX_VALUE are static, so they are called on the class.",
+              "intValue and doubleValue are instance methods, so they are called on an object."
             ]
           },
           {
-            "id": "n_cmp",
-            "kind": "compare",
-            "instruction": "The same number, with and without methods.",
-            "sides": [
+            "id": "n_run",
+            "kind": "run",
+            "instruction": "Run it.",
+            "code": "System.out.println(Integer.MIN_VALUE);\nSystem.out.println(Integer.MAX_VALUE);\nInteger num = new Integer(17);\nSystem.out.println(num.intValue());\nDouble d = new Double(2.5);\nSystem.out.println(d.doubleValue());",
+            "after": "MIN_VALUE and MAX_VALUE came from the class. intValue and doubleValue came from the objects."
+          },
+          {
+            "id": "n_auto",
+            "kind": "teach",
+            "instruction": "Autoboxing converts a primitive value into an object of its wrapper class.",
+            "code": "Integer myInt = 53;\nSystem.out.println(myInt);",
+            "output": "53",
+            "body": [
+              "53 is a primitive int. myInt is an Integer object.",
+              "Java converted it automatically. You did not write new Integer(53)."
+            ],
+            "keypoint": "Autoboxing converts a primitive value into its wrapper class object automatically."
+          },
+          {
+            "id": "n_unbox",
+            "kind": "teach",
+            "instruction": "Unboxing converts a wrapper object back into its primitive value.",
+            "code": "Integer myInt = 53;\nint myInt2 = myInt;\nSystem.out.println(myInt2);",
+            "output": "53",
+            "body": [
+              "myInt is an Integer object. myInt2 is a primitive int.",
+              "Java converted it automatically. You did not write myInt.intValue()."
+            ],
+            "keypoint": "Unboxing converts a wrapper object back into its primitive value automatically."
+          },
+          {
+            "id": "n_param",
+            "kind": "teach",
+            "instruction": "Java also unboxes a wrapper value passed to a method that expects a primitive.",
+            "code": "public void run() {\n  Integer boxed = 7;\n  System.out.println(doubleIt(boxed));\n}\n\npublic int doubleIt(int n) {\n  return n * 2;\n}",
+            "wrap": "methods",
+            "output": "14",
+            "body": [
+              "doubleIt expects an int. boxed is an Integer object.",
+              "Java unboxed it on the way in."
+            ],
+            "keypoint": "Autoboxing and unboxing let you use primitives and wrapper objects interchangeably, with no casting."
+          },
+          {
+            "id": "n_bucket",
+            "kind": "bucket",
+            "instruction": "Autoboxing or unboxing?",
+            "buckets": [
+              "Autoboxing",
+              "Unboxing"
+            ],
+            "items": [
               {
-                "label": "int - a value",
-                "code": "public void run() {\n  int n = 20;\n  System.out.println(n + 5);\n}",
-                "output": "25"
+                "text": "Integer a = 5;",
+                "bucket": 0
               },
               {
-                "label": "Integer - an object",
-                "code": "public void run() {\n  Integer n = 20;\n  System.out.println(n + 5);\n  System.out.println(n.equals(20));\n  System.out.println(Integer.MAX_VALUE);\n}",
-                "output": "25\ntrue\n2147483647"
-              }
-            ],
-            "points": [
-              {
-                "label": "int - a value",
-                "text": "Arithmetic works, and that is all it can do."
+                "text": "Double d = 2.5;",
+                "bucket": 0
               },
               {
-                "label": "Integer - an object",
-                "text": "Arithmetic still works, AND it has methods like .equals(), plus class constants like MAX_VALUE."
+                "text": "int b = someInteger;",
+                "bucket": 1
+              },
+              {
+                "text": "double e = someDouble;",
+                "bucket": 1
               }
             ],
+            "why": "Autoboxing goes primitive to object. Unboxing goes object to primitive. Read which side of the = is the wrapper class.",
             "skills": [
               "tell a primitive apart from its wrapper class"
-            ]
-          },
-          {
-            "id": "n_meth",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "The wrapper classes carry useful class methods.",
-            "code": "public void run() {\n  System.out.println(Integer.parseInt(\"42\") + 1);\n  System.out.println(Double.parseDouble(\"2.5\") * 2);\n  System.out.println(Integer.MAX_VALUE);\n}",
-            "output": "43\n5.0\n2147483647",
-            "points": [
-              {
-                "label": "Integer.parseInt(\"42\")",
-                "text": "Turns the TEXT \"42\" into the number 42, so + 1 gives 43 rather than \"421\"."
-              },
-              {
-                "label": "Double.parseDouble(\"2.5\")",
-                "text": "The same for decimals."
-              },
-              {
-                "label": "Integer.MAX_VALUE",
-                "text": "The largest int Java can hold. This is the integer overflow from 3.4, given a name."
-              },
-              {
-                "label": "called on the class",
-                "text": "Integer.parseInt, not someInteger.parseInt - these are static, from 5.7."
-              }
             ]
           },
           {
             "id": "n_predict",
             "kind": "predict",
-            "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  System.out.println(Integer.parseInt(\"7\") + Integer.parseInt(\"3\"));\n  System.out.println(\"7\" + \"3\");\n}",
+            "instruction": "What comes out?",
+            "code": "Integer a = 10;\nint b = a;\nInteger c = b + 5;\nSystem.out.println(c);",
             "opts": [
-              "10\n73",
-              "10\n10",
-              "(an error)",
-              "73\n73"
+              "15",
+              "10",
+              "5",
+              "An error"
             ],
             "correct": 0,
-            "why": "parseInt turns the text into real numbers, so + adds them to 10. Left as Strings, + glues them into \"73\".",
-            "skills": [
-              "use Integer and Double class methods"
-            ]
-          },
-          {
-            "id": "n_concat",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "Same characters, two very different results.",
-            "code": "public void run() {\n  System.out.println(\"42\" + 1);\n  System.out.println(Integer.parseInt(\"42\") + 1);\n}",
-            "opts": [
-              "43\n43",
-              "421\n43",
-              "421\n421",
-              "43\n421"
-            ],
-            "correct": 1,
-            "why": "\"42\" is text, so + glues 1 onto the end and gives 421. parseInt turns the text into the NUMBER 42 first, so + adds and gives 43. This is why input has to be parsed before you can do arithmetic on it.",
-            "skills": [
-              "use Integer and Double class methods"
-            ]
-          },
-          {
-            "id": "n_fill",
-            "kind": "fill",
-            "wrap": "methods",
-            "instruction": "\"2.5\" has a decimal point. Pick the parser that can cope.",
-            "code": "public void run() {\n  double d = Double.⟦1⟧(\"2.5\");\n  System.out.println(d * 2);\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "parseDouble",
-                  "parseInt",
-                  "toString"
-                ],
-                "answer": 0
-              }
-            ],
-            "target": "5.0",
-            "hint": "The class you call it on is Double, so the method belongs to Double too.",
-            "after": "Integer.parseInt(\"2.5\") would compile and then crash at run time - \"2.5\" is not a whole number.",
-            "skills": [
-              "use Integer and Double class methods"
-            ]
-          },
-          {
-            "id": "n_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "Integer wrapped = 20;\nint plain = 20;",
-            "questions": [
-              {
-                "prompt": "What is the difference between int and Integer?",
-                "opts": [
-                  "Integer holds bigger numbers",
-                  "int is a primitive value; Integer is an object with methods",
-                  "int is faster to type",
-                  "There is none"
-                ],
-                "correct": 1,
-                "why": "They hold the same number. Integer is a class, so it has methods and can go where an object is required."
-              },
-              {
-                "prompt": "What does Integer.parseInt(\"42\") give you?",
-                "opts": [
-                  "the String \"42\"",
-                  "an error",
-                  "the int 42",
-                  "42.0"
-                ],
-                "correct": 2,
-                "why": "It converts text to a number, which is what lets you do arithmetic with it."
-              }
-            ],
+            "why": "a is unboxed into b, giving the int 10. b + 5 is 15, then autoboxed back into the Integer c.",
             "skills": [
               "tell a primitive apart from its wrapper class"
             ]
           },
           {
-            "id": "n_write",
+            "id": "n_w1",
             "kind": "write",
-            "wrap": "methods",
-            "instruction": "Your turn: add two numbers that arrived as text.",
-            "code": "public void run() {\n  String a = \"18\";\n  String b = \"24\";\n  // print their sum as a number, not glued together\n}",
-            "target": "42",
-            "solution": "public void run() {\n  String a = \"18\";\n  String b = \"24\";\n  System.out.println(Integer.parseInt(a) + Integer.parseInt(b));\n}",
-            "hint": "Integer.parseInt on each one before adding, or you will print 1824.",
-            "after": "1824 is what you get without parseInt. Converting first is the whole job.",
+            "instruction": "Print the largest and smallest value an int can hold.",
+            "code": "// print Integer.MAX_VALUE then Integer.MIN_VALUE\n",
+            "target": "2147483647\n-2147483648",
+            "solution": "System.out.println(Integer.MAX_VALUE);\nSystem.out.println(Integer.MIN_VALUE);",
+            "hint": "Both are static, so call them on the Integer class.",
+            "after": "These are the limits that caused the overflow you saw in 3.5.",
+            "skills": [
+              "use Integer and Double class methods"
+            ]
+          },
+          {
+            "id": "n_w2",
+            "kind": "write",
+            "instruction": "Create an Integer object holding 42 by autoboxing. Unbox it into an int. Print both.",
+            "code": "// autobox 42 into an Integer, unbox it into an int, print both\n",
+            "target": "42\n42",
+            "solution": "Integer boxed = 42;\nint unboxed = boxed;\nSystem.out.println(boxed);\nSystem.out.println(unboxed);",
+            "hint": "Integer boxed = 42; autoboxes. int unboxed = boxed; unboxes.",
+            "after": "Neither line needed a cast or a method call. Java did both conversions.",
+            "skills": [
+              "tell a primitive apart from its wrapper class"
+            ]
+          },
+          {
+            "id": "n_final",
+            "kind": "write",
+            "instruction": "Read two numbers typed as text, add them, and print the total.",
+            "code": "// ask \"First? \" and \"Second? \" with readLine, which returns a String\n// convert both to int, add them, print the total\n",
+            "stdin": "17\n25",
+            "target": "First? 17\nSecond? 25\n42",
+            "solution": "String a = readLine(\"First? \");\nString b = readLine(\"Second? \");\nint total = Integer.parseInt(a) + Integer.parseInt(b);\nSystem.out.println(total);",
+            "hint": "Integer.parseInt converts a String to an int.",
+            "after": "Without parseInt, a + b would join the text into \"1725\".",
             "skills": [
               "use Integer and Double class methods"
             ]
@@ -9759,216 +9908,226 @@
           {
             "id": "o_task",
             "kind": "teach",
-            "instruction": "Most potions are standard strength. A few are not.",
-            "points": [
-              {
-                "label": "new Potion(\"Elixir\", 60)",
-                "text": "A custom strength."
-              },
-              {
-                "label": "new Potion(\"Small\")",
-                "text": "Should just mean the standard 10, without making the caller say so."
-              },
-              {
-                "label": "two constructors",
-                "text": "Same name - it has to be, a constructor is named after its class - but different parameters."
-              }
-            ]
+            "instruction": "You want a method called sum. How do you make it work for two ints, two doubles, and three ints?",
+            "body": [
+              "sumTwoInts, sumTwoDoubles and sumThreeInts would all work.",
+              "Every caller would have to remember which name to use."
+            ],
+            "keypoint": "Method overloading lets several methods share one name."
           },
           {
             "id": "o_over",
             "kind": "teach",
+            "instruction": "A class can have several methods with the same name, as long as their arguments are different.",
+            "code": "public void run() {\n  System.out.println(sum(3, 4));\n  System.out.println(sum(1.5, 2.5));\n  System.out.println(sum(3, 4, 5));\n  System.out.println(sum(2, 1.5));\n}\n\npublic int sum(int a, int b) {\n  return a + b;\n}\n\npublic double sum(double a, double b) {\n  return a + b;\n}\n\npublic int sum(int a, int b, int c) {\n  return a + b + c;\n}\n\npublic double sum(int a, double b) {\n  return a + b;\n}",
             "wrap": "methods",
-            "instruction": "Two constructors, one name, different parameter lists.",
-            "code": "public void run() {\n  System.out.println(new Potion(\"Elixir\", 60));\n  System.out.println(new Potion(\"Small\"));\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
-            "output": "Elixir heals 60\nSmall heals 10",
-            "highlight": [
-              1,
-              2
+            "output": "7\n4.0\n12\n3.5",
+            "body": [
+              "Four methods, all called sum.",
+              "Java picked the right one for each call."
             ],
-            "points": [
-              {
-                "label": "Potion(String, int)",
-                "text": "Runs when you pass two arguments."
-              },
-              {
-                "label": "Potion(String)",
-                "text": "Runs when you pass one, and fills in 10 itself."
-              },
-              {
-                "label": "Java chooses",
-                "text": "By counting and typing the arguments at the call. Nothing else distinguishes them."
-              },
-              {
-                "label": "overloading",
-                "text": "The name for this: several methods sharing a name, told apart by their parameters."
-              }
-            ]
+            "keypoint": "Overloaded methods share a name but must take different arguments."
           },
           {
-            "id": "o_cmp",
-            "kind": "compare",
-            "instruction": "Two names to remember, or one.",
-            "sides": [
-              {
-                "label": "separate names",
-                "code": "public void run() {\n  Potion a = makeCustom(\"Elixir\", 60);\n  Potion b = makeStandard(\"Small\");\n  System.out.println(a);\n  System.out.println(b);\n}\n\npublic Potion makeCustom(String n, int h) { return new Potion(n, h); }\npublic Potion makeStandard(String n) { return new Potion(n); }\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
-                "output": "Elixir heals 60\nSmall heals 10"
-              },
-              {
-                "label": "one overloaded name",
-                "code": "public void run() {\n  System.out.println(new Potion(\"Elixir\", 60));\n  System.out.println(new Potion(\"Small\"));\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
-                "output": "Elixir heals 60\nSmall heals 10"
-              }
-            ],
-            "points": [
-              {
-                "label": "separate names",
-                "text": "The caller must remember which name goes with which situation."
-              },
-              {
-                "label": "one overloaded name",
-                "text": "The caller writes what they mean and Java works out which version fits."
-              }
-            ],
-            "skills": [
-              "write two methods with the same name and different parameters"
-            ]
-          },
-          {
-            "id": "o_rule",
+            "id": "o_how",
             "kind": "teach",
-            "instruction": "The parameter list is what tells them apart.",
-            "points": [
+            "instruction": "Java chooses by the types of the parameters and the order of the parameters.",
+            "facts": {
+              "columns": [
+                "Call",
+                "Runs",
+                "Because"
+              ],
+              "rows": [
+                [
+                  "sum(3, 4)",
+                  "sum(int, int)",
+                  "two ints"
+                ],
+                [
+                  "sum(1.5, 2.5)",
+                  "sum(double, double)",
+                  "two doubles"
+                ],
+                [
+                  "sum(3, 4, 5)",
+                  "sum(int, int, int)",
+                  "three ints"
+                ],
+                [
+                  "sum(2, 1.5)",
+                  "sum(int, double)",
+                  "an int then a double"
+                ]
+              ]
+            },
+            "keypoint": "Java chooses an overload by the types and the order of the parameters."
+          },
+          {
+            "id": "o_sig",
+            "kind": "teach",
+            "instruction": "The method signature must be different. There are three ways to make it different.",
+            "rules": [
               {
-                "label": "different count",
-                "text": "heal() and heal(int) are two different methods."
+                "text": "Different types of parameters",
+                "example": "sum(int, int) and sum(double, double)"
               },
               {
-                "label": "different types",
-                "text": "heal(int) and heal(String) are too."
+                "text": "Different order of parameter types",
+                "example": "sum(int, double) and sum(double, int)"
               },
               {
-                "label": "NOT the return type",
-                "text": "int heal() and String heal() clash. Java cannot choose on return type alone."
-              },
-              {
-                "label": "NOT the parameter names",
-                "text": "heal(int a) and heal(int b) are the same method twice, and will not compile."
+                "text": "Different number of parameters",
+                "example": "sum(int, int) and sum(int, int, int)"
               }
+            ],
+            "keypoint": "A signature is the method name plus its parameter list. Overloads must differ in that list."
+          },
+          {
+            "id": "o_invalid",
+            "kind": "teach",
+            "instruction": "The return type is not part of the signature.",
+            "code": "public int sum(int a, int b) {\n  return a + b;\n}\n\npublic double sum(int a, int b) {\n  return a + b;\n}",
+            "body": [
+              "These two have the same name and the same parameter list.",
+              "Changing the return type does not make them different methods, so this does not compile."
+            ],
+            "keypoint": "Two methods cannot differ only by return type."
+          },
+          {
+            "id": "o_names",
+            "kind": "teach",
+            "instruction": "Parameter names are not part of the signature either.",
+            "code": "public int sum(int a, int b) {\n  return a + b;\n}\n\npublic int sum(int first, int second) {\n  return first + second;\n}",
+            "body": [
+              "Both take two ints. Renaming the parameters changes nothing.",
+              "This does not compile."
+            ],
+            "keypoint": "Two methods cannot differ only by parameter names."
+          },
+          {
+            "id": "o_bucket",
+            "kind": "bucket",
+            "instruction": "Given public int sum(int a, int b), is each of these a valid overload?",
+            "buckets": [
+              "Valid overload",
+              "Will not compile"
+            ],
+            "items": [
+              {
+                "text": "public double sum(double a, double b)",
+                "bucket": 0
+              },
+              {
+                "text": "public int sum(int a, int b, int c)",
+                "bucket": 0
+              },
+              {
+                "text": "public double sum(int a, double b)",
+                "bucket": 0
+              },
+              {
+                "text": "public double sum(int a, int b)",
+                "bucket": 1
+              },
+              {
+                "text": "public int sum(int first, int second)",
+                "bucket": 1
+              }
+            ],
+            "why": "The first three change the parameter list. The last two do not: one changes only the return type, the other only the parameter names.",
+            "skills": [
+              "explain how Java chooses which one to run"
             ]
           },
           {
             "id": "o_predict",
             "kind": "predict",
+            "instruction": "What comes out?",
             "wrap": "methods",
-            "instruction": "Which version runs?",
-            "code": "public void run() {\n  System.out.println(new Potion(\"Tonic\"));\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
+            "code": "public void run() {\n  System.out.println(describe(5));\n  System.out.println(describe(\"five\"));\n  System.out.println(describe(5, 3));\n}\n\npublic String describe(int n) {\n  return \"one int\";\n}\n\npublic String describe(String s) {\n  return \"one String\";\n}\n\npublic String describe(int a, int b) {\n  return \"two ints\";\n}",
             "opts": [
-              "(an error)",
-              "Tonic heals 60",
-              "Tonic heals 10",
-              "Tonic heals 0"
+              "one int\none String\ntwo ints",
+              "one int\none int\ntwo ints",
+              "one String\none String\ntwo ints",
+              "An error"
             ],
-            "correct": 2,
-            "why": "One argument, so Java picks Potion(String), which sets healing to 10 itself.",
+            "correct": 0,
+            "why": "Java matched each call to the overload whose parameter list fits: one int, one String, then two ints.",
             "skills": [
               "explain how Java chooses which one to run"
             ]
           },
           {
-            "id": "o_bucket",
-            "kind": "bucket",
-            "instruction": "Java tells overloads apart by the parameter list, and nothing else. Sort each pair.",
-            "buckets": [
-              "A valid overload",
-              "Will not compile"
-            ],
-            "items": [
-              {
-                "text": "heal() and heal(int amount)",
-                "bucket": 0
-              },
-              {
-                "text": "heal(int amount) and heal(String spell)",
-                "bucket": 0
-              },
-              {
-                "text": "attack(int a) and attack(int a, int b)",
-                "bucket": 0
-              },
-              {
-                "text": "int heal() and String heal()",
-                "bucket": 1
-              },
-              {
-                "text": "heal(int amount) and heal(int power)",
-                "bucket": 1
-              }
-            ],
-            "why": "Count and types distinguish them. Return type does not - at the call site Java has not got to the return yet. Parameter NAMES do not either; heal(int amount) and heal(int power) are the same method declared twice.",
-            "skills": [
-              "explain how Java chooses which one to run"
-            ]
-          },
-          {
-            "id": "o_none",
-            "kind": "fix",
+            "id": "o_order",
+            "kind": "predict",
+            "instruction": "The two overloads differ only in the ORDER of the types. What comes out?",
             "wrap": "methods",
-            "instruction": "Potion has two constructors. This call matches neither.",
-            "code": "public void run() {\n  System.out.println(new Potion());\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
-            "target": "Small heals 10",
-            "solution": "public void run() {\n  System.out.println(new Potion(\"Small\"));\n}\n\nclass Potion {\n  private String name;\n  private int healing;\n\n  public Potion(String name, int healing) {\n    this.name = name;\n    this.healing = healing;\n  }\n\n  public Potion(String name) {\n    this.name = name;\n    this.healing = 10;\n  }\n\n  public String toString() {\n    return name + \" heals \" + healing;\n  }\n}",
-            "hint": "One constructor takes a name, the other a name and a number. Zero arguments is not on the menu.",
-            "after": "Overloading gives you the versions you wrote, not every version imaginable. No match means it will not compile.",
-            "skills": [
-              "explain how Java chooses which one to run"
-            ]
-          },
-          {
-            "id": "o_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public void heal() { }\npublic void heal(int amount) { }",
-            "questions": [
-              {
-                "prompt": "What makes two overloaded methods different?",
-                "opts": [
-                  "Their names",
-                  "Their parameter lists",
-                  "Their comments",
-                  "Their return types"
-                ],
-                "correct": 1,
-                "why": "A different number or different types of parameters. The name is deliberately the same."
-              },
-              {
-                "prompt": "Why overload instead of using two names?",
-                "opts": [
-                  "It uses less memory",
-                  "The caller writes what they mean and Java picks the right version",
-                  "It runs faster",
-                  "Java requires it"
-                ],
-                "correct": 1,
-                "why": "One name to remember, and the arguments say which situation it is."
-              }
+            "code": "public void run() {\n  System.out.println(tag(1, \"a\"));\n  System.out.println(tag(\"a\", 1));\n}\n\npublic String tag(int n, String s) {\n  return \"int first\";\n}\n\npublic String tag(String s, int n) {\n  return \"String first\";\n}",
+            "opts": [
+              "int first\nString first",
+              "String first\nint first",
+              "int first\nint first",
+              "An error"
             ],
+            "correct": 0,
+            "why": "Reordering the parameter types produces a different signature, so both overloads are valid and Java matches each call by order.",
             "skills": [
               "explain how Java chooses which one to run"
             ]
           },
           {
-            "id": "o_write",
+            "id": "o_w1",
             "kind": "write",
+            "instruction": "Overload area. One takes a side length for a square. One takes a width and a height for a rectangle.",
             "wrap": "methods",
-            "instruction": "Your turn: overload attack so it works with or without a weapon.",
-            "harness": "public void run() {\n  Hero h = new Hero();\n  h.attack();\n  h.attack(\"sword\");\n}",
-            "code": "// class Hero with two attack methods:\n//   attack()        prints \"You punch for 1 damage.\"\n//   attack(String w) prints \"You swing the sword for 5 damage.\"\n",
-            "target": "You punch for 1 damage.\nYou swing the sword for 5 damage.",
-            "solution": "class Hero {\n  public void attack() {\n    System.out.println(\"You punch for 1 damage.\");\n  }\n\n  public void attack(String weapon) {\n    System.out.println(\"You swing the \" + weapon + \" for 5 damage.\");\n  }\n}",
-            "hint": "Two methods both called attack: one with no parameters, one taking a String.",
-            "after": "Same name twice, and Java chose by the arguments. That is overloading.",
+            "code": "public void run() {\n  System.out.println(area(5));\n  System.out.println(area(4, 6));\n}\n\n// write both area methods here\n",
+            "target": "25\n24",
+            "solution": "public void run() {\n  System.out.println(area(5));\n  System.out.println(area(4, 6));\n}\n\npublic int area(int side) {\n  return side * side;\n}\n\npublic int area(int width, int height) {\n  return width * height;\n}",
+            "hint": "One takes one int, the other takes two. Different number of parameters.",
+            "after": "The caller writes area for both shapes.",
+            "skills": [
+              "write two methods with the same name and different parameters"
+            ]
+          },
+          {
+            "id": "o_w2",
+            "kind": "write",
+            "instruction": "Overload max. One takes two ints. One takes three ints. One takes two doubles.",
+            "wrap": "methods",
+            "code": "public void run() {\n  System.out.println(max(3, 9));\n  System.out.println(max(3, 9, 5));\n  System.out.println(max(1.5, 0.5));\n}\n\n// write all three max methods here\n",
+            "target": "9\n9\n1.5",
+            "solution": "public void run() {\n  System.out.println(max(3, 9));\n  System.out.println(max(3, 9, 5));\n  System.out.println(max(1.5, 0.5));\n}\n\npublic int max(int a, int b) {\n  if (a > b) {\n    return a;\n  }\n  return b;\n}\n\npublic int max(int a, int b, int c) {\n  return max(max(a, b), c);\n}\n\npublic double max(double a, double b) {\n  if (a > b) {\n    return a;\n  }\n  return b;\n}",
+            "hint": "The three-int version can call the two-int version twice.",
+            "after": "max(int, int, int) reused max(int, int) instead of repeating the comparison.",
+            "skills": [
+              "write two methods with the same name and different parameters"
+            ]
+          },
+          {
+            "id": "o_w3",
+            "kind": "write",
+            "instruction": "Overload greet. One takes a name. One takes a name and a title.",
+            "wrap": "methods",
+            "code": "public void run() {\n  System.out.println(greet(\"Ada\"));\n  System.out.println(greet(\"Ada\", \"Captain\"));\n}\n\n// write both greet methods here\n",
+            "target": "Hello, Ada\nHello, Captain Ada",
+            "solution": "public void run() {\n  System.out.println(greet(\"Ada\"));\n  System.out.println(greet(\"Ada\", \"Captain\"));\n}\n\npublic String greet(String name) {\n  return \"Hello, \" + name;\n}\n\npublic String greet(String name, String title) {\n  return \"Hello, \" + title + \" \" + name;\n}",
+            "hint": "Both return a String. One takes one parameter, the other takes two.",
+            "after": "Both are valid because the number of parameters differs.",
+            "skills": [
+              "write two methods with the same name and different parameters"
+            ]
+          },
+          {
+            "id": "o_final",
+            "kind": "write",
+            "instruction": "Overload a constructor. A Weapon made with only a name gets 10 damage. A Weapon made with a name and a damage gets that damage.",
+            "wrap": "methods",
+            "code": "class Weapon {\n  private String name;\n  private int damage;\n\n  // write both constructors here\n\n  public String toString() {\n    return name + \" deals \" + damage + \" damage\";\n  }\n}\n\npublic void run() {\n  System.out.println(new Weapon(\"Dagger\"));\n  System.out.println(new Weapon(\"Greatsword\", 40));\n}",
+            "target": "Dagger deals 10 damage\nGreatsword deals 40 damage",
+            "solution": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String weaponName) {\n    name = weaponName;\n    damage = 10;\n  }\n\n  public Weapon(String weaponName, int weaponDamage) {\n    name = weaponName;\n    damage = weaponDamage;\n  }\n\n  public String toString() {\n    return name + \" deals \" + damage + \" damage\";\n  }\n}\n\npublic void run() {\n  System.out.println(new Weapon(\"Dagger\"));\n  System.out.println(new Weapon(\"Greatsword\", 40));\n}",
+            "hint": "Constructors overload by the same rules. One takes one parameter, the other takes two.",
+            "after": "Constructors can be overloaded too. This is how a class offers a default value.",
             "skills": [
               "write two methods with the same name and different parameters"
             ]

@@ -198,6 +198,7 @@ ones.
 | `Monster` | name, hp, power | `attack`, `takeDamage`, `isAlive`, getters | Becomes the parent in 5.13. `Boss extends Monster` and `Slime extends Monster` are the inheritance, abstract and polymorphism examples. |
 | `Weapon` | name, damage | `getName`, `getDamage` | A `Player` HAS A `Weapon`. That is the HAS-A against IS-A contrast in 5.13, with a real object rather than a sentence. |
 | `Room` | width, height | `getArea`, `getPerimeter` | Our Rectangle. Two numbers in, a computed answer out, so a method that returns something has an obvious job in 5.5. |
+| `Randomizer` | none — all static | `nextInt(low, high)`, `nextBoolean()`, `nextDouble(low, high)` | Deliberately identical to the CodeHS Randomizer, so a student reading CodeHS alongside classOS sees the same method names. Introduced in 5.7 as the example of a class you never instantiate. Only ever used in `run` steps, since random output cannot be checked against a fixed target. |
 | `Chest` | gold, locked | `isLocked`, `unlock`, `open`, `getGold` | Written by someone else on purpose: the client example in 5.3. Deterministic, because a class that rolls dice cannot have its output checked, and a Dice that always returns the same number would be a lie told to make the tests pass. |
 
 Rules for using them:
