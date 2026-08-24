@@ -5690,247 +5690,334 @@
           {
             "id": "e_task",
             "kind": "teach",
-            "instruction": "Three ways a program goes wrong, and only one of them is loud.",
-            "points": [
-              {
-                "label": "it will not compile",
-                "text": "A missing semicolon or a misspelt name. Java refuses to run it at all."
-              },
-              {
-                "label": "it crashes while running",
-                "text": "It compiles fine, then dies partway - dividing by zero, or asking for character 9 of a 4-letter word."
-              },
-              {
-                "label": "it runs and is wrong",
-                "text": "No error at all. It just prints the wrong number, and only you can catch it."
-              },
-              {
-                "label": "which is worst",
-                "text": "The last one. The other two tell you where to look."
-              }
+            "instruction": "Programs have bugs.",
+            "body": [
+              "Everyone writes them. The skill is knowing what kind you are looking at.",
+              "Java splits them into two, and the difference decides how you hunt for them."
             ]
           },
           {
             "id": "e_compile",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A compile error stops it before it starts.",
-            "code": "public void run() {\n  int hp = 20\n  System.out.println(hp);\n}",
-            "points": [
-              {
-                "label": "the missing semicolon",
-                "text": "Line 2 does not end. Java cannot tell where the statement stops."
-              },
-              {
-                "label": "no output at all",
-                "text": "Not one line runs. There is nothing to run until it compiles."
-              },
-              {
-                "label": "reading the error",
-                "text": "It names a line number. Look at that line and the one above it."
-              }
+            "instruction": "A compile time error is a mistake in the text of the code.",
+            "body": [
+              "The compiler is the tool that turns your .java file into something the computer can run.",
+              "It needs the code written with proper Java syntax.",
+              "When it cannot make sense of the text, it refuses, and the program never runs at all."
+            ],
+            "keypoint": "A compile time error is a mistake in the text of the code. The program never runs."
+          },
+          {
+            "id": "e_syntax",
+            "kind": "teach",
+            "instruction": "The commonest one is a syntax error.",
+            "facts": {
+              "columns": [
+                "What is wrong",
+                "Example"
+              ],
+              "rows": [
+                [
+                  "a missing semicolon",
+                  "int x = 5"
+                ],
+                [
+                  "a missing bracket",
+                  "System.out.println(\"hi\""
+                ],
+                [
+                  "a missing brace",
+                  "a for loop with no closing }"
+                ],
+                [
+                  "a name spelled differently",
+                  "int level; System.out.println(Level);"
+                ]
+              ]
+            },
+            "body": [
+              "The grammar is broken, so the compiler cannot read it."
+            ]
+          },
+          {
+            "id": "e_type",
+            "kind": "teach",
+            "instruction": "Putting the wrong type in a box is also caught at compile time.",
+            "code": "int x = \"hello world\";\nSystem.out.println(x);",
+            "body": [
+              "An int box cannot hold text.",
+              "The compiler checks types before the program ever runs, so this never gets the chance to fail later."
+            ]
+          },
+          {
+            "id": "e_cfix",
+            "kind": "fix",
+            "instruction": "Fix this so it compiles.",
+            "code": "int x = \"5\";\nSystem.out.println(x + 1);",
+            "target": "6",
+            "solution": "int x = 5;\nSystem.out.println(x + 1);",
+            "hint": "The quotes make it text. An int wants a number.",
+            "after": "The compiler caught it. Nothing ran, so nothing could go wrong at run time.",
+            "skills": [
+              "tell compile, run-time and logic errors apart"
             ]
           },
           {
             "id": "e_runtime",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A run-time error compiles, then dies partway.",
-            "code": "public void run() {\n  System.out.println(\"before\");\n  int hits = 0;\n  System.out.println(10 / hits);\n  System.out.println(\"after\");\n}",
-            "points": [
-              {
-                "label": "\"before\" prints",
-                "text": "The program really does start. The first line works."
-              },
-              {
-                "label": "10 / hits",
-                "text": "hits is 0, and integer division by zero throws ArithmeticException."
-              },
-              {
-                "label": "\"after\" never prints",
-                "text": "The crash stops everything from that point."
-              },
-              {
-                "label": "hits != 0 &&",
-                "text": "Guard it with short-circuiting, from 3.13."
-              }
+            "instruction": "A run time error happens while the program is running.",
+            "body": [
+              "The code can be perfectly correct Java, so the compiler is happy.",
+              "It is the VALUES worked out while it runs that cause the crash."
+            ],
+            "code": "int total = 10;\nint hits = 0;\nSystem.out.println(total / hits);",
+            "keypoint": "A run time error happens while the program runs. The code compiled fine; the values caused it."
+          },
+          {
+            "id": "e_zero",
+            "kind": "predict",
+            "instruction": "hits is 0. What happens?",
+            "code": "int total = 10;\nint hits = 0;\nSystem.out.println(total / hits);",
+            "opts": [
+              "It prints 0",
+              "It prints Infinity",
+              "It crashes while running",
+              "It will not compile"
+            ],
+            "correct": 2,
+            "why": "Dividing an int by zero is valid Java, so it compiles. It only fails once it runs and reaches the division.",
+            "skills": [
+              "tell compile, run-time and logic errors apart"
             ]
+          },
+          {
+            "id": "e_cmp",
+            "kind": "teach",
+            "instruction": "The difference in one table.",
+            "facts": {
+              "columns": [
+                "",
+                "Compile time error",
+                "Run time error"
+              ],
+              "rows": [
+                [
+                  "When it is found",
+                  "before the program runs",
+                  "while the program runs"
+                ],
+                [
+                  "Does it run?",
+                  "no, the file is invalid",
+                  "yes, until it hits the problem"
+                ],
+                [
+                  "Caused by",
+                  "the text of the code",
+                  "the values being worked out"
+                ],
+                [
+                  "Example",
+                  "int x = \"hello\";",
+                  "dividing by zero"
+                ]
+              ]
+            },
+            "keypoint": "Compile time: the program never runs. Run time: it runs and then crashes."
+          },
+          {
+            "id": "e_bucket",
+            "kind": "bucket",
+            "instruction": "Which kind is each one?",
+            "buckets": [
+              "Compile time",
+              "Run time"
+            ],
+            "items": [
+              {
+                "text": "A missing semicolon",
+                "bucket": 0
+              },
+              {
+                "text": "int x = \"hello\";",
+                "bucket": 0
+              },
+              {
+                "text": "Calling a method that does not exist",
+                "bucket": 0
+              },
+              {
+                "text": "Dividing by a variable that happens to be 0",
+                "bucket": 1
+              },
+              {
+                "text": "charAt(10) on a 4 character String",
+                "bucket": 1
+              },
+              {
+                "text": "Integer.parseInt on text that is not a number",
+                "bucket": 1
+              }
+            ],
+            "why": "If the compiler can see it in the text, it is compile time. If it depends on a value only known while running, it is run time.",
+            "skills": [
+              "tell compile, run-time and logic errors apart"
+            ]
+          },
+          {
+            "id": "e_exc",
+            "kind": "teach",
+            "instruction": "When a run time error happens, Java throws an exception.",
+            "body": [
+              "An exception tells you what kind of error it was.",
+              "The name is the most useful thing on the screen, so read it before anything else."
+            ],
+            "keypoint": "An exception names what kind of run time error happened."
+          },
+          {
+            "id": "e_arith",
+            "kind": "teach",
+            "instruction": "ArithmeticException. Usually dividing by zero.",
+            "code": "int hits = 0;\nSystem.out.println(10 / hits);",
+            "body": [
+              "Fix it by checking the value before you divide by it."
+            ],
+            "keypoint": "ArithmeticException is usually a division by zero."
+          },
+          {
+            "id": "e_index",
+            "kind": "teach",
+            "instruction": "IndexOutOfBoundsException. Asking for a position that is not there.",
+            "code": "String s = \"cat\";\nSystem.out.println(s.charAt(5));",
+            "body": [
+              "\"cat\" has positions 0, 1 and 2. There is no position 5.",
+              "Fix it by keeping the index below length()."
+            ],
+            "keypoint": "IndexOutOfBoundsException means you asked for a position that does not exist."
+          },
+          {
+            "id": "e_illegal",
+            "kind": "teach",
+            "instruction": "IllegalArgumentException. Handing a method something it cannot work with.",
+            "code": "System.out.println(Integer.parseInt(\"hello\"));",
+            "body": [
+              "parseInt can turn \"42\" into a number. It cannot turn \"hello\" into one.",
+              "NumberFormatException is the particular kind it throws here."
+            ],
+            "keypoint": "IllegalArgumentException means a method was given a value it cannot use."
           },
           {
             "id": "e_match",
             "kind": "match",
-            "instruction": "Match each mistake to what Java does about it.",
+            "instruction": "Match each mistake to the exception it throws.",
             "pairs": [
               [
                 "10 / 0",
                 "ArithmeticException"
               ],
               [
-                "\"hello\".charAt(10)",
+                "\"cat\".charAt(9)",
                 "IndexOutOfBoundsException"
               ],
               [
-                "int x = 3 with no semicolon",
-                "compile error - it never runs"
+                "Integer.parseInt(\"abc\")",
+                "IllegalArgumentException"
               ],
               [
-                "x + y / 2 instead of (x + y) / 2",
-                "no error at all, just a wrong answer"
+                "int x = \"hello\";",
+                "no exception, it will not compile"
               ]
             ],
-            "why": "Only the first two are exceptions. The third never starts, and the fourth finishes and lies to you.",
+            "why": "The last one never runs, so it can never throw anything. Only a program that runs can throw an exception.",
             "skills": [
               "name the exception a crash throws"
             ]
           },
           {
-            "id": "e_named",
+            "id": "e_hunt1",
             "kind": "teach",
-            "instruction": "Run-time crashes have names, and the test asks for them.",
-            "points": [
-              {
-                "label": "ArithmeticException",
-                "text": "Thrown by integer division by zero: 10 / 0."
-              },
-              {
-                "label": "IndexOutOfBoundsException",
-                "text": "Thrown by asking for a position that is not there: \"hello\".charAt(10) when the last position is 4."
-              },
-              {
-                "label": "a compile error has no exception",
-                "text": "A missing semicolon never runs, so nothing is thrown. Exceptions only happen to programs that started."
-              },
-              {
-                "label": "reading the name",
-                "text": "The exception name tells you what went wrong before you read a single line of your code."
-              }
+            "instruction": "Bug hunt. Four programs, four bugs.",
+            "body": [
+              "For each one, work out whether it fails at compile time or at run time before you fix it.",
+              "That decides where you look."
             ]
           },
           {
-            "id": "e_bucket",
-            "kind": "bucket",
-            "instruction": "Which kind of error is each one?",
-            "buckets": [
-              "will not compile",
-              "crashes while running",
-              "runs but wrong"
-            ],
-            "items": [
-              {
-                "text": "missing semicolon",
-                "bucket": 0
-              },
-              {
-                "text": "dividing by zero",
-                "bucket": 1
-              },
-              {
-                "text": "charAt(9) on a 4-letter word",
-                "bucket": 1
-              },
-              {
-                "text": "x + y / 2 instead of (x + y) / 2",
-                "bucket": 2
-              },
-              {
-                "text": "misspelling a variable name",
-                "bucket": 0
-              },
-              {
-                "text": "a loop that runs one time too few",
-                "bucket": 2
-              }
-            ],
-            "why": "Compile errors are caught before running. Run-time errors stop it partway. Logic errors finish and lie to you.",
-            "skills": [
-              "tell compile, run-time and logic errors apart"
-            ]
-          },
-          {
-            "id": "e_logic",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A logic error is silent. It just gives the wrong answer.",
-            "code": "public void run() {\n  int a = 8;\n  int b = 2;\n  System.out.println(average(a, b));\n}\n\npublic int average(int x, int y) {\n  return x + y / 2;\n}",
-            "output": "9",
-            "points": [
-              {
-                "label": "expected 5",
-                "text": "The average of 8 and 2 is 5. This prints 9."
-              },
-              {
-                "label": "x + y / 2",
-                "text": "Division happens before addition, so it is 8 + 1, not (8 + 2) / 2."
-              },
-              {
-                "label": "no error",
-                "text": "It compiled, it ran, it printed a number. Nothing warned you."
-              },
-              {
-                "label": "(x + y) / 2",
-                "text": "Brackets force the addition to happen first."
-              }
-            ]
-          },
-          {
-            "id": "e_fix",
+            "id": "e_h1",
             "kind": "fix",
-            "wrap": "methods",
-            "instruction": "This averages wrongly. Fix it.",
-            "code": "public void run() {\n  System.out.println(average(8, 2));\n}\n\npublic int average(int x, int y) {\n  return x + y / 2;\n}",
-            "target": "5",
-            "solution": "public void run() {\n  System.out.println(average(8, 2));\n}\n\npublic int average(int x, int y) {\n  return (x + y) / 2;\n}",
-            "hint": "Division runs before addition. Force the addition first.",
-            "after": "A logic error nothing could have warned you about. Only checking the answer finds these.",
+            "instruction": "Hunt 1. Fix it.",
+            "code": "String word = \"gold\"\nSystem.out.println(word);",
+            "target": "gold",
+            "solution": "String word = \"gold\";\nSystem.out.println(word);",
+            "hint": "Read the first line very carefully.",
+            "after": "A missing semicolon. Compile time, so nothing ran.",
             "skills": [
               "tell compile, run-time and logic errors apart"
             ]
           },
           {
-            "id": "e_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "String hello = \"hello\";",
-            "questions": [
-              {
-                "prompt": "int x = 3 (no semicolon), then int y = 4; then int sum = x + y; — run-time error, compile error, both, or neither?",
-                "opts": [
-                  "Compile time error",
-                  "Both",
-                  "Neither",
-                  "Run time error"
-                ],
-                "correct": 0,
-                "why": "Java cannot tell where the first statement ends, so it refuses to build the program. Nothing runs, so there is no run-time error to have."
-              },
-              {
-                "prompt": "String hello = \"hello\"; char last = hello.charAt(10); — which exception?",
-                "opts": [
-                  "IllegalArgumentException",
-                  "None",
-                  "IndexOutOfBoundsException",
-                  "ArithmeticException"
-                ],
-                "correct": 2,
-                "why": "\"hello\" has 5 characters, at positions 0 to 4. Position 10 is outside the String, and that is exactly what this exception means."
-              }
-            ],
+            "id": "e_h2",
+            "kind": "fix",
+            "instruction": "Hunt 2. Fix it so it prints the last character.",
+            "code": "String word = \"gold\";\nSystem.out.println(word.charAt(word.length()));",
+            "target": "d",
+            "solution": "String word = \"gold\";\nSystem.out.println(word.charAt(word.length() - 1));",
+            "hint": "length() is 4, and the positions are 0 to 3.",
+            "after": "IndexOutOfBoundsException. Run time, because the compiler cannot know what length() will be.",
             "skills": [
               "name the exception a crash throws"
             ]
           },
           {
-            "id": "e_bug",
+            "id": "e_h3",
             "kind": "fix",
-            "wrap": "methods",
-            "instruction": "Two bugs, both stopping it compiling. Hunt them.",
-            "code": "public void run() {\n  String word = 'hello';\n  System.out.println(word)\n}",
-            "target": "hello",
-            "solution": "public void run() {\n  String word = \"hello\";\n  System.out.println(word);\n}",
-            "hint": "A String needs double quotes, and every statement needs a semicolon.",
-            "after": "That is CodeHS exercise 4.7.5, Bug Hunter, in miniature - single quotes on a String, and a missing semicolon.",
+            "instruction": "Hunt 3. Fix it so it prints the average.",
+            "code": "int total = 30;\nint count = 0;\nSystem.out.println(total / count);",
+            "target": "0",
+            "solution": "int total = 30;\nint count = 0;\nif (count != 0) {\n  System.out.println(total / count);\n} else {\n  System.out.println(0);\n}",
+            "hint": "You cannot divide by zero, so check before you do it.",
+            "after": "ArithmeticException. Guarding the division is the fix, not changing the numbers.",
+            "skills": [
+              "name the exception a crash throws"
+            ]
+          },
+          {
+            "id": "e_h4",
+            "kind": "fix",
+            "instruction": "Hunt 4. Fix it so it prints 43.",
+            "code": "String typed = \"42\";\nint n = typed;\nSystem.out.println(n + 1);",
+            "target": "43",
+            "solution": "String typed = \"42\";\nint n = Integer.parseInt(typed);\nSystem.out.println(n + 1);",
+            "hint": "A String has to be turned into a number before it can go in an int.",
+            "after": "Compile time. An int box cannot hold a String, and the compiler says so before anything runs.",
             "skills": [
               "tell compile, run-time and logic errors apart"
+            ]
+          },
+          {
+            "id": "e_final",
+            "kind": "workout",
+            "level": "standard",
+            "instruction": "Write a program that survives bad input. Ask for two numbers and print the first divided by the second, without ever crashing.",
+            "plan": [
+              "read the first number",
+              "read the second number",
+              "if the second is not zero, print the division",
+              "otherwise print a message instead"
+            ],
+            "methods": [
+              "readInt",
+              "if / else",
+              "!= 0"
+            ],
+            "code": "// ask \"Top? \" and \"Bottom? \" with readInt\n// print the division, or the words cannot divide by zero\n",
+            "stdin": "10\n0",
+            "target": "Top? 10\nBottom? 0\ncannot divide by zero",
+            "solution": "int top = readInt(\"Top? \");\nint bottom = readInt(\"Bottom? \");\nif (bottom != 0) {\n  System.out.println(top / bottom);\n} else {\n  System.out.println(\"cannot divide by zero\");\n}",
+            "hint": "Check bottom before dividing by it.",
+            "after": "You cannot stop a user typing 0. You can stop it crashing your program.",
+            "skills": [
+              "name the exception a crash throws"
             ]
           }
         ]
