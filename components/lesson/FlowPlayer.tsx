@@ -52,6 +52,7 @@ type Step = {
   rules?: { text: string; example?: string }[];
   annotate?: { token: string; note: string }[];
   keypoint?: string;
+  facts?: { columns: string[]; rows: string[][] };
   vars?: { type: string; name: string; placeholder?: string; label?: string }[];
   frames?: { line: number; note: string; vars?: Record<string, string>; out?: string }[];
   output?: string;
@@ -1015,6 +1016,18 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
             <div className="flowout" style={{ marginTop: 10 }}>
               <div className="lbl">WHAT IT PRINTS</div>
               <pre>{step.output || "(nothing)"}</pre>
+            </div>
+          )}
+          {step.facts && (
+            <div className="factswrap">
+              <table className="facts">
+                <thead><tr>{step.facts.columns.map((c, j) => <th key={j}>{c}</th>)}</tr></thead>
+                <tbody>
+                  {step.facts.rows.map((r, ri) => (
+                    <tr key={ri}>{r.map((c, ci) => <td key={ci}>{c}</td>)}</tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
           {(step.rules || []).length > 0 && (

@@ -143,6 +143,13 @@ export type FlowStep = {
    * revision material, not a restatement of the instruction.
    */
   keypoint?: string;
+  /**
+   * A plain reference table, shown not asked. `table` is an exercise — its
+   * cells get compiled and checked — so it cannot carry a comparison like
+   * String against char, or a slice of the ASCII chart. Headers and rows,
+   * rendered as-is.
+   */
+  facts?: { columns: string[]; rows: string[][] };
   // PLAIN PROSE. Short lines, rendered as ordinary sentences with no label and
   // no highlight. This exists because `points` was the only way to say anything,
   // so every explanation got forced into a highlighted label — including ones
@@ -205,6 +212,13 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       else if (h < 0 || h >= lines) errors.push(`${at}: highlight line ${h} is outside the ${lines}-line snippet`);
     }
     if (s.keypoint !== undefined && !String(s.keypoint).trim()) errors.push(`${at}: keypoint is empty`);
+    if (s.facts) {
+      if (!s.facts.columns?.length) errors.push(`${at}: facts needs columns`);
+      if (!s.facts.rows?.length) errors.push(`${at}: facts needs rows`);
+      for (const [i, r] of (s.facts.rows || []).entries()) {
+        if (r.length !== s.facts.columns.length) errors.push(`${at}: facts row ${i + 1} has ${r.length} cells, expected ${s.facts.columns.length}`);
+      }
+    }
     for (const a of s.annotate || []) {
       if (!s.code) errors.push(`${at}: annotate needs code`);
       else if (!s.code.includes(a.token)) errors.push(`${at}: annotate token ${JSON.stringify(a.token)} is not in the snippet`);
@@ -214,8 +228,8 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       case "run": if (!s.code) errors.push(`${at}: needs code`); break;
       case "tweak": if (!s.code || s.target === undefined) errors.push(`${at}: needs code + target (the ORIGINAL output)`); break;
       case "teach":
-        if (!s.code && !(s.points || []).length && !(s.body || []).length && !(s.rules || []).length) {
-          errors.push(`${at}: needs code, points[], body[] or rules[]`);
+        if (!s.code && !(s.points || []).length && !(s.body || []).length && !(s.rules || []).length && !s.facts) {
+          errors.push(`${at}: needs code, points[], body[], rules[] or facts`);
         }
         break;
       case "walk": {
@@ -340,7 +354,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       for (let i = rights.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rights[i], rights[j]] = [rights[j], rights[i]]; }
       return { ...base, lefts, rights };
     }
-    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, annotate: s.annotate, output: s.output };
+    case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, annotate: s.annotate, facts: s.facts, output: s.output };
     case "card": return { ...base, vars: s.vars };
     case "walk": return { ...base, frames: s.frames };
     case "compare": return { ...base, sides: s.sides, points: s.points };

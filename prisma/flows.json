@@ -4681,7 +4681,8 @@
       "title": "Strings Methods",
       "objectives": [
         "use String methods to inspect text",
-        "count positions from zero"
+        "count positions from zero",
+        "loop through the characters of a String"
       ],
       "flow": {
         "v": 1,
@@ -4689,204 +4690,374 @@
           {
             "id": "s_task",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "The player typed a name. You need its initial, and its length.",
-            "points": [
-              {
-                "label": "\"Ada Lovelace\"",
-                "text": "A String is not just something to print. You can ask it questions."
-              },
-              {
-                "label": "the initial",
-                "text": "The first character, for a save-slot icon."
-              },
-              {
-                "label": "the length",
-                "text": "To check the name fits on the card."
-              },
-              {
-                "label": "built in",
-                "text": "Java gives Strings methods for all of this. You call them ON the String."
-              }
-            ]
-          },
-          {
-            "id": "s_tour",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "Five String methods, one name.",
-            "code": "public void run() {\n  String name = \"Ada Lovelace\";\n  System.out.println(name.length());\n  System.out.println(name.toUpperCase());\n  System.out.println(name.charAt(0));\n  System.out.println(name.substring(0, 3));\n  System.out.println(name.indexOf(\"Love\"));\n}",
-            "output": "12\nADA LOVELACE\nA\nAda\n4",
-            "points": [
-              {
-                "label": "name.length()",
-                "text": "12 - every character including the space."
-              },
-              {
-                "label": "name.toUpperCase()",
-                "text": "A new String in capitals. name itself is unchanged."
-              },
-              {
-                "label": "name.charAt(0)",
-                "text": "The character at position 0. Counting starts at 0, so this is the A."
-              },
-              {
-                "label": "name.substring(0, 3)",
-                "text": "From position 0 up to but NOT including 3, giving \"Ada\"."
-              },
-              {
-                "label": "name.indexOf(\"Love\")",
-                "text": "The position where \"Love\" starts, which is 4. It is -1 if not found."
-              }
-            ]
-          },
-          {
-            "id": "s_zero",
-            "kind": "teach",
-            "instruction": "Positions start at 0.",
-            "points": [
-              {
-                "label": "\"Ada\"",
-                "text": "A is at 0, d is at 1, a is at 2."
-              },
-              {
-                "label": "charAt(0)",
-                "text": "The FIRST character. charAt(1) is the second."
-              },
-              {
-                "label": "length() is 3",
-                "text": "But the last position is 2. length is a count; positions are 0-based."
-              },
-              {
-                "label": "charAt(3)",
-                "text": "Crashes. There is no character at position 3 in a 3-character String."
-              }
-            ]
-          },
-          {
-            "id": "s_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  String word = \"dungeon\";\n  System.out.println(word.charAt(1));\n}",
-            "opts": [
-              "u",
-              "d",
-              "n",
-              "1"
+            "instruction": "A String is a sequence of characters.",
+            "code": "String str = \"hello\";",
+            "facts": {
+              "columns": [
+                "Position",
+                "Character"
+              ],
+              "rows": [
+                [
+                  "0",
+                  "h"
+                ],
+                [
+                  "1",
+                  "e"
+                ],
+                [
+                  "2",
+                  "l"
+                ],
+                [
+                  "3",
+                  "l"
+                ],
+                [
+                  "4",
+                  "o"
+                ]
+              ]
+            },
+            "body": [
+              "Positions start at 0, not 1.",
+              "The last position is always one less than the length."
             ],
-            "correct": 0,
-            "why": "Position 0 is d, position 1 is u. Counting from zero is the single most common String mistake.",
-            "skills": [
-              "use String methods to inspect text"
+            "keypoint": "A String is a sequence of characters, numbered from 0."
+          },
+          {
+            "id": "s_obj",
+            "kind": "teach",
+            "instruction": "A String is an object, not a primitive type.",
+            "code": "String a = \"hi\";\nString part = \"i\";\nString b = \"h\" + part;\nSystem.out.println(a == b);\nSystem.out.println(a.equals(b));",
+            "output": "false\ntrue",
+            "body": [
+              "That is why text is compared with .equals() and never with ==."
+            ],
+            "keypoint": "Strings are objects, so compare them with .equals()."
+          },
+          {
+            "id": "s_docs",
+            "kind": "teach",
+            "instruction": "Every String method is written down in the official Java documentation.",
+            "body": [
+              "Search for \"java String documentation\" and open the java.lang.String page.",
+              "It lists every method, what it takes and what it gives back.",
+              "Professional programmers look things up constantly. Learning to read that page is part of learning Java."
+            ],
+            "keypoint": "The java.lang.String documentation lists every String method."
+          },
+          {
+            "id": "s_length",
+            "kind": "teach",
+            "instruction": "length() gives how many characters there are.",
+            "code": "String word = \"gold\";\nSystem.out.println(word.length());",
+            "output": "4",
+            "body": [
+              "So the last position is word.length() - 1, which is 3."
             ]
+          },
+          {
+            "id": "s_charat",
+            "kind": "teach",
+            "instruction": "charAt(int index) gives the character at one position.",
+            "code": "String word = \"gold\";\nSystem.out.println(word.charAt(0));\nSystem.out.println(word.charAt(3));",
+            "output": "g\nd",
+            "body": [
+              "charAt(4) would crash, because there is no position 4."
+            ],
+            "keypoint": "charAt(i) gives the character at position i."
+          },
+          {
+            "id": "s_equals",
+            "kind": "teach",
+            "instruction": "equals and equalsIgnoreCase compare the characters.",
+            "code": "String a = \"Gold\";\nSystem.out.println(a.equals(\"gold\"));\nSystem.out.println(a.equalsIgnoreCase(\"gold\"));",
+            "output": "false\ntrue",
+            "body": [
+              "equals is exact, so a capital G is not a small g.",
+              "equalsIgnoreCase treats them as the same letter."
+            ],
+            "keypoint": "equals is exact. equalsIgnoreCase treats capitals and small letters as the same."
+          },
+          {
+            "id": "s_indexof",
+            "kind": "teach",
+            "instruction": "indexOf finds where something starts.",
+            "code": "String s = \"Ada Lovelace\";\nSystem.out.println(s.indexOf(\"Love\"));\nSystem.out.println(s.indexOf(\"z\"));",
+            "output": "4\n-1",
+            "body": [
+              "It gives the position of the first match.",
+              "It gives -1 when there is no match at all, rather than crashing."
+            ],
+            "keypoint": "indexOf gives the position of the first match, or -1 when there is none."
           },
           {
             "id": "s_sub",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "substring(start, end) stops BEFORE end.",
-            "code": "public void run() {\n  String word = \"dungeon\";\n  System.out.println(word.substring(0, 3));\n  System.out.println(word.substring(3));\n}",
+            "instruction": "substring cuts a piece out.",
+            "code": "String s = \"dungeon\";\nSystem.out.println(s.substring(0, 3));\nSystem.out.println(s.substring(3));",
             "output": "dun\ngeon",
-            "points": [
-              {
-                "label": "substring(0, 3)",
-                "text": "Positions 0, 1, 2 - giving \"dun\". Position 3 is left out."
-              },
-              {
-                "label": "substring(3)",
-                "text": "One argument means \"from here to the end\", giving \"geon\"."
-              },
-              {
-                "label": "why exclusive",
-                "text": "end - start is the length you get. 3 - 0 is 3 characters."
-              }
-            ]
+            "body": [
+              "substring(begin, end) takes from begin up to but NOT including end.",
+              "substring(begin) takes from there to the end.",
+              "end minus begin is how many characters you get. 3 - 0 is 3."
+            ],
+            "keypoint": "substring(a, b) takes from a up to but not including b."
           },
           {
-            "id": "s_fill",
-            "kind": "fill",
-            "wrap": "methods",
-            "instruction": "Get just the first three letters.",
-            "code": "public void run() {\n  String word = \"treasure\";\n  System.out.println(word.substring(0, ⟦1⟧));\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "2",
-                  "3",
-                  "4"
+            "id": "s_ref",
+            "kind": "teach",
+            "instruction": "The six to know.",
+            "facts": {
+              "columns": [
+                "Method",
+                "What it gives back",
+                "Example"
+              ],
+              "rows": [
+                [
+                  "length()",
+                  "how many characters",
+                  "\"gold\".length() is 4"
                 ],
-                "answer": 1
-              }
+                [
+                  "charAt(i)",
+                  "the character at position i",
+                  "\"gold\".charAt(0) is g"
+                ],
+                [
+                  "equals(s)",
+                  "true when the text matches exactly",
+                  "\"Gold\".equals(\"gold\") is false"
+                ],
+                [
+                  "equalsIgnoreCase(s)",
+                  "true ignoring capitals",
+                  "\"Gold\".equalsIgnoreCase(\"gold\") is true"
+                ],
+                [
+                  "indexOf(s)",
+                  "where it starts, or -1",
+                  "\"gold\".indexOf(\"l\") is 2"
+                ],
+                [
+                  "substring(a, b)",
+                  "the piece from a up to b",
+                  "\"gold\".substring(0, 2) is go"
+                ]
+              ]
+            }
+          },
+          {
+            "id": "s_immutable",
+            "kind": "teach",
+            "instruction": "A String can never be changed. Methods give back a new one.",
+            "code": "String s = \"dungeon\";\ns.substring(0, 3);\nSystem.out.println(s);\nString cut = s.substring(0, 3);\nSystem.out.println(cut);",
+            "output": "dungeon\ndun",
+            "body": [
+              "Line 2 made a new String and threw it away, so s is untouched.",
+              "To keep the result you have to store it."
             ],
-            "target": "tre",
-            "hint": "The end position is not included, so it equals how many characters you want.",
-            "after": "substring(0, 3) gives 3 characters. The second number is where to stop, not the last one to keep.",
+            "keypoint": "Strings are immutable. A method gives back a new String and leaves the original alone."
+          },
+          {
+            "id": "s_imfix",
+            "kind": "fix",
+            "instruction": "Fix this so it prints DUN.",
+            "code": "String s = \"dun\";\ns.toUpperCase();\nSystem.out.println(s);",
+            "target": "DUN",
+            "solution": "String s = \"dun\";\ns = s.toUpperCase();\nSystem.out.println(s);",
+            "hint": "The method hands back a new String. Nothing catches it.",
+            "after": "A String never changes in place. You must store what comes back.",
             "skills": [
               "use String methods to inspect text"
             ]
           },
           {
-            "id": "s_last",
-            "kind": "fix",
-            "wrap": "methods",
-            "instruction": "\"Ada\" has three characters. This asks for one that is not there.",
-            "code": "public void run() {\n  String word = \"Ada\";\n  System.out.println(word.charAt(3));\n}",
-            "target": "a",
-            "solution": "public void run() {\n  String word = \"Ada\";\n  System.out.println(word.charAt(2));\n}",
-            "hint": "length() is 3, and positions start at 0. So what is the LAST position?",
-            "after": "A is 0, d is 1, a is 2. The last position is always length() - 1, which is why charAt(length()) always crashes.",
+            "id": "s_loop",
+            "kind": "teach",
+            "instruction": "Looping over a String visits every character.",
+            "code": "String word = \"gold\";\nfor (int i = 0; i < word.length(); i++) {\n  System.out.println(word.charAt(i));\n}",
+            "output": "g\no\nl\nd",
+            "body": [
+              "i goes from 0 up to length() - 1.",
+              "charAt(i) fetches the character at whatever i currently is."
+            ],
+            "keypoint": "for (int i = 0; i < s.length(); i++) with s.charAt(i) visits every character."
+          },
+          {
+            "id": "s_walk",
+            "kind": "walk",
+            "instruction": "Step through it and watch i move along the word.",
+            "code": "String word = \"gold\";\nfor (int i = 0; i < word.length(); i++) {\n  System.out.println(word.charAt(i));\n}",
+            "frames": [
+              {
+                "line": 1,
+                "note": "i starts at 0.",
+                "vars": {
+                  "i": "0"
+                },
+                "out": ""
+              },
+              {
+                "line": 1,
+                "note": "Is 0 less than 4? Yes.",
+                "vars": {
+                  "i": "0"
+                },
+                "out": ""
+              },
+              {
+                "line": 2,
+                "note": "charAt(0) is g.",
+                "vars": {
+                  "i": "0"
+                },
+                "out": "g"
+              },
+              {
+                "line": 1,
+                "note": "i++ makes i 1. Is 1 less than 4? Yes.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": "g"
+              },
+              {
+                "line": 2,
+                "note": "charAt(1) is o.",
+                "vars": {
+                  "i": "1"
+                },
+                "out": "g\no"
+              },
+              {
+                "line": 1,
+                "note": "i++ makes i 2. Still less than 4.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "g\no"
+              },
+              {
+                "line": 2,
+                "note": "charAt(2) is l.",
+                "vars": {
+                  "i": "2"
+                },
+                "out": "g\no\nl"
+              },
+              {
+                "line": 1,
+                "note": "i++ makes i 3. Still less than 4.",
+                "vars": {
+                  "i": "3"
+                },
+                "out": "g\no\nl"
+              },
+              {
+                "line": 2,
+                "note": "charAt(3) is d.",
+                "vars": {
+                  "i": "3"
+                },
+                "out": "g\no\nl\nd"
+              },
+              {
+                "line": 1,
+                "note": "i++ makes i 4. Is 4 less than 4? No, so the loop stops. charAt(4) is never reached.",
+                "vars": {
+                  "i": "4"
+                },
+                "out": "g\no\nl\nd"
+              }
+            ]
+          },
+          {
+            "id": "s_bound",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "String s = \"cat\";\nSystem.out.println(s.length());\nSystem.out.println(s.charAt(s.length() - 1));",
+            "opts": [
+              "3\nt",
+              "3\na",
+              "2\nt",
+              "4\nt"
+            ],
+            "correct": 0,
+            "why": "length() counts the characters, so 3. The last position is one less than that, so charAt(2) is t.",
             "skills": [
               "count positions from zero"
             ]
           },
           {
-            "id": "s_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "String s = \"hello\";",
-            "questions": [
-              {
-                "prompt": "What is \"hello\".length()?",
-                "opts": [
-                  "h",
-                  "4",
-                  "5",
-                  "6"
-                ],
-                "correct": 2,
-                "why": "length() counts characters, and there are five. The last position is 4."
-              },
-              {
-                "prompt": "What is \"hello\".charAt(0)?",
-                "opts": [
-                  "e",
-                  "1",
-                  "h",
-                  "o"
-                ],
-                "correct": 2,
-                "why": "Positions start at 0, so charAt(0) is the first character."
-              }
-            ],
+            "id": "s_w1",
+            "kind": "write",
+            "instruction": "Print the first and last character of a word.",
+            "code": "String word = \"dungeon\";\n// print d then n, on separate lines\n",
+            "target": "d\nn",
+            "solution": "String word = \"dungeon\";\nSystem.out.println(word.charAt(0));\nSystem.out.println(word.charAt(word.length() - 1));",
+            "hint": "The last position is length() - 1.",
+            "after": "Using length() - 1 works for a word of any size.",
             "skills": [
               "use String methods to inspect text"
             ]
           },
           {
-            "id": "s_write",
+            "id": "s_w2",
             "kind": "write",
-            "wrap": "methods",
-            "instruction": "Your turn: write yell, which shouts any text back.",
-            "code": "// write yell(String statement): returns the text in capitals\n",
-            "target": "HELLO\nWATCH OUT",
-            "solution": "public String yell(String statement) {\n  return statement.toUpperCase();\n}",
-            "hint": "public String yell(String statement) and return statement.toUpperCase();",
-            "after": "That is CodeHS exercise 4.5.4, Yelling. yell(\"hello\") returns \"HELLO\".",
+            "instruction": "Print the first three characters, then everything after them.",
+            "code": "String s = \"peppermint\";\n// print pep then permint\n",
+            "target": "pep\npermint",
+            "solution": "String s = \"peppermint\";\nSystem.out.println(s.substring(0, 3));\nSystem.out.println(s.substring(3));",
+            "hint": "Two forms of substring, one with an end and one without.",
+            "after": "The two pieces fit together with no gap and no overlap.",
             "skills": [
               "use String methods to inspect text"
-            ],
-            "harness": "public void run() {\n  System.out.println(yell(\"hello\"));\n  System.out.println(yell(\"watch out\"));\n}"
+            ]
+          },
+          {
+            "id": "s_w3",
+            "kind": "write",
+            "instruction": "Ask for a word, then print each of its characters on its own line.",
+            "code": "// ask \"Word? \" with readLine\n// then print one character per line\n",
+            "stdin": "gold",
+            "target": "Word? gold\ng\no\nl\nd",
+            "solution": "String word = readLine(\"Word? \");\nfor (int i = 0; i < word.length(); i++) {\n  System.out.println(word.charAt(i));\n}",
+            "hint": "Loop from 0 while i is less than length(), and print charAt(i).",
+            "after": "This loop is the shape behind almost every String problem.",
+            "skills": [
+              "loop through the characters of a String"
+            ]
+          },
+          {
+            "id": "s_w4",
+            "kind": "write",
+            "instruction": "Count how many times the letter l appears in a word.",
+            "code": "String word = \"hello world\";\n// print how many l characters there are\n",
+            "target": "3",
+            "solution": "String word = \"hello world\";\nint count = 0;\nfor (int i = 0; i < word.length(); i++) {\n  if (word.charAt(i) == 'l') {\n    count++;\n  }\n}\nSystem.out.println(count);",
+            "hint": "A counter before the loop, an if inside it comparing charAt(i) with a char.",
+            "after": "A char is compared with ==, using single quotes.",
+            "skills": [
+              "loop through the characters of a String"
+            ]
+          },
+          {
+            "id": "s_final",
+            "kind": "write",
+            "instruction": "Ask for a word and a letter, then say whether the word contains it.",
+            "code": "// ask \"Word? \" and \"Letter? \" with readLine\n// print true or false\n",
+            "stdin": "dungeon\ng",
+            "target": "Word? dungeon\nLetter? g\ntrue",
+            "solution": "String word = readLine(\"Word? \");\nString letter = readLine(\"Letter? \");\nSystem.out.println(word.indexOf(letter) != -1);",
+            "hint": "indexOf gives -1 when there is no match.",
+            "after": "Testing against -1 is how you ask whether something is there at all.",
+            "skills": [
+              "use String methods to inspect text"
+            ]
           }
         ]
       }
@@ -4905,247 +5076,318 @@
           {
             "id": "c_task",
             "kind": "teach",
-            "instruction": "You can get one character. Now get every character.",
-            "points": [
-              {
-                "label": "charAt(0)",
-                "text": "One character, at a position you name."
-              },
-              {
-                "label": "every character",
-                "text": "Position 0, then 1, then 2... which is a counter going up. You have written that loop already."
-              },
-              {
-                "label": "length() and charAt(i)",
-                "text": "length() says where to stop, charAt(i) fetches each one."
-              }
-            ]
+            "instruction": "A String and a char are not the same thing.",
+            "facts": {
+              "columns": [
+                "",
+                "String",
+                "char"
+              ],
+              "rows": [
+                [
+                  "What it holds",
+                  "a sequence of characters",
+                  "a single character"
+                ],
+                [
+                  "Kind of type",
+                  "an object",
+                  "a primitive"
+                ],
+                [
+                  "Quotes",
+                  "double quotes \"a\"",
+                  "single quotes 'a'"
+                ],
+                [
+                  "How to compare",
+                  ".equals()",
+                  "=="
+                ]
+              ]
+            },
+            "keypoint": "A String is an object in double quotes. A char is a primitive in single quotes."
           },
           {
-            "id": "c_loop",
+            "id": "c_both",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A for loop plus charAt walks the whole String.",
-            "code": "public void run() {\n  String word = \"gold\";\n  for (int i = 0; i < word.length(); i++) {\n    System.out.println(word.charAt(i));\n  }\n}",
-            "output": "g\no\nl\nd",
-            "highlight": [
-              2,
-              3
-            ],
-            "points": [
-              {
-                "label": "i < word.length()",
-                "text": "Stops at 4, so i takes 0, 1, 2, 3 - exactly the valid positions."
-              },
-              {
-                "label": "word.charAt(i)",
-                "text": "Fetches the character at whatever i currently is."
-              },
-              {
-                "label": "i <= word.length()",
-                "text": "Would crash on the last pass. There is no character at position 4."
-              }
+            "instruction": "The same letter, two types.",
+            "code": "String s = \"A\";\nchar c = 'A';\nSystem.out.println(s);\nSystem.out.println(c);\nSystem.out.println(s.equals(\"A\"));\nSystem.out.println(c == 'A');",
+            "output": "A\nA\ntrue\ntrue",
+            "body": [
+              "They print the same and they are compared differently."
             ]
           },
           {
-            "id": "c_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  String s = \"abc\";\n  for (int i = 0; i < s.length(); i++) {\n    System.out.print(s.charAt(i));\n  }\n}",
-            "opts": [
-              "abc",
-              "abc ",
-              "cba",
-              "a\nb\nc"
-            ],
-            "correct": 0,
-            "why": "print keeps them on one line, and the loop visits positions 0, 1, 2 in order.",
+            "id": "c_fix",
+            "kind": "fix",
+            "instruction": "Fix this so it runs.",
+            "code": "String word = \"gold\";\nchar first = word.charAt(0);\nSystem.out.println(first == \"g\");",
+            "target": "true",
+            "solution": "String word = \"gold\";\nchar first = word.charAt(0);\nSystem.out.println(first == 'g');",
+            "hint": "charAt gives a char, and a char is written in single quotes.",
+            "after": "A char and a String cannot be compared, so Java refuses to compile it.",
             "skills": [
-              "loop through the characters of a String"
-            ]
-          },
-          {
-            "id": "c_char",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "charAt gives a char, not a String.",
-            "code": "public void run() {\n  String word = \"gold\";\n  char first = word.charAt(0);\n  System.out.println(first);\n  System.out.println(first == 'g');\n}",
-            "output": "g\ntrue",
-            "points": [
-              {
-                "label": "char first",
-                "text": "charAt returns a char, so it goes in a char box - the type from 3.2."
-              },
-              {
-                "label": "'g'",
-                "text": "Single quotes for a char. \"g\" with double quotes is a String and will not compare."
-              },
-              {
-                "label": "first == 'g'",
-                "text": "char comparison uses ==, unlike Strings which need .equals()."
-              }
+              "use Character methods to test a character"
             ]
           },
           {
             "id": "c_ascii",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "Every char is secretly a number.",
-            "code": "public void run() {\n  char lowercaseA = 'a';\n  System.out.println(lowercaseA);\n  System.out.println((int) lowercaseA);\n  char uppercaseA = 'A';\n  System.out.println((int) uppercaseA);\n}",
-            "output": "a\n97\n65",
-            "points": [
-              {
-                "label": "(int) 'a'",
-                "text": "97. Casting a char to an int gives the number Java stores it as - its ASCII value."
-              },
-              {
-                "label": "(int) 'A'",
-                "text": "65. Capitals come before lowercase in the table, so they have smaller numbers."
-              },
-              {
-                "label": "'a' > 'A'",
-                "text": "True, because 97 > 65. Chars can be compared with < and > like numbers."
-              },
-              {
-                "label": "why it matters",
-                "text": "Testing c >= 'A' && c <= 'Z' for a capital works because those are just number comparisons."
-              }
-            ]
-          },
-          {
-            "id": "c_fill",
-            "kind": "fill",
-            "wrap": "methods",
-            "instruction": "Stop at the right place.",
-            "code": "public void run() {\n  String word = \"map\";\n  for (int i = 0; i ⟦1⟧ word.length(); i++) {\n    System.out.print(word.charAt(i));\n  }\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "<=",
-                  "==",
-                  "<"
-                ],
-                "answer": 2
-              }
+            "instruction": "Every character is stored as a number.",
+            "code": "System.out.println((int) 'A');\nSystem.out.println((int) 'a');\nSystem.out.println((int) '0');",
+            "output": "65\n97\n48",
+            "body": [
+              "The chart that maps characters to numbers is called ASCII.",
+              "Casting a char to an int shows you the number underneath."
             ],
-            "target": "map",
-            "hint": "The last valid position is length() - 1.",
-            "after": "<= would ask for position 3 in a 3-character String and crash.",
-            "skills": [
-              "loop through the characters of a String"
+            "keypoint": "Characters are stored as numbers. ASCII is the chart that maps them."
+          },
+          {
+            "id": "c_chart",
+            "kind": "teach",
+            "instruction": "A slice of the chart.",
+            "facts": {
+              "columns": [
+                "Character",
+                "Number"
+              ],
+              "rows": [
+                [
+                  "'0'",
+                  "48"
+                ],
+                [
+                  "'9'",
+                  "57"
+                ],
+                [
+                  "'A'",
+                  "65"
+                ],
+                [
+                  "'Z'",
+                  "90"
+                ],
+                [
+                  "'a'",
+                  "97"
+                ],
+                [
+                  "'z'",
+                  "122"
+                ],
+                [
+                  "' '",
+                  "32"
+                ]
+              ]
+            },
+            "body": [
+              "Capitals come before small letters, so every capital is a smaller number."
             ]
           },
           {
-            "id": "c_quote",
-            "kind": "fix",
-            "wrap": "methods",
-            "instruction": "charAt gives a char. This compares it to something else.",
-            "code": "public void run() {\n  String word = \"gold\";\n  char first = word.charAt(0);\n  System.out.println(first == \"g\");\n}",
-            "target": "true",
-            "solution": "public void run() {\n  String word = \"gold\";\n  char first = word.charAt(0);\n  System.out.println(first == 'g');\n}",
-            "hint": "Single quotes make a char. Double quotes make a String, and the two types cannot be compared.",
-            "after": "A char is a single character and a String is an object holding characters. \"g\" is not a char, so the comparison will not even compile.",
+            "id": "c_exp",
+            "kind": "run",
+            "instruction": "Run it. Adding 1 to a character moves along the alphabet.",
+            "code": "char c = 'a';\nSystem.out.println((char) (c + 1));\nSystem.out.println((char) (c + 2));\nSystem.out.println((char) ('A' + 25));\nSystem.out.println((char) ('a' - 32));",
+            "after": "'a' plus 1 is b. And 'a' minus 32 lands on A, because capitals sit 32 lower."
+          },
+          {
+            "id": "c_cmp",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "System.out.println('a' > 'A');\nSystem.out.println('b' > 'a');",
+            "opts": [
+              "true\ntrue",
+              "false\ntrue",
+              "true\nfalse",
+              "false\nfalse"
+            ],
+            "correct": 0,
+            "why": "'a' is 97 and 'A' is 65, so the first is true. 'b' is 98, one more than 'a', so the second is true too. Comparing chars compares their numbers.",
             "skills": [
-              "use Character methods to test a character"
+              "read a char as its number"
             ]
           },
           {
             "id": "c_esc",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "A backslash gives you characters you cannot type directly.",
-            "code": "public void run() {\n  String manyLines = \"First Line\\nSecond Line\";\n  System.out.println(manyLines);\n  System.out.println(\"Make sure to finish your \\\"homework\\\"\");\n}",
-            "output": "First Line\nSecond Line\nMake sure to finish your \"homework\"",
-            "points": [
-              {
-                "label": "\\n",
-                "text": "A new line, in the middle of one String. One println, two lines of output."
-              },
-              {
-                "label": "\\\"",
-                "text": "A real quote mark. Without the backslash it would end the String early and break."
-              },
-              {
-                "label": "\\\\",
-                "text": "A single backslash, when you actually want one."
-              },
-              {
-                "label": "still one String",
-                "text": "\"First Line\\nSecond Line\" is a single value. The break is inside it."
-              }
-            ]
-          },
-          {
-            "id": "c_charm",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "The Character class answers questions about a char.",
-            "code": "public void run() {\n  char ch = 'f';\n  System.out.println(Character.isUpperCase(ch));\n  System.out.println(Character.isLowerCase(ch));\n  System.out.println(Character.isDigit('7'));\n  System.out.println(Character.isLetter(ch));\n}",
-            "output": "false\ntrue\ntrue\ntrue",
-            "points": [
-              {
-                "label": "Character.isUpperCase(ch)",
-                "text": "false, because 'f' is lowercase."
-              },
-              {
-                "label": "Character.isDigit(c)",
-                "text": "true for '0' to '9'. This is how you check a character is a digit without comparing numbers yourself."
-              },
-              {
-                "label": "Character.",
-                "text": "These belong to the Character class, so the class name goes in front - not ch.isDigit()."
-              },
-              {
-                "label": "each returns a boolean",
-                "text": "So they drop straight into an if or an &&."
-              }
-            ]
-          },
-          {
-            "id": "c_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "char c = 'a';",
-            "questions": [
-              {
-                "prompt": "What does (int) 'a' give?",
-                "opts": [
-                  "a",
-                  "97",
-                  "1",
-                  "0"
+            "instruction": "Some characters need a backslash to write.",
+            "facts": {
+              "columns": [
+                "You write",
+                "You get"
+              ],
+              "rows": [
+                [
+                  "\\n",
+                  "a new line"
                 ],
-                "correct": 1,
-                "why": "Casting a char to int gives its ASCII value, and 'a' is 97. 'A' is 65."
-              },
-              {
-                "prompt": "Which checks whether a char is a digit?",
-                "opts": [
-                  "Character.isDigit(c)",
-                  "isDigit(c)",
-                  "c.digit()",
-                  "c.isDigit()"
+                [
+                  "\\t",
+                  "a tab"
                 ],
-                "correct": 0,
-                "why": "It is a method on the Character CLASS, so the class name goes first."
-              }
+                [
+                  "\\\"",
+                  "a double quote"
+                ],
+                [
+                  "\\\\",
+                  "a backslash"
+                ],
+                [
+                  "\\'",
+                  "a single quote"
+                ]
+              ]
+            },
+            "code": "System.out.println(\"First\\nSecond\");\nSystem.out.println(\"She said \\\"hi\\\"\");",
+            "output": "First\nSecond\nShe said \"hi\"",
+            "body": [
+              "These are called escape sequences."
             ],
+            "keypoint": "\\n is a new line and \\\" is a double quote. They are escape sequences."
+          },
+          {
+            "id": "c_escw",
+            "kind": "write",
+            "instruction": "Print two lines using only one println.",
+            "code": "// print:\n//   up\n//   down\n// using ONE println\n",
+            "target": "up\ndown",
+            "solution": "System.out.println(\"up\\ndown\");",
+            "hint": "Put the new line inside the quotes.",
+            "after": "One println, two lines, because of the \\n.",
             "skills": [
               "use Character methods to test a character"
             ]
           },
           {
-            "id": "c_write",
+            "id": "c_meth",
+            "kind": "teach",
+            "instruction": "The Character class has methods for testing and changing a char.",
+            "facts": {
+              "columns": [
+                "Method",
+                "What it gives back"
+              ],
+              "rows": [
+                [
+                  "Character.isUpperCase(c)",
+                  "true when c is a capital"
+                ],
+                [
+                  "Character.isLowerCase(c)",
+                  "true when c is a small letter"
+                ],
+                [
+                  "Character.isLetter(c)",
+                  "true when c is a letter"
+                ],
+                [
+                  "Character.isDigit(c)",
+                  "true when c is 0 to 9"
+                ],
+                [
+                  "Character.toUpperCase(c)",
+                  "the capital version of c"
+                ],
+                [
+                  "Character.toLowerCase(c)",
+                  "the small version of c"
+                ]
+              ]
+            },
+            "body": [
+              "They are called on the class Character, not on the char itself.",
+              "The full list is in the java.lang.Character documentation, which is worth looking up."
+            ],
+            "keypoint": "Character.isDigit, isLetter, toUpperCase and friends are called on the class Character."
+          },
+          {
+            "id": "c_methrun",
+            "kind": "run",
+            "instruction": "Run it and see them work.",
+            "code": "char a = 'G';\nchar b = '7';\nSystem.out.println(Character.isUpperCase(a));\nSystem.out.println(Character.isDigit(b));\nSystem.out.println(Character.isLetter(b));\nSystem.out.println(Character.toLowerCase(a));",
+            "after": "Each one answers a question about a single character."
+          },
+          {
+            "id": "c_bucket",
+            "kind": "bucket",
+            "instruction": "What does each call give back for the char 'k'?",
+            "buckets": [
+              "true",
+              "false"
+            ],
+            "items": [
+              {
+                "text": "Character.isLetter('k')",
+                "bucket": 0
+              },
+              {
+                "text": "Character.isLowerCase('k')",
+                "bucket": 0
+              },
+              {
+                "text": "Character.isUpperCase('k')",
+                "bucket": 1
+              },
+              {
+                "text": "Character.isDigit('k')",
+                "bucket": 1
+              }
+            ],
+            "why": "k is a small letter, so it is a letter and lowercase, but neither a capital nor a digit.",
+            "skills": [
+              "use Character methods to test a character"
+            ]
+          },
+          {
+            "id": "c_fill",
+            "kind": "fill",
+            "instruction": "Count the digits in the text.",
+            "code": "String s = \"a1b2c3\";\nint count = 0;\nfor (int i = 0; i < s.length(); i++) {\n  if (Character.⟦1⟧(s.charAt(i))) {\n    count++;\n  }\n}\nSystem.out.println(count);",
+            "blanks": [
+              {
+                "chips": [
+                  "isLetter",
+                  "isDigit",
+                  "isUpperCase"
+                ],
+                "answer": 1
+              }
+            ],
+            "target": "3",
+            "hint": "You want the ones that are 0 to 9.",
+            "after": "1, 2 and 3. The letters were skipped.",
+            "skills": [
+              "use Character methods to test a character"
+            ]
+          },
+          {
+            "id": "c_w1",
             "kind": "write",
-            "wrap": "methods",
-            "instruction": "Your turn: is this String made only of digits?",
-            "harness": "public void run() {\n  System.out.println(isInteger(\"123\"));\n  System.out.println(isInteger(\"hello\"));\n  System.out.println(isInteger(\"12a\"));\n}",
-            "code": "public boolean isInteger(String str)\n{\n    \n}\n",
-            "target": "true\nfalse\nfalse",
-            "solution": "public boolean isInteger(String str)\n{\n    for (int i = 0; i < str.length(); i++) {\n      if (!Character.isDigit(str.charAt(i))) {\n        return false;\n      }\n    }\n    return true;\n}",
-            "hint": "Loop through the characters. If any one is NOT a digit, return false straight away. If the loop finishes, return true.",
-            "after": "That is CodeHS exercise 4.6.5, Is it an Integer? Returning false early is what stops one bad character being outvoted.",
+            "instruction": "Count how many capital letters a name has.",
+            "code": "String name = \"Ada Lovelace\";\n// print how many capitals there are\n",
+            "target": "2",
+            "solution": "String name = \"Ada Lovelace\";\nint count = 0;\nfor (int i = 0; i < name.length(); i++) {\n  if (Character.isUpperCase(name.charAt(i))) {\n    count++;\n  }\n}\nSystem.out.println(count);",
+            "hint": "Loop every position, test charAt(i) with Character.isUpperCase.",
+            "after": "A and L.",
+            "skills": [
+              "use Character methods to test a character"
+            ]
+          },
+          {
+            "id": "c_w2",
+            "kind": "write",
+            "instruction": "Ask for a word, then print it with every letter in capitals. Do not use toUpperCase on the String.",
+            "code": "// ask \"Word? \" with readLine\n// print the word in capitals, one character at a time\n// use Character.toUpperCase on each char\n",
+            "stdin": "gold",
+            "target": "Word? gold\nGOLD",
+            "solution": "String word = readLine(\"Word? \");\nfor (int i = 0; i < word.length(); i++) {\n  System.out.print(Character.toUpperCase(word.charAt(i)));\n}\nSystem.out.println();",
+            "hint": "print each capital with System.out.print, then one println at the end to finish the line.",
+            "after": "You have just written toUpperCase yourself, one character at a time.",
             "skills": [
               "use Character methods to test a character"
             ]

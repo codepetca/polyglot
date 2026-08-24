@@ -13,6 +13,7 @@ type Step = {
   code?: string; output?: string; keypoint?: string;
   sides?: { label: string; code: string; output: string }[];
   columns?: string[]; rows?: string[][]; fillFrom?: number;
+  facts?: { columns: string[]; rows: string[][] };
 };
 
 /**
@@ -131,6 +132,16 @@ export default async function UnitNotes({ params }: { params: Promise<{ unit: st
                 </div>
               )}
 
+              {s.facts && (
+                <div className="guidetablewrap">
+                  <table className="facts">
+                    <thead><tr>{s.facts.columns.map((c, j) => <th key={j}>{c}</th>)}</tr></thead>
+                    <tbody>{s.facts.rows.map((r, ri) => (
+                      <tr key={ri}>{r.map((c, ci) => <td key={ci}>{c}</td>)}</tr>
+                    ))}</tbody>
+                  </table>
+                </div>
+              )}
               {(s.columns || []).length > 0 && (
                 <div className="guidetablewrap">
                   <table className="guidetable">
