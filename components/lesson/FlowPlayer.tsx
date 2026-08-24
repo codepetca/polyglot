@@ -51,6 +51,7 @@ type Step = {
   body?: string[];
   rules?: { text: string; example?: string }[];
   annotate?: { token: string; note: string }[];
+  scopes?: { name: string; from: number; to: number; kind?: string }[];
   keypoint?: string;
   facts?: { columns: string[]; rows: string[][] };
   pipeline?: { label: string; note?: string; kind?: string }[];
@@ -562,7 +563,29 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         // Tint the lines that are NEW on this step, so a program that grows
         // across a lesson shows what just arrived rather than re-presenting
         // itself whole each time.
-        (step.annotate || []).length ? (
+        (step.scopes || []).length ? (
+          // One lane per variable, filled on exactly the lines where it exists.
+          <div className="scopes" style={{ gridTemplateColumns: `max-content repeat(${(step.scopes || []).length}, 92px)` }}>
+            {step.code.split("\n").map((ln, li) => (
+              <div className="scoperow" key={li} style={{ display: "contents" }}>
+                <div className="scopeline">{ln || " "}</div>
+                {(step.scopes || []).map((sc, si) => {
+                  const inScope = li >= sc.from && li <= sc.to;
+                  const first = li === sc.from;
+                  const last = li === sc.to;
+                  return (
+                    <div
+                      key={si}
+                      className={`scopecell ${inScope ? "in" : ""} ${first ? "first" : ""} ${last ? "last" : ""} sk-${sc.kind || "local"}`}
+                    >
+                      {first && <span className="scopename">{sc.name}</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        ) : (step.annotate || []).length ? (
           // ONE GRID. The arrows only line up if the note rows are laid out in
           // the same monospace box as the code, from the same left edge — the
           // previous version put them in a sibling element with its own

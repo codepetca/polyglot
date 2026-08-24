@@ -15,6 +15,7 @@ type Step = {
   columns?: string[]; rows?: string[][]; fillFrom?: number;
   facts?: { columns: string[]; rows: string[][] };
   pipeline?: { label: string; note?: string; kind?: string }[];
+  scopes?: { name: string; from: number; to: number; kind?: string }[];
 };
 
 /**
@@ -92,7 +93,23 @@ export default async function UnitNotes({ params }: { params: Promise<{ unit: st
                 </ol>
               )}
 
-              {s.code && (s.annotate || []).length > 0 ? (
+              {s.code && (s.scopes || []).length > 0 ? (
+                <div className="scopes" style={{ gridTemplateColumns: `max-content repeat(${(s.scopes || []).length}, 92px)` }}>
+                  {s.code.split("\n").map((ln, li) => (
+                    <div key={li} style={{ display: "contents" }}>
+                      <div className="scopeline">{ln || " "}</div>
+                      {(s.scopes || []).map((sc, si) => {
+                        const inScope = li >= sc.from && li <= sc.to;
+                        return (
+                          <div key={si} className={`scopecell ${inScope ? "in" : ""} ${li === sc.from ? "first" : ""} ${li === sc.to ? "last" : ""} sk-${sc.kind || "local"}`}>
+                            {li === sc.from && <span className="scopename">{sc.name}</span>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+              ) : s.code && (s.annotate || []).length > 0 ? (
                 <div className="flowcode ro anncode">
                   {s.code.split("\n").map((ln, li) => {
                     const marks = (s.annotate || [])

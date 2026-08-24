@@ -10146,161 +10146,265 @@
         "v": 1,
         "steps": [
           {
-            "id": "p_task",
+            "id": "l_task",
             "kind": "teach",
-            "instruction": "A variable made inside a loop is gone when the loop ends.",
-            "points": [
+            "instruction": "A variable declared inside a method is a local variable. It only exists inside that method.",
+            "body": [
+              "Scope is where a variable exists.",
+              "Every variable has a scope."
+            ],
+            "keypoint": "Scope is where a variable exists."
+          },
+          {
+            "id": "l_diagram",
+            "kind": "teach",
+            "instruction": "Here is one class, and the exact lines each variable exists on.",
+            "code": "class Bag {\n  private int capacity;\n\n  public int totalWeight(int[] items) {\n    int total = 0;\n    for (int i = 0; i < items.length; i++) {\n      total = total + items[i];\n    }\n    return total;\n  }\n}",
+            "scopes": [
               {
-                "label": "the braces",
-                "text": "A variable lives from where it is declared to the closing brace of the block it is in."
+                "name": "capacity",
+                "from": 1,
+                "to": 10,
+                "kind": "instance"
               },
               {
-                "label": "outside that",
-                "text": "Java has never heard of it. Not empty, not zero - unknown."
+                "name": "items",
+                "from": 3,
+                "to": 9,
+                "kind": "param"
               },
               {
-                "label": "scope",
-                "text": "The name for that region. Knowing it is the whole lesson."
+                "name": "total",
+                "from": 4,
+                "to": 8,
+                "kind": "local"
+              },
+              {
+                "name": "i",
+                "from": 5,
+                "to": 7,
+                "kind": "loop"
               }
+            ],
+            "body": [
+              "capacity is an instance variable. It exists everywhere in the class.",
+              "items is a parameter. It exists for the whole method.",
+              "total is a local variable. It exists from where it is declared to the end of the method.",
+              "i is declared in the for loop. It exists only inside the loop."
             ]
           },
           {
-            "id": "p_inside",
+            "id": "l_rule",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "Declared inside, usable inside.",
-            "code": "public void run() {\n  for (int i = 1; i <= 3; i++) {\n    int doubled = i * 2;\n    System.out.println(doubled);\n  }\n}",
-            "output": "2\n4\n6",
-            "highlight": [
-              2,
-              3
-            ],
-            "points": [
-              {
-                "label": "int doubled",
-                "text": "Made fresh on every pass, inside the loop braces."
-              },
-              {
-                "label": "used on the next line",
-                "text": "Still inside the same braces, so it is in scope."
-              },
-              {
-                "label": "after the loop",
-                "text": "Both i and doubled are gone. Using either would not compile."
-              }
-            ]
-          },
-          {
-            "id": "p_table",
-            "kind": "table",
-            "instruction": "Which variables exist at each point?",
-            "columns": [
-              "point in the program",
-              "total in scope?",
-              "i in scope?"
-            ],
-            "fillFrom": 1,
-            "chips": [
-              "yes",
-              "no"
-            ],
-            "rows": [
-              [
-                "before the loop",
-                "yes",
-                "no"
+            "instruction": "A variable exists from where it is declared to the closing brace of the block it is in.",
+            "facts": {
+              "columns": [
+                "Kind",
+                "Declared",
+                "Exists"
               ],
-              [
-                "inside the loop body",
-                "yes",
-                "yes"
-              ],
-              [
-                "after the loop",
-                "yes",
-                "no"
+              "rows": [
+                [
+                  "Instance variable",
+                  "inside the class",
+                  "everywhere in the class"
+                ],
+                [
+                  "Parameter",
+                  "in the method header",
+                  "for the whole method"
+                ],
+                [
+                  "Local variable",
+                  "inside a method",
+                  "to the end of that method"
+                ],
+                [
+                  "Loop variable",
+                  "in the for header",
+                  "only inside the loop"
+                ]
               ]
+            },
+            "keypoint": "A variable exists from its declaration to the closing brace of its block."
+          },
+          {
+            "id": "l_gone",
+            "kind": "teach",
+            "instruction": "Outside its block, a variable does not exist.",
+            "code": "public void run() {\n  for (int i = 0; i < 3; i++) {\n    System.out.println(i);\n  }\n  System.out.println(i);\n}",
+            "wrap": "methods",
+            "body": [
+              "i was declared in the for loop, so it does not exist after the closing brace.",
+              "That last line does not compile."
             ],
-            "why": "total is declared before the loop, so it outlives it. i is declared in the for header, so it exists only while the loop runs.",
+            "keypoint": "A loop variable does not exist after the loop ends."
+          },
+          {
+            "id": "l_spot",
+            "kind": "spot",
+            "instruction": "This does not compile. Tap the line that uses a variable which does not exist there.",
+            "code": "public void run() {\n  int total = 0;\n  for (int i = 0; i < 3; i++) {\n    int doubled = i * 2;\n    total = total + doubled;\n  }\n  System.out.println(doubled);\n}",
+            "correct": 6,
+            "why": "doubled is declared inside the loop, so it stops existing at the closing brace on line 6. Line 7 is outside that block.",
             "skills": [
               "work out where a variable exists"
             ]
           },
           {
-            "id": "p_fix",
-            "kind": "fix",
+            "id": "l_keep",
+            "kind": "teach",
+            "instruction": "To use a value after a loop, declare the variable before the loop.",
+            "code": "public void run() {\n  int total = 0;\n  for (int i = 1; i <= 4; i++) {\n    total = total + i;\n  }\n  System.out.println(total);\n}",
             "wrap": "methods",
-            "instruction": "This will not compile. Move the declaration.",
-            "code": "public void run() {\n  for (int i = 1; i <= 3; i++) {\n    int total = 0;\n    total = total + i;\n  }\n  System.out.println(total);\n}",
-            "target": "6",
-            "solution": "public void run() {\n  int total = 0;\n  for (int i = 1; i <= 3; i++) {\n    total = total + i;\n  }\n  System.out.println(total);\n}",
-            "hint": "total must be declared BEFORE the loop, or it dies each pass and does not exist afterwards.",
-            "after": "Declared outside, it survives the loop and holds 1 + 2 + 3. Declared inside, it was reset every pass and gone at the end.",
+            "output": "10",
+            "scopes": [
+              {
+                "name": "total",
+                "from": 1,
+                "to": 5,
+                "kind": "local"
+              },
+              {
+                "name": "i",
+                "from": 2,
+                "to": 4,
+                "kind": "loop"
+              }
+            ],
+            "body": [
+              "total is declared before the loop, so it still exists on line 6.",
+              "i is declared in the loop header, so it does not."
+            ],
+            "keypoint": "Declare a variable before the loop if you need it after the loop."
+          },
+          {
+            "id": "l_shadow",
+            "kind": "teach",
+            "instruction": "Shadowing: when two variables have the same name, the one with the more specific scope takes over.",
+            "body": [
+              "The variable with the more general scope no longer exists at that location."
+            ],
+            "keypoint": "When two variables share a name, the more specific scope wins."
+          },
+          {
+            "id": "l_shadowex",
+            "kind": "teach",
+            "instruction": "Here the parameter shadows the instance variable.",
+            "code": "class Player {\n  private int level = 5;\n\n  public void show(int level) {\n    System.out.println(level);\n  }\n}\n\npublic void run() {\n  Player p = new Player();\n  p.show(99);\n}",
+            "wrap": "methods",
+            "output": "99",
+            "scopes": [
+              {
+                "name": "level (field)",
+                "from": 1,
+                "to": 5,
+                "kind": "instance"
+              },
+              {
+                "name": "level (param)",
+                "from": 3,
+                "to": 5,
+                "kind": "param"
+              }
+            ],
+            "body": [
+              "Both are called level.",
+              "Inside show, the parameter is the more specific scope, so it wins.",
+              "The field still holds 5, but the name level does not reach it inside show."
+            ]
+          },
+          {
+            "id": "l_predict",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "wrap": "methods",
+            "code": "class Player {\n  private int level = 5;\n\n  public void show(int level) {\n    System.out.println(level);\n  }\n\n  public void showField() {\n    System.out.println(level);\n  }\n}\n\npublic void run() {\n  Player p = new Player();\n  p.show(99);\n  p.showField();\n}",
+            "opts": [
+              "99\n5",
+              "99\n99",
+              "5\n5",
+              "5\n99"
+            ],
+            "correct": 0,
+            "why": "In show, the parameter level shadows the field. In showField there is no parameter, so level reaches the field, which is still 5.",
+            "skills": [
+              "work out where a variable exists"
+            ]
+          },
+          {
+            "id": "l_this",
+            "kind": "teach",
+            "instruction": "Use this to reach the field when a parameter shadows it.",
+            "code": "class Player {\n  private int level = 5;\n\n  public void show(int level) {\n    System.out.println(level);\n    System.out.println(this.level);\n  }\n}\n\npublic void run() {\n  Player p = new Player();\n  p.show(99);\n}",
+            "wrap": "methods",
+            "output": "99\n5",
+            "body": [
+              "level is the parameter.",
+              "this.level is the field."
+            ],
+            "keypoint": "this.name reaches the field when a parameter shadows it."
+          },
+          {
+            "id": "l_bucket",
+            "kind": "bucket",
+            "instruction": "Where does each variable exist?",
+            "buckets": [
+              "The whole class",
+              "One method only",
+              "Inside a loop only"
+            ],
+            "items": [
+              {
+                "text": "private int hp;",
+                "bucket": 0
+              },
+              {
+                "text": "private static int count;",
+                "bucket": 0
+              },
+              {
+                "text": "a parameter in the method header",
+                "bucket": 1
+              },
+              {
+                "text": "int total = 0; declared in a method",
+                "bucket": 1
+              },
+              {
+                "text": "the i in for (int i = 0; ...)",
+                "bucket": 2
+              }
+            ],
+            "why": "An instance variable is declared in the class, so the whole class can see it. Everything declared inside a method or a loop header is gone at the matching closing brace.",
+            "skills": [
+              "work out where a variable exists"
+            ]
+          },
+          {
+            "id": "l_w1",
+            "kind": "write",
+            "instruction": "Fix the scope. Sum the numbers 1 to 5 and print the total after the loop.",
+            "wrap": "methods",
+            "code": "public void run() {\n  for (int i = 1; i <= 5; i++) {\n    int total = 0;\n    total = total + i;\n  }\n  // print the total here\n}",
+            "target": "15",
+            "solution": "public void run() {\n  int total = 0;\n  for (int i = 1; i <= 5; i++) {\n    total = total + i;\n  }\n  System.out.println(total);\n}",
+            "hint": "total must be declared before the loop, or it does not exist after it.",
+            "after": "Declared inside the loop, total was reset every pass and gone by the end.",
             "skills": [
               "keep a variable alive past the block that made it"
             ]
           },
           {
-            "id": "p_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "Where does this go wrong?",
-            "code": "public void run() {\n  int x = 5;\n  if (x > 0) {\n    int y = x * 2;\n    System.out.println(y);\n  }\n  System.out.println(x);\n}",
-            "opts": [
-              "5\n5",
-              "(it does not compile)",
-              "10\n5",
-              "10\n10"
-            ],
-            "correct": 2,
-            "why": "y lives only inside the if braces and is printed there. x was declared in run(), so it is still in scope afterwards.",
-            "skills": [
-              "work out where a variable exists"
-            ]
-          },
-          {
-            "id": "p_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "for (int i = 0; i < 3; i++) {\n  int temp = i;\n}",
-            "questions": [
-              {
-                "prompt": "What is the scope of a variable?",
-                "opts": [
-                  "From its declaration to the closing brace of its block",
-                  "Only the line it is on",
-                  "The whole program",
-                  "The whole class"
-                ],
-                "correct": 0,
-                "why": "The braces it was declared inside decide where it exists."
-              },
-              {
-                "prompt": "Which has the more specific scope: a variable declared in run(), or one declared inside a loop in run()?",
-                "opts": [
-                  "Neither has scope",
-                  "The one inside the loop",
-                  "The one in run()",
-                  "They are the same"
-                ],
-                "correct": 1,
-                "why": "A smaller enclosing block means a narrower scope. The loop variable dies first."
-              }
-            ],
-            "skills": [
-              "work out where a variable exists"
-            ]
-          },
-          {
-            "id": "p_write",
+            "id": "l_final",
             "kind": "write",
+            "instruction": "Write countUpTo. It counts how many numbers from 1 to n are even, and returns the count.",
             "wrap": "methods",
-            "instruction": "Your turn: count the treasure across the whole loop.",
-            "code": "public void run() {\n  // add up 10, 20 and 30 using a loop, then print the total AFTER the loop\n}",
-            "target": "60",
-            "solution": "public void run() {\n  int total = 0;\n  for (int i = 1; i <= 3; i++) {\n    total = total + i * 10;\n  }\n  System.out.println(total);\n}",
-            "hint": "Declare total before the loop so it survives, add to it inside, print it after.",
-            "after": "Declare where you need it to live, not where you first use it.",
+            "code": "public void run() {\n  System.out.println(countEven(10));\n  System.out.println(countEven(7));\n}\n\n// write countEven(int n) here. It returns an int.\n",
+            "target": "5\n3",
+            "solution": "public void run() {\n  System.out.println(countEven(10));\n  System.out.println(countEven(7));\n}\n\npublic int countEven(int n) {\n  int count = 0;\n  for (int i = 1; i <= n; i++) {\n    if (i % 2 == 0) {\n      count++;\n    }\n  }\n  return count;\n}",
+            "hint": "count must be declared before the loop so it survives to the return.",
+            "after": "count exists for the whole method. i exists only inside the loop.",
             "skills": [
               "keep a variable alive past the block that made it"
             ]

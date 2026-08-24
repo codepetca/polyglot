@@ -168,6 +168,15 @@ export type FlowStep = {
    */
   library?: string;
   /**
+   * Lifetime bars beside a snippet, one lane per variable, showing the exact
+   * lines where each one exists. Scope is a property of WHERE code sits, and
+   * describing that in prose ("it only exists inside the method") asks the
+   * student to hold a shape in their head. This draws the shape.
+   *
+   * `from` and `to` are zero-based line numbers in `code`, both inclusive.
+   */
+  scopes?: { name: string; from: number; to: number; kind?: "instance" | "local" | "loop" | "param" }[];
+  /**
    * workout: a problem solved in two moves — plan it, then write it.
    *
    * WHY IT IS TWO MOVES. The owner's own account of learning this unit: the
@@ -253,6 +262,14 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
       for (const [i, r] of (s.facts.rows || []).entries()) {
         if (r.length !== s.facts.columns.length) errors.push(`${at}: facts row ${i + 1} has ${r.length} cells, expected ${s.facts.columns.length}`);
       }
+    }
+    for (const sc of s.scopes || []) {
+      if (!s.code) { errors.push(`${at}: scopes needs code`); break; }
+      const n = s.code.split("\n").length;
+      if (!sc.name) errors.push(`${at}: every scope needs a name`);
+      if (sc.from < 0 || sc.from >= n) errors.push(`${at}: scope ${sc.name} starts at line ${sc.from}, outside the ${n}-line snippet`);
+      if (sc.to < 0 || sc.to >= n) errors.push(`${at}: scope ${sc.name} ends at line ${sc.to}, outside the ${n}-line snippet`);
+      if (sc.to < sc.from) errors.push(`${at}: scope ${sc.name} ends before it starts`);
     }
     for (const a of s.annotate || []) {
       if (!s.code) errors.push(`${at}: annotate needs code`);
@@ -395,7 +412,7 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
       for (let i = rights.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [rights[i], rights[j]] = [rights[j], rights[i]]; }
       return { ...base, lefts, rights };
     }
-    case "teach": return { ...base, points: s.points, rules: s.rules, annotate: s.annotate, pipeline: s.pipeline, output: s.output };
+    case "teach": return { ...base, points: s.points, rules: s.rules, annotate: s.annotate, pipeline: s.pipeline, scopes: s.scopes, output: s.output };
     case "card": return { ...base, vars: s.vars };
     case "walk": return { ...base, frames: s.frames };
     case "workout": {
