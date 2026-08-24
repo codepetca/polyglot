@@ -24,6 +24,7 @@ export default async function NotesPage() {
     orderBy: { order: "asc" },
     select: {
       title: true,
+      order: true,
       lessons: {
         orderBy: { order: "asc" },
         select: { code: true, title: true, flow: true },
@@ -32,8 +33,8 @@ export default async function NotesPage() {
   });
 
   const units = chapters
-    .map((c, ci) => ({
-      unit: ci + 1,
+    .map((c) => ({
+      unit: c.order + 1,
       title: c.title,
       lessons: c.lessons
         .map((l) => ({
