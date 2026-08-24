@@ -10425,116 +10425,131 @@
           {
             "id": "k_task",
             "kind": "teach",
-            "instruction": "The constructor parameter and the field have the same name.",
-            "points": [
-              {
-                "label": "private String name;",
-                "text": "The field. It belongs to the object."
-              },
-              {
-                "label": "public Potion(String name)",
-                "text": "The parameter. It belongs to this one call."
-              },
-              {
-                "label": "name",
-                "text": "Written alone inside the constructor, it means the PARAMETER. The nearer one wins."
-              },
-              {
-                "label": "shadowing",
-                "text": "The name for that: the parameter hides the field of the same name."
-              }
-            ]
-          },
-          {
-            "id": "k_cmp",
-            "kind": "compare",
-            "instruction": "One character apart. One of them works.",
-            "sides": [
-              {
-                "label": "name = name;",
-                "code": "public void run() {\n  System.out.println(new Potion(\"Elixir\"));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
-                "output": "null"
-              },
-              {
-                "label": "this.name = name;",
-                "code": "public void run() {\n  System.out.println(new Potion(\"Elixir\"));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
-                "output": "Elixir"
-              }
+            "instruction": "A constructor parameter usually has the same name as the field it fills. How does Java tell them apart?",
+            "code": "public Player(String name, int level) {\n  name = name;\n  level = level;\n}",
+            "body": [
+              "Both sides say name. Java reads both as the parameter.",
+              "The fields are never set. This compiles and does nothing."
             ],
-            "points": [
-              {
-                "label": "name = name;",
-                "text": "Assigns the parameter to itself. The field is never touched, so it stays null."
-              },
-              {
-                "label": "this.name = name;",
-                "text": "this.name is the field, name is the parameter. Now the value crosses over."
-              }
-            ],
-            "skills": [
-              "use this to tell a field from a parameter of the same name"
-            ]
+            "keypoint": "Inside a constructor, a plain name means the parameter, not the field."
           },
           {
             "id": "k_this",
             "kind": "teach",
+            "instruction": "this refers to the object being built. this.name is the field.",
+            "code": "class Player {\n  private String name;\n  private int level;\n\n  public Player(String name, int level) {\n    this.name = name;\n    this.level = level;\n  }\n\n  public String toString() {\n    return name + \" at level \" + level;\n  }\n}\n\npublic void run() {\n  System.out.println(new Player(\"Ada\", 4));\n}",
             "wrap": "methods",
-            "instruction": "this means \"the object this method is running on\".",
-            "code": "public void run() {\n  System.out.println(new Potion(\"Elixir\"));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
-            "output": "Elixir",
-            "highlight": [
-              7
-            ],
-            "points": [
+            "output": "Ada at level 4",
+            "annotate": [
               {
-                "label": "this.name",
-                "text": "Reaches past the parameter to the field of this particular object."
-              },
-              {
-                "label": "name",
-                "text": "With nothing in front, Java takes the closest declaration - the parameter."
-              },
-              {
-                "label": "in toString()",
-                "text": "There is no parameter called name, so plain name already means the field. this. is optional there."
-              },
-              {
-                "label": "when you need it",
-                "text": "Whenever a parameter shares a field's name. Which is most constructors."
+                "token": "this.name",
+                "note": "the field"
               }
-            ]
+            ],
+            "body": [
+              "this.name is the field. name on its own is the parameter.",
+              "In toString there is no parameter called name, so name already means the field."
+            ],
+            "keypoint": "this.name is the field. A plain name is whatever is closest in scope."
+          },
+          {
+            "id": "k_when",
+            "kind": "teach",
+            "instruction": "You only need this when a parameter shadows a field.",
+            "facts": {
+              "columns": [
+                "Where",
+                "What name means",
+                "Need this?"
+              ],
+              "rows": [
+                [
+                  "A constructor with a parameter called name",
+                  "the parameter",
+                  "yes, for the field"
+                ],
+                [
+                  "A method with no parameter called name",
+                  "the field",
+                  "no"
+                ],
+                [
+                  "A method with a local variable called name",
+                  "the local variable",
+                  "yes, for the field"
+                ]
+              ]
+            },
+            "keypoint": "this is needed only when something closer in scope has the same name."
+          },
+          {
+            "id": "k_parts",
+            "kind": "teach",
+            "instruction": "The parts of a class, named.",
+            "facts": {
+              "columns": [
+                "Term",
+                "What it is"
+              ],
+              "rows": [
+                [
+                  "Instance variable",
+                  "a variable declared in the class. Each object has its own. Also called a field"
+                ],
+                [
+                  "Class variable",
+                  "a static variable. One copy shared by the whole class"
+                ],
+                [
+                  "Constructor",
+                  "a special method with the class name and no return type. It builds an object"
+                ],
+                [
+                  "Instance method",
+                  "a method called on an object"
+                ],
+                [
+                  "Class method",
+                  "a static method called on the class"
+                ],
+                [
+                  "Parameter",
+                  "a value a method or constructor receives"
+                ],
+                [
+                  "this",
+                  "the object the method was called on"
+                ]
+              ]
+            }
           },
           {
             "id": "k_match",
             "kind": "match",
-            "instruction": "The vocabulary the exam uses.",
+            "instruction": "Match each piece of code to what it is.",
             "pairs": [
               [
-                "class",
-                "the template objects are built from"
+                "private int hp;",
+                "instance variable"
               ],
               [
-                "instance variable",
-                "a value each object holds separately"
+                "private static int count;",
+                "class variable"
               ],
               [
-                "constructor",
-                "the method that builds an object"
+                "public Player(String name)",
+                "constructor"
               ],
               [
-                "instance method",
-                "something an object can do"
+                "public int getHp()",
+                "instance method"
               ],
               [
-                "static",
-                "belongs to the class, not to any object"
-              ],
-              [
-                "this",
-                "the object the method is running on"
+                "public static int getCount()",
+                "class method"
               ]
             ],
-            "why": "Every one of these has appeared in a lesson already. This is the naming, not new material.",
+            "why": "static means it belongs to the class. A constructor has the class name and no return type.",
             "skills": [
               "name the parts of a class correctly"
             ]
@@ -10542,79 +10557,45 @@
           {
             "id": "k_predict",
             "kind": "predict",
+            "instruction": "The constructor is missing this. What comes out?",
             "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  System.out.println(new Potion(\"Tonic\"));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
+            "code": "class Player {\n  private String name;\n\n  public Player(String name) {\n    name = name;\n  }\n\n  public String toString() {\n    return \"name is \" + name;\n  }\n}\n\npublic void run() {\n  System.out.println(new Player(\"Ada\"));\n}",
             "opts": [
-              "null",
-              "name",
-              "Tonic",
-              "(an error)"
+              "name is Ada",
+              "name is null",
+              "name is name",
+              "An error"
             ],
-            "correct": 0,
-            "why": "name = name assigns the parameter to itself, so the field is never set. An unset String field is null.",
+            "correct": 1,
+            "why": "name = name assigns the parameter to itself. The field was never set, so it holds null, the default value for an object.",
             "skills": [
               "use this to tell a field from a parameter of the same name"
             ]
           },
           {
-            "id": "k_selfassign",
+            "id": "k_fix",
             "kind": "fix",
+            "instruction": "Fix this so it prints the name.",
             "wrap": "methods",
-            "instruction": "This compiles, runs, and stores nothing.",
-            "code": "public void run() {\n  Potion p = new Potion(\"Healing\");\n  System.out.println(p);\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
-            "target": "Healing",
-            "solution": "public void run() {\n  Potion p = new Potion(\"Healing\");\n  System.out.println(p);\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public String toString() {\n    return name;\n  }\n}",
-            "hint": "Both sides say name, and inside the constructor plain name means the parameter.",
-            "after": "It assigned the parameter to itself, so the field was never touched and stayed empty. No error - just the wrong answer, which is what makes this one hard to see.",
+            "code": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String name, int damage) {\n    name = name;\n    damage = damage;\n  }\n\n  public String toString() {\n    return name + \" deals \" + damage;\n  }\n}\n\npublic void run() {\n  System.out.println(new Weapon(\"Sword\", 12));\n}",
+            "target": "Sword deals 12",
+            "solution": "class Weapon {\n  private String name;\n  private int damage;\n\n  public Weapon(String name, int damage) {\n    this.name = name;\n    this.damage = damage;\n  }\n\n  public String toString() {\n    return name + \" deals \" + damage;\n  }\n}\n\npublic void run() {\n  System.out.println(new Weapon(\"Sword\", 12));\n}",
+            "hint": "Put this. in front of each field on the left of the =.",
+            "after": "Without this, both fields stayed at their defaults: null and 0.",
             "skills": [
               "use this to tell a field from a parameter of the same name"
             ]
           },
           {
-            "id": "k_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "public Potion(String name) {\n  this.name = name;\n}",
-            "questions": [
-              {
-                "prompt": "What does this refer to?",
-                "opts": [
-                  "The parameter",
-                  "The class",
-                  "The object the method is currently running on",
-                  "The constructor"
-                ],
-                "correct": 2,
-                "why": "It is a reference to the particular object, which is how this.name reaches that object's field."
-              },
-              {
-                "prompt": "Why is this. needed in the constructor but often not elsewhere?",
-                "opts": [
-                  "Fields are private",
-                  "Constructors are special",
-                  "It is always needed",
-                  "A parameter of the same name is shadowing the field"
-                ],
-                "correct": 3,
-                "why": "Where nothing else is called name, plain name already means the field."
-              }
-            ],
-            "skills": [
-              "use this to tell a field from a parameter of the same name"
-            ]
-          },
-          {
-            "id": "k_write",
+            "id": "k_final",
             "kind": "write",
+            "instruction": "Write a Room class whose constructor parameters share the names of its fields.",
             "wrap": "methods",
-            "instruction": "Your turn: a constructor whose parameters shadow both fields.",
-            "harness": "public void run() {\n  System.out.println(new Hero(\"Ada\", 7));\n}",
-            "code": "// class Hero: private name and level, a constructor taking\n// (String name, int level), toString returning e.g. \"Ada is level 7\"\n",
-            "target": "Ada is level 7",
-            "solution": "class Hero {\n  private String name;\n  private int level;\n\n  public Hero(String name, int level) {\n    this.name = name;\n    this.level = level;\n  }\n\n  public String toString() {\n    return name + \" is level \" + level;\n  }\n}",
-            "hint": "Both assignments need this. on the left, or the fields stay null and 0.",
-            "after": "Without this., that would have printed \"null is level 0\".",
+            "code": "public void run() {\n  System.out.println(new Room(20, 8));\n}\n\n// write Room. Fields width and height.\n// The constructor parameters must ALSO be called width and height.\n// toString returns:  20x8\n",
+            "target": "20x8",
+            "solution": "public void run() {\n  System.out.println(new Room(20, 8));\n}\n\nclass Room {\n  private int width;\n  private int height;\n\n  public Room(int width, int height) {\n    this.width = width;\n    this.height = height;\n  }\n\n  public String toString() {\n    return width + \"x\" + height;\n  }\n}",
+            "hint": "this.width = width; assigns the parameter into the field.",
+            "after": "This is why almost every Java constructor you will read starts with this.",
             "skills": [
               "use this to tell a field from a parameter of the same name"
             ]
@@ -10635,197 +10616,173 @@
           {
             "id": "q_task",
             "kind": "teach",
+            "instruction": "Two objects hold the same values. Why does == say they are different?",
+            "code": "class Point {\n  private int x;\n\n  public Point(int x) {\n    this.x = x;\n  }\n}\n\npublic void run() {\n  Point a = new Point(3);\n  Point b = new Point(3);\n  System.out.println(a == b);\n}",
             "wrap": "methods",
-            "instruction": "Two identical potions. == says they are different.",
-            "code": "public void run() {\n  Potion a = new Potion(\"Elixir\");\n  Potion b = new Potion(\"Elixir\");\n  System.out.println(a == b);\n  System.out.println(a.equals(b));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Potion other) {\n    return name.equals(other.name);\n  }\n}",
-            "output": "false\ntrue",
-            "highlight": [
-              3,
-              4
-            ],
-            "points": [
-              {
-                "label": "a == b",
-                "text": "false. Two separate objects were built, and == asks whether they are the SAME object."
-              },
-              {
-                "label": "a.equals(b)",
-                "text": "true. equals asks whether their contents match, which is usually what you meant."
-              },
-              {
-                "label": "int x == y",
-                "text": "For primitives == compares the values, so it works as expected. Only objects behave this way."
-              },
-              {
-                "label": "you saw this in 3.15",
-                "text": "Strings are objects, which is why == failed there too."
-              }
-            ]
+            "output": "false",
+            "keypoint": "== on objects asks whether they are the same object, not whether they hold the same values."
           },
           {
-            "id": "q_table",
-            "kind": "table",
-            "instruction": "What does == actually compare?",
-            "columns": [
-              "type",
-              "== compares"
-            ],
-            "fillFrom": 1,
-            "chips": [
-              "the value",
-              "whether it is the same object"
-            ],
-            "rows": [
-              [
-                "int",
-                "the value"
+            "id": "q_holds",
+            "kind": "teach",
+            "instruction": "A primitive variable holds a value. An object variable holds a reference.",
+            "facts": {
+              "columns": [
+                "",
+                "Primitive",
+                "Object"
               ],
-              [
-                "double",
-                "the value"
-              ],
-              [
-                "boolean",
-                "the value"
-              ],
-              [
-                "String",
-                "whether it is the same object"
-              ],
-              [
-                "Potion",
-                "whether it is the same object"
+              "rows": [
+                [
+                  "Example",
+                  "int x = 3;",
+                  "Point p = new Point(3);"
+                ],
+                [
+                  "The variable holds",
+                  "the value 3",
+                  "a reference to an object"
+                ],
+                [
+                  "== compares",
+                  "the values",
+                  "whether it is the same object"
+                ],
+                [
+                  "Compare contents with",
+                  "==",
+                  ".equals()"
+                ]
               ]
+            },
+            "keypoint": "A primitive variable holds a value. An object variable holds a reference to an object."
+          },
+          {
+            "id": "q_same",
+            "kind": "teach",
+            "instruction": "Two references can point at the same object.",
+            "code": "class Point {\n  private int x;\n\n  public Point(int x) {\n    this.x = x;\n  }\n\n  public int getX() {\n    return x;\n  }\n\n  public void setX(int x) {\n    this.x = x;\n  }\n}\n\npublic void run() {\n  Point a = new Point(3);\n  Point b = a;\n  b.setX(99);\n  System.out.println(a.getX());\n  System.out.println(a == b);\n}",
+            "wrap": "methods",
+            "output": "99\ntrue",
+            "body": [
+              "b = a does not copy the object. Both names now refer to the same object.",
+              "Changing it through b changes what a sees."
             ],
-            "why": "Primitives hold their value directly, so == compares values. Object variables hold a reference to a thing, so == compares which thing.",
-            "skills": [
-              "compare objects with equals and primitives with =="
-            ]
+            "keypoint": "Assigning one object variable to another copies the reference, not the object."
           },
           {
             "id": "q_pass",
             "kind": "teach",
+            "instruction": "Passing a primitive passes a copy. Passing an object passes a copy of the reference.",
+            "code": "public void run() {\n  int n = 5;\n  bump(n);\n  System.out.println(n);\n}\n\npublic void bump(int value) {\n  value = value + 1;\n}",
             "wrap": "methods",
-            "instruction": "A primitive is copied. An object reference is shared.",
-            "code": "public void run() {\n  int n = 5;\n  bump(n);\n  System.out.println(n);\n}\n\npublic void bump(int x) {\n  x = x + 1;\n}",
             "output": "5",
-            "highlight": [
-              2
-            ],
-            "points": [
-              {
-                "label": "bump(n)",
-                "text": "Passes a COPY of the 5. The method changes its copy."
-              },
-              {
-                "label": "still 5",
-                "text": "run()'s n was never touched."
-              },
-              {
-                "label": "objects differ",
-                "text": "Passing an object passes a copy of the REFERENCE, so both point at the same thing and changes are seen by both."
-              }
-            ]
-          },
-          {
-            "id": "q_null",
-            "kind": "teach",
-            "instruction": "An object variable can hold nothing at all.",
-            "points": [
-              {
-                "label": "null",
-                "text": "Means \"points at no object\". An object field starts this way until you set it."
-              },
-              {
-                "label": "calling a method on null",
-                "text": "There is no object to run it, so Java throws a NullPointerException and the program stops."
-              },
-              {
-                "label": "where it comes from",
-                "text": "A constructor that forgot this., or a field never assigned. You saw exactly that in 5.11."
-              },
-              {
-                "label": "avoiding it",
-                "text": "Set every field in the constructor, and check for null before calling a method on something that might be."
-              }
+            "body": [
+              "bump changed its own copy. The original n never moved.",
+              "An object is different: the copy of the reference still points at the same object, so changes through it are visible outside."
             ]
           },
           {
             "id": "q_predict",
             "kind": "predict",
+            "instruction": "What comes out?",
             "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  String a = \"cat\";\n  String b = \"cat\";\n  System.out.println(a.equals(b));\n}",
+            "code": "class Box {\n  private int n;\n\n  public Box(int n) {\n    this.n = n;\n  }\n\n  public int getN() {\n    return n;\n  }\n\n  public void setN(int n) {\n    this.n = n;\n  }\n}\n\npublic void run() {\n  Box box = new Box(1);\n  change(box);\n  System.out.println(box.getN());\n}\n\npublic void change(Box b) {\n  b.setN(42);\n}",
             "opts": [
-              "false",
-              "true",
-              "(a crash)",
-              "cat"
+              "1",
+              "42",
+              "0",
+              "An error"
             ],
             "correct": 1,
-            "why": "equals compares the characters, which match. == would be unreliable here for exactly the reason in the table.",
+            "why": "change received a copy of the reference, which still points at the same Box. Calling setN through it changed the object everyone can see.",
             "skills": [
               "compare objects with equals and primitives with =="
             ]
           },
           {
-            "id": "q_npe",
-            "kind": "fix",
+            "id": "q_null",
+            "kind": "teach",
+            "instruction": "An object variable can hold null, which means it refers to no object.",
+            "code": "class Hero {\n  private String name;\n\n  public int nameLength() {\n    return name.length();\n  }\n}\n\npublic void run() {\n  Hero h = new Hero();\n  System.out.println(h.nameLength());\n}",
             "wrap": "methods",
-            "instruction": "It compiles and then dies. The constructor takes a name and forgets it.",
-            "code": "public void run() {\n  Hero h = new Hero(\"Ada\");\n  System.out.println(h.nameLength());\n}\n\nclass Hero {\n  private String name;\n\n  public Hero(String n) {\n  }\n\n  public int nameLength() {\n    return name.length();\n  }\n}",
+            "body": [
+              "name was never set, so it holds null.",
+              "Calling a method on null throws a NullPointerException."
+            ],
+            "keypoint": "null means the variable refers to no object. Calling a method on it throws a NullPointerException."
+          },
+          {
+            "id": "q_nullfix",
+            "kind": "fix",
+            "instruction": "Fix this so it prints 3.",
+            "wrap": "methods",
+            "code": "class Hero {\n  private String name;\n\n  public Hero(String n) {\n  }\n\n  public int nameLength() {\n    return name.length();\n  }\n}\n\npublic void run() {\n  Hero h = new Hero(\"Ada\");\n  System.out.println(h.nameLength());\n}",
             "target": "3",
-            "solution": "public void run() {\n  Hero h = new Hero(\"Ada\");\n  System.out.println(h.nameLength());\n}\n\nclass Hero {\n  private String name;\n\n  public Hero(String n) {\n    name = n;\n  }\n\n  public int nameLength() {\n    return name.length();\n  }\n}",
-            "hint": "An object field starts out pointing at nothing. Something has to put the value in.",
-            "after": "name still pointed at nothing, so name.length() had no object to run on - a NullPointerException. Setting every field in the constructor is what prevents it.",
+            "solution": "class Hero {\n  private String name;\n\n  public Hero(String n) {\n    name = n;\n  }\n\n  public int nameLength() {\n    return name.length();\n  }\n}\n\npublic void run() {\n  Hero h = new Hero(\"Ada\");\n  System.out.println(h.nameLength());\n}",
+            "hint": "The constructor takes n but never stores it.",
+            "after": "Setting every field in the constructor is how you avoid a NullPointerException.",
             "skills": [
               "avoid a null pointer exception"
             ]
           },
           {
-            "id": "q_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "Potion a = new Potion(\"Elixir\");\nPotion b = new Potion(\"Elixir\");",
-            "questions": [
+            "id": "q_equals",
+            "kind": "teach",
+            "instruction": "Compare object contents with .equals().",
+            "code": "String a = \"cat\";\nString part = \"at\";\nString b = \"c\" + part;\nSystem.out.println(a == b);\nSystem.out.println(a.equals(b));",
+            "output": "false\ntrue",
+            "body": [
+              "b was built while the program ran, so it is a different object.",
+              "== compared the references. .equals() compared the characters."
+            ],
+            "keypoint": "Use .equals() to compare object contents. Use == only for primitives."
+          },
+          {
+            "id": "q_bucket",
+            "kind": "bucket",
+            "instruction": "Which comparison is correct?",
+            "buckets": [
+              "Use ==",
+              "Use .equals()"
+            ],
+            "items": [
               {
-                "prompt": "Why does a == b give false?",
-                "opts": [
-                  "They are two different objects, and == compares identity",
-                  "== does not work on objects",
-                  "It gives true",
-                  "Their names differ"
-                ],
-                "correct": 0,
-                "why": "Two news made two objects. == asks whether the variables point at the same one, and they do not."
+                "text": "two int values",
+                "bucket": 0
               },
               {
-                "prompt": "What causes a NullPointerException?",
-                "opts": [
-                  "Calling a method on a variable that points at no object",
-                  "Dividing by zero",
-                  "An index past the end",
-                  "A missing semicolon"
-                ],
-                "correct": 0,
-                "why": "null means no object, so there is nothing to run the method on. Division by zero is ArithmeticException, from 4.7."
+                "text": "two double values",
+                "bucket": 0
+              },
+              {
+                "text": "two boolean values",
+                "bucket": 0
+              },
+              {
+                "text": "two Strings",
+                "bucket": 1
+              },
+              {
+                "text": "two Player objects",
+                "bucket": 1
               }
             ],
+            "why": "Primitives hold values, so == compares what you want. Objects hold references, so == compares identity instead of contents.",
             "skills": [
-              "avoid a null pointer exception"
+              "compare objects with equals and primitives with =="
             ]
           },
           {
-            "id": "q_write",
+            "id": "q_final",
             "kind": "write",
-            "wrap": "methods",
-            "instruction": "Your turn: compare two potions correctly.",
-            "harness": "public void run() {\n  Potion a = new Potion(\"Elixir\");\n  Potion b = new Potion(\"Elixir\");\n  Potion c = new Potion(\"Tonic\");\n  System.out.println(same(a, b));\n  System.out.println(same(a, c));\n}\n\nclass Potion {\n  private String name;\n\n  public Potion(String name) {\n    this.name = name;\n  }\n\n  public boolean equals(Potion other) {\n    return name.equals(other.name);\n  }\n}",
-            "code": "// write same(Potion x, Potion y) returning whether they hold the same name\n",
-            "target": "true\nfalse",
-            "solution": "public boolean same(Potion x, Potion y) {\n  return x.equals(y);\n}",
-            "hint": "Use the equals method the class already provides, not ==.",
-            "after": "== would have printed false twice, because all three are separate objects.",
+            "instruction": "Ask for two words and print whether they are the same text.",
+            "code": "// ask \"First? \" and \"Second? \" with readLine\n// print true when the two words have the same text\n",
+            "stdin": "gold\ngold",
+            "target": "First? gold\nSecond? gold\ntrue",
+            "solution": "String a = readLine(\"First? \");\nString b = readLine(\"Second? \");\nSystem.out.println(a.equals(b));",
+            "hint": "Two Strings are objects, so compare them with .equals().",
+            "after": "== would compare the two references and could print false even for identical text.",
             "skills": [
               "compare objects with equals and primitives with =="
             ]
@@ -10846,256 +10803,194 @@
           {
             "id": "h_task",
             "kind": "teach",
-            "instruction": "A Boss is a Monster with one extra thing.",
-            "points": [
-              {
-                "label": "what it shares",
-                "text": "A name, hp, and the ability to roar. Identical to Monster."
-              },
-              {
-                "label": "what it adds",
-                "text": "A title, and the ability to enrage."
-              },
-              {
-                "label": "copying the class",
-                "text": "Would duplicate name, hp and roar, and any fix to roar would then need doing twice."
-              },
-              {
-                "label": "IS A",
-                "text": "A Boss IS A Monster. That relationship is what inheritance is for."
-              }
-            ]
+            "instruction": "A Boss is a Monster with one extra thing. How do we reuse everything Monster already has?",
+            "body": [
+              "A Boss has a name and hp, like every Monster.",
+              "A Boss also has a title, and it can enrage.",
+              "Copying the Monster code into Boss would mean fixing every bug twice."
+            ],
+            "keypoint": "Inheritance lets one class reuse the fields and methods of another."
           },
           {
-            "id": "h_cmp",
-            "kind": "compare",
-            "instruction": "Copy the shared parts, or inherit them.",
-            "sides": [
+            "id": "h_extends",
+            "kind": "teach",
+            "instruction": "extends makes one class inherit from another.",
+            "code": "class Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" the \" + title + \" roars!\");\n  }\n}\n\npublic void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  b.attack();\n  b.enrage();\n}",
+            "wrap": "methods",
+            "output": "Grendel lunges!\nGrendel the Terrible roars!",
+            "annotate": [
               {
-                "label": "copied",
-                "code": "public void run() {\n  Boss b = new Boss(\"Grendel\", 300, \"Terrible\");\n  b.roar();\n  b.enrage();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n  public Monster(String name, int hp) { this.name = name; this.hp = hp; }\n  public void roar() { System.out.println(name + \" roars!\"); }\n}\n\nclass Boss {\n  private String name;\n  private int hp;\n  private String title;\n  public Boss(String name, int hp, String title) { this.name = name; this.hp = hp; this.title = title; }\n  public void roar() { System.out.println(name + \" roars!\"); }\n  public void enrage() { System.out.println(name + \" the \" + title + \" enrages!\"); }\n}",
-                "output": "Grendel roars!\nGrendel the Terrible enrages!"
-              },
-              {
-                "label": "inherited",
-                "code": "public void run() {\n  Boss b = new Boss(\"Grendel\", 300, \"Terrible\");\n  b.roar();\n  b.enrage();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" the \" + title + \" enrages!\");\n  }\n}",
-                "output": "Grendel roars!\nGrendel the Terrible enrages!"
+                "token": "class Boss extends Monster",
+                "note": "Boss inherits from Monster"
               }
             ],
-            "points": [
+            "body": [
+              "attack was never written in Boss. It came from Monster.",
+              "enrage is new, and only Boss has it."
+            ],
+            "keypoint": "class Boss extends Monster means Boss inherits Monster fields and methods."
+          },
+          {
+            "id": "h_words",
+            "kind": "teach",
+            "instruction": "The two classes have names.",
+            "facts": {
+              "columns": [
+                "Term",
+                "Also called",
+                "In this example"
+              ],
+              "rows": [
+                [
+                  "Superclass",
+                  "parent class, base class",
+                  "Monster"
+                ],
+                [
+                  "Subclass",
+                  "child class, derived class",
+                  "Boss"
+                ]
+              ]
+            },
+            "keypoint": "The class being extended is the superclass. The class extending it is the subclass."
+          },
+          {
+            "id": "h_super",
+            "kind": "teach",
+            "instruction": "super calls the superclass constructor. It must be the first line.",
+            "code": "public Boss(String name, int hp, String title) {\n  super(name, hp);\n  this.title = title;\n}",
+            "annotate": [
               {
-                "label": "copied",
-                "text": "name, hp and roar exist twice. Fixing roar means fixing it in both places."
-              },
-              {
-                "label": "inherited",
-                "text": "Boss adds only what is new. roar is written once, in Monster."
+                "token": "super(name, hp)",
+                "note": "builds the Monster half first"
               }
             ],
+            "body": [
+              "Monster fields are private, so Boss cannot set them directly.",
+              "super passes them to the Monster constructor, which sets them."
+            ],
+            "keypoint": "super(...) calls the superclass constructor and must be the first line of the subclass constructor."
+          },
+          {
+            "id": "h_superfirst",
+            "kind": "fix",
+            "instruction": "Fix this so it compiles.",
+            "wrap": "methods",
+            "code": "class Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    this.title = title;\n    super(name, hp);\n  }\n}\n\npublic void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  b.attack();\n}",
+            "target": "Grendel lunges!",
+            "solution": "class Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n}\n\npublic void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  b.attack();\n}",
+            "hint": "The inherited half must be built before the subclass adds to it.",
+            "after": "Java builds an object from the superclass outwards, so super must come first.",
             "skills": [
               "write a subclass with extends and super"
             ]
           },
           {
-            "id": "h_ext",
+            "id": "h_private",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "extends takes everything the parent has.",
-            "code": "public void run() {\n  Boss b = new Boss(\"Grendel\", 300, \"Terrible\");\n  b.roar();\n  b.enrage();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" the \" + title + \" enrages!\");\n  }\n}",
-            "output": "Grendel roars!\nGrendel the Terrible enrages!",
-            "highlight": [
-              6,
-              7,
-              8,
-              9,
-              10,
-              11,
-              12,
-              13,
-              14
+            "instruction": "A subclass inherits private fields but cannot name them directly.",
+            "body": [
+              "Boss inherits name from Monster, but private means only Monster can touch it.",
+              "Boss reaches it through the public getter getName()."
             ],
-            "points": [
-              {
-                "label": "class Boss extends Monster",
-                "text": "Boss is now a Monster as well, and gets its fields and methods."
-              },
-              {
-                "label": "b.roar()",
-                "text": "Not written anywhere in Boss. It came from Monster."
-              },
-              {
-                "label": "super(name, hp)",
-                "text": "Calls Monster's constructor to set up the inherited half. It must be the FIRST line."
-              },
-              {
-                "label": "getName()",
-                "text": "Boss cannot touch Monster's private name directly, so it uses the inherited getter."
-              }
-            ]
-          },
-          {
-            "id": "h_super",
-            "kind": "teach",
-            "instruction": "super(...) runs the parent constructor first.",
-            "points": [
-              {
-                "label": "super(name, hp);",
-                "text": "Hands the shared values up to Monster, which stores them."
-              },
-              {
-                "label": "first line",
-                "text": "It must come before anything else in the constructor. The parent half is built first."
-              },
-              {
-                "label": "leaving it out",
-                "text": "Java tries to call a no-argument Monster() instead, and there is not one, so it will not compile."
-              },
-              {
-                "label": "private stays private",
-                "text": "A subclass inherits private fields but cannot name them. Getters are how it reaches them."
-              }
-            ]
+            "keypoint": "A subclass reaches inherited private fields through public getters, not directly."
           },
           {
             "id": "h_isa",
+            "kind": "teach",
+            "instruction": "Use inheritance for IS A. Use a field for HAS A.",
+            "facts": {
+              "columns": [
+                "Relationship",
+                "Meaning",
+                "How to write it"
+              ],
+              "rows": [
+                [
+                  "IS A",
+                  "a Boss IS A Monster",
+                  "class Boss extends Monster"
+                ],
+                [
+                  "HAS A",
+                  "a Player HAS A Weapon",
+                  "a Weapon field inside Player"
+                ]
+              ]
+            },
+            "keypoint": "IS A means inheritance. HAS A means a field."
+          },
+          {
+            "id": "h_bucket",
             "kind": "bucket",
-            "instruction": "IS A, or HAS A?",
+            "instruction": "IS A or HAS A?",
             "buckets": [
-              "IS A - use inheritance",
-              "HAS A - use a field"
+              "IS A — use extends",
+              "HAS A — use a field"
             ],
             "items": [
               {
-                "text": "a Boss and a Monster",
+                "text": "A Boss and a Monster",
                 "bucket": 0
               },
               {
-                "text": "a Monster and its name",
+                "text": "A Dog and an Animal",
+                "bucket": 0
+              },
+              {
+                "text": "A Healer and a Hero",
+                "bucket": 0
+              },
+              {
+                "text": "A Player and a Weapon",
                 "bucket": 1
               },
               {
-                "text": "a Potion and an Item",
-                "bucket": 0
-              },
-              {
-                "text": "a Hero and their sword",
+                "text": "A Room and a Door",
                 "bucket": 1
               },
               {
-                "text": "a Dog and an Animal",
-                "bucket": 0
-              },
-              {
-                "text": "a Car and its engine",
+                "text": "A Car and an Engine",
                 "bucket": 1
               }
             ],
-            "why": "If one thing IS a kind of the other, subclass it. If one thing merely HAS the other, store it as a field.",
+            "why": "If you can say \"is a kind of\", use extends. If you can say \"owns one\", use a field.",
             "skills": [
               "tell an IS A relationship from a HAS A relationship"
-            ]
-          },
-          {
-            "id": "h_object",
-            "kind": "teach",
-            "instruction": "Everything already inherits from Object.",
-            "points": [
-              {
-                "label": "Object",
-                "text": "The class at the top of every hierarchy in Java. You never write extends Object - it is automatic."
-              },
-              {
-                "label": "toString()",
-                "text": "Comes from Object. That is why println(anything) works even before you write your own."
-              },
-              {
-                "label": "Treasure@1b6d3586",
-                "text": "Object's version of toString. Writing your own in 5.4 replaced it."
-              },
-              {
-                "label": "Boss extends Monster extends Object",
-                "text": "Three levels of hierarchy, and you only wrote one of them."
-              }
             ]
           },
           {
             "id": "h_predict",
             "kind": "predict",
+            "instruction": "Boss does not define attack. What comes out?",
             "wrap": "methods",
-            "instruction": "roar is not written in Boss. What happens?",
-            "code": "public void run() {\n  Boss b = new Boss(\"Grendel\", 300, \"Terrible\");\n  b.roar();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public void roar() {\n    System.out.println(name + \" roars!\");\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" the \" + title + \" enrages!\");\n  }\n}",
+            "code": "class Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public int getHp() {\n    return hp;\n  }\n\n  public void attack() {\n    System.out.println(name + \" lunges!\");\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void enrage() {\n    System.out.println(getName() + \" the \" + title + \" roars!\");\n  }\n}\n\npublic void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  System.out.println(b.getHp());\n  b.attack();\n}",
             "opts": [
-              "Grendel roars!",
-              "(it does not compile)",
-              "Boss roars!",
-              "(nothing)"
+              "90\nGrendel lunges!",
+              "90\nGrendel the Terrible roars!",
+              "An error",
+              "0\nGrendel lunges!"
             ],
             "correct": 0,
-            "why": "Boss inherited roar from Monster, so calling it on a Boss runs Monster's version using the Boss's own name.",
+            "why": "getHp and attack were both inherited from Monster. Boss did not have to write either one.",
             "skills": [
               "write a subclass with extends and super"
             ]
           },
           {
-            "id": "h_superfirst",
-            "kind": "fix",
-            "wrap": "methods",
-            "instruction": "Boss sets its own field before the parent has been built.",
-            "code": "public void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  b.attack();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    this.title = title;\n    super(name, hp);\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n}",
-            "target": "Grendel the Terrible strikes!",
-            "solution": "public void run() {\n  Boss b = new Boss(\"Grendel\", 90, \"Terrible\");\n  b.attack();\n}\n\nclass Monster {\n  private String name;\n  private int hp;\n\n  public Monster(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n}\n\nclass Boss extends Monster {\n  private String title;\n\n  public Boss(String name, int hp, String title) {\n    super(name, hp);\n    this.title = title;\n  }\n\n  public void attack() {\n    System.out.println(getName() + \" the \" + title + \" strikes!\");\n  }\n}",
-            "hint": "The inherited half has to exist before the subclass adds to it.",
-            "after": "super(...) must be the very first line of the constructor. Java builds a Boss from the Monster outwards.",
-            "skills": [
-              "write a subclass with extends and super"
-            ]
-          },
-          {
-            "id": "h_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "class Boss extends Monster {\n  public Boss(String n, int h) {\n    super(n, h);\n  }\n}",
-            "questions": [
-              {
-                "prompt": "What does super(name, hp) do?",
-                "opts": [
-                  "Makes the class static",
-                  "Returns to the parent",
-                  "Calls the parent class constructor",
-                  "Creates a new object"
-                ],
-                "correct": 2,
-                "why": "It builds the inherited half of the object, and must be the first line of the subclass constructor."
-              },
-              {
-                "prompt": "Which is an IS A relationship?",
-                "opts": [
-                  "A class and a file",
-                  "A Monster and its hp",
-                  "A Hero and their sword",
-                  "A Boss and a Monster"
-                ],
-                "correct": 3,
-                "why": "A Boss IS A kind of Monster, so it subclasses it. A Hero merely HAS a sword, so the sword is a field."
-              }
-            ],
-            "skills": [
-              "tell an IS A relationship from a HAS A relationship"
-            ]
-          },
-          {
-            "id": "h_write",
+            "id": "h_final",
             "kind": "write",
+            "instruction": "Write a Healer class that IS A Hero.",
             "wrap": "methods",
-            "instruction": "Your turn: a Healer that IS A Hero.",
-            "harness": "public void run() {\n  Healer h = new Healer(\"Ada\", 3);\n  h.introduce();\n  h.heal();\n}\n\nclass Hero {\n  private String name;\n\n  public Hero(String name) {\n    this.name = name;\n  }\n\n  public void introduce() {\n    System.out.println(\"I am \" + name + \".\");\n  }\n\n  public String getName() {\n    return name;\n  }\n}",
-            "code": "// class Healer extends Hero: adds an int potions field,\n// constructor (String name, int potions) calling super,\n// heal() printing e.g. \"Ada heals with 3 potions.\"\n",
-            "target": "I am Ada.\nAda heals with 3 potions.",
-            "solution": "class Healer extends Hero {\n  private int potions;\n\n  public Healer(String name, int potions) {\n    super(name);\n    this.potions = potions;\n  }\n\n  public void heal() {\n    System.out.println(getName() + \" heals with \" + potions + \" potions.\");\n  }\n}",
-            "hint": "extends Hero, super(name) as the first constructor line, and use getName() since name is private in Hero.",
-            "after": "introduce() was never written in Healer. It was inherited.",
+            "code": "class Hero {\n  private String name;\n  private int hp;\n\n  public Hero(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void fight() {\n    System.out.println(name + \" swings a sword.\");\n  }\n}\n\n// write Healer. It extends Hero, adds an int called mana,\n// and adds a method heal() that prints:  Ada restores 30 hp.\n\npublic void run() {\n  Healer h = new Healer(\"Ada\", 100, 30);\n  h.fight();\n  h.heal();\n}",
+            "target": "Ada swings a sword.\nAda restores 30 hp.",
+            "solution": "class Hero {\n  private String name;\n  private int hp;\n\n  public Hero(String name, int hp) {\n    this.name = name;\n    this.hp = hp;\n  }\n\n  public String getName() {\n    return name;\n  }\n\n  public void fight() {\n    System.out.println(name + \" swings a sword.\");\n  }\n}\n\nclass Healer extends Hero {\n  private int mana;\n\n  public Healer(String name, int hp, int mana) {\n    super(name, hp);\n    this.mana = mana;\n  }\n\n  public void heal() {\n    System.out.println(getName() + \" restores \" + mana + \" hp.\");\n  }\n}\n\npublic void run() {\n  Healer h = new Healer(\"Ada\", 100, 30);\n  h.fight();\n  h.heal();\n}",
+            "hint": "super(name, hp) first, then this.mana = mana. Use getName() inside heal, since name is private to Hero.",
+            "after": "fight came from Hero. heal is new. name was reached through the getter.",
             "skills": [
-              "write a subclass with extends and super"
+              "write a subclass with extends and super",
+              "tell an IS A relationship from a HAS A relationship"
             ]
           }
         ]
