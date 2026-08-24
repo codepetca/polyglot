@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { studentCode } from "@/lib/curriculum/codehs";
+import { excludeInternal } from "@/lib/curriculum/internal";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +25,9 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
   // when Pika lands; until then every note is visible to everyone.
   void searchParams;
 
-  const chapters = await prisma.chapter.findMany({
-    where: { title: { not: { startsWith: "__" } } },
+  // Internal chapters are filtered in JS, never with a Prisma startsWith —
+  // see lib/curriculum/internal.ts for why that silently matches nothing.
+  const chapters = excludeInternal(await prisma.chapter.findMany({
     orderBy: { order: "asc" },
     select: {
       title: true,
@@ -35,7 +37,7 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
         select: { code: true, title: true, flow: true },
       },
     },
-  });
+  }));
 
   const units = chapters
     .map((c) => ({

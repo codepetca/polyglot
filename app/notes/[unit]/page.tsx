@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { studentCode } from "@/lib/curriculum/codehs";
+import { isInternalChapter } from "@/lib/curriculum/internal";
 
 export const dynamic = "force-dynamic";
 
@@ -34,14 +35,15 @@ export default async function UnitNotes({ params }: { params: Promise<{ unit: st
   if (!me) redirect("/login");
   const { unit } = await params;
 
+  // No Prisma startsWith here either — see lib/curriculum/internal.ts.
   const chapter = await prisma.chapter.findFirst({
-    where: { order: Number(unit) - 1, title: { not: { startsWith: "__" } } },
+    where: { order: Number(unit) - 1 },
     select: {
       title: true,
       lessons: { orderBy: { order: "asc" }, select: { code: true, title: true, objectives: true, flow: true } },
     },
   });
-  if (!chapter) notFound();
+  if (!chapter || isInternalChapter(chapter.title)) notFound();
 
   const lessons = chapter.lessons
     .map((l) => ({
