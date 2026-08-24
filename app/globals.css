@@ -937,3 +937,36 @@ pre.flowcode.ro { margin: 0; }
 .facts td { padding: 7px 16px 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.5; }
 .facts tr:last-child td { border-bottom: none; }
 .facts td:first-child { font-family: var(--mono); font-size: 13px; color: var(--accent); white-space: nowrap; }
+
+/* ── workout: plan it, then write it ─────────────────────────────────────────
+   The editor stays locked until the pseudocode is in order, because the
+   planning is the thing being trained. */
+.workout { margin-top: 12px; }
+.wlevel { display: inline-block; font-family: var(--sans); font-size: 10.5px; text-transform: uppercase;
+  letter-spacing: .09em; font-weight: 700; padding: 2px 9px; border-radius: 999px; margin-bottom: 9px; }
+.wl-warm-up { background: rgba(13,92,70,.12); color: var(--accent); }
+.wl-standard { background: rgba(91,95,158,.14); color: var(--violet); }
+.wl-hard { background: rgba(201,138,16,.16); color: var(--warn); }
+.wl-olympic { background: var(--ink); color: var(--paper); }
+.worksub { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+.workmethods { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 14px; }
+.workmethods .lbl { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; color: var(--muted);
+  margin-right: 3px; }
+.workmethods code { font-family: var(--mono); font-size: 12.5px; background: var(--card);
+  border: 1.5px solid var(--line); border-radius: 6px; padding: 2px 8px; color: var(--accent); }
+.planpicked { list-style: decimal; margin: 0 0 12px; padding-left: 22px; display: flex; flex-direction: column; gap: 5px;
+  min-height: 34px; }
+.planpicked li { font-size: 14.5px; display: flex; gap: 8px; align-items: baseline; }
+.planpicked .planempty { list-style: none; margin-left: -22px; color: var(--muted); font-style: italic; font-size: 13.5px; }
+.planx { border: none; background: transparent; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 4px; }
+.planx:hover { color: var(--bad); }
+.planpool { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.planchip { text-align: left; background: var(--card); border: 1.5px solid var(--line); border-radius: 9px;
+  padding: 9px 13px; font-size: 14.5px; color: var(--ink); font-family: var(--sans); }
+.planchip:hover { border-color: var(--accent); }
+.planwrong { font-size: 14px; color: var(--bad); margin-bottom: 10px; }
+.workplan { background: var(--card); border: 1.5px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 10px; padding: 12px 16px; margin: 12px 0; }
+.workplan .lbl { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; color: var(--muted); }
+.workplan ol { margin: 7px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+.workplan li { font-size: 14px; line-height: 1.5; }

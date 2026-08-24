@@ -53,6 +53,9 @@ type Step = {
   annotate?: { token: string; note: string }[];
   keypoint?: string;
   facts?: { columns: string[]; rows: string[][] };
+  plan?: string[];
+  methods?: string[];
+  level?: string;
   vars?: { type: string; name: string; placeholder?: string; label?: string }[];
   frames?: { line: number; note: string; vars?: Record<string, string>; out?: string }[];
   output?: string;
@@ -289,6 +292,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
   const [termWait, setTermWait] = useState(false);
   const [termLine, setTermLine] = useState("");
   const [frame, setFrame] = useState(0);
+  // workout: move one is ordering the pseudocode, move two is writing the code.
+  const [planPick, setPlanPick] = useState<string[]>([]);
+  const [planOk, setPlanOk] = useState(false);
+  const [planWrong, setPlanWrong] = useState(false);
   const [cardVals, setCardVals] = useState<string[]>([]);
   const [cardErrs, setCardErrs] = useState<(string | null)[]>([]);
   const [reveal, setReveal] = useState<{ correct: boolean; correctIndex?: number; why?: string; chosen?: number } | null>(null);
@@ -471,8 +478,8 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
     setAiBusy(false);
   }
 
-  const runnable = ["run", "tweak", "fix", "write", "arrange", "ask"].includes(step.kind);
-  const editable = ["tweak", "fix", "write"].includes(step.kind);
+  const runnable = ["run", "tweak", "fix", "write", "arrange", "ask"].includes(step.kind) || (step.kind === "workout" && planOk);
+  const editable = ["tweak", "fix", "write"].includes(step.kind) || (step.kind === "workout" && planOk);
   const codeLines = (step.code || "").split("\n");
   const advanceReady = won || (reveal && step.kind !== "fill" && step.kind !== "bucket");
 
@@ -910,6 +917,53 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
               <pre className="cmpout">{sd.output}</pre>
             </div>
           ))}
+        </div>
+      )}
+
+      {step.kind === "workout" && !planOk && (
+        <div className="workout">
+          {step.level && <span className={`wlevel wl-${step.level.replace(" ", "-")}`}>{step.level}</span>}
+          <div className="worksub">First, put the plan in order. You write the code after.</div>
+          {(step.methods || []).length > 0 && (
+            <div className="workmethods">
+              <span className="lbl">MIGHT BE USEFUL</span>
+              {(step.methods || []).map((m) => <code key={m}>{m}</code>)}
+            </div>
+          )}
+          <ol className="planpicked">
+            {planPick.map((t, j) => (
+              <li key={j}>
+                <span>{t}</span>
+                <button className="planx" onClick={() => setPlanPick((p) => p.filter((_, k) => k !== j))} aria-label="remove">×</button>
+              </li>
+            ))}
+            {planPick.length === 0 && <li className="planempty">tap the lines below, in the order they should happen</li>}
+          </ol>
+          <div className="planpool">
+            {(step.plan || []).filter((t) => !planPick.includes(t)).map((t) => (
+              <button key={t} className="planchip" onClick={() => { setPlanWrong(false); setPlanPick((p) => [...p, t]); }}>{t}</button>
+            ))}
+          </div>
+          {planWrong && <div className="planwrong">Not that order. Think about what has to exist before the loop starts, and what happens after it ends.</div>}
+          <button
+            className="btn green"
+            disabled={busy || planPick.length !== (step.plan || []).length}
+            onClick={async () => {
+              setBusy(true);
+              const d = await post({ action: "plan", order: planPick, attempt: fails + 1 });
+              setBusy(false);
+              if (d.correct) { setPlanOk(true); setPlanWrong(false); }
+              else { setPlanWrong(true); onAttempt(step.id); }
+            }}
+          >
+            Check the plan
+          </button>
+        </div>
+      )}
+      {step.kind === "workout" && planOk && !won && (
+        <div className="workplan">
+          <span className="lbl">YOUR PLAN</span>
+          <ol>{(planPick.length ? planPick : step.plan || []).map((t, j) => <li key={j}>{t}</li>)}</ol>
         </div>
       )}
 

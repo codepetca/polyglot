@@ -225,12 +225,23 @@ Return ONLY JSON: {"pass": true|false, "reply": "one warm sentence — if pass: 
       }
     }
 
+    // workout, first move: is the pseudocode in the right order?
+    case "plan": {
+      if (step.kind !== "workout" || !step.plan) return NextResponse.json({ error: "not a workout" }, { status: 400 });
+      const given: string[] = Array.isArray(body.order) ? body.order.map(String) : [];
+      const correct = given.length === step.plan.length && given.every((t, i) => t === step.plan![i]);
+      if (isStudent) {
+        logEvent({ type: EVENT.FLOW_STEP, userId: me.id, classId: me.classId, lessonId: flow.lessonId, stepId: step.id, kind: "workout.plan", correct });
+      }
+      return NextResponse.json({ correct, order: correct ? undefined : step.plan });
+    }
+
     // run/tweak/fix/arrange/write/card finishing (client-verified vs the visible
     // target; MASTERED still only comes from the server-graded clean quiz)
     case "complete": {
       const attempts = Math.max(1, Number(body.attempts) || 1);
       if (isStudent) {
-        if (step.kind === "fix" || step.kind === "arrange" || step.kind === "write" || step.kind === "card") {
+        if (step.kind === "fix" || step.kind === "arrange" || step.kind === "write" || step.kind === "card" || step.kind === "workout") {
           logEvent({ type: EVENT.QUIZ_ANSWER, userId: me.id, classId: me.classId, lessonId: flow.lessonId, questionId: step.id, correct: attempts <= 2, chosen: null, source: "practice" });
           // These are the hands-on steps. evidence() cannot cover them: it gates
           // on body.attempt, which this action does not send.

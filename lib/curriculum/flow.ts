@@ -32,7 +32,7 @@
 
 export type FlowStep = {
   id: string;
-  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch" | "card" | "walk";
+  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch" | "card" | "walk" | "workout";
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -150,6 +150,22 @@ export type FlowStep = {
    * rendered as-is.
    */
   facts?: { columns: string[]; rows: string[][] };
+  /**
+   * workout: a problem solved in two moves — plan it, then write it.
+   *
+   * WHY IT IS TWO MOVES. The owner's own account of learning this unit: the
+   * hard part was never the syntax, it was not knowing how to plan a loop over
+   * a String before starting to type. A `write` step lets a student flail at
+   * the editor. This one makes them put the pseudocode in order first, so the
+   * habit gets drilled every single time rather than mentioned once.
+   *
+   * `plan` is the pseudocode in the CORRECT order — the client is sent it
+   * shuffled. `methods` is the reference rail: which methods are worth
+   * reaching for, since not knowing them is the other half of being stuck.
+   */
+  plan?: string[];
+  methods?: string[];
+  level?: "warm-up" | "standard" | "hard" | "olympic";
   // PLAIN PROSE. Short lines, rendered as ordinary sentences with no label and
   // no highlight. This exists because `points` was the only way to say anything,
   // so every explanation got forced into a highlighted label — including ones
@@ -232,6 +248,12 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
           errors.push(`${at}: needs code, points[], body[], rules[] or facts`);
         }
         break;
+      case "workout": {
+        if (!s.plan || s.plan.length < 2) errors.push(`${at}: needs plan[] — the pseudocode, in the right order`);
+        if (s.target === undefined) errors.push(`${at}: needs target`);
+        if (!s.solution) errors.push(`${at}: needs solution`);
+        break;
+      }
       case "walk": {
         if (!s.code) errors.push(`${at}: needs code`);
         if (!s.frames || s.frames.length < 2) errors.push(`${at}: needs 2+ frames`);
@@ -357,6 +379,12 @@ export function stripStepForClient(s: FlowStep): Record<string, unknown> {
     case "teach": return { ...base, points: s.points, body: s.body, rules: s.rules, annotate: s.annotate, facts: s.facts, output: s.output };
     case "card": return { ...base, vars: s.vars };
     case "walk": return { ...base, frames: s.frames };
+    case "workout": {
+      // Shuffle the plan; the right order is the answer to the first move.
+      const pool = [...(s.plan || [])];
+      for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+      return { ...base, plan: pool, methods: s.methods, level: s.level };
+    }
     case "compare": return { ...base, sides: s.sides, points: s.points };
     // Blank out every cell the student is meant to work out; the answers stay
     // on the server like every other answer key.

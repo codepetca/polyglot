@@ -5667,209 +5667,471 @@
           {
             "id": "x_task",
             "kind": "teach",
-            "instruction": "Turn \"Ada Lovelace\" into a save-slot tag: AL.",
-            "points": [
+            "instruction": "Most String problems are the same problem wearing a different hat.",
+            "body": [
+              "Build a new String out of an old one, one character at a time.",
+              "The hard part is never the syntax. It is knowing the plan before you start typing."
+            ],
+            "keypoint": "Most String problems are: build a new String from an old one, one character at a time."
+          },
+          {
+            "id": "x_pseudo",
+            "kind": "teach",
+            "instruction": "Pseudocode is the plan, written in plain words.",
+            "body": [
+              "You write it before the code, not instead of it.",
+              "It is not Java, so nothing has to compile and nothing has to be spelled right."
+            ],
+            "rules": [
               {
-                "label": "the input",
-                "text": "A full name, any length, with a space somewhere in the middle."
+                "text": "create a result string",
+                "example": "String result = \"\";"
               },
               {
-                "label": "the output",
-                "text": "One String made of the letters that follow the start and the space."
+                "text": "for every char in the string",
+                "example": "for (int i = 0; i < s.length(); i++)"
               },
               {
-                "label": "the shape",
-                "text": "Look at every character; some of them get added to an answer you are building."
+                "text": "do something with the current char",
+                "example": "char c = s.charAt(i);"
               },
               {
-                "label": "plan first",
-                "text": "Say the steps in English before writing Java. Start empty, walk the name, add what qualifies."
+                "text": "return the result",
+                "example": "return result;"
+              }
+            ],
+            "keypoint": "The plan for most String work: make a result, loop every char, do something, return the result."
+          },
+          {
+            "id": "x_pattern",
+            "kind": "teach",
+            "instruction": "Here is that plan as real code. It copies the String character by character.",
+            "code": "String s = \"gold\";\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  char c = s.charAt(i);\n  result = result + c;\n}\nSystem.out.println(result);",
+            "output": "gold",
+            "body": [
+              "On its own it does nothing useful. It is the frame every exercise below hangs on.",
+              "Change the one line in the middle and you change the whole problem."
+            ],
+            "keypoint": "result = result + c inside the loop is how a new String gets built up."
+          },
+          {
+            "id": "x_walk",
+            "kind": "walk",
+            "instruction": "Step through it and watch result grow.",
+            "code": "String s = \"cat\";\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  char c = s.charAt(i);\n  result = result + c;\n}\nSystem.out.println(result);",
+            "frames": [
+              {
+                "line": 1,
+                "note": "result starts empty. It has to exist before the loop, or every pass would wipe it.",
+                "vars": {
+                  "result": "\"\""
+                },
+                "out": ""
+              },
+              {
+                "line": 2,
+                "note": "i starts at 0.",
+                "vars": {
+                  "i": "0",
+                  "result": "\"\""
+                },
+                "out": ""
+              },
+              {
+                "line": 3,
+                "note": "c is the character at 0, which is c.",
+                "vars": {
+                  "i": "0",
+                  "c": "'c'",
+                  "result": "\"\""
+                },
+                "out": ""
+              },
+              {
+                "line": 4,
+                "note": "result becomes \"\" plus c, so \"c\".",
+                "vars": {
+                  "i": "0",
+                  "c": "'c'",
+                  "result": "\"c\""
+                },
+                "out": ""
+              },
+              {
+                "line": 2,
+                "note": "i++ makes i 1.",
+                "vars": {
+                  "i": "1",
+                  "result": "\"c\""
+                },
+                "out": ""
+              },
+              {
+                "line": 3,
+                "note": "c is now a.",
+                "vars": {
+                  "i": "1",
+                  "c": "'a'",
+                  "result": "\"c\""
+                },
+                "out": ""
+              },
+              {
+                "line": 4,
+                "note": "result becomes \"ca\".",
+                "vars": {
+                  "i": "1",
+                  "c": "'a'",
+                  "result": "\"ca\""
+                },
+                "out": ""
+              },
+              {
+                "line": 2,
+                "note": "i++ makes i 2.",
+                "vars": {
+                  "i": "2",
+                  "result": "\"ca\""
+                },
+                "out": ""
+              },
+              {
+                "line": 3,
+                "note": "c is t.",
+                "vars": {
+                  "i": "2",
+                  "c": "'t'",
+                  "result": "\"ca\""
+                },
+                "out": ""
+              },
+              {
+                "line": 4,
+                "note": "result becomes \"cat\".",
+                "vars": {
+                  "i": "2",
+                  "c": "'t'",
+                  "result": "\"cat\""
+                },
+                "out": ""
+              },
+              {
+                "line": 2,
+                "note": "i++ makes i 3. Not less than 3, so the loop ends.",
+                "vars": {
+                  "i": "3",
+                  "result": "\"cat\""
+                },
+                "out": ""
+              },
+              {
+                "line": 6,
+                "note": "Print the finished result.",
+                "vars": {
+                  "result": "\"cat\""
+                },
+                "out": "cat"
               }
             ]
           },
           {
-            "id": "x_build",
+            "id": "x_where",
             "kind": "teach",
-            "wrap": "methods",
-            "instruction": "Start with an empty String and add to it as you go.",
-            "code": "public void run() {\n  String word = \"gold\";\n  String backwards = \"\";\n  for (int i = word.length() - 1; i >= 0; i--) {\n    backwards = backwards + word.charAt(i);\n  }\n  System.out.println(backwards);\n}",
+            "instruction": "Three places a line can go, and it matters which.",
+            "facts": {
+              "columns": [
+                "Where",
+                "When it runs",
+                "What belongs there"
+              ],
+              "rows": [
+                [
+                  "Before the loop",
+                  "once, at the start",
+                  "making result, and any counter"
+                ],
+                [
+                  "Inside the loop",
+                  "once per character",
+                  "the decision about this character"
+                ],
+                [
+                  "After the loop",
+                  "once, at the end",
+                  "printing or returning the result"
+                ]
+              ]
+            },
+            "body": [
+              "Putting result = \"\" inside the loop is the commonest mistake in this lesson. It empties on every pass."
+            ],
+            "keypoint": "Make the result before the loop, decide inside it, return after it."
+          },
+          {
+            "id": "x_spot",
+            "kind": "spot",
+            "instruction": "This should print gold and prints d. Tap the line to blame.",
+            "code": "String s = \"gold\";\nfor (int i = 0; i < s.length(); i++) {\n  String result = \"\";\n  result = result + s.charAt(i);\n  System.out.println(result);\n}",
+            "correct": 2,
+            "why": "result is made fresh on every pass, so it is emptied each time round and only ever holds the newest character. It has to be made once, before the loop.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_worked1",
+            "kind": "teach",
+            "instruction": "Worked example: keep only the letters.",
+            "body": [
+              "TASK. Given \"a1b2c3\", give back \"abc\".",
+              "PLAN. Make a result. For every char, if it is a letter, add it. Return the result.",
+              "Only the middle line changed from the frame."
+            ],
+            "code": "String s = \"a1b2c3\";\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  char c = s.charAt(i);\n  if (Character.isLetter(c)) {\n    result = result + c;\n  }\n}\nSystem.out.println(result);",
+            "output": "abc"
+          },
+          {
+            "id": "x_worked2",
+            "kind": "teach",
+            "instruction": "Worked example: reverse it.",
+            "body": [
+              "TASK. Given \"gold\", give back \"dlog\".",
+              "PLAN. Make a result. For every char, put it in FRONT of the result. Return the result.",
+              "Same frame again. The only change is which side the character goes on."
+            ],
+            "code": "String s = \"gold\";\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  result = s.charAt(i) + result;\n}\nSystem.out.println(result);",
             "output": "dlog",
-            "highlight": [
-              2,
-              4
+            "keypoint": "c + result builds backwards. result + c builds forwards."
+          },
+          {
+            "id": "x_w1",
+            "kind": "workout",
+            "level": "warm-up",
+            "instruction": "Count the vowels in a word.",
+            "plan": [
+              "make a counter, starting at 0",
+              "for every char in the word",
+              "if the char is a vowel, add one to the counter",
+              "print the counter"
             ],
-            "points": [
-              {
-                "label": "String backwards = \"\"",
-                "text": "Empty, not null. There is nothing in it yet but it exists and can be added to."
-              },
-              {
-                "label": "backwards = backwards + ...",
-                "text": "Take what you have, add one character, put it back. The same shape as total = total + n."
-              },
-              {
-                "label": "i = length() - 1; i >= 0; i--",
-                "text": "Walks the positions backwards, so characters arrive in reverse."
-              },
-              {
-                "label": "\"dlog\"",
-                "text": "The accumulator grew one character per pass: d, dl, dlo, dlog."
-              }
-            ]
-          },
-          {
-            "id": "x_empty",
-            "kind": "teach",
-            "wrap": "methods",
-            "instruction": "The empty start matters.",
-            "code": "public void run() {\n  String out = \"\";\n  out = out + \"a\";\n  out = out + \"b\";\n  System.out.println(out);\n  System.out.println(out.length());\n}",
-            "output": "ab\n2",
-            "points": [
-              {
-                "label": "\"\"",
-                "text": "A String of zero characters. length() is 0."
-              },
-              {
-                "label": "after two adds",
-                "text": "\"ab\", length 2. Each add makes a new String and reassigns it."
-              },
-              {
-                "label": "why not start with a letter",
-                "text": "Anything you start with ends up in the answer. \"\" is the only safe start."
-              }
-            ]
-          },
-          {
-            "id": "x_predict",
-            "kind": "predict",
-            "wrap": "methods",
-            "instruction": "What does this print?",
-            "code": "public void run() {\n  String s = \"abc\";\n  String out = \"\";\n  for (int i = 0; i < s.length(); i++) {\n    out = s.charAt(i) + out;\n  }\n  System.out.println(out);\n}",
-            "opts": [
-              "abc",
-              "ccbbaa",
-              "aabbcc",
-              "cba"
+            "methods": [
+              "s.length()",
+              "s.charAt(i)",
+              "indexOf"
             ],
-            "correct": 3,
-            "why": "Each character is put in FRONT of what is already there, so the result comes out reversed even though the loop runs forwards.",
-            "skills": [
-              "build up a String inside a loop"
-            ]
-          },
-          {
-            "id": "x_fill",
-            "kind": "fill",
-            "wrap": "methods",
-            "instruction": "Collect only the capital letters.",
-            "code": "public void run() {\n  String name = \"Ada Lovelace\";\n  String tag = ⟦1⟧;\n  for (int i = 0; i < name.length(); i++) {\n    char c = name.charAt(i);\n    if (c >= 'A' && c <= 'Z') {\n      tag = tag + c;\n    }\n  }\n  System.out.println(tag);\n}",
-            "blanks": [
-              {
-                "chips": [
-                  "\"\"",
-                  "\" \"",
-                  "\"AL\""
-                ],
-                "answer": 0
-              }
-            ],
-            "target": "AL",
-            "hint": "Whatever you start with stays in the answer.",
-            "after": "Starting with \" \" would have printed \" AL\", and starting with \"AL\" would have printed \"ALAL\".",
-            "skills": [
-              "build up a String inside a loop"
-            ]
-          },
-          {
-            "id": "x_upper",
-            "kind": "write",
-            "wrap": "methods",
-            "instruction": "Convert To Uppercase: shout a String back, one character at a time.",
-            "harness": "public void run() {\n  System.out.println(toUpper(\"dungeon\"));\n  System.out.println(toUpper(\"Ada\"));\n}",
-            "code": "public String toUpper(String str)\n{\n    \n}\n",
-            "target": "DUNGEON\nADA",
-            "solution": "public String toUpper(String str)\n{\n    String result = \"\";\n    for (int i = 0; i < str.length(); i++) {\n      result = result + Character.toUpperCase(str.charAt(i));\n    }\n    return result;\n}",
-            "hint": "Start result at \"\". Loop the characters, add Character.toUpperCase(str.charAt(i)) each time, then return result.",
-            "after": "CodeHS exercise 4.8.6, Convert To Uppercase. Same empty-start pattern as the initials.",
-            "skills": [
-              "build up a String inside a loop"
-            ]
-          },
-          {
-            "id": "x_mcq",
-            "kind": "trace",
-            "instruction": "Two the test asks.",
-            "code": "String out = \"\";\nout = out + \"x\";",
-            "questions": [
-              {
-                "prompt": "Why start an accumulator String at \"\"?",
-                "opts": [
-                  "So length() works",
-                  "So nothing unwanted appears in the result",
-                  "Because Java requires it",
-                  "To make the loop faster"
-                ],
-                "correct": 1,
-                "why": "Every character you start with survives to the end. Empty is the only start that adds nothing."
-              },
-              {
-                "prompt": "What does out = out + c; do?",
-                "opts": [
-                  "Makes a new String with c on the end and stores it in out",
-                  "Changes the existing String in place",
-                  "Removes c from out",
-                  "Prints c"
-                ],
-                "correct": 0,
-                "why": "Strings cannot be changed in place. Each += builds a new String and reassigns the variable."
-              }
-            ],
-            "skills": [
-              "build up a String inside a loop"
-            ]
-          },
-          {
-            "id": "x_same",
-            "kind": "write",
-            "wrap": "methods",
-            "instruction": "All Same Letter: is every character the same one?",
-            "harness": "public void run() {\n  System.out.println(allSameLetter(\"aaa\"));\n  System.out.println(allSameLetter(\"aab\"));\n  System.out.println(allSameLetter(\"z\"));\n}",
-            "code": "public boolean allSameLetter(String str)\n{\n    \n}\n",
-            "target": "true\nfalse\ntrue",
-            "solution": "public boolean allSameLetter(String str)\n{\n    for (int i = 0; i < str.length(); i++) {\n      if (str.charAt(i) != str.charAt(0)) {\n        return false;\n      }\n    }\n    return true;\n}",
-            "hint": "Compare every character with the first one. The moment one differs, return false. Reaching the end means true.",
-            "after": "CodeHS exercise 4.8.8, All Same Letter. Same shape as Is it an Integer? - false early, true at the end.",
+            "code": "String s = \"programming\";\n// print how many vowels there are\n",
+            "target": "3",
+            "solution": "String s = \"programming\";\nint count = 0;\nfor (int i = 0; i < s.length(); i++) {\n  char c = s.charAt(i);\n  if (\"aeiou\".indexOf(c) != -1) {\n    count++;\n  }\n}\nSystem.out.println(count);",
+            "hint": "\"aeiou\".indexOf(c) gives -1 when c is not a vowel. That is a shorter test than five comparisons.",
+            "after": "o, a and i. Using indexOf on a String of vowels beats writing c == 'a' || c == 'e' four more times.",
             "skills": [
               "loop over characters and decide something about all of them"
             ]
           },
           {
-            "id": "x_write",
-            "kind": "write",
-            "wrap": "methods",
-            "instruction": "Your turn: build the initials of \"Grace Hopper\".",
-            "code": "public void run() {\n  String name = \"Grace Hopper\";\n  // build a String of just the capital letters, then print it\n}",
-            "target": "GH",
-            "solution": "public void run() {\n  String name = \"Grace Hopper\";\n  String tag = \"\";\n  for (int i = 0; i < name.length(); i++) {\n    char c = name.charAt(i);\n    if (c >= 'A' && c <= 'Z') {\n      tag = tag + c;\n    }\n  }\n  System.out.println(tag);\n}",
-            "hint": "Start tag at \"\", loop with charAt(i), and add the character when it is between 'A' and 'Z'.",
-            "after": "Start empty, walk the String, add what qualifies. That pattern solves most String problems.",
+            "id": "x_w2",
+            "kind": "workout",
+            "level": "standard",
+            "instruction": "Double every vowel. doubleVowel(\"hello\") gives \"heelloo\".",
+            "plan": [
+              "make an empty result string",
+              "for every char in the word",
+              "add the char to the result",
+              "if it is a vowel, add it a second time",
+              "print the result"
+            ],
+            "methods": [
+              "s.length()",
+              "s.charAt(i)",
+              "indexOf"
+            ],
+            "code": "String s = \"hello\";\n// print heelloo\n",
+            "target": "heelloo",
+            "solution": "String s = \"hello\";\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  char c = s.charAt(i);\n  result = result + c;\n  if (\"aeiou\".indexOf(c) != -1) {\n    result = result + c;\n  }\n}\nSystem.out.println(result);",
+            "hint": "Add it once always, then a second time only if it is a vowel.",
+            "after": "Adding unconditionally first, then conditionally, avoids writing the add twice in an if and an else.",
             "skills": [
               "build up a String inside a loop"
             ]
           },
           {
-            "id": "x_pal",
-            "kind": "write",
-            "wrap": "methods",
-            "instruction": "Finding Palindromes: does it read the same backwards?",
-            "harness": "public void run() {\n  System.out.println(isPalindrome(\"racecar\"));\n  System.out.println(isPalindrome(\"dungeon\"));\n  System.out.println(isPalindrome(\"aa\"));\n}",
-            "code": "public boolean isPalindrome(String str)\n{\n    \n}\n",
-            "target": "true\nfalse\ntrue",
-            "solution": "public boolean isPalindrome(String str)\n{\n    String backwards = \"\";\n    for (int i = str.length() - 1; i >= 0; i--) {\n      backwards = backwards + str.charAt(i);\n    }\n    return backwards.equals(str);\n}",
-            "hint": "Build the String backwards by looping from length() - 1 down to 0, then compare with .equals() - not ==.",
-            "after": "CodeHS exercise 4.8.3, Finding Palindromes. It uses a countdown loop, String building, and .equals() from 3.15 all at once.",
+            "id": "x_w3",
+            "kind": "workout",
+            "level": "standard",
+            "instruction": "Write toUpperCase yourself. You may use Character methods but not the String one.",
+            "plan": [
+              "make an empty result string",
+              "for every char in the word",
+              "turn that char into its capital",
+              "add it to the result",
+              "print the result"
+            ],
+            "methods": [
+              "s.charAt(i)",
+              "Character.toUpperCase(c)"
+            ],
+            "code": "String s = \"hello world\";\n// print HELLO WORLD without using s.toUpperCase()\n",
+            "target": "HELLO WORLD",
+            "solution": "String s = \"hello world\";\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  result = result + Character.toUpperCase(s.charAt(i));\n}\nSystem.out.println(result);",
+            "hint": "Character.toUpperCase leaves anything that is not a letter alone, so the space needs no special case.",
+            "after": "The space came through untouched, because Character.toUpperCase returns anything non-alphabetic unchanged.",
             "skills": [
               "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_w4",
+            "kind": "workout",
+            "level": "hard",
+            "instruction": "Are all the letters in the word the same letter?",
+            "plan": [
+              "take the first char as the one to match",
+              "for every char in the word",
+              "if any char is different, the answer is false",
+              "print the answer"
+            ],
+            "methods": [
+              "s.charAt(0)",
+              "s.length()",
+              "boolean"
+            ],
+            "code": "String s = \"aaaa\";\n// print true when every character is the same, false otherwise\n",
+            "target": "true",
+            "solution": "String s = \"aaaa\";\nchar first = s.charAt(0);\nboolean same = true;\nfor (int i = 0; i < s.length(); i++) {\n  if (s.charAt(i) != first) {\n    same = false;\n  }\n}\nSystem.out.println(same);",
+            "hint": "Start with same = true and only ever set it to false. One difference is enough to settle it.",
+            "after": "Assume true, then look for a counter-example. That shape solves a whole family of \"are they all\" questions.",
+            "skills": [
+              "loop over characters and decide something about all of them"
+            ]
+          },
+          {
+            "id": "x_w5",
+            "kind": "workout",
+            "level": "hard",
+            "instruction": "Print the word in AltCase. HeLlO. The first letter is a capital and it alternates from there.",
+            "plan": [
+              "make an empty result string",
+              "for every position in the word",
+              "if the position is even, add the capital",
+              "otherwise add the small letter",
+              "print the result"
+            ],
+            "methods": [
+              "i % 2",
+              "Character.toUpperCase(c)",
+              "Character.toLowerCase(c)"
+            ],
+            "code": "String s = \"hello world\";\n// print HeLlO WoRlD\n",
+            "target": "HeLlO WoRlD",
+            "solution": "String s = \"hello world\";\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  char c = s.charAt(i);\n  if (i % 2 == 0) {\n    result = result + Character.toUpperCase(c);\n  } else {\n    result = result + Character.toLowerCase(c);\n  }\n}\nSystem.out.println(result);",
+            "hint": "The position decides, not the character. i % 2 == 0 is every even position.",
+            "after": "The space counts as a position, which is why the D comes out capital. Using i rather than a counter you manage yourself is what makes this short.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_w6",
+            "kind": "workout",
+            "level": "hard",
+            "instruction": "Is the word a palindrome? Does it read the same backwards?",
+            "plan": [
+              "make an empty reversed string",
+              "for every char in the word, put it in front of the reversed string",
+              "compare the reversed string with the original",
+              "print the answer"
+            ],
+            "methods": [
+              "s.charAt(i)",
+              ".equals()"
+            ],
+            "code": "String s = \"racecar\";\n// print true when it reads the same backwards\n",
+            "target": "true",
+            "solution": "String s = \"racecar\";\nString reversed = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  reversed = s.charAt(i) + reversed;\n}\nSystem.out.println(s.equals(reversed));",
+            "hint": "Build the reverse with c + result, then compare with .equals() and not ==.",
+            "after": "Reversing then comparing is the plainest solution. Comparing from both ends inwards is faster, but this one is easier to get right.",
+            "skills": [
+              "loop over characters and decide something about all of them"
+            ]
+          },
+          {
+            "id": "x_w7",
+            "kind": "workout",
+            "level": "olympic",
+            "instruction": "Do the curly brackets match? {{}} matches. {{} does not.",
+            "plan": [
+              "keep a count of how many brackets are still open",
+              "for every char in the string",
+              "add one when it opens, take one away when it closes",
+              "if the count ever goes below zero, they do not match",
+              "at the end they match only if the count is exactly zero"
+            ],
+            "methods": [
+              "s.charAt(i)",
+              "a counter",
+              "&&"
+            ],
+            "code": "String s = \"{{}{{}}}\";\n// print true when the brackets match, false when they do not\n",
+            "target": "true",
+            "solution": "String s = \"{{}{{}}}\";\nint open = 0;\nboolean ok = true;\nfor (int i = 0; i < s.length(); i++) {\n  if (s.charAt(i) == '{') {\n    open++;\n  } else {\n    open--;\n  }\n  if (open < 0) {\n    ok = false;\n  }\n}\nSystem.out.println(ok && open == 0);",
+            "hint": "One counter is enough. Going below zero means a closing bracket arrived with nothing to close.",
+            "after": "Two conditions, both needed. Never going negative means nothing closed too early, and ending at zero means nothing was left open. The empty string gives true, which is correct.",
+            "skills": [
+              "loop over characters and decide something about all of them"
+            ]
+          },
+          {
+            "id": "x_w8",
+            "kind": "workout",
+            "level": "olympic",
+            "instruction": "Fix the Sum String. sumString(6, 10) should give \"6 + 10 = 16\" and currently gives \"6 + 10 = 610\".",
+            "wrap": "methods",
+            "plan": [
+              "work out the sum as a number first",
+              "build the text from the two numbers",
+              "add the sum on at the end, in brackets so it stays a number",
+              "return the finished string"
+            ],
+            "methods": [
+              "+ on numbers",
+              "+ on Strings",
+              "brackets"
+            ],
+            "code": "public void run() {\n  System.out.println(sumString(6, 10));\n}\n\npublic String sumString(int one, int two) {\n  return one + \" + \" + two + \" = \" + one + two;\n}",
+            "target": "6 + 10 = 16",
+            "solution": "public void run() {\n  System.out.println(sumString(6, 10));\n}\n\npublic String sumString(int one, int two) {\n  return one + \" + \" + two + \" = \" + (one + two);\n}",
+            "hint": "By the time Java reaches one + two it is already building text, so it glues instead of adding.",
+            "after": "+ adds numbers and joins text, and Java works left to right. Once one side is a String, everything after it is joining. The brackets force the addition to happen first.",
+            "skills": [
+              "build up a String inside a loop"
+            ]
+          },
+          {
+            "id": "x_final",
+            "kind": "workout",
+            "level": "olympic",
+            "instruction": "Ask for a sentence, then print it with every vowel removed.",
+            "plan": [
+              "read the sentence",
+              "make an empty result string",
+              "for every char in the sentence",
+              "if it is not a vowel, add it to the result",
+              "print the result"
+            ],
+            "methods": [
+              "readLine",
+              "indexOf",
+              "s.charAt(i)"
+            ],
+            "code": "// ask \"Sentence? \" with readLine\n// print it back with a e i o u removed\n",
+            "stdin": "the quick brown fox",
+            "target": "Sentence? the quick brown fox\nth qck brwn fx",
+            "solution": "String s = readLine(\"Sentence? \");\nString result = \"\";\nfor (int i = 0; i < s.length(); i++) {\n  char c = s.charAt(i);\n  if (\"aeiou\".indexOf(c) == -1) {\n    result = result + c;\n  }\n}\nSystem.out.println(result);",
+            "hint": "Same frame as always. The only new part is that the test is now == -1 instead of != -1.",
+            "after": "That is the whole lesson in one exercise: read, make a result, loop, decide, print. You now have the shape for any of these.",
+            "skills": [
+              "build up a String inside a loop",
+              "loop over characters and decide something about all of them"
             ]
           }
         ]
