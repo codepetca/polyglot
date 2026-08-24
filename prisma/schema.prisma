@@ -38,11 +38,11 @@ model Lesson {
   // Ordered array of typed blocks. See lib/curriculum/blocks.ts for the shape.
   // No @default: Prisma's Json defaults are broken on SQLite (emits unquoted
   // `DEFAULT []` -> invalid SQL). Every create site supplies these explicitly.
-  blocks    Json
+  blocks      Json
   // Graded coding exercise: { prompt, starter, expected, behaviour, stdin }
-  exercise  Json
+  exercise    Json
   // Legacy MCQ pool ({q,opts,correct,why}) — still powers the old practice panel.
-  quizBank  Json
+  quizBank    Json
   // The mastery quiz: typed Question[]. One per lesson. Passing it (server-graded)
   // is the ONLY path to MASTERED. Falls back to quizBank if unset.
   masteryQuiz Json?
@@ -69,14 +69,14 @@ model Lesson {
   // Unpublished working copy: { title, goal, objectives, blocks, exercise, quizBank }.
   // Students always read the live fields above; the editor edits this until
   // the owner hits Publish.
-  draft    Json?
-  draftAt  DateTime?
+  draft   Json?
+  draftAt DateTime?
 
   attempts  Attempt[]
   versions  LessonVersion[]
   skills    Skill[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 
   @@index([chapterId, order])
 }
@@ -102,29 +102,32 @@ model LessonVersion {
 // Students have NO email/password — they join a Class with its join code and a
 // display name, Kahoot/ClassDojo-style.
 model User {
-  id           String    @id @default(cuid())
-  name         String
-  email        String?   @unique
-  passwordHash String? // scrypt "salt:hash"
-  emailVerifiedAt DateTime?
-  totpSecret   String? // encrypted TOTP secret (Google Authenticator) — admin/staff 2FA
+  id                 String           @id @default(cuid())
+  name               String
+  email              String?          @unique
+  passwordHash       String? // scrypt "salt:hash"
+  emailVerifiedAt    DateTime?
+  totpSecret         String? // encrypted TOTP secret (Google Authenticator) — admin/staff 2FA
   googleRefreshToken String? // encrypted — a teacher's Google Classroom connection
-  googleEmail  String? // which Google account they connected
-  failedLogins Int       @default(0)
-  lockedAt     DateTime? // set after repeated failures; admin can unlock
-  role         String    @default("STUDENT")
-  class        Class?    @relation("ClassStudents", fields: [classId], references: [id], onDelete: SetNull)
-  classId      String? // students only
-  classesOwned Class[]   @relation("ClassTeacher") // staff only
-  attempts     Attempt[]
-  aiCalls      AiCall[]
-  sent         Message[] @relation("MsgFrom")
-  inbox        Message[] @relation("MsgTo")
-  testsOwned   Test[]    @relation("TestOwner")
-  submissions  TestSubmission[]
-  boardPosts   BoardPost[]
-  avatar       String? // small image as a data URL (profile pic)
-  createdAt    DateTime  @default(now())
+  googleEmail        String? // which Google account they connected
+  failedLogins       Int              @default(0)
+  lockedAt           DateTime? // set after repeated failures; admin can unlock
+  role               String           @default("STUDENT")
+  class              Class?           @relation("ClassStudents", fields: [classId], references: [id], onDelete: SetNull)
+  classId            String? // students only
+  classesOwned       Class[]          @relation("ClassTeacher") // staff only
+  attempts           Attempt[]
+  aiCalls            AiCall[]
+  sent               Message[]        @relation("MsgFrom")
+  inbox              Message[]        @relation("MsgTo")
+  testsOwned         Test[]           @relation("TestOwner")
+  submissions        TestSubmission[]
+  boardPosts         BoardPost[]
+  avatar             String? // small image as a data URL (profile pic)
+  // Pika identity: SHA256(salt + raw_student_id), never the raw Pika user id.
+  // Set on first authenticated visit from the Pika tab — see PIKA-INTEGRATION.md.
+  pikaSubject        String?          @unique
+  createdAt          DateTime         @default(now())
 
   @@index([classId])
 }
@@ -132,40 +135,40 @@ model User {
 // A test/quiz assembled from typed questions (lib/curriculum/questions.ts).
 // Assign to a class; students take it full-screen; results feed grading.
 model Test {
-  id          String   @id @default(cuid())
-  title       String
-  owner       User?    @relation("TestOwner", fields: [ownerId], references: [id], onDelete: SetNull)
-  ownerId     String?
-  class       Class?   @relation(fields: [classId], references: [id], onDelete: SetNull)
-  classId     String?
-  questions   Json // Question[]
-  timeLimit   Int? // minutes, null = untimed
-  openAt      DateTime?
-  closeAt     DateTime?
-  published   Boolean  @default(false) // students can take it
-  resultsReleased Boolean @default(false) // students can see their marks + feedback
-  requireSeb  Boolean  @default(false) // must be opened in Safe Exam Browser
+  id                 String           @id @default(cuid())
+  title              String
+  owner              User?            @relation("TestOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId            String?
+  class              Class?           @relation(fields: [classId], references: [id], onDelete: SetNull)
+  classId            String?
+  questions          Json // Question[]
+  timeLimit          Int? // minutes, null = untimed
+  openAt             DateTime?
+  closeAt            DateTime?
+  published          Boolean          @default(false) // students can take it
+  resultsReleased    Boolean          @default(false) // students can see their marks + feedback
+  requireSeb         Boolean          @default(false) // must be opened in Safe Exam Browser
   googleCourseWorkId String? // the synced Google Classroom assignment id
-  submissions TestSubmission[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  submissions        TestSubmission[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 
   @@index([classId])
 }
 
 model TestSubmission {
-  id          String   @id @default(cuid())
-  test        Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  test        Test      @relation(fields: [testId], references: [id], onDelete: Cascade)
   testId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   answers     Json // { [questionId]: answer }
   results     Json? // QResult[] after grading
-  autoScore   Float    @default(0)
-  maxScore    Float    @default(0)
+  autoScore   Float     @default(0)
+  maxScore    Float     @default(0)
   finalScore  Float? // teacher-confirmed total (overrides auto)
-  status      String   @default("submitted") // submitted | graded
-  submittedAt DateTime @default(now())
+  status      String    @default("submitted") // submitted | graded
+  submittedAt DateTime  @default(now())
   gradedAt    DateTime?
 
   @@unique([testId, userId])
@@ -193,17 +196,17 @@ model Message {
 }
 
 model Class {
-  id        String   @id @default(cuid())
-  name      String
-  joinCode  String   @unique // what students type to join
+  id               String      @id @default(cuid())
+  name             String
+  joinCode         String      @unique // what students type to join
   googleCourseId   String? // linked Google Classroom course
   googleCourseName String?
-  teacher   User?    @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
-  teacherId String?
-  students  User[]   @relation("ClassStudents")
-  tests     Test[]
-  boardPosts BoardPost[]
-  createdAt DateTime @default(now())
+  teacher          User?       @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
+  teacherId        String?
+  students         User[]      @relation("ClassStudents")
+  tests            Test[]
+  boardPosts       BoardPost[]
+  createdAt        DateTime    @default(now())
 }
 
 // Short-lived email verification codes. `payload` carries pending signup data
@@ -249,7 +252,7 @@ model Attempt {
   kind      String
   passed    Boolean
   score     Float    @default(0) // 0..1
-  detail    Json     // per-question results, code, verdict, etc. — always supplied by callers
+  detail    Json // per-question results, code, verdict, etc. — always supplied by callers
   createdAt DateTime @default(now())
 
   @@index([userId, lessonId])
@@ -258,11 +261,11 @@ model Attempt {
 // Mastery is derived state, updated only through the one honest chokepoint
 // (see lib/progress.ts). Kept as a row so the teacher dashboard reads it cheaply.
 model Progress {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
   lessonId  String
-  status    String  @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | MASTERED
-  readiness Float   @default(0)             // 0..1 — evidence toward mastery
+  status    String   @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | MASTERED
+  readiness Float    @default(0) // 0..1 — evidence toward mastery
   flag      String? // "stuck" | "coast" | null
   updatedAt DateTime @updatedAt
 
@@ -273,7 +276,7 @@ model AiCall {
   id        String   @id @default(cuid())
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?
-  feature   String   // tutor | grade | generate | runjava
+  feature   String // tutor | grade | generate | runjava
   provider  String
   model     String
   inTokens  Int      @default(0)
@@ -309,8 +312,8 @@ model Skill {
 
   questionSkills QuestionSkill[]
   evidence       Evidence[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   @@index([lessonId])
 }
