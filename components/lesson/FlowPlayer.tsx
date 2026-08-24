@@ -71,23 +71,48 @@ const RTL = new Set(["ur", "fa", "ar"]);
 
 // Each language names itself, so a student can find theirs without first
 
-// ESL scaffolding. The English above it is the lesson; this is a help line the
-// student opens when a sentence blocks them, then goes back to the English.
-// Collapsed by default ON PURPOSE — the goal is learning the course in English,
-// so the assist must never be the thing you read first.
-function Assist({ text, lang }: { text?: string; lang: string }) {
-  const [open, setOpen] = useState(false);
+// ESL: the SAME sentence twice, side by side.
+//
+// This used to be a collapsed "what does this mean?" line underneath. The owner
+// asked for two columns instead, and it is the better shape: a student reading
+// a translation underneath has already given up on the English line above it,
+// whereas side by side the two stay coupled and the English is always in view.
+//
+// The English column is always first, and is never replaced. Technical terms
+// stay English inside the translation too — see lib/curriculum/i18n-extract.ts.
+//
+// Below 900px there is no room for two columns, so they stack, English on top.
+// Short captions — a hint, a reveal, a caption after success — are one line, so
+// two columns would be more chrome than text. These render inline underneath.
+function Alt({ text, lang }: { text?: string; lang: string }) {
   if (!text || !lang) return null;
   return (
-    <div className="assist">
-      {open ? (
-        <p className="assisttext" dir={RTL.has(lang) ? "rtl" : "ltr"} lang={lang}>
-          {text}
-          <button className="assistbtn" onClick={() => setOpen(false)} aria-label="Hide translation">✕</button>
-        </p>
-      ) : (
-        <button className="assistbtn" onClick={() => setOpen(true)}>文 what does this mean?</button>
-      )}
+    <span className="altline" dir={RTL.has(lang) ? "rtl" : "ltr"} lang={lang}>
+      {text}
+    </span>
+  );
+}
+
+function Pair({
+  en,
+  zh,
+  lang,
+  className = "",
+  as: Tag = "div",
+}: {
+  en: React.ReactNode;
+  zh?: string;
+  lang: string;
+  className?: string;
+  as?: "div" | "p";
+}) {
+  if (!zh || !lang) return <Tag className={className}>{en}</Tag>;
+  return (
+    <div className="pair">
+      <Tag className={className}>{en}</Tag>
+      <Tag className={`${className} pairalt`} dir={RTL.has(lang) ? "rtl" : "ltr"} lang={lang}>
+        {zh}
+      </Tag>
     </div>
   );
 }
@@ -488,11 +513,12 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
 
   return (
     <div className={`panel flowstep ${won ? "won" : ""}`}>
-      <div className="flowq">{step.instruction}</div>
-      <Assist text={assist?.instruction} lang={lang} />
+      <Pair className="flowq" en={step.instruction} zh={assist?.instruction} lang={lang} />
       {(step.body || []).length > 0 && (
         <div className="teachbody">
-          {(step.body || []).map((line, j) => <p key={j}>{line}</p>)}
+          {(step.body || []).map((line, j) => (
+            <Pair as="p" key={j} en={line} zh={assist?.body?.[j]} lang={lang} />
+          ))}
         </div>
       )}
       {/* The documentation stays on screen while the student works. Hiding it
@@ -1134,7 +1160,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
               <code className="tp-label">{p.label}</code>
               <span className="tp-text">
                 {p.text}
-                <Assist text={assist?.points?.[j]?.text} lang={lang} />
+                <Alt text={assist?.points?.[j]?.text} lang={lang} />
               </span>
             </div>
           ))}
@@ -1178,10 +1204,10 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
         {reveal && reveal.why !== undefined && reveal.why !== "" && (
           <div className={`flowwhy ${reveal.correct ? "yes" : "no"}`}>
             <b>{reveal.correct ? "✓ exactly." : "Good guess — here's the catch:"}</b> {reveal.why}
-            <Assist text={assist?.why} lang={lang} />
+            <Alt text={assist?.why} lang={lang} />
           </div>
         )}
-        {won && step.after && <div className="flowwhy yes"><b>✓</b> {step.after}<Assist text={assist?.after} lang={lang} /></div>}
+        {won && step.after && <div className="flowwhy yes"><b>✓</b> {step.after}<Alt text={assist?.after} lang={lang} /></div>}
         {won && !step.after && !reveal?.why && step.kind !== "note" && <div className="flowwhy yes"><b>✓ nailed it.</b></div>}
       </div>
 
@@ -1189,7 +1215,7 @@ function StepView({ step, lessonCode, assist, lang, onDone, onSkip, onGoto, onAt
       {!won && !reveal && (runnable || step.kind === "fill" || step.kind === "bucket") && fails >= 1 && (
         <div className="flowhelp">
           {step.hint && !hintOpen && <button className="btn ghost" onClick={() => setHintOpen(true)}>💡 hint</button>}
-          {hintOpen && <span className="hinttext">💡 {step.hint}<Assist text={assist?.hint} lang={lang} /></span>}
+          {hintOpen && <span className="hinttext">💡 {step.hint}<Alt text={assist?.hint} lang={lang} /></span>}
           {fails >= 2 && !aiHint && runnable && (
             <button className="btn purple" disabled={aiBusy} onClick={askTutor}>{aiBusy ? "…" : "🤖 I'm stuck"}</button>
           )}

@@ -162,7 +162,13 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
     setTimeout(() => setSentNote(""), 3500);
   }
 
-  const current = PANES.find((p) => p.id === pane)!;
+  const idx = PANES.findIndex((p) => p.id === pane);
+  const current = PANES[idx];
+  // What each arrow will take you to. The icon goes ON the arrow so the
+  // shortcut is legible without pressing it — left is that pane, right is that
+  // one — rather than only telling you where you already are.
+  const prev = PANES[(idx - 1 + PANES.length) % PANES.length];
+  const next = PANES[(idx + 1) % PANES.length];
 
   return (
     <>
@@ -219,20 +225,24 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
           label={current.label}
           header={
             <>
-              <button className="benchnav" onClick={() => swap(-1)} title="Previous tool (←)" aria-label="Previous tool">
-                ‹
+              <button
+                className="benchnav"
+                onClick={() => swap(-1)}
+                title={`${prev.label} (←)`}
+                aria-label={`Go to ${prev.label}`}
+              >
+                <span className="navarrow">‹</span>
+                <BenchIcon name={prev.id} size={13} />
               </button>
-              <div className="benchtitle">
-                {/* The icon sits with the title so you can see what you have
-                    landed on without reading, which is the point of swapping
-                    with arrows in the first place. */}
-                <span className="bicon">
-                  <BenchIcon name={current.id} />
-                </span>
-                {current.label}
-              </div>
-              <button className="benchnav" onClick={() => swap(1)} title="Next tool (→)" aria-label="Next tool">
-                ›
+              <div className="benchtitle">{current.label}</div>
+              <button
+                className="benchnav"
+                onClick={() => swap(1)}
+                title={`${next.label} (→)`}
+                aria-label={`Go to ${next.label}`}
+              >
+                <BenchIcon name={next.id} size={13} />
+                <span className="navarrow">›</span>
               </button>
               <span className="benchdots" aria-hidden>
                 {PANES.map((p) => (

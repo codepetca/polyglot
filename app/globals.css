@@ -1125,7 +1125,14 @@ pre.flowcode.ro { margin: 0; }
   letter-spacing: .05em; text-transform: uppercase; color: var(--ink); display: flex; align-items: center;
   justify-content: center; gap: 7px; }
 .benchnav, .benchclose { background: transparent; border: 1.5px solid transparent; border-radius: 8px;
-  width: 28px; height: 28px; font-size: 17px; line-height: 1; color: var(--muted); cursor: pointer; flex-shrink: 0; }
+  height: 28px; font-size: 17px; line-height: 1; color: var(--muted); cursor: pointer; flex-shrink: 0; }
+.benchclose { width: 28px; }
+/* The arrow carries the icon of where it goes, so left/right is readable
+   before you press it. */
+.benchnav { display: inline-flex; align-items: center; gap: 3px; padding: 0 6px; }
+.benchnav .navarrow { font-size: 17px; line-height: 1; }
+.benchnav svg { opacity: .75; }
+.benchnav:hover svg { opacity: 1; }
 .benchnav:hover, .benchclose:hover { background: #e9e5da; color: var(--ink); border-color: var(--line); }
 .benchclose { font-size: 13px; }
 .benchdots { display: flex; gap: 4px; margin: 0 4px; flex-shrink: 0; }
@@ -1221,3 +1228,24 @@ pre.flowcode.ro { margin: 0; }
 .refpane .refhere > h4 { color: var(--accent); border-bottom-color: var(--accent); }
 .refbadge { float: right; font-family: var(--sans); font-size: 9.5px; letter-spacing: .06em;
   background: var(--accent); color: #fff; border-radius: 99px; padding: 2px 7px; text-transform: uppercase; }
+
+/* ── ESL: the same sentence twice, side by side ──
+   English first and never replaced. Below 900px there is no room for two
+   columns, so they stack with English on top. */
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; align-items: start; }
+.pair > .pairalt { color: var(--muted); }
+.pair > .pairalt::before { content: ""; position: absolute; }
+.pairalt { position: relative; padding-left: 14px; border-left: 2px solid var(--line); }
+@media (max-width: 900px) {
+  .pair { grid-template-columns: 1fr; gap: 2px; }
+  .pairalt { padding-left: 12px; }
+}
+.altline { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+
+.eslcard h2 { font-family: var(--sans); font-size: 15px; text-transform: uppercase; letter-spacing: .07em; margin: 0 0 6px; }
+.eslrow { display: flex; align-items: center; gap: 10px; margin: 12px 0; font-size: 14.5px; }
+.eslrow .esllabel { min-width: 74px; color: var(--muted); font-size: 13px; }
+.eslrow select { font-family: var(--sans); font-size: 14px; padding: 7px 10px; border: 1.5px solid var(--line);
+  border-radius: 9px; background: var(--card); color: var(--ink); }
+.eslrow select:disabled { opacity: .5; }
+.eslnote { margin: 4px 0 0; font-size: 12.5px; }

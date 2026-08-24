@@ -2,6 +2,13 @@ import "server-only";
 import { prisma } from "@/lib/db";
 import { complete } from "@/lib/llm";
 import type { FlowStep } from "@/lib/curriculum/flow";
+import {
+  TRANSLATABLE_FIELDS, GLOSSARY, extractTranslatable, setAt,
+  type TPath, type TItem, type StepTranslation, type FlowTranslation,
+} from "@/lib/curriculum/i18n-extract";
+
+export { TRANSLATABLE_FIELDS, GLOSSARY, extractTranslatable };
+export type { TPath, TItem, StepTranslation, FlowTranslation };
 
 // LANGUAGE ASSIST for English-as-a-second-language students.
 //
@@ -26,61 +33,6 @@ import type { FlowStep } from "@/lib/curriculum/flow";
 // Cheap by design: the "minimal text" thesis means all 6 lessons hold roughly
 // 7k characters of prose, so assisting the whole curriculum costs a fraction of
 // a cent per language.
-
-export const TRANSLATABLE_FIELDS = ["instruction", "why", "after", "hint", "prompt"] as const;
-
-export type StepTranslation = {
-  instruction?: string;
-  why?: string;
-  after?: string;
-  hint?: string;
-  prompt?: string;
-  opts?: string[]; // only when the options are prose, not program output
-  questions?: { prompt?: string; why?: string }[];
-  // teach steps: the labelled explanation lines. The label is a code token
-  // (e.g. "nextLine()") and stays English; only `text` is assisted.
-  points?: { text?: string }[];
-};
-export type FlowTranslation = Record<string, StepTranslation>; // stepId → fields
-
-// An option is program OUTPUT (don't translate) vs prose (do). "(an error)" is
-// prose; "123" or "Hi\nBye" is output. Heuristic, but conservative: anything
-// that isn't clearly a natural-language phrase is left alone.
-function optionIsProse(opt: string): boolean {
-  const s = opt.trim();
-  if (!s) return false;
-  if (/^\(.*\)$/.test(s)) return true; // "(an error)", "(nothing)"
-  if (/[{};()]|System\.|\bint\b|\bdouble\b|\bString\b/.test(s)) return false; // code-ish
-  if (/^[\d\s.,+\-*/%]+$/.test(s)) return false; // pure numbers/operators
-  return /\s/.test(s) && /[a-zA-Z]{3,}/.test(s); // multi-word with real words
-}
-
-/** Only the parts of a flow a translator should ever see. */
-export function extractTranslatable(steps: FlowStep[]): Record<string, StepTranslation> {
-  const out: Record<string, StepTranslation> = {};
-  for (const s of steps) {
-    const t: StepTranslation = {};
-    for (const f of TRANSLATABLE_FIELDS) {
-      const v = (s as any)[f];
-      if (typeof v === "string" && v.trim()) t[f] = v;
-    }
-    if (Array.isArray(s.opts)) {
-      const proseIdx = s.opts.map((o, i) => (optionIsProse(o) ? i : -1)).filter((i) => i >= 0);
-      if (proseIdx.length) {
-        // Keep positions stable: untranslated entries stay as the original.
-        t.opts = s.opts.map((o, i) => (proseIdx.includes(i) ? o : o));
-      }
-    }
-    if (Array.isArray(s.questions) && s.questions.length) {
-      t.questions = s.questions.map((q) => ({ prompt: q.prompt, why: q.why }));
-    }
-    if (Array.isArray(s.points) && s.points.length) {
-      t.points = s.points.map((pt) => ({ text: pt.text }));
-    }
-    if (Object.keys(t).length) out[s.id] = t;
-  }
-  return out;
-}
 
 // Chosen for Markham, Ontario — one of the most linguistically diverse places
 // in Canada. Chinese (both scripts: Mandarin-speaking families generally read
@@ -120,52 +72,32 @@ export async function translateLesson(lessonCode: string, locale: string, userId
   const steps = (((lesson.flow as any)?.steps as FlowStep[]) || []);
   if (!steps.length) throw new Error("this lesson has no interactive flow to translate");
 
-  const source = extractTranslatable(steps);
-
-  // FLAT LIST, NOT A NESTED ECHO.
-  //
-  // This used to hand the model a nested {stepId: {field: text}} object and ask
-  // it to return the same shape back. Models reliably mangle that — the real
-  // failure logged here was a reply keyed "questions" instead of by step id,
-  // which matched zero steps and produced an empty translation. A flat list of
-  // {id, text} with opaque ids is almost impossible to get wrong, and any item
-  // that does come back malformed is skipped individually instead of taking the
-  // whole language down.
-  const items: { id: string; text: string }[] = [];
-  for (const [stepId, fields] of Object.entries(source)) {
-    for (const [field, value] of Object.entries(fields as Record<string, unknown>)) {
-      if (typeof value === "string" && value.trim()) items.push({ id: `${stepId}::${field}`, text: value });
-      else if (Array.isArray(value)) {
-        value.forEach((entry, idx) => {
-          if (entry && typeof entry === "object") {
-            for (const [sub, subVal] of Object.entries(entry as Record<string, unknown>)) {
-              if (typeof subVal === "string" && subVal.trim()) items.push({ id: `${stepId}::${field}::${idx}::${sub}`, text: subVal });
-            }
-          }
-        });
-      }
-    }
-  }
+  const items = extractTranslatable(steps);
   if (!items.length) throw new Error("nothing to translate in this lesson");
 
   const r = await complete<{ items: { id: string; text: string }[] }>(
     {
       feature: "generate",
-      system: `You write short ${language} comprehension notes for an English-language beginner Java course. The student is learning IN ENGLISH and will keep reading English. Your note appears UNDERNEATH the English sentence as a help line — it never replaces it.
+      system: `You translate a beginner Java course into ${language} for students in Canada who are still learning English.
 
-Because of that:
-- The goal is to unblock understanding, not to substitute for the English. Keep each note SHORTER than the English where you can, so a student can glance at it and get straight back to the English.
-- KEEP TECHNICAL VOCABULARY IN ENGLISH, even inside your ${language} note: System.out.println, print, println, int, double, String, boolean, loop, variable, compile, error, method, quotes. These are the words the student must actually learn. Explain around them; do not replace them.
-- NEVER translate or alter anything that is code — keywords, identifiers, method names, variable names like i, n, total. If a sentence quotes code, keep the code EXACTLY as-is.
-- Keep any \\n, \\t, quotes and punctuation exactly as they appear.
-- Plain and encouraging. These are one-line captions, not paragraphs.
+WHERE THIS APPEARS: beside the English, in a second column — not underneath it, and not instead of it. The student reads both. So translate the sentence properly and completely; do not summarise it and do not shorten it into a caption.
+
+TECHNICAL VOCABULARY STAYS IN ENGLISH, with the ${language} in brackets after it the first time it appears in a passage:
+  "A variable (变量) holds one value."   <- correct shape, in ${language}
+These are the words the student has to end up knowing, because their exam, their compiler errors and every piece of documentation they will ever read use the English. Words in this group: ${GLOSSARY.join(", ")}.
+
+CODE IS NEVER TOUCHED, and never gets a bracket. Leave exactly as written, character for character: System.out.println, println, readLine, .length, size(), get(i), ArrayList<Integer>, int, String, and every identifier or variable name such as i, n, hp, total. If a sentence quotes code, the code inside it is unchanged.
+
+ALSO KEEP EXACTLY: every \\n and \\t, all quotes, all punctuation around code, and any number.
+
+Plain, direct sentences. This is a course for beginners, not a manual.
 
 You will receive: {"items":[{"id":"...","text":"..."}]}
-Return EXACTLY: {"items":[{"id":"...","text":"<your ${language} note>"}]}
+Return EXACTLY: {"items":[{"id":"...","text":"<the ${language} translation>"}]}
 The "id" values are opaque — copy each one back CHARACTER FOR CHARACTER and never invent, merge, reorder or drop one. Return one item for every item you received.`,
-      messages: [{ role: "user", content: JSON.stringify({ items }) }],
+      messages: [{ role: "user", content: JSON.stringify({ items: items.map((i) => ({ id: i.id, text: i.text })) }) }],
       json: true,
-      maxTokens: 8000,
+      maxTokens: 16000,
       reasoningEffort: "low",
     },
     { userId }
@@ -180,33 +112,36 @@ The "id" values are opaque — copy each one back CHARACTER FOR CHARACTER and ne
     );
   }
 
-  // Rebuild the nested shape from the flat ids.
+  // Rebuild by looking the path up from the id. A malformed item is skipped on
+  // its own rather than taking the whole language down.
+  const byId = new Map(items.map((i) => [i.id, i.path]));
   const cleaned: FlowTranslation = {};
+  let used = 0;
   for (const it of returned) {
     if (!it || typeof it.id !== "string" || typeof it.text !== "string" || !it.text.trim()) continue;
-    const [stepId, field, idxRaw, sub] = it.id.split("::");
-    if (!stepId || !field || !source[stepId]) continue;
-    const target = (cleaned[stepId] ||= {});
-    if (idxRaw === undefined) {
-      (target as any)[field] = it.text;
-    } else {
-      const arr = ((target as any)[field] ||= []);
-      const idx = Number(idxRaw);
-      if (!Number.isInteger(idx) || idx < 0) continue;
-      arr[idx] = { ...(arr[idx] || {}), [sub]: it.text };
-    }
+    const path = byId.get(it.id);
+    if (!path) continue;
+    const [stepId, ...rest] = path;
+    if (typeof stepId !== "string") continue;
+    setAt((cleaned[stepId] ||= {}), rest, it.text);
+    used++;
   }
 
-  if (Object.keys(cleaned).length === 0) {
-    throw new Error("translator returned items but none matched this lesson's steps");
-  }
+  if (!used) throw new Error("translator returned items but none matched this lesson");
 
   // Merge into the existing map rather than replacing other languages.
   const current = ((lesson.flowI18n as any) || {}) as Record<string, FlowTranslation>;
   current[locale] = cleaned;
   await prisma.lesson.update({ where: { id: lesson.id }, data: { flowI18n: current as any } });
 
-  return { translated: Object.keys(cleaned).length, of: steps.length, provider: r.provider, model: r.model };
+  return {
+    translated: Object.keys(cleaned).length,
+    of: steps.length,
+    strings: used,
+    ofStrings: items.length,
+    provider: r.provider,
+    model: r.model,
+  };
 }
 
 /**
@@ -219,20 +154,12 @@ The "id" values are opaque — copy each one back CHARACTER FOR CHARACTER and ne
  */
 export function assistForClient(steps: FlowStep[], t: FlowTranslation): Record<string, StepTranslation> {
   const out: Record<string, StepTranslation> = {};
-  for (const s of steps) {
-    const tr = t[s.id];
-    if (!tr) continue;
-    const keep: StepTranslation = {};
-    for (const f of TRANSLATABLE_FIELDS) {
-      const v = tr[f];
-      // `why` is only revealed after answering, but it ships with the reveal —
-      // it's already stripped for unanswered predict steps upstream.
-      if (typeof v === "string" && v.trim() && (s as any)[f]) keep[f] = v;
-    }
-    if (Array.isArray(tr.questions) && Array.isArray(s.questions)) {
-      keep.questions = tr.questions.slice(0, s.questions.length);
-    }
-    if (Object.keys(keep).length) out[s.id] = keep;
+  const ids = new Set(steps.map((s) => s.id));
+  for (const [stepId, tr] of Object.entries(t || {})) {
+    // Only steps that still exist, so a stale translation cannot resurrect a
+    // deleted step. Everything stored is already a readable field — the
+    // extractor is the gate, and answer keys never pass it.
+    if (ids.has(stepId) && tr && Object.keys(tr).length) out[stepId] = tr;
   }
   return out;
 }

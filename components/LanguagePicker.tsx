@@ -15,44 +15,25 @@ import { useEffect, useState } from "react";
 
 // Each language names itself, so a student can find theirs without first being
 // able to read English.
-export const LANG_LABELS: Record<string, string> = {
-  "zh-Hans": "简体中文",
-  "zh-Hant": "繁體中文",
-  ta: "தமிழ்",
-  ur: "اردو",
-  pa: "ਪੰਜਾਬੀ",
-  hi: "हिन्दी",
-  fa: "فارسی",
-  tl: "Tagalog",
-  ko: "한국어",
-  vi: "Tiếng Việt",
-  fr: "Français",
-  es: "Español",
-};
+export { LANG_LABELS, LANG_EVENT, LANG_KEY as LANG_STORAGE_KEY } from "@/lib/i18n/prefs";
+import { LANG_LABELS as LABELS, readPrefs, writePrefs, activeLang } from "@/lib/i18n/prefs";
 
-export const LANG_STORAGE_KEY = "classos_assist_lang";
-// Fired when the setting changes so open pages update without a reload.
-export const LANG_EVENT = "classos:langchange";
-
+/** The language in effect, or "" when the help is switched off. */
 export function readLang(): string {
-  try {
-    return localStorage.getItem(LANG_STORAGE_KEY) || "";
-  } catch {
-    return "";
-  }
+  return activeLang();
 }
 
 export default function LanguagePicker() {
   const [lang, setLang] = useState("");
 
-  useEffect(() => setLang(readLang()), []);
+  useEffect(() => setLang(activeLang()), []);
 
   function change(next: string) {
     setLang(next);
-    try {
-      localStorage.setItem(LANG_STORAGE_KEY, next);
-    } catch { /* private mode */ }
-    window.dispatchEvent(new CustomEvent(LANG_EVENT, { detail: next }));
+    // Picking a language here turns the help on; "English only" turns it off
+    // but remembers which language was chosen.
+    const cur = readPrefs();
+    writePrefs({ lang: next || cur.lang, esl: Boolean(next) });
   }
 
   return (
@@ -64,7 +45,7 @@ export default function LanguagePicker() {
       aria-label="Language help"
     >
       <option value="">🌐 English only</option>
-      {Object.entries(LANG_LABELS).map(([code, label]) => (
+      {Object.entries(LABELS).map(([code, label]) => (
         <option key={code} value={code}>+ {label}</option>
       ))}
     </select>
