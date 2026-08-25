@@ -18,6 +18,15 @@ export interface CompleteArgs {
   // models they're 70-85% of the bill for tasks that don't need deep
   // reasoning. Set "low" for short, simple tasks (a hint, a one-line verdict).
   reasoningEffort?: "low" | "medium" | "high";
+  /**
+   * Override the configured model for THIS call.
+   *
+   * Bulk translation is a cheap, mechanical job — the wrong shape entirely for
+   * the expensive reasoning model the tutor is configured with. Rather than
+   * changing the platform-wide setting and dragging every other feature along
+   * with it, one caller can ask for a cheaper model.
+   */
+  model?: string;
 }
 
 export interface LLMResult<T = unknown> {

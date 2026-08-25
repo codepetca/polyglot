@@ -63,7 +63,10 @@ export const RTL_LOCALES = new Set(["ur", "fa", "ar"]);
  * Translate one lesson's prose into `locale` and store it under Lesson.flowI18n.
  * Returns how many steps were translated.
  */
-export async function translateLesson(lessonCode: string, locale: string, userId?: string) {
+/** Cheap by default: translation is mechanical, not reasoning. */
+export const DEFAULT_TRANSLATE_MODEL = "gemini-flash-latest";
+
+export async function translateLesson(lessonCode: string, locale: string, userId?: string, model?: string) {
   const language = LANGUAGES[locale]?.name;
   if (!language) throw new Error(`unsupported locale "${locale}"`);
 
@@ -99,6 +102,7 @@ The "id" values are opaque — copy each one back CHARACTER FOR CHARACTER and ne
       json: true,
       maxTokens: 16000,
       reasoningEffort: "low",
+      model: model || DEFAULT_TRANSLATE_MODEL,
     },
     { userId }
   );

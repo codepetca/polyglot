@@ -14,6 +14,15 @@ const PRICES: Record<string, [number, number]> = {
   // Vertex (paid, but you're on GCP credits) — approximate list prices.
   "gemini-2.5-pro": [1.25, 10],
   "gemini-2.5-flash": [0.3, 2.5],
+  // Flash tiers, for the bulk jobs. Listed so the daily cap measures them
+  // properly instead of charging the fail-closed [15, 75] penalty rate — which
+  // is what made a few cents of translation read as $5 and trip the kill
+  // switch. Approximate list prices; correct them if Google's move.
+  "gemini-flash-latest": [0.3, 2.5],
+  "gemini-3-flash": [0.3, 2.5],
+  "gemini-3.1-flash": [0.3, 2.5],
+  "gemini-3.1-flash-preview": [0.3, 2.5],
+  "gemini-2.5-flash-lite": [0.1, 0.4],
   "gemini-1.5-pro": [1.25, 5],
   "llama-3.3-70b-versatile": [0, 0], // groq free
   "claude-haiku-4-5": [1, 5],
@@ -88,6 +97,8 @@ export async function complete<T = unknown>(
   ctx?: { userId?: string }
 ): Promise<LLMResult<T>> {
   let lanes = await resolveLanes(args.feature);
+  // A per-call model override applies to every paid lane; the stub ignores it.
+  if (args.model) lanes = lanes.map((l) => (l.provider === "stub" ? l : { ...l, model: args.model! }));
   // WHY the stub is serving matters to the caller. "Degraded because today's
   // budget is spent" and "degraded because nobody configured a key" are the
   // same symptom and completely different fixes, and reporting the second for

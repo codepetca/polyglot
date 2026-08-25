@@ -27,6 +27,9 @@ export default function TranslateConsole() {
   const [stop, setStop] = useState(false);
   const [err, setErr] = useState("");
   const [budget, setBudget] = useState<{ spent: number; cap: number; over: boolean } | null>(null);
+  // Editable, because a model id that 404s should be a one-word fix here rather
+  // than a redeploy. Flash by default: translation is mechanical work.
+  const [model, setModel] = useState("gemini-flash-latest");
   // Which language THIS browser will actually render. Translating zh-Hant and
   // then reading with zh-Hans selected shows nothing, and looks like the
   // translation failed — which is exactly what happened the first time.
@@ -43,6 +46,7 @@ export default function TranslateConsole() {
     setLessons(r.lessons || []);
     setLangs(r.languages || []);
     setBudget(r.budget || null);
+    if (r.defaultModel) setModel(r.defaultModel);
   }, []);
   useEffect(() => {
     load();
@@ -56,7 +60,7 @@ export default function TranslateConsole() {
       const r = await fetch("/api/curriculum/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lessonCode: code, locale }),
+        body: JSON.stringify({ lessonCode: code, locale, model }),
       }).then((x) => x.json());
       if (r.ok) {
         setRows((s) => ({ ...s, [code]: { code, state: "done", note: `${r.strings ?? "?"} strings · ${r.model || r.provider}` } }));
@@ -116,6 +120,16 @@ export default function TranslateConsole() {
               </option>
             ))}
           </select>
+        </label>
+        <label>
+          Model
+          <input
+            className="trmodel"
+            value={model}
+            disabled={busy}
+            onChange={(e) => setModel(e.target.value)}
+            spellCheck={false}
+          />
         </label>
         <span className="trcount">
           {lessons.length - missing.length} of {lessons.length} lessons already have this language

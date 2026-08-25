@@ -1233,29 +1233,43 @@ pre.flowcode.ro { margin: 0; }
 .refbadge { float: right; font-family: var(--sans); font-size: 9.5px; letter-spacing: .06em;
   background: var(--accent); color: #fff; border-radius: 99px; padding: 2px 7px; text-transform: uppercase; }
 
-/* ── ESL: two identical blocks, or a small line underneath ──
-   Identical means identical: same size, same weight, same spacing. If the
-   translation were styled as a secondary note it would stop being a second
-   copy of the lesson and go back to being a caption. */
-.twoblocks { display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; align-items: start; }
-.twoblocks > .prose + .prose { border-left: 1.5px solid var(--line); padding-left: 28px; }
-@media (max-width: 1100px) {
-  /* Two columns of prose below this width are too narrow to read. */
-  .twoblocks { grid-template-columns: 1fr; gap: 0; }
-  .twoblocks > .prose + .prose { border-left: 0; padding-left: 0; margin-top: 16px;
-    padding-top: 14px; border-top: 1.5px solid var(--line); }
-}
-/* The other option: a small translated line under the original. */
-.altline { display: block; margin-top: 4px; font-family: var(--sans); font-size: 13.5px;
-  font-weight: 400; line-height: 1.5; color: var(--muted); }
+/* ── ESL layouts ──────────────────────────────────────────────────────────
+   Two shapes, and only two.
 
-.eslcard h2 { font-family: var(--sans); font-size: 15px; text-transform: uppercase; letter-spacing: .07em; margin: 0 0 6px; }
-.eslrow { display: flex; align-items: center; gap: 10px; margin: 12px 0; font-size: 14.5px; }
-.eslrow .esllabel { min-width: 74px; color: var(--muted); font-size: 13px; }
-.eslrow select { font-family: var(--sans); font-size: 14px; padding: 7px 10px; border: 1.5px solid var(--line);
-  border-radius: 9px; background: var(--card); color: var(--ink); }
-.eslrow select:disabled { opacity: .5; }
-.eslnote { margin: 4px 0 0; font-size: 12.5px; }
+   DUPLICATE BLOCK. The lesson, twice, as two real panels — not one paragraph
+   grid pretending to be two columns. Each has its own language chip, its own
+   padding and its own surface, so the eye reads "the same thing again in my
+   language" rather than "a wall of text with characters in it". They are
+   deliberately identical in size and weight; the moment the second is styled
+   as a note it stops being a duplicate and becomes a caption.
+
+   UNDER. The original line, with a small translated line tucked beneath it.
+   Indented and lighter, so a skim reads only the English. */
+
+.twoblocks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: stretch; }
+.langblock { position: relative; border: 1.5px solid var(--line); border-radius: 12px;
+  background: var(--paper); padding: 30px 22px 20px; }
+.langblock.alt { background: #f3f1ea; }
+:root[data-theme="dark"] .langblock { background: rgba(255,255,255,.02); }
+:root[data-theme="dark"] .langblock.alt { background: rgba(255,255,255,.05); }
+/* The chip naming the language. Small, uppercase, out of the way of the text. */
+.langtag { position: absolute; top: -9px; left: 18px; background: var(--card);
+  border: 1.5px solid var(--line); border-radius: 99px; padding: 2px 10px;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); }
+.langblock.alt .langtag { border-color: var(--accent); color: var(--accent); }
+/* CJK has no italic and needs a touch more line height to breathe. */
+.langblock[lang^="zh"], .langblock[lang^="ja"], .langblock[lang^="ko"] { line-height: 1.75; }
+.langblock[lang^="zh"] .flowq, .langblock[lang^="ko"] .flowq { font-family: var(--sans); font-weight: 700; }
+@media (max-width: 1100px) {
+  .twoblocks { grid-template-columns: 1fr; gap: 12px; }
+}
+
+/* The other option: a small translated line under the original. */
+.altline { display: block; margin-top: 5px; padding-left: 12px;
+  border-left: 2px solid var(--line); font-family: var(--sans); font-size: 13.5px;
+  font-weight: 400; line-height: 1.6; color: var(--muted); }
+.flowq .altline { margin-top: 8px; font-size: 14px; }
 
 /* ── Profile menu: quick settings behind the name ── */
 .profilewrap { position: relative; }
@@ -1312,3 +1326,5 @@ pre.flowcode.ro { margin: 0; }
 .trreading { flex-basis: 100%; font-size: 12.5px; }
 .trreading.match { color: var(--ok); }
 .trreading.warn { color: var(--warn); }
+.trmodel { font-family: var(--mono); font-size: 12.5px; padding: 7px 9px; width: 210px;
+  border: 1.5px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); }

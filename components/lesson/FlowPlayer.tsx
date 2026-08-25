@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ScopeDiagram from "@/components/lesson/ScopeDiagram";
 import Link from "next/link";
 import CodeBox from "./CodeBox";
-import { readPrefs, onPrefsChange, RTL, type EslPrefs } from "@/lib/i18n/prefs";
+import { readPrefs, onPrefsChange, RTL, LANG_LABELS, type EslPrefs } from "@/lib/i18n/prefs";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
 // text. 15 step kinds (see lib/curriculum/flow.ts, the canonical spec):
@@ -101,13 +101,18 @@ function Prose({
   instruction,
   body,
   lang,
+  tag,
 }: {
   instruction: React.ReactNode;
   body: string[];
   lang?: string;
+  /** Language chip. Only set when there are two blocks to tell apart. */
+  tag?: string;
 }) {
+  const cls = tag ? `langblock prose ${lang ? "alt" : ""}` : "prose";
   return (
-    <div className="prose" dir={lang && RTL.has(lang) ? "rtl" : "ltr"} lang={lang || undefined}>
+    <div className={cls} dir={lang && RTL.has(lang) ? "rtl" : "ltr"} lang={lang || undefined}>
+      {tag && <span className="langtag">{tag}</span>}
       <div className="flowq">{instruction}</div>
       {body.length > 0 && (
         <div className="teachbody">
@@ -548,11 +553,12 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
 
         return (
           <div className="twoblocks">
-            <Prose instruction={step.instruction} body={body} />
+            <Prose instruction={step.instruction} body={body} tag="English" />
             <Prose
               instruction={altQ || step.instruction}
               body={body.map((line, j) => altBody[j] || line)}
               lang={lang}
+              tag={LANG_LABELS[lang] || lang}
             />
           </div>
         );

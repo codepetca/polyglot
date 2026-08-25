@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireRoleApi } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { LANGUAGES, translateLesson } from "@/lib/curriculum/translate";
+import { LANGUAGES, translateLesson, DEFAULT_TRANSLATE_MODEL } from "@/lib/curriculum/translate";
 import { studentCode } from "@/lib/curriculum/codehs";
 import { getBudgetConfig } from "@/lib/settings";
 
@@ -26,6 +26,7 @@ export async function GET() {
 
   return NextResponse.json({
     budget: { spent, cap: cfg.dailyCapUsd, over: spent >= cfg.dailyCapUsd },
+    defaultModel: DEFAULT_TRANSLATE_MODEL,
     languages: Object.entries(LANGUAGES).map(([code, v]) => ({ code, ...v })),
     lessons: lessons
       .filter((l) => !l.chapter.title.startsWith("__") && (((l.flow as any)?.steps || []).length > 0))
@@ -38,9 +39,9 @@ export async function GET() {
 export async function POST(req: Request) {
   const me = await requireRoleApi("ADMIN");
   if (me instanceof NextResponse) return me;
-  const { lessonCode, locale } = await req.json();
+  const { lessonCode, locale, model } = await req.json();
   try {
-    const r = await translateLesson(String(lessonCode || ""), String(locale || ""), me.id);
+    const r = await translateLesson(String(lessonCode || ""), String(locale || ""), me.id, model ? String(model) : undefined);
     return NextResponse.json({ ok: true, ...r });
   } catch (e) {
     // Prisma puts the actual reason at the END of a very long message, so
