@@ -88,8 +88,15 @@ export async function complete<T = unknown>(
   ctx?: { userId?: string }
 ): Promise<LLMResult<T>> {
   let lanes = await resolveLanes(args.feature);
+  // WHY the stub is serving matters to the caller. "Degraded because today's
+  // budget is spent" and "degraded because nobody configured a key" are the
+  // same symptom and completely different fixes, and reporting the second for
+  // the first sent the owner to a settings page to add a key that was already
+  // there.
+  let degraded: "budget" | null = null;
   if (lanes.some((l) => l.provider !== "stub") && (await overDailyBudget())) {
     lanes = lanes.filter((l) => l.provider === "stub"); // degrade, never hard-fail
+    degraded = "budget";
   }
   let lastErr: unknown;
 
@@ -113,6 +120,7 @@ export async function complete<T = unknown>(
         cost,
         provider: lane.provider,
         model: lane.model,
+        degraded: lane.provider === "stub" ? degraded ?? "unconfigured" : null,
       };
     } catch (err) {
       lastErr = err;

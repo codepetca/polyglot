@@ -27,6 +27,8 @@ export interface LLMResult<T = unknown> {
   cost: number; // normalized USD, from the DB price table
   provider: Provider;
   model: string;
+  /** Why the offline stub answered, when it did. */
+  degraded?: "budget" | "unconfigured" | null;
 }
 
 // One lane = one attempt target. The adapter tries the primary, then fallbacks.

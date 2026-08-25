@@ -26,6 +26,7 @@ export default function TranslateConsole() {
   const [busy, setBusy] = useState(false);
   const [stop, setStop] = useState(false);
   const [err, setErr] = useState("");
+  const [budget, setBudget] = useState<{ spent: number; cap: number; over: boolean } | null>(null);
   // Which language THIS browser will actually render. Translating zh-Hant and
   // then reading with zh-Hans selected shows nothing, and looks like the
   // translation failed — which is exactly what happened the first time.
@@ -41,6 +42,7 @@ export default function TranslateConsole() {
     if (r.error) return setErr(r.error);
     setLessons(r.lessons || []);
     setLangs(r.languages || []);
+    setBudget(r.budget || null);
   }, []);
   useEffect(() => {
     load();
@@ -94,6 +96,15 @@ export default function TranslateConsole() {
       </header>
 
       {err && <p className="trerr">{err}</p>}
+
+      {budget && (
+        <p className={budget.over ? "trerr" : "meta"}>
+          AI spend today: ${budget.spent.toFixed(2)} of ${budget.cap.toFixed(2)}.
+          {budget.over
+            ? " The cap is reached, so every call is being answered by the offline stub — nothing will translate until you raise it on the Usage page or it resets at midnight UTC."
+            : " Note gemini-3.1-pro-preview is not in the price table, so it is charged at the most expensive tier on purpose; real spend is lower."}
+        </p>
+      )}
 
       <div className="trbar">
         <label>

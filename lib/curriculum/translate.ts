@@ -106,9 +106,11 @@ The "id" values are opaque — copy each one back CHARACTER FOR CHARACTER and ne
   const returned = Array.isArray(r.data?.items) ? r.data!.items : [];
   if (!returned.length) {
     throw new Error(
-      r.provider === "stub"
-        ? "No AI key configured — add one in Settings."
-        : `translator returned no items (got: ${Object.keys((r.data as object) || {}).slice(0, 4).join(", ") || "nothing"})`
+      r.degraded === "budget"
+        ? "Today's AI budget is spent, so the offline stub answered. Raise the daily cap on the Usage page, or wait for it to reset at midnight UTC."
+        : r.provider === "stub"
+          ? "No AI key configured — add one in Settings."
+          : `translator returned no items (got: ${Object.keys((r.data as object) || {}).slice(0, 4).join(", ") || "nothing"})`
     );
   }
 
