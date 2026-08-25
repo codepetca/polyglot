@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentUser } from "@/lib/auth";
+import { resolveActor } from "@/lib/actor";
 import { runJava } from "@/lib/java/piston";
 import { rateLimit } from "@/lib/ratelimit";
 import { logEvent, EVENT } from "@/lib/events";
@@ -16,7 +16,7 @@ import { resolveLessonCode } from "@/lib/curriculum/codehs";
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
-  const me = await currentUser();
+  const me = await resolveActor(req);
   if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
   // Interactive flow lessons are run-heavy by design (every step is a ▶ press).
   if (!rateLimit(`run:${me.id}`, 20, 60 * 1000)) {

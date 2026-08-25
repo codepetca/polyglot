@@ -180,9 +180,69 @@ export default function ScratchpadPanel({
         </div>
       )}
 
-      <div className="padcode">
-        <CodeEditor value={code} onChange={setCode} height="100%" />
-      </div>
+      {notes.length > 0 ? (
+        <div className="padcode annotated">
+          {/* A read-only copy of the code with each note under the line it is
+              about. Editing here would fight the note positions, so the way
+              back is one button rather than a half-live editor. */}
+          <div className="annwrap">
+            {code.split("\n").map((ln, i) => {
+              const mine = notes.filter((n) => n.line === i + 1);
+              return (
+                <div key={i} className={mine.length ? "annrowc marked" : "annrowc"}>
+                  <span className="annnum">{i + 1}</span>
+                  <code>{ln || " "}</code>
+                  {mine.map((n, j) => (
+                    <span className="annnote" key={j}>
+                      {n.note}
+                    </span>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+          <button className="annback" onClick={clearNotes}>
+            ← back to editing
+          </button>
+        </div>
+      ) : (
+        <div className="padcode">
+          <CodeEditor
+            value={code}
+            onChange={(v) => {
+              // Notes are pinned to line numbers, and editing moves the lines.
+              // Keeping them would point confident advice at the wrong code.
+              if (notes.length || summary) clearNotes();
+              setCode(v);
+            }}
+            height="100%"
+          />
+        </div>
+      )}
+
+      {(summary || thinking) && (
+        <div className="padexplain">
+          {thinking ? (
+            <span className="mutedtx">reading your code…</span>
+          ) : (
+            <>
+              <p>{summary}</p>
+              {fix && fix.trim() !== code.trim() && (
+                <button
+                  className="btn"
+                  onClick={() => {
+                    snapshot(code, "before applying the fix");
+                    setCode(fix);
+                    clearNotes();
+                  }}
+                >
+                  Apply the fix
+                </button>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       {/* The console. Click anywhere in it to type, when it is waiting. */}
       <div

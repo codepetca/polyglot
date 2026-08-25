@@ -44,8 +44,22 @@ export function decryptSecret(blob: string): string {
 
 export interface BudgetConfig {
   dailyCapUsd: number;
+  /**
+   * AI calls one student may make in a day.
+   *
+   * SEPARATE FROM THE DOLLAR CAP ON PURPOSE. The platform cap protects the
+   * bill; this protects the other students. Without it one person in a loop
+   * spends everyone's budget and the class degrades to the offline stub for
+   * the rest of the day.
+   *
+   * Counted per User row, which is what makes it survive the Pika move: a
+   * student arriving through Pika is resolved to a User row by pikaSubject
+   * (lib/pika/identity.ts), so the same limit applies to them without a second
+   * mechanism. See PIKA-INTEGRATION.md.
+   */
+  studentDailyCalls: number;
 }
-const DEFAULT_BUDGET: BudgetConfig = { dailyCapUsd: 5 };
+const DEFAULT_BUDGET: BudgetConfig = { dailyCapUsd: 5, studentDailyCalls: 150 };
 
 export async function getBudgetConfig(): Promise<BudgetConfig> {
   return { ...DEFAULT_BUDGET, ...(await getSetting<Partial<BudgetConfig>>("budget", {})) };

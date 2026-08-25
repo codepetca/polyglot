@@ -7,15 +7,24 @@ import { useState } from "react";
 // stub for the rest of the day rather than keep charging. Bounds total
 // platform exposure — per-user/IP limits alone don't, since an anonymous
 // session costs nothing to mint.
-export default function BudgetCap({ capUsd, spentToday }: { capUsd: number; spentToday: number }) {
+export default function BudgetCap({
+  capUsd,
+  spentToday,
+  studentDailyCalls,
+}: {
+  capUsd: number;
+  spentToday: number;
+  studentDailyCalls: number;
+}) {
   const [cap, setCap] = useState(capUsd);
+  const [perStudent, setPerStudent] = useState(studentDailyCalls);
   const [status, setStatus] = useState("");
   const pct = Math.min(100, (spentToday / Math.max(0.01, cap)) * 100);
   const over = spentToday >= cap;
 
   async function save() {
     setStatus("saving…");
-    await fetch("/api/settings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ budget: { dailyCapUsd: cap } }) });
+    await fetch("/api/settings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ budget: { dailyCapUsd: cap, studentDailyCalls: perStudent } }) });
     setStatus("saved ✓");
   }
 
@@ -38,7 +47,31 @@ export default function BudgetCap({ capUsd, spentToday }: { capUsd: number; spen
         <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13.5 }}>
           $ <input className="f" type="number" min={0.5} step={0.5} value={cap} onChange={(e) => setCap(Number(e.target.value))} style={{ width: 90 }} /> / day
         </label>
-        <button className="btn green" onClick={save}>Save cap</button>
+      </div>
+
+      <hr style={{ border: 0, borderTop: "1.5px solid var(--line)", margin: "16px 0 12px" }} />
+
+      <b>👤 Per-student daily limit</b>
+      <p className="meta" style={{ marginTop: 6 }}>
+        AI questions one student may ask in a day — tutor replies, error explanations and code annotations all count.
+        The cap above protects the bill; this protects the other students, because without it one person in a loop
+        spends the whole class&rsquo;s budget and everyone else drops to offline replies for the rest of the day.
+        Counted per account, so it applies the same way to students arriving from Pika.
+      </p>
+      <div className="runrow" style={{ marginTop: 10 }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13.5 }}>
+          <input
+            className="f"
+            type="number"
+            min={1}
+            step={10}
+            value={perStudent}
+            onChange={(e) => setPerStudent(Number(e.target.value))}
+            style={{ width: 90 }}
+          />{" "}
+          calls / student / day
+        </label>
+        <button className="btn green" onClick={save}>Save limits</button>
         {status && <span className="meta" style={{ margin: 0 }}>{status}</span>}
       </div>
     </div>

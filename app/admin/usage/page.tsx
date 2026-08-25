@@ -92,7 +92,7 @@ export default async function UsagePage() {
 
       <p className="dashnote">Free-tier models report $0 — the token counts show real consumption against your daily quotas. Add more keys in Settings to rotate when one runs out.</p>
 
-      <BudgetCap capUsd={budget.dailyCapUsd} spentToday={today._sum.cost || 0} />
+      <BudgetCap capUsd={budget.dailyCapUsd} spentToday={today._sum.cost || 0} studentDailyCalls={budget.studentDailyCalls} />
       <RunnerHealth initial={runnerHealth()} />
     </div>
   );

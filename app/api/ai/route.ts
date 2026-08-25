@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { currentUser } from "@/lib/auth";
+import { resolveActor } from "@/lib/actor";
 import { complete } from "@/lib/llm";
 import { DEFAULT_PROMPTS, renderPrompt } from "@/lib/llm/prompts";
 import { getProviderConfig } from "@/lib/settings";
@@ -10,16 +10,16 @@ import { normalize } from "@/lib/text";
 import { sanitizeInline } from "@/lib/sanitize";
 import { rateLimit } from "@/lib/ratelimit";
 import type { Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
+import { getBudgetConfig } from "@/lib/settings";
 
 // Flash for the interactive features. Cheap, fast, and plenty for a hint.
 const TUTOR_MODEL = "gemini-flash-latest";
 
-const STUDENT_DAILY_AI_CAP = 150;
 
 export async function POST(req: Request) {
   const body = await req.json();
   const { feature, lessonCode } = body;
-  const me = await currentUser();
+  const me = await resolveActor(req);
   if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
 
   // One student can't burn the whole class's free-tier quota.
@@ -29,9 +29,16 @@ export async function POST(req: Request) {
     }
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    // Configurable, on the Usage page. It was a constant in this file, which
+    // meant changing it needed a deploy — no use to a teacher watching a class
+    // burn through the budget on a Tuesday.
+    const cap = (await getBudgetConfig()).studentDailyCalls;
     const used = await prisma.aiCall.count({ where: { userId: me.id, createdAt: { gte: today } } });
-    if (used >= STUDENT_DAILY_AI_CAP) {
-      return NextResponse.json({ error: "You've hit today's AI limit — back tomorrow. The lessons and code runner still work!" }, { status: 429 });
+    if (used >= cap) {
+      return NextResponse.json(
+        { error: `You've used today's ${cap} AI questions — back tomorrow. The lessons, the runner and the reference all still work.` },
+        { status: 429 },
+      );
     }
   }
 
