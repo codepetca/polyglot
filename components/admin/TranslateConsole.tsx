@@ -156,6 +156,26 @@ export default function TranslateConsole() {
             <button className="btn blue" disabled={!lessons.length} onClick={() => runAll(lessons)}>
               Redo all {lessons.length}
             </button>
+            <button
+              className="btn"
+              title="Translate the Java reference into this language"
+              onClick={async () => {
+                setRows((r) => ({ ...r, __ref: { code: "__ref", state: "running" } }));
+                const r = await fetch("/api/curriculum/reference-i18n", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ locale }),
+                }).then((x) => x.json());
+                setRows((s) => ({
+                  ...s,
+                  __ref: r.ok
+                    ? { code: "__ref", state: "done", note: `${r.translated}/${r.of} entries` }
+                    : { code: "__ref", state: "failed", note: r.error || "failed" },
+                }));
+              }}
+            >
+              Reference
+            </button>
           </>
         )}
       </div>
@@ -164,6 +184,13 @@ export default function TranslateConsole() {
         <p className="meta">
           {done} done{failed.length ? `, ${failed.length} failed` : ""}
           {busy ? " — still going, leave this tab open" : ""}
+        </p>
+      )}
+
+      {rows.__ref && (
+        <p className={rows.__ref.state === "failed" ? "trerr" : "meta"}>
+          Java reference: <span className={`trstate ${rows.__ref.state}`}>{rows.__ref.state}</span>
+          {rows.__ref.note ? ` · ${rows.__ref.note}` : ""}
         </p>
       )}
 

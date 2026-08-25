@@ -31,7 +31,7 @@ export type Section = { id: string; title: string; entries: Entry[] };
 export const REFERENCE: Section[] = [
   {
     id: "print",
-    title: "Showing things",
+    title: "Output",
     entries: [
       { name: "Print a line", code: 'System.out.println("Hello");', note: "Prints, then moves to the next line." },
       { name: "Print, stay on the line", code: 'System.out.print("Hello");', note: "No line break — the next print continues right after." },
@@ -42,7 +42,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "vars",
-    title: "Storing values",
+    title: "Variables and Types",
     entries: [
       { name: "Whole number", code: "int age = 16;", note: "No decimal point. 7 / 2 gives 3, not 3.5." },
       { name: "Decimal number", code: "double price = 9.99;", note: "Use when the value can have a fraction." },
@@ -53,7 +53,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "input",
-    title: "Asking the user",
+    title: "Input",
     entries: [
       { name: "Read text", code: 'String name = readLine("Name? ");\nSystem.out.println(name);', note: "The question goes inside the brackets. You get back what they typed.", stdin: "Ada" },
       { name: "Read a whole number", code: 'int age = readInt("Age? ");\nSystem.out.println(age + 1);', note: "Use when you want to do maths with the answer.", stdin: "16" },
@@ -63,7 +63,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "maths",
-    title: "Maths",
+    title: "Arithmetic Operators",
     entries: [
       { name: "The operators", code: "+   -   *   /   %", note: "% is the remainder: 7 % 2 is 1.", wrap: "none" },
       { name: "Order", code: "2 + 3 * 4   // 14\n(2 + 3) * 4 // 20", note: "× and ÷ happen before + and −. Brackets go first.", wrap: "none" },
@@ -79,7 +79,7 @@ export const REFERENCE: Section[] = [
   // exactly the panel that is meant to be trustworthy.
   {
     id: "logic",
-    title: "True and false",
+    title: "Booleans and Comparison",
     entries: [
       { name: "True or false", code: "boolean passed = true;", note: "Only two values. No quotes — \"true\" with quotes is text, not a boolean." },
       { name: "Comparing", wrap: "none", code: "==   !=   <   >   <=   >=", note: "Each one answers a yes/no question. == compares; a single = assigns instead — a very common bug." },
@@ -90,7 +90,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "if",
-    title: "Making decisions",
+    title: "Conditionals",
     entries: [
       { name: "If", code: 'int age = 20;\nif (age >= 18) {\n  System.out.println("adult");\n}', note: "Runs the block only when the condition is true." },
       { name: "If / else", code: 'int n = 3;\nif (n > 0) {\n  System.out.println("yes");\n} else {\n  System.out.println("no");\n}', note: "One or the other, never both." },
@@ -98,7 +98,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "loops",
-    title: "Repeating",
+    title: "Loops",
     entries: [
       { name: "For loop", code: "for (int i = 1; i <= 5; i++) {\n  System.out.println(i);\n}", note: "Start; keep going while true; do this each time." },
       { name: "Count from 0", code: "for (int i = 0; i < 3; i++) {\n  System.out.println(i);\n}", note: "Runs 3 times: 0, 1, 2. The usual way to repeat N times." },
@@ -122,7 +122,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "strings",
-    title: "Working with text",
+    title: "Strings",
     entries: [
       { name: "How long", code: "String s = \"hello\";\nSystem.out.println(s.length());", note: "Brackets, because it is a method. An array uses .length with no brackets." },
       { name: "One character", code: "String s = \"hello\";\nSystem.out.println(s.charAt(0));", note: "Counts from 0, so charAt(0) is the first letter." },
@@ -137,7 +137,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "chars",
-    title: "Characters",
+    title: "Characters (char)",
     entries: [
       { name: "char vs String", code: "char c = 'a';\nString s = \"a\";", note: "Single quotes for one character. Double quotes for text." },
       { name: "Is it a letter", code: "System.out.println(Character.isLetter('a'));", note: "Also isDigit, isUpperCase, isLowerCase, isWhitespace." },
@@ -148,7 +148,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "errors",
-    title: "When it goes wrong",
+    title: "Errors and Exceptions",
     entries: [
       { name: "Compile error", code: "// int x = \"text\";", note: "Java refuses to build it. Nothing runs at all. The editor usually says the line." },
       { name: "Run-time error", code: "// int[] a = new int[2];\n// System.out.println(a[5]);", note: "It builds, then stops partway. Everything before it already printed." },
@@ -160,7 +160,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "classes",
-    title: "Classes and objects",
+    title: "Classes and Objects",
     entries: [
       { name: "Write a class", code: "class Player {\n  private String name;\n  private int hp;\n}", note: "A class is the blueprint. private keeps the fields to itself.", wrap: "methods" },
       { name: "Constructor", code: "class Player {\n  private String name;\n\n  public Player(String name) {\n    this.name = name;\n  }\n}", note: "Same name as the class, no return type. this.name is the field, name is the parameter.", wrap: "methods" },
@@ -174,7 +174,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "objects",
-    title: "Objects against primitives",
+    title: "Objects vs Primitives",
     entries: [
       { name: "Primitives compare by value", code: "int a = 5;\nint b = 5;\nSystem.out.println(a == b);", note: "Two ints holding 5 are equal. == is right here." },
       { name: "Objects compare by identity", code: "String a = new String(\"hi\");\nString b = new String(\"hi\");\nSystem.out.println(a == b);", note: "false. == asks whether they are the SAME object, not whether they match." },
@@ -184,7 +184,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "inherit",
-    title: "Inheritance and interfaces",
+    title: "Inheritance and Interfaces",
     entries: [
       { name: "extends", code: "class Monster {\n  public void roar() {\n    System.out.println(\"rawr\");\n  }\n}\n\nclass Boss extends Monster {\n}", note: "Boss IS A Monster. It gets roar() without writing it.", wrap: "methods" },
       { name: "super", code: "class Monster {\n  private String name;\n\n  public Monster(String name) {\n    this.name = name;\n  }\n}\n\nclass Boss extends Monster {\n  public Boss(String name) {\n    super(name);\n  }\n}", note: "Calls the parent constructor. It must be the first line.", wrap: "methods" },
@@ -196,7 +196,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "wrappers",
-    title: "Wrapper classes",
+    title: "Wrapper Classes",
     entries: [
       { name: "The object versions", code: "Integer a = 5;\nDouble b = 2.5;\nSystem.out.println(a + 1);", note: "Integer wraps int, Double wraps double. Java converts both ways for you." },
       { name: "Text to number", code: "System.out.println(Integer.parseInt(\"42\") + 1);", note: "Also Double.parseDouble. Throws if the text is not a number." },
@@ -206,7 +206,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "scope",
-    title: "Where a variable exists",
+    title: "Scope",
     entries: [
       { name: "Local", code: "int total = 0;\nSystem.out.println(total);", note: "Exists from its declaration to the closing brace of its block." },
       { name: "Loop variable", code: "for (int i = 0; i < 3; i++) {\n  System.out.println(i);\n}", note: "i does not exist after the loop's closing brace." },
@@ -243,7 +243,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "grids",
-    title: "2D arrays",
+    title: "2D Arrays",
     entries: [
       { name: "Make one", code: "int[][] grid = {{1, 2}, {3, 4}};\nSystem.out.println(grid[1][0]);", note: "Row first, then column. Both count from 0." },
       { name: "Make empty", code: "int[][] g = new int[2][3];\nSystem.out.println(g.length);", note: "Two rows of three columns, in that order." },
@@ -265,7 +265,7 @@ export const REFERENCE: Section[] = [
   },
   {
     id: "binary",
-    title: "Binary and other bases",
+    title: "Number Systems",
     entries: [
       { name: "Place values", code: "// 128  64  32  16  8  4  2  1", note: "Each place is twice the one on its right." },
       { name: "Read a binary number", code: "System.out.println(8 + 4 + 1);", note: "Binary 1101 is 8 + 4 + 0 + 1, which is 13. Add the places holding a 1." },

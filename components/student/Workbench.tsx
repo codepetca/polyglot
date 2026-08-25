@@ -25,6 +25,7 @@ import BenchFrame, { type BenchMode, type BenchGeom } from "./BenchFrame";
 import BenchIcon from "./BenchIcon";
 import { allSections, sectionsForLesson, type Section } from "@/lib/curriculum/reference";
 import { snapshot } from "@/lib/tutor-history";
+import { readPrefs, onPrefsChange, RTL, type EslPrefs } from "@/lib/i18n/prefs";
 
 const SCRATCH_KEY = "classos_scratchpad";
 const OPEN_KEY = "classos_bench_open";
@@ -96,6 +97,17 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
   }, [mode, geom, loaded]);
 
   const setGeom = useCallback((g: Partial<BenchGeom>) => setGeomState((cur) => ({ ...cur, ...g })), []);
+
+  // Publish how much room the rail is taking, so anything the lesson pins to
+  // the bottom-right can sit clear of it. The tome button used to be
+  // position:fixed at right:22px, which parked it on top of the tutor and the
+  // terminal — CSS cannot know the rail's width because it changes with the
+  // pane state, so it has to be told.
+  useEffect(() => {
+    const w = !open ? 46 : mode === "docked" ? geom.w : 0; // floating overlays anyway
+    document.documentElement.style.setProperty("--bench-w", `${w}px`);
+    return () => document.documentElement.style.setProperty("--bench-w", "0px");
+  }, [open, mode, geom.w]);
 
   const swap = useCallback((delta: 1 | -1) => {
     setDir(delta);
@@ -305,6 +317,25 @@ function ReferencePane({
   lessonCode: string;
 }) {
   const [q, setQ] = useState("");
+  // Reference is translated only when the student asked for it — it is a
+  // separate switch from the lessons, because plenty of people want the
+  // lesson in two languages and the API names left alone.
+  const [esl, setEsl] = useState<EslPrefs | null>(null);
+  const [dict, setDict] = useState<Record<string, string>>({});
+  useEffect(() => {
+    setEsl(readPrefs());
+    return onPrefsChange(setEsl);
+  }, []);
+  const refLang = esl?.esl && esl.reference ? esl.lang : "";
+  useEffect(() => {
+    if (!refLang) return setDict({});
+    let alive = true;
+    fetch(`/api/curriculum/reference-i18n?locale=${encodeURIComponent(refLang)}`)
+      .then((r) => r.json())
+      .then((d) => { if (alive) setDict(d?.entries || {}); })
+      .catch(() => { if (alive) setDict({}); });
+    return () => { alive = false; };
+  }, [refLang]);
   const scroller = useRef<HTMLDivElement>(null);
 
   // Jump to this lesson's first topic on open and whenever the lesson changes.
@@ -351,13 +382,22 @@ function ReferencePane({
           </h4>
           <dl>
             {s.entries.map((e) => (
-              <div className="docs-item" key={e.name}>
+              // Signature first, description under it — the shape every piece
+              // of API documentation uses, and the one a student will meet
+              // everywhere else. The friendly label is dropped here: in a
+              // narrow rail it made three lines of text per entry, which is
+              // what turned this into a wall.
+              <div className="refentry" key={e.name}>
                 <dt>
-                  <pre>{e.code}</pre>
+                  <code>{e.code}</code>
                 </dt>
                 <dd>
-                  <strong>{e.name}</strong>
                   {e.note}
+                  {dict[`${s.id}::${e.name}`] && (
+                    <span className="refalt" dir={RTL.has(refLang) ? "rtl" : "ltr"} lang={refLang}>
+                      {dict[`${s.id}::${e.name}`]}
+                    </span>
+                  )}
                 </dd>
               </div>
             ))}

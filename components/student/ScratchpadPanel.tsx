@@ -47,6 +47,10 @@ export default function ScratchpadPanel({
   const [summary, setSummary] = useState("");
   const [fix, setFix] = useState("");
   const [thinking, setThinking] = useState(false);
+  // Which lines the fix touched, kept after it is applied so the student can
+  // see what changed rather than watching their code silently swap.
+  const [changed, setChanged] = useState<{ line: number; kind: "added" | "changed" }[]>([]);
+  const [applying, setApplying] = useState(false);
   const [histOpen, setHistOpen] = useState(false);
   const [snaps, setSnaps] = useState<Snapshot[]>([]);
   const linesRef = useRef<string[]>([]);
@@ -58,16 +62,22 @@ export default function ScratchpadPanel({
     if (waiting) inputRef.current?.focus();
   }, [out, waiting]);
 
-  function clearNotes() {
+  /** Line-pinned notes only. The explanation is still true after an edit. */
+  function dropNotes() {
+    setNotes([]);
+  }
+
+  function clearAll() {
     setNotes([]);
     setSummary("");
     setFix("");
+    setChanged([]);
   }
 
   async function explain(mode: "error" | "review") {
     if (thinking) return;
     setThinking(true);
-    clearNotes();
+    clearAll();
     const r = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -180,7 +190,21 @@ export default function ScratchpadPanel({
         </div>
       )}
 
-      {notes.length > 0 ? (
+      {changed.length > 0 && applying ? (
+        <div className="padcode annotated">
+          <div className="annwrap">
+            {code.split("\n").map((ln, i) => {
+              const m = changed.find((c) => c.line === i + 1);
+              return (
+                <div key={i} className={m ? `annrowc fixline ${m.kind}` : "annrowc"}>
+                  <span className="annnum">{i + 1}</span>
+                  <code>{ln || " "}</code>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : notes.length > 0 ? (
         <div className="padcode annotated">
           {/* A read-only copy of the code with each note under the line it is
               about. Editing here would fight the note positions, so the way
@@ -201,7 +225,7 @@ export default function ScratchpadPanel({
               );
             })}
           </div>
-          <button className="annback" onClick={clearNotes}>
+          <button className="annback" onClick={dropNotes}>
             ← back to editing
           </button>
         </div>
@@ -212,7 +236,11 @@ export default function ScratchpadPanel({
             onChange={(v) => {
               // Notes are pinned to line numbers, and editing moves the lines.
               // Keeping them would point confident advice at the wrong code.
-              if (notes.length || summary) clearNotes();
+              // Notes are pinned to line numbers and editing moves the lines,
+              // so those go. The written explanation is not pinned to anything
+              // and is still worth reading, so it stays — losing it the moment
+              // you started fixing the problem it described was the wrong call.
+              if (notes.length) dropNotes();
               setCode(v);
             }}
             height="100%"
@@ -227,16 +255,37 @@ export default function ScratchpadPanel({
           ) : (
             <>
               <p>{summary}</p>
+              {changed.length > 0 && (
+                <span className="fixrecord">
+                  Fixed {changed.length === 1 ? "line" : "lines"}{" "}
+                  {changed.map((c) => c.line).join(", ")}
+                </span>
+              )}
               {fix && fix.trim() !== code.trim() && (
                 <button
                   className="btn"
+                  disabled={applying}
                   onClick={() => {
                     snapshot(code, "before applying the fix");
+                    // Work out what actually changed BEFORE swapping, so the
+                    // student sees the edit happen instead of finding new code
+                    // in front of them and having to spot the difference.
+                    const before = code.split("\n");
+                    const after = fix.split("\n");
+                    const marks: { line: number; kind: "added" | "changed" }[] = [];
+                    for (let i = 0; i < after.length; i++) {
+                      if (i >= before.length) marks.push({ line: i + 1, kind: "added" });
+                      else if (before[i].trim() !== after[i].trim()) marks.push({ line: i + 1, kind: "changed" });
+                    }
                     setCode(fix);
-                    clearNotes();
+                    setNotes([]);
+                    setChanged(marks);
+                    setApplying(true);
+                    // Long enough to watch, short enough not to be in the way.
+                    setTimeout(() => setApplying(false), 1600);
                   }}
                 >
-                  Apply the fix
+                  {applying ? "Fixed ✓" : "Apply the fix"}
                 </button>
               )}
             </>

@@ -22,6 +22,13 @@ export const DEFAULT_PROMPTS = {
 Return ONLY valid JSON, no fences:
 {"summary":"one or two plain sentences","notes":[{"line":3,"note":"short note about THIS line"}],"fix":"corrected code, or empty"}
 
+WHO YOU ARE TALKING TO
+A 15-year-old in their first programming course, a few weeks in. They do not
+know what a compiler is, what "expected token" means, or what a stack trace is.
+Write for someone who is confused and slightly discouraged, not for a
+colleague. Short sentences. No jargon unless the lesson taught it, and if you
+must use a term, say what it means in the same breath.
+
 RULES
 - "line" is a 1-based line number in the code you were given. Never invent one.
 - A note is one short sentence about that line. Six to fifteen words. No essays.
