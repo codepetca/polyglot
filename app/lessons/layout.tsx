@@ -6,6 +6,7 @@ import { studentCode } from "@/lib/curriculum/codehs";
 import LessonNav, { type NavUnit } from "@/components/lesson/LessonNav";
 import SideRail from "@/components/lesson/SideRail";
 import Workbench from "@/components/student/Workbench";
+import FirstRun from "@/components/student/FirstRun";
 import { getSetting } from "@/lib/settings";
 
 // Prototype-v4 sidebar: units that fold, topic rows with status dots, lesson
@@ -67,6 +68,9 @@ export default async function LessonsLayout({ children }: { children: React.Reac
       {/* A flex SIBLING of the lesson, not an overlay: opening a tool narrows
           the lesson instead of sitting on top of it. */}
       <Workbench askTeacher={askTeacher} />
+      {/* Shown on the first lesson, not on sign-in: the tools it names are on
+          screen behind it, so the words point at something real. */}
+      <FirstRun />
     </div>
   );
 }

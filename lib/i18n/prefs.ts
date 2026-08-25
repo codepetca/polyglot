@@ -28,6 +28,7 @@ export const LANG_LABELS: Record<string, string> = {
   fa: "فارسی",
   tl: "Tagalog",
   ko: "한국어",
+  ja: "日本語",
   vi: "Tiếng Việt",
   fr: "Français",
   es: "Español",

@@ -96,6 +96,10 @@ export default function TutorPanel({
   return (
     <div className="tutor" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <div className="msgs" ref={scrollRef} style={{ maxHeight: "none", flex: 1 }}>
+        {/* The thread is stored per lesson, so say so — otherwise coming back to
+            a full conversation on one lesson and an empty one on the next looks
+            like history was lost. */}
+        <p className="threadfor">This chat is about lesson {lessonCode}. Each lesson keeps its own.</p>
         <div className="msg a">
           <span className="who">TUTOR</span>
           Hi! Ask me about this topic, or about the code in your scratchpad. Highlight any part of the lesson and hit “Ask

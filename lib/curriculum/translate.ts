@@ -50,6 +50,7 @@ export const LANGUAGES: Record<string, { name: string; label: string }> = {
   fa: { name: "Persian (Farsi)", label: "فارسی" },
   tl: { name: "Tagalog", label: "Tagalog" },
   ko: { name: "Korean", label: "한국어" },
+  ja: { name: "Japanese", label: "日本語" },
   vi: { name: "Vietnamese", label: "Tiếng Việt" },
   fr: { name: "French", label: "Français" },
   es: { name: "Spanish", label: "Español" },
