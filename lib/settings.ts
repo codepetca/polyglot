@@ -67,7 +67,7 @@ export async function setSetting(key: string, value: unknown): Promise<void> {
 
 // ─── LLM config: a list of keys (rotation lanes) + per-feature model + prompts ─
 
-export type PromptKey = "tutor" | "grade" | "generate" | "oversee";
+export type PromptKey = "tutor" | "grade" | "generate" | "oversee" | "explain";
 
 export interface StoredKey {
   id: string;

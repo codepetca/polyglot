@@ -7,9 +7,36 @@ export const PROMPT_PLACEHOLDERS: Record<string, string[]> = {
   grade: ["prompt", "behaviour", "compileNote"],
   generate: ["lessonTitle", "goal", "objectives", "record"],
   oversee: ["student", "curriculum", "mastery", "activity", "tutorQuestions"],
+  explain: ["lessonTitle", "keypoints", "mode", "payload"],
 };
 
 export const DEFAULT_PROMPTS = {
+  // Two jobs, one shape. Both answer "what is going on in MY code", and both
+  // want their answer pinned to specific lines rather than delivered as a
+  // paragraph the student has to map back onto the code themselves.
+  explain: `You help a grade 11 beginner understand their own Java. Lesson: {{lessonTitle}}
+{{keypoints}}
+
+{{mode}}
+
+Return ONLY valid JSON, no fences:
+{"summary":"one or two plain sentences","notes":[{"line":3,"note":"short note about THIS line"}],"fix":"corrected code, or empty"}
+
+RULES
+- "line" is a 1-based line number in the code you were given. Never invent one.
+- A note is one short sentence about that line. Six to fifteen words. No essays.
+- At most 5 notes. Pick the lines that matter, not every line.
+- Plain words. Say "you are missing a semicolon", not "expected token".
+- Never mention the wrapper, main(), or imports — the student cannot see those
+  and did not write them.
+- Input in this course is readLine / readInt / readDouble / readBoolean. Never
+  Scanner, never input().
+- "fix" is the student's WHOLE corrected program, or "" when nothing needs
+  changing. Change as little as possible, and never add a topic the lesson has
+  not reached.
+
+{{payload}}`,
+
   tutor: `You are a built-in AI tutor in a high-school platform (grade 11 intro Java).
 Current lesson: {{lessonTitle}}. Goal: {{goal}}
 {{objectives}}

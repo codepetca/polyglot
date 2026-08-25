@@ -95,6 +95,62 @@ export async function POST(req: Request) {
     return NextResponse.json({ text: r.text, meta: metaLine(r) });
   }
 
+  // ─── Explain: "what does this error mean" and "annotate my code" ───────────
+  //
+  // ONE ENDPOINT, because they are the same question asked at two moments —
+  // what is going on in MY code — and both want the answer pinned to lines
+  // rather than delivered as a paragraph to map back by hand.
+  if (feature === "explain") {
+    const keypoints = ((((lesson.flow as any)?.steps as any[]) || [])
+      .map((st) => st.keypoint)
+      .filter((k: unknown): k is string => typeof k === "string" && k.trim().length > 0));
+    const code = String(body.code || "");
+    if (!code.trim()) return NextResponse.json({ error: "no code" }, { status: 400 });
+
+    const errorMode = body.mode === "error";
+    const numbered = code.split("\n").map((l: string, i: number) => `${i + 1}| ${l}`).join("\n");
+
+    const r = await complete<{ summary?: string; notes?: { line: number; note: string }[]; fix?: string }>(
+      {
+        feature: "explain",
+        system: renderPrompt(prompts.explain || DEFAULT_PROMPTS.explain, {
+          lessonTitle: lesson.title,
+          keypoints: keypoints.length ? `This lesson teaches:\n${keypoints.map((k) => `- ${k}`).join("\n")}` : "",
+          mode: errorMode
+            ? "The student's program did not run. Explain the error in plain words, say which line is at fault, and give the corrected program."
+            : "The student's program runs. Walk through what it does, line by line, on the lines that matter. Only set \"fix\" if something is genuinely wrong.",
+          payload: errorMode
+            ? `Their code (line-numbered):\n${numbered}\n\nThe compiler said:\n${String(body.error || "").slice(0, 2000)}`
+            : `Their code (line-numbered):\n${numbered}${body.stdout ? `\n\nIt printed:\n${String(body.stdout).slice(0, 800)}` : ""}`,
+        }),
+        messages: [{ role: "user", content: errorMode ? "Explain the error." : "Explain my code." }],
+        json: true,
+        maxTokens: 2000,
+        reasoningEffort: "low",
+        model: TUTOR_MODEL,
+      },
+      { userId: me.id }
+    );
+
+    const lineCount = code.split("\n").length;
+    const notes = (Array.isArray(r.data?.notes) ? r.data!.notes : [])
+      // A note against a line that does not exist would render nowhere, or
+      // worse, against the wrong line. Drop it.
+      .filter((n) => n && Number.isFinite(n.line) && n.line >= 1 && n.line <= lineCount && typeof n.note === "string" && n.note.trim())
+      .slice(0, 5)
+      .map((n) => ({ line: Math.round(n.line), note: n.note.trim() }));
+
+    if (me.role === "STUDENT") {
+      logEvent({ type: EVENT.TUTOR_MESSAGE, userId: me.id, classId: me.classId, lessonId: lesson.id, lessonCode, question: errorMode ? "(explain error)" : "(explain code)", reply: r.text });
+    }
+    return NextResponse.json({
+      summary: (r.data?.summary || "").trim(),
+      notes,
+      fix: typeof r.data?.fix === "string" ? r.data.fix.trim() : "",
+      meta: metaLine(r),
+    });
+  }
+
   // ─── Grade (output verdict is authoritative; AI writes the coaching) ─────────
   if (feature === "grade") {
     const passed = body.compiled !== false && normalize(body.stdout || "") === normalize(exercise?.expected || "");

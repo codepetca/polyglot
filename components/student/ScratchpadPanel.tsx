@@ -41,6 +41,12 @@ export default function ScratchpadPanel({
   const [busy, setBusy] = useState(false);
   const [ran, setRan] = useState(false);
   const [typed, setTyped] = useState("");
+  // AI explanation of the current code or the current error. Rendered against
+  // the lines it refers to, not as a paragraph the student has to map back.
+  const [notes, setNotes] = useState<{ line: number; note: string }[]>([]);
+  const [summary, setSummary] = useState("");
+  const [fix, setFix] = useState("");
+  const [thinking, setThinking] = useState(false);
   const [histOpen, setHistOpen] = useState(false);
   const [snaps, setSnaps] = useState<Snapshot[]>([]);
   const linesRef = useRef<string[]>([]);
@@ -51,6 +57,27 @@ export default function ScratchpadPanel({
     consoleRef.current?.scrollTo(0, consoleRef.current.scrollHeight);
     if (waiting) inputRef.current?.focus();
   }, [out, waiting]);
+
+  function clearNotes() {
+    setNotes([]);
+    setSummary("");
+    setFix("");
+  }
+
+  async function explain(mode: "error" | "review") {
+    if (thinking) return;
+    setThinking(true);
+    clearNotes();
+    const r = await fetch("/api/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ feature: "explain", mode, lessonCode, code, error, stdout: out }),
+    }).then((x) => x.json()).catch(() => null);
+    setSummary(r?.summary || r?.error || "Could not explain that one.");
+    setNotes(Array.isArray(r?.notes) ? r.notes : []);
+    setFix(typeof r?.fix === "string" ? r.fix : "");
+    setThinking(false);
+  }
 
   async function exec(lines: string[]) {
     setBusy(true);
@@ -114,6 +141,14 @@ export default function ScratchpadPanel({
             buffer — which the tutor's "Put in scratchpad" does — is otherwise
             destructive with no undo. */}
         <button
+          className="tbtn2"
+          title="Have the tutor annotate your code, line by line"
+          onClick={() => explain("review")}
+          disabled={thinking || !code.trim()}
+        >
+          ✦ Explain
+        </button>
+        <button
           className={`tbtn2 ${histOpen ? "on" : ""}`}
           title="Earlier versions of this code"
           onClick={() => {
@@ -159,7 +194,16 @@ export default function ScratchpadPanel({
           <span className="mutedtx">▶ Run to see the output. If the program asks a question, type your answer here.</span>
         )}
         {out && <span className="termout">{out}</span>}
-        {error && <span className="termerr">{error}</span>}
+        {error && (
+          <>
+            <span className="termerr">{error}</span>
+            {/* The moment a beginner gives up. "cannot find symbol" tells them
+                nothing, so the offer belongs here, not in another pane. */}
+            <button className="explainbtn" onClick={(e) => { e.stopPropagation(); explain("error"); }} disabled={thinking}>
+              ✦ What does this mean?
+            </button>
+          </>
+        )}
         {waiting && (
           <span className="termline">
             <span className="caret">›</span>
