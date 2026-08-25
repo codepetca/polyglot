@@ -7,7 +7,8 @@ import LessonNav, { type NavUnit } from "@/components/lesson/LessonNav";
 import SideRail from "@/components/lesson/SideRail";
 import Workbench from "@/components/student/Workbench";
 import FirstRun from "@/components/student/FirstRun";
-import { getSetting } from "@/lib/settings";
+import { getSetting, getFeatureFlags } from "@/lib/settings";
+import { FeaturesProvider } from "@/lib/features";
 
 // Prototype-v4 sidebar: units that fold, topic rows with status dots, lesson
 // code minis. The folding lives in LessonNav because it needs the current
@@ -52,7 +53,10 @@ export default async function LessonsLayout({ children }: { children: React.Reac
     }
   }
 
+  const { ai } = await getFeatureFlags();
+
   return (
+    <FeaturesProvider ai={ai}>
     <div className="shell">
       {/* On phones the sidebar is hidden, which used to leave a student stuck
           on whichever lesson they landed on with no way to browse. This picker
@@ -72,5 +76,6 @@ export default async function LessonsLayout({ children }: { children: React.Reac
           screen behind it, so the words point at something real. */}
       <FirstRun />
     </div>
+    </FeaturesProvider>
   );
 }

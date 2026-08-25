@@ -37,7 +37,7 @@ export interface LLMResult<T = unknown> {
   provider: Provider;
   model: string;
   /** Why the offline stub answered, when it did. */
-  degraded?: "budget" | "unconfigured" | null;
+  degraded?: "budget" | "unconfigured" | "off" | null;
 }
 
 // One lane = one attempt target. The adapter tries the primary, then fallbacks.

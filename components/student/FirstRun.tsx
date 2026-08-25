@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { LANG_LABELS, readPrefs, writePrefs } from "@/lib/i18n/prefs";
 import ReportButton from "./ReportButton";
+import { useAi } from "@/lib/features";
 
 // What a student meets the first time they open a lesson.
 //
@@ -22,6 +23,7 @@ import ReportButton from "./ReportButton";
 const SEEN = "classos_firstrun_v1";
 
 export default function FirstRun() {
+  const ai = useAi();
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [show, setShow] = useState(false);
   const [lang, setLang] = useState("");
@@ -96,7 +98,7 @@ export default function FirstRun() {
         {step === 1 && (
           <>
             <p className="freyebrow">Step 2 of 2</p>
-            <h2>Three tools live on the right</h2>
+            <h2>{ai ? "Three tools live on the right" : "Two tools live on the right"}</h2>
             <ul className="frtools">
               <li>
                 <b>Scratchpad</b> — write Java and run it. Nothing here is marked, so try things.
@@ -104,9 +106,11 @@ export default function FirstRun() {
               <li>
                 <b>Reference</b> — every piece of syntax in the course. It opens at the part this lesson uses.
               </li>
-              <li>
-                <b>AI Tutor</b> — ask anything about the lesson or your code. It can write code and fix yours.
-              </li>
+              {ai && (
+                <li>
+                  <b>AI Tutor</b> — ask anything about the lesson or your code. It can write code and fix yours.
+                </li>
+              )}
             </ul>
             <p className="frnote">
               Open one from the right edge, then swap between them with <kbd>←</kbd> <kbd>→</kbd>. Drag the panel
@@ -127,13 +131,20 @@ export default function FirstRun() {
           <>
             <p className="freyebrow">Last one</p>
             <h2>Stuck is normal</h2>
+            {ai ? (
+              <p className="frnote">
+                When your code will not run, the red message has a <b>“What does this mean?”</b> button under it. It
+                explains the error in plain words and shows the line to fix.
+              </p>
+            ) : (
+              <p className="frnote">
+                When your code will not run, read the red message from the top. The first line names the file and the
+                line number, and that line is where to look first.
+              </p>
+            )}
             <p className="frnote">
-              When your code will not run, the red message has a <b>“What does this mean?”</b> button under it. It
-              explains the error in plain words and shows the line to fix.
-            </p>
-            <p className="frnote">
-              Highlight any sentence in a lesson to ask about it, and every key point you meet is saved in{" "}
-              <b>Notes</b>.
+              Every key point you meet is saved in <b>Notes</b>, so you can look it up later without hunting
+              through the lesson again.
             </p>
             <p className="frnote">
               And <b>Tell me</b>, at the top of every page, goes straight to the person who built this. Broken,

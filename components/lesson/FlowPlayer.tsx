@@ -5,6 +5,7 @@ import ScopeDiagram from "@/components/lesson/ScopeDiagram";
 import Link from "next/link";
 import CodeBox from "./CodeBox";
 import { readPrefs, onPrefsChange, RTL, LANG_LABELS, type EslPrefs } from "@/lib/i18n/prefs";
+import { useAi } from "@/lib/features";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
 // text. 15 step kinds (see lib/curriculum/flow.ts, the canonical spec):
@@ -508,6 +509,7 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
   const [explainText, setExplainText] = useState("");
   const [explainReply, setExplainReply] = useState("");
   const [hintOpen, setHintOpen] = useState(false);
+  const ai = useAi();
   const [aiHint, setAiHint] = useState("");
   const [aiBusy, setAiBusy] = useState(false);
   const fails = attemptsOf(step.id);
@@ -1138,7 +1140,7 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
           <textarea className="f" rows={2} value={explainText} placeholder="one or two sentences, your own words…" onChange={(e) => setExplainText(e.target.value)} disabled={won} />
           {!won && (
             <div className="runrow" style={{ marginTop: 8 }}>
-              <button className="btn purple" disabled={busy || !explainText.trim()} onClick={sendExplain}>{busy ? "reading…" : "✦ Convince me"}</button>
+              <button className="btn purple" disabled={busy || !explainText.trim()} onClick={sendExplain}>{busy ? (ai ? "reading…" : "…") : ai ? "✦ Convince me" : "Show me the answer"}</button>
               {fails >= 2 && <button className="skiplink" onClick={onSkip}>move on ›</button>}
             </div>
           )}
@@ -1415,7 +1417,7 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
         <div className="flowhelp">
           {step.hint && !hintOpen && <button className="btn ghost" onClick={() => setHintOpen(true)}>💡 hint</button>}
           {hintOpen && <span className="hinttext">💡 {step.hint}<Alt text={assist?.hint} lang={lang} /></span>}
-          {fails >= 2 && !aiHint && runnable && (
+          {ai && fails >= 2 && !aiHint && runnable && (
             <button className="btn purple" disabled={aiBusy} onClick={askTutor}>{aiBusy ? "…" : "🤖 I'm stuck"}</button>
           )}
           {aiHint && <span className="hinttext">🤖 {aiHint}</span>}

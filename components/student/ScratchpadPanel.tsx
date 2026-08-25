@@ -23,6 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import CodeEditor from "../CodeEditor";
 import { needsMethodsMode, ensureRun } from "@/lib/java/detect";
 import { loadSnapshots, snapshot, describeAge, type Snapshot } from "@/lib/tutor-history";
+import { useAi } from "@/lib/features";
 
 const WANTS_INPUT = /NoSuchElementException/;
 
@@ -35,6 +36,7 @@ export default function ScratchpadPanel({
   setCode: (v: string) => void;
   lessonCode: string;
 }) {
+  const ai = useAi();
   const [out, setOut] = useState("");
   const [error, setError] = useState("");
   const [waiting, setWaiting] = useState(false);
@@ -150,14 +152,16 @@ export default function ScratchpadPanel({
         {/* One control, not a toolbar. It only exists because replacing the
             buffer — which the tutor's "Put in scratchpad" does — is otherwise
             destructive with no undo. */}
-        <button
-          className="tbtn2"
-          title="Have the tutor annotate your code, line by line"
-          onClick={() => explain("review")}
-          disabled={thinking || !code.trim()}
-        >
-          ✦ Explain
-        </button>
+        {ai && (
+          <button
+            className="tbtn2"
+            title="Have the tutor annotate your code, line by line"
+            onClick={() => explain("review")}
+            disabled={thinking || !code.trim()}
+          >
+            ✦ Explain
+          </button>
+        )}
         <button
           className={`tbtn2 ${histOpen ? "on" : ""}`}
           title="Earlier versions of this code"
@@ -308,9 +312,11 @@ export default function ScratchpadPanel({
             <span className="termerr">{error}</span>
             {/* The moment a beginner gives up. "cannot find symbol" tells them
                 nothing, so the offer belongs here, not in another pane. */}
-            <button className="explainbtn" onClick={(e) => { e.stopPropagation(); explain("error"); }} disabled={thinking}>
-              ✦ What does this mean?
-            </button>
+            {ai && (
+              <button className="explainbtn" onClick={(e) => { e.stopPropagation(); explain("error"); }} disabled={thinking}>
+                ✦ What does this mean?
+              </button>
+            )}
           </>
         )}
         {waiting && (

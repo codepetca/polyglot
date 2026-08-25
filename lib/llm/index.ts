@@ -2,6 +2,7 @@ import "server-only";
 import type { CompleteArgs, Feature, Lane, LLMResult, Provider } from "./types";
 import { callProvider } from "./providers";
 import { safeParseJson } from "./json";
+import { getFeatureFlags } from "@/lib/settings";
 import { getProviderConfig, getBudgetConfig } from "../settings";
 import { prisma } from "../db";
 
@@ -104,8 +105,14 @@ export async function complete<T = unknown>(
   // same symptom and completely different fixes, and reporting the second for
   // the first sent the owner to a settings page to add a key that was already
   // there.
-  let degraded: "budget" | null = null;
-  if (lanes.some((l) => l.provider !== "stub") && (await overDailyBudget())) {
+  let degraded: "budget" | "off" | null = null;
+  // The master switch, checked BEFORE the budget: when AI is off the spend is
+  // not merely capped, there is no paid lane at all. Enforced here rather than
+  // in each route so a new AI feature is off by construction, not by remembering.
+  if (!(await getFeatureFlags()).ai) {
+    lanes = lanes.filter((l) => l.provider === "stub");
+    degraded = "off";
+  } else if (lanes.some((l) => l.provider !== "stub") && (await overDailyBudget())) {
     lanes = lanes.filter((l) => l.provider === "stub"); // degrade, never hard-fail
     degraded = "budget";
   }
@@ -117,7 +124,7 @@ export async function complete<T = unknown>(
       const data = args.json ? safeParseJson<T>(raw.text) : undefined;
       const cost = costOf(lane.model, raw.input, raw.output);
 
-      if (lane.provider === "stub" && lanes.some((l) => l.provider !== "stub")) {
+      if (lane.provider === "stub" && degraded !== "off" && lanes.some((l) => l.provider !== "stub")) {
         console.error(`[llm] "${args.feature}" served by the OFFLINE STUB — every configured provider failed. Students are getting canned responses.`);
       }
 

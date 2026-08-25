@@ -34,6 +34,34 @@ export function decryptSecret(blob: string): string {
   }
 }
 
+// ─── The master AI switch ───────────────────────────────────────────────────
+// The teacher's position is that NOBODY should be paying for this — not the
+// school and not the student who built it. A spend cap does not answer that,
+// because a cap still means the bill is merely small, and "capped" is a word
+// you have to defend in a meeting.
+//
+// So this is a real off. It is enforced in complete() (lib/llm/index.ts),
+// which is the single chokepoint every AI call in the product passes through,
+// so turning it off cannot be routed around by a page that forgot to check.
+// The UI hides its AI affordances too — a dead button is worse than no button
+// — but the UI is the courtesy and this is the control.
+//
+// Default ON so that flipping the switch is a deliberate act and an existing
+// deployment does not silently lose its tutor on deploy.
+
+export interface FeatureFlags {
+  /** Master switch. Off means every AI call serves the offline stub. */
+  ai: boolean;
+}
+const DEFAULT_FEATURES: FeatureFlags = { ai: true };
+
+export async function getFeatureFlags(): Promise<FeatureFlags> {
+  return { ...DEFAULT_FEATURES, ...(await getSetting<Partial<FeatureFlags>>("features", {})) };
+}
+export async function saveFeatureFlags(f: Partial<FeatureFlags>): Promise<void> {
+  await setSetting("features", { ...(await getFeatureFlags()), ...f });
+}
+
 // ─── Global AI spend cap ────────────────────────────────────────────────────
 // Per-user/IP rate limits (lib/ratelimit.ts) bound one actor's abuse, but an
 // anonymous entry (no signup) is cheap to mint many of — so nothing bounded

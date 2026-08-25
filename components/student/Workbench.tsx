@@ -21,6 +21,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import ScratchpadPanel from "./ScratchpadPanel";
 import TutorPanel from "./TutorPanel";
+import { useAi } from "@/lib/features";
 import BenchFrame, { type BenchMode, type BenchGeom } from "./BenchFrame";
 import BenchIcon from "./BenchIcon";
 import { allSections, sectionsForLesson, type Section } from "@/lib/curriculum/reference";
@@ -38,13 +39,18 @@ const DEFAULT_GEOM: BenchGeom = { x: 200, y: 110, w: 520, h: 560 };
 const DEFAULT_CODE = 'String name = readLine("Your name? ");\nSystem.out.println("Hi, " + name + "!");';
 
 type PaneId = "scratchpad" | "reference" | "tutor";
-const PANES: { id: PaneId; label: string }[] = [
+const ALL_PANES: { id: PaneId; label: string }[] = [
   { id: "scratchpad", label: "Scratchpad" },
   { id: "reference", label: "Reference" },
   { id: "tutor", label: "AI Tutor" },
 ];
 
 export default function Workbench({ askTeacher }: { askTeacher: { id: string; name: string } | null }) {
+  // With AI off the tutor is not disabled, it is absent: the rail has two
+  // spines, the arrow keys cycle two panes, and nothing anywhere hints at a
+  // third that does not answer.
+  const ai = useAi();
+  const PANES = ai ? ALL_PANES : ALL_PANES.filter((p) => p.id !== "tutor");
   const path = usePathname() || "";
   const lessonCode = decodeURIComponent(path.split("/lessons/")[1] || "").split("/")[0];
   // The reference pane carries the WHOLE course and scrolls to where you are,
@@ -72,6 +78,7 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
     setOpen(localStorage.getItem(OPEN_KEY) === "1");
     const p = localStorage.getItem(PANE_KEY) as PaneId | null;
     if (p && PANES.some((x) => x.id === p)) setPane(p);
+    else if (p === "tutor") setPane("scratchpad"); // AI was switched off since their last visit
     try {
       const w = JSON.parse(localStorage.getItem(WIN_KEY) || "null");
       if (w) {
