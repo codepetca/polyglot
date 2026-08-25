@@ -11886,6 +11886,40 @@
             "instruction": "What comes out?"
           },
           {
+            "id": "d_p3",
+            "kind": "predict",
+            "instruction": "Only one slot was filled. What comes out?",
+            "code": "int[] scores = new int[4];\nscores[0] = 90;\nSystem.out.println(scores[0] + \" \" + scores[1]);",
+            "opts": [
+              "90 90",
+              "90 0",
+              "90 null",
+              "a crash, because scores[1] was never set"
+            ],
+            "correct": 1,
+            "why": "new int[4] fills every slot with 0 straight away. There is no empty slot to crash on.",
+            "skills": [
+              "say what an int array holds before you fill it"
+            ]
+          },
+          {
+            "id": "d_p4",
+            "kind": "predict",
+            "instruction": "This array holds names, not numbers. What comes out?",
+            "code": "String[] names = new String[2];\nSystem.out.println(names[0]);",
+            "opts": [
+              "null",
+              "0",
+              "an empty line",
+              "it will not compile"
+            ],
+            "correct": 0,
+            "why": "Numbers start at 0. Anything else starts at null, which means no value yet.",
+            "skills": [
+              "say what a String array holds before you fill it"
+            ]
+          },
+          {
             "id": "d_four",
             "kind": "teach",
             "facts": {
@@ -12214,6 +12248,40 @@
             ],
             "correct": 2,
             "instruction": "What comes out?"
+          },
+          {
+            "id": "r_p2",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "double[] t = {1.5, 2.5};\nSystem.out.println(t.length + \" \" + t[t.length - 1]);",
+            "opts": [
+              "2 1.5",
+              "1 2.5",
+              "3 2.5",
+              "2 2.5"
+            ],
+            "correct": 3,
+            "why": "length is 2, so the last index is 2 - 1, which is 1. That slot holds 2.5.",
+            "skills": [
+              "reach the last element with length - 1"
+            ]
+          },
+          {
+            "id": "r_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "String[] days = {\"Mon\", \"Tue\", \"Wed\"};\nSystem.out.println(days[1]);",
+            "opts": [
+              "Mon",
+              "Tue",
+              "Wed",
+              "a crash"
+            ],
+            "correct": 1,
+            "why": "Counting starts at 0, so index 1 is the second one.",
+            "skills": [
+              "count array positions from 0"
+            ]
           },
           {
             "id": "r_w2",
@@ -12571,6 +12639,40 @@
             "instruction": "This loop uses <= instead of <. What happens?"
           },
           {
+            "id": "u_p3",
+            "kind": "predict",
+            "instruction": "The loop fills the array. What comes out?",
+            "code": "int[] n = new int[3];\nfor (int i = 0; i < n.length; i++) {\n  n[i] = i * 2;\n}\nSystem.out.println(n[0] + \" \" + n[1] + \" \" + n[2]);",
+            "opts": [
+              "0 1 2",
+              "2 4 6",
+              "0 0 0",
+              "0 2 4"
+            ],
+            "correct": 3,
+            "why": "i runs 0, 1, 2, so the slots get 0, 2 and 4.",
+            "skills": [
+              "write into an array inside a loop"
+            ]
+          },
+          {
+            "id": "u_p4",
+            "kind": "predict",
+            "instruction": "This should add up the hp. What comes out?",
+            "code": "int[] hp = {12, 30, 8};\nint total = 0;\nfor (int i = 0; i < hp.length; i++) {\n  total = hp[i];\n}\nSystem.out.println(total);",
+            "opts": [
+              "8",
+              "50",
+              "12",
+              "0"
+            ],
+            "correct": 0,
+            "why": "= replaces total every pass, so only the last value survives. It needs +=.",
+            "skills": [
+              "tell = apart from += when adding things up"
+            ]
+          },
+          {
             "id": "u_oobwhy",
             "body": [
               "This is a run-time error, so the program compiles and then stops partway.",
@@ -12799,6 +12901,40 @@
             ],
             "correct": 0,
             "instruction": "What comes out?"
+          },
+          {
+            "id": "e_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "int[] hp = {12, 30, 8};\nint total = 0;\nfor (int h : hp) {\n  total += h;\n}\nSystem.out.println(total);",
+            "opts": [
+              "8",
+              "3",
+              "12",
+              "50"
+            ],
+            "correct": 3,
+            "why": "h is each value in turn, so total collects 12, then 30, then 8.",
+            "skills": [
+              "add up an array with an enhanced for loop"
+            ]
+          },
+          {
+            "id": "e_p4",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "String[] names = {\"Ada\", \"Ben\"};\nString out = \"\";\nfor (String n : names) {\n  out += n.charAt(0);\n}\nSystem.out.println(out);",
+            "opts": [
+              "AdaBen",
+              "AB",
+              "3 3",
+              "Ada Ben"
+            ],
+            "correct": 1,
+            "why": "charAt(0) is the first letter of each name, and += sticks them together.",
+            "skills": [
+              "use an enhanced for loop over Strings"
+            ]
           },
           {
             "id": "e_w2",
@@ -13109,6 +13245,40 @@
             "instruction": "What comes out?"
           },
           {
+            "id": "a_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "ArrayList<String> bag = new ArrayList<String>();\nbag.add(\"rope\");\nbag.add(\"gem\");\nbag.add(0, \"map\");\nSystem.out.println(bag);",
+            "opts": [
+              "[rope, gem, map]",
+              "[map, gem, rope]",
+              "[map, gem]",
+              "[map, rope, gem]"
+            ],
+            "correct": 3,
+            "why": "add with an index puts the item at that position and pushes the rest along. Nothing is lost.",
+            "skills": [
+              "insert into an ArrayList at a position"
+            ]
+          },
+          {
+            "id": "a_p4",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "ArrayList<Integer> n = new ArrayList<Integer>();\nn.add(4);\nn.add(9);\nn.set(0, 7);\nSystem.out.println(n.size() + \" \" + n.get(0));",
+            "opts": [
+              "2 7",
+              "3 7",
+              "2 4",
+              "1 7"
+            ],
+            "correct": 0,
+            "why": "set replaces what is already at that position. add makes the list longer, set never does.",
+            "skills": [
+              "tell set apart from add"
+            ]
+          },
+          {
             "id": "a_w2",
             "code": "// make the list here\n\n// add 40, 55 and 12\n\n// print the second score\n",
             "hint": "A list of whole numbers is ArrayList<Integer>, not ArrayList<int>.",
@@ -13354,6 +13524,40 @@
             ],
             "correct": 2,
             "instruction": "What comes out?"
+          },
+          {
+            "id": "v_p2",
+            "kind": "predict",
+            "instruction": "What happens?",
+            "code": "ArrayList<String> bag = new ArrayList<String>();\nbag.add(\"rope\");\nSystem.out.println(bag.length);",
+            "opts": [
+              "1",
+              "0",
+              "it will not compile, because an ArrayList uses size()",
+              "rope"
+            ],
+            "correct": 2,
+            "why": "length is for arrays. An ArrayList has size(). Different structure, different word.",
+            "skills": [
+              "use length for arrays and size() for ArrayLists"
+            ]
+          },
+          {
+            "id": "v_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "ArrayList<Integer> n = new ArrayList<Integer>();\nn.add(4);\nn.add(9);\nn.remove(0);\nSystem.out.println(n.get(0) + \" \" + n.size());",
+            "opts": [
+              "4 1",
+              "9 2",
+              "4 2",
+              "9 1"
+            ],
+            "correct": 3,
+            "why": "remove(0) removes position 0, not the number 0. It takes out 4, so 9 slides down to position 0.",
+            "skills": [
+              "say which item remove(0) takes out"
+            ]
           },
           {
             "id": "v_w2",
@@ -13625,6 +13829,40 @@
             ],
             "correct": 2,
             "instruction": "This should remove every fallen monster. A monster has fallen when its hp is 0. What comes out?"
+          },
+          {
+            "id": "s_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "int[] hp = {12, 0, 30, 0};\nint fallen = 0;\nfor (int h : hp) {\n  if (h == 0) {\n    fallen++;\n  }\n}\nSystem.out.println(fallen);",
+            "opts": [
+              "0",
+              "2",
+              "1",
+              "4"
+            ],
+            "correct": 1,
+            "why": "Two of the four values are 0, so the counter goes up twice.",
+            "skills": [
+              "count the values that match a test"
+            ]
+          },
+          {
+            "id": "s_p4",
+            "kind": "predict",
+            "instruction": "This should find the highest temperature. What comes out?",
+            "code": "int[] temps = {-4, -9, -2};\nint best = 0;\nfor (int t : temps) {\n  if (t > best) {\n    best = t;\n  }\n}\nSystem.out.println(best);",
+            "opts": [
+              "-2",
+              "-9",
+              "-4",
+              "0"
+            ],
+            "correct": 3,
+            "why": "Every temperature is below 0, so nothing ever beats the starting value and 0 is printed even though it is not in the array. Start best at temps[0] instead.",
+            "skills": [
+              "start a highest-so-far at the first element, not 0"
+            ]
           },
           {
             "id": "s_walk",
@@ -13931,6 +14169,40 @@
             "instruction": "What comes out?"
           },
           {
+            "id": "t_p2",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "List<String> bag = new ArrayList<String>();\nbag.add(\"rope\");\nSystem.out.println(bag.contains(\"gem\"));",
+            "opts": [
+              "false",
+              "true",
+              "null",
+              "it will not compile"
+            ],
+            "correct": 0,
+            "why": "contains answers yes or no. Nothing added gem, so the answer is false.",
+            "skills": [
+              "ask a List whether it holds something"
+            ]
+          },
+          {
+            "id": "t_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "List<Integer> n = new ArrayList<Integer>();\nn.add(4);\nn.add(9);\nSystem.out.println(n.indexOf(9) + \" \" + n.indexOf(3));",
+            "opts": [
+              "1 0",
+              "2 -1",
+              "1 null",
+              "1 -1"
+            ],
+            "correct": 3,
+            "why": "9 sits at position 1. 3 is not in the list, and indexOf says that with -1, because 0 is a real position.",
+            "skills": [
+              "read -1 as not found"
+            ]
+          },
+          {
             "id": "t_param",
             "body": [
               "An ArrayList is a List, so it is accepted.",
@@ -14189,6 +14461,40 @@
             ],
             "correct": 1,
             "instruction": "What comes out?"
+          },
+          {
+            "id": "g_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "int[][] grid = {{1, 2, 3}, {4, 5, 6}};\nSystem.out.println(grid.length + \" \" + grid[0].length);",
+            "opts": [
+              "2 3",
+              "3 2",
+              "6 6",
+              "2 2"
+            ],
+            "correct": 0,
+            "why": "grid.length counts the rows, which is 2. grid[0].length counts what is inside one row, which is 3.",
+            "skills": [
+              "count rows and columns of a 2D array"
+            ]
+          },
+          {
+            "id": "g_p4",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "int[][] grid = new int[2][3];\ngrid[1][2] = 7;\nSystem.out.println(grid[1][2] + \" \" + grid[0][0]);",
+            "opts": [
+              "7 7",
+              "0 7",
+              "0 0",
+              "7 0"
+            ],
+            "correct": 3,
+            "why": "Only one cell was set. Every other cell is still the 0 it started as.",
+            "skills": [
+              "set one cell of a 2D array without touching the rest"
+            ]
           },
           {
             "id": "g_new",
@@ -14537,6 +14843,40 @@
             "instruction": "The loops have been swapped. What comes out?"
           },
           {
+            "id": "n_p3",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "int[][] grid = {{1, 2}, {3, 4}};\nint total = 0;\nfor (int r = 0; r < grid.length; r++) {\n  for (int c = 0; c < grid[r].length; c++) {\n    total += grid[r][c];\n  }\n}\nSystem.out.println(total);",
+            "opts": [
+              "4",
+              "10",
+              "6",
+              "1234"
+            ],
+            "correct": 1,
+            "why": "The inner loop visits every cell of a row, and the outer loop does that for every row. 1 + 2 + 3 + 4 is 10.",
+            "skills": [
+              "add up every cell of a grid"
+            ]
+          },
+          {
+            "id": "n_p4",
+            "kind": "predict",
+            "instruction": "An enhanced for loop over a grid. What comes out?",
+            "code": "int[][] grid = {{1, 2}, {3, 4}};\nString out = \"\";\nfor (int[] row : grid) {\n  out += row[0];\n}\nSystem.out.println(out);",
+            "opts": [
+              "12",
+              "1 3",
+              "10",
+              "13"
+            ],
+            "correct": 3,
+            "why": "Each pass hands you a whole row, not a number. row[0] is the first cell of that row, so 1 then 3.",
+            "skills": [
+              "say what one pass of a loop over a 2D array gives you"
+            ]
+          },
+          {
             "id": "n_rowlen",
             "body": [
               "Rows in Java do not have to be the same width.",
@@ -14782,6 +15122,40 @@
             ],
             "correct": 2,
             "instruction": "What comes out?"
+          },
+          {
+            "id": "h_p3",
+            "kind": "predict",
+            "instruction": "The same key is put twice. What comes out?",
+            "code": "HashMap<String, Integer> hp = new HashMap<String, Integer>();\nhp.put(\"ogre\", 12);\nhp.put(\"ogre\", 30);\nSystem.out.println(hp.size() + \" \" + hp.get(\"ogre\"));",
+            "opts": [
+              "1 30",
+              "2 30",
+              "1 12",
+              "2 12"
+            ],
+            "correct": 0,
+            "why": "A key appears once. Putting it again replaces the value instead of adding a second entry.",
+            "skills": [
+              "say what putting the same key twice does"
+            ]
+          },
+          {
+            "id": "h_p4",
+            "kind": "predict",
+            "instruction": "That key was never put in. What comes out?",
+            "code": "HashMap<String, Integer> hp = new HashMap<String, Integer>();\nhp.put(\"ogre\", 12);\nSystem.out.println(hp.get(\"troll\"));",
+            "opts": [
+              "null",
+              "0",
+              "a crash",
+              "it will not compile"
+            ],
+            "correct": 0,
+            "why": "A missing key gives null, not a crash. Check with containsKey before you use the value.",
+            "skills": [
+              "say what get returns for a key that is not there"
+            ]
           },
           {
             "id": "h_w2",
@@ -15163,6 +15537,40 @@
             ],
             "correct": 2,
             "instruction": "What comes out?"
+          },
+          {
+            "id": "b_p3",
+            "kind": "predict",
+            "instruction": "This binary number starts with a 0. What comes out?",
+            "code": "int[] bits = {0, 1, 1};\nint value = 0;\nfor (int b : bits) {\n  value = value * 2 + b;\n}\nSystem.out.println(value);",
+            "opts": [
+              "6",
+              "011",
+              "7",
+              "3"
+            ],
+            "correct": 3,
+            "why": "Doubling 0 is still 0, so a leading zero changes nothing. 011 is worth the same as 11, which is 3.",
+            "skills": [
+              "say what a leading zero does to a binary number"
+            ]
+          },
+          {
+            "id": "b_p4",
+            "kind": "predict",
+            "instruction": "The place-value method, on four digits. What comes out?",
+            "code": "int[] bits = {1, 0, 1, 1};\nint[] places = {8, 4, 2, 1};\nint value = 0;\nfor (int i = 0; i < bits.length; i++) {\n  value = value + bits[i] * places[i];\n}\nSystem.out.println(value);",
+            "opts": [
+              "13",
+              "11",
+              "1011",
+              "7"
+            ],
+            "correct": 1,
+            "why": "The 8s, 2s and 1s places hold a 1. 8 + 2 + 1 is 11. The 4s place holds 0, so it is skipped.",
+            "skills": [
+              "convert binary to decimal with place values"
+            ]
           },
           {
             "id": "b_bases",
@@ -15721,6 +16129,40 @@
             ],
             "correct": 3,
             "instruction": "What comes out?"
+          },
+          {
+            "id": "q_hmap",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "HashMap<String, Integer> hp = new HashMap<String, Integer>();\nhp.put(\"ogre\", 12);\nhp.put(\"troll\", 45);\nhp.put(\"ogre\", 8);\nSystem.out.println(hp.size() + \" \" + hp.get(\"ogre\"));",
+            "opts": [
+              "3 8",
+              "2 12",
+              "3 12",
+              "2 8"
+            ],
+            "correct": 3,
+            "why": "ogre is one key put twice, so the map holds two keys and ogre now maps to 8.",
+            "skills": [
+              "say what putting the same key twice does"
+            ]
+          },
+          {
+            "id": "q_alist",
+            "kind": "predict",
+            "instruction": "What comes out?",
+            "code": "ArrayList<String> bag = new ArrayList<String>();\nbag.add(\"rope\");\nbag.add(\"gem\");\nbag.remove(0);\nbag.add(\"map\");\nSystem.out.println(bag);",
+            "opts": [
+              "[rope, map]",
+              "[map, gem]",
+              "[gem, map]",
+              "[rope, gem, map]"
+            ],
+            "correct": 2,
+            "why": "remove(0) takes out rope. add puts map on the end, after gem.",
+            "skills": [
+              "track an ArrayList through add and remove"
+            ]
           },
           {
             "id": "q_final",
