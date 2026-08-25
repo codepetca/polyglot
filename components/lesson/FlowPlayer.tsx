@@ -70,19 +70,23 @@ const norm = (s: string) => (s || "").replace(/\r\n/g, "\n").trimEnd();
 
 // Each language names itself, so a student can find theirs without first
 
-// ESL: the SAME sentence twice, side by side.
+// ESL, exactly two shapes, because those are the two the owner asked for.
 //
-// This used to be a collapsed "what does this mean?" line underneath. The owner
-// asked for two columns instead, and it is the better shape: a student reading
-// a translation underneath has already given up on the English line above it,
-// whereas side by side the two stay coupled and the English is always in view.
+//   "side"  — TWO IDENTICAL BLOCKS. The same question and the same paragraphs,
+//             rendered twice at the same size and weight. The only difference
+//             between the columns is the language.
+//   "under" — the original line, with a small translated line beneath it.
 //
-// The English column is always first, and is never replaced. Technical terms
-// stay English inside the translation too — see lib/curriculum/i18n-extract.ts.
+// What this replaced was neither: it paired line by line into a grid, so the
+// question sat beside its translation while the paragraphs underneath ran full
+// width and unpaired. Ragged, and not a thing anyone asked for.
 //
-// Below 900px there is no room for two columns, so they stack, English on top.
-// Short captions — a hint, a reveal, a caption after success — are one line, so
-// two columns would be more chrome than text. These render inline underneath.
+// A line with no translation falls back to the English in the second block, so
+// the two blocks stay structurally identical rather than one ending short.
+
+/** A small translated line under an original line. Used by the "under" layout,
+ *  and by short captions — a hint or a reveal — in either layout, since two
+ *  columns for one line of text is more chrome than text. */
 function Alt({ text, lang }: { text?: string; lang: string }) {
   if (!text || !lang) return null;
   return (
@@ -92,28 +96,26 @@ function Alt({ text, lang }: { text?: string; lang: string }) {
   );
 }
 
-function Pair({
-  en,
-  zh,
+/** The readable part of a step: the question and its paragraphs. */
+function Prose({
+  instruction,
+  body,
   lang,
-  layout = "side",
-  className = "",
-  as: Tag = "div",
 }: {
-  en: React.ReactNode;
-  zh?: string;
-  lang: string;
-  layout?: "side" | "under";
-  className?: string;
-  as?: "div" | "p";
+  instruction: React.ReactNode;
+  body: string[];
+  lang?: string;
 }) {
-  if (!zh || !lang) return <Tag className={className}>{en}</Tag>;
   return (
-    <div className={`pair ${layout === "under" ? "stack" : ""}`}>
-      <Tag className={className}>{en}</Tag>
-      <Tag className={`${className} pairalt`} dir={RTL.has(lang) ? "rtl" : "ltr"} lang={lang}>
-        {zh}
-      </Tag>
+    <div className="prose" dir={lang && RTL.has(lang) ? "rtl" : "ltr"} lang={lang || undefined}>
+      <div className="flowq">{instruction}</div>
+      {body.length > 0 && (
+        <div className="teachbody">
+          {body.map((line, j) => (
+            <p key={j}>{line}</p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -515,14 +517,46 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
 
   return (
     <div className={`panel flowstep ${won ? "won" : ""}`}>
-      <Pair className="flowq" en={step.instruction} zh={assist?.instruction} lang={lang} layout={layout} />
-      {(step.body || []).length > 0 && (
-        <div className="teachbody">
-          {(step.body || []).map((line, j) => (
-            <Pair as="p" key={j} en={line} zh={assist?.body?.[j]} lang={lang} layout={layout} />
-          ))}
-        </div>
-      )}
+      {(() => {
+        const body = step.body || [];
+        const altQ: string | undefined = assist?.instruction;
+        const altBody: string[] = Array.isArray(assist?.body) ? assist!.body : [];
+        const hasAlt = Boolean(lang) && Boolean(altQ || altBody.some(Boolean));
+
+        if (!hasAlt) return <Prose instruction={step.instruction} body={body} />;
+
+        if (layout === "under") {
+          return (
+            <div className="prose">
+              <div className="flowq">
+                {step.instruction}
+                {altQ && <Alt text={altQ} lang={lang} />}
+              </div>
+              {body.length > 0 && (
+                <div className="teachbody">
+                  {body.map((line, j) => (
+                    <p key={j}>
+                      {line}
+                      {altBody[j] && <Alt text={altBody[j]} lang={lang} />}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        return (
+          <div className="twoblocks">
+            <Prose instruction={step.instruction} body={body} />
+            <Prose
+              instruction={altQ || step.instruction}
+              body={body.map((line, j) => altBody[j] || line)}
+              lang={lang}
+            />
+          </div>
+        );
+      })()}
       {/* The documentation stays on screen while the student works. Hiding it
           the moment an exercise starts is the whole reason 5.3 felt unfair. */}
       {step.facts && step.kind !== "teach" && (
