@@ -7,9 +7,19 @@ type Person = { id: string; name: string; role: string };
 
 // Make a badge, give a badge.
 //
-// The image is stored as a data URL, exactly like a profile picture — no file
-// hosting, no bucket, no CDN for something that is forty pixels wide. Emoji
-// works too, and for most badges it is the better answer.
+// THESE ARE MEANT TO END UP IN PAL, not here. Pal owns the reward surface: the
+// companion, the celebration animation, the collection in the world. A badge
+// that only exists in classOS is a second, worse rewards system sitting next to
+// a good one.
+//
+// Pal cannot accept them yet. Its collection is DERIVED — keepsakes unlock from
+// earned Weekly Rhythms through its own pipeline — and there is no event type
+// for "a person decided you deserved this". That is the ask in
+// docs/for-the-teacher.md. Until it is agreed, awards are recorded here and
+// will be replayed to Pal once the bridge exists.
+//
+// The image is a data URL, exactly like a profile picture — no bucket, no CDN
+// for something forty pixels wide. Emoji works too and is usually better.
 export default function BadgeAdmin({ people }: { people: Person[] }) {
   const [list, setList] = useState<Badge[]>([]);
   const [name, setName] = useState("");
@@ -70,9 +80,14 @@ export default function BadgeAdmin({ people }: { people: Person[] }) {
       <header className="noteshead">
         <h1>Badges</h1>
         <p className="meta">
-          Your own, for the things XP cannot see — spotting a bug, telling you a lesson was confusing, helping
-          someone else. Pal counts work; this is for everything else. Handing one out sends the student a message,
-          so they actually find out.
+          For the things XP cannot see — spotting a bug, telling you a lesson was confusing, helping someone else.
+          Pal counts work; this is for everything else.
+        </p>
+        <p className="meta" style={{ color: "var(--warn)" }}>
+          These are meant to land in Pal, with its claim animation and its collection. Pal cannot accept them yet —
+          its keepsakes are earned from Weekly Rhythms, and there is no event for “a person decided you deserved
+          this”. Awards are recorded here and will be replayed once that bridge exists. See
+          <code> docs/for-the-teacher.md</code>.
         </p>
       </header>
 
@@ -110,7 +125,7 @@ export default function BadgeAdmin({ people }: { people: Person[] }) {
               <span className="meta">{b.description || "—"} · given {b._count?.awards ?? 0}×</span>
               <div className="badgeimgrow">
                 <select className="f" value={pick[b.id] || ""} onChange={(e) => setPick((p) => ({ ...p, [b.id]: e.target.value }))}>
-                  <option value="">Give to…</option>
+                  <option value="">{people.length ? "Give to…" : "No Pika students yet"}</option>
                   {people.map((p) => (
                     <option key={p.id} value={p.id}>{p.name} · {p.role.toLowerCase()}</option>
                   ))}

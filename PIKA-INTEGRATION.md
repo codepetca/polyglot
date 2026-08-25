@@ -61,8 +61,9 @@ reason for going early.
 | Pika's read-token route, tab, feature flag, gradebook write | **teacher** | Needs a PR from a fork, and his review. |
 
 Nothing on the Pika side lands without him, but he is one text message away —
-this is a dependency with a short turnaround, not a blocker. The asks are in
-`docs/pika-ask.md`, written to be forwarded as-is.
+this is a dependency with a short turnaround, not a blocker. The asks live in two notes, kept current:
+`docs/for-the-teacher.md` (plain language, what to approve) and
+`docs/for-pika-claude.md` (the contract, for whoever builds the Pika side).
 
 ---
 
