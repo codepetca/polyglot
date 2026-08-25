@@ -1476,3 +1476,32 @@ pre.flowcode.ro { margin: 0; }
 .frx { position: absolute; top: 12px; right: 12px; background: transparent; border: 0;
   color: var(--muted); font-size: 14px; cursor: pointer; padding: 6px; }
 .frx:hover { color: var(--ink); }
+
+/* ── "Tell me" — a report, not a DM ── */
+.reportbtn { display: inline-flex; align-items: center; gap: 7px; background: transparent;
+  border: 1.5px solid rgb(233 228 216 / .3); border-radius: 9px; padding: 7px 13px;
+  font-family: var(--sans); font-size: 13px; font-weight: 600; color: #e9e4d8; cursor: pointer; }
+.reportbtn:hover { border-color: #7fd6b8; color: #7fd6b8; }
+.frask .reportbtn { color: var(--ink); border-color: var(--line); }
+.frask .reportbtn:hover { border-color: var(--accent); color: var(--accent); }
+.frask { margin-bottom: 14px; }
+
+.reportwrap { position: fixed; inset: 0; z-index: 95; background: rgb(26 28 30 / .55);
+  display: grid; place-items: center; padding: 20px; }
+.reportcard { position: relative; width: min(500px, 100%); max-height: 88vh; overflow-y: auto;
+  background: var(--card); border: 1.5px solid var(--ink); border-radius: 16px; padding: 26px 28px;
+  box-shadow: 0 24px 60px rgb(26 28 30 / .3); }
+.reportcard h2 { font-family: var(--serif); font-size: 24px; margin: 0 0 10px; }
+.reportcard textarea { width: 100%; font-family: var(--sans); font-size: 14.5px; line-height: 1.55;
+  padding: 11px 13px; border: 1.5px solid var(--line); border-radius: 10px; resize: vertical;
+  background: var(--paper); color: var(--ink); margin-bottom: 10px; }
+.reportcard textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.reasons { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+.reason { border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
+  border-radius: 99px; padding: 7px 14px; font-family: var(--sans); font-size: 13.5px; cursor: pointer; }
+.reason:hover { border-color: var(--ink); }
+.reason.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+.reporterr { margin: 0 0 10px; color: var(--bad); font-size: 13.5px; }
+.reportsent { text-align: center; padding: 18px 0 8px; }
+.bigtick { margin: 0 0 6px; font-size: 40px; line-height: 1; color: var(--ok); }
+.reportsent h2 { margin-bottom: 6px; }

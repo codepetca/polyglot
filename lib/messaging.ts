@@ -36,3 +36,22 @@ export async function canMessage(me: User, toId: string): Promise<boolean> {
 export async function unreadCount(userId: string): Promise<number> {
   return prisma.message.count({ where: { toId: userId, readAt: null } });
 }
+
+/**
+ * The person a student reports TO.
+ *
+ * Students never pick a recipient for a report. A contact list turns "tell the
+ * person who built this" into "compose a DM", which is the framing we are
+ * trying not to have — and it makes a student decide who is responsible for a
+ * broken lesson, which is not their job.
+ *
+ * The oldest admin, so this is stable as accounts come and go rather than
+ * depending on whoever was created most recently.
+ */
+export async function reportRecipient() {
+  return prisma.user.findFirst({
+    where: { role: "ADMIN" },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, name: true },
+  });
+}

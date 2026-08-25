@@ -232,6 +232,22 @@ Token rules, taken from Pal's client so the caching code is identical:
 classOS verifies signature, `aud`, `iss` and `exp` on every request. A token is
 a read credential for one student, nothing more.
 
+### 3a. The owner stays an admin here, whatever Pika says
+
+Worth stating because it is easy to assume otherwise: **classOS roles are not
+derived from Pika.**
+
+A Pika student is resolved to a classOS `User` row and given `role: "STUDENT"`.
+The owner's own row has `role: "ADMIN"` and no `pikaSubject`, so it is untouched
+by any of this — he signs in here directly, keeps authoring, keeps the stats,
+and keeps receiving reports, without anyone granting him anything in Pika. That
+matters because he will be teaching a different class and will not appear on the
+roster of this one.
+
+The same fact is what makes "Tell me" work after the merge: every report goes to
+the oldest ADMIN row, and a student arriving through Pika is an ordinary
+STUDENT row, so the route is identical either way.
+
 ### 4. Identity — Pika owns it outright
 
 classOS has **no account system** on this path. No login, no password, no join

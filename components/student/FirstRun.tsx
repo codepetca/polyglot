@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { LANG_LABELS, readPrefs, writePrefs } from "@/lib/i18n/prefs";
+import ReportButton from "./ReportButton";
 
 // What a student meets the first time they open a lesson.
 //
@@ -68,9 +69,11 @@ export default function FirstRun() {
               ))}
             </div>
             <p className="frnote small">
-              Not listed? Message your teacher from <b>Messages</b> and it can be added — the translation is
-              automatic, so it is a small job.
+              Not listed? Ask for it — the translation is automatic, so it is a small job.
             </p>
+            <div className="frask">
+              <ReportButton initialReason="language" />
+            </div>
             <div className="frrow">
               <button className="frghost" onClick={() => setStep(1)}>
                 English is fine
@@ -131,6 +134,10 @@ export default function FirstRun() {
             <p className="frnote">
               Highlight any sentence in a lesson to ask about it, and every key point you meet is saved in{" "}
               <b>Notes</b>.
+            </p>
+            <p className="frnote">
+              And <b>Tell me</b>, at the top of every page, goes straight to the person who built this. Broken,
+              confusing, missing a language, or just an idea — say so. It is not a survey and nobody else sees it.
             </p>
             <div className="frrow">
               <span />

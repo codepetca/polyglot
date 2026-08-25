@@ -6,6 +6,7 @@ import ThemeToggle from "./ThemeToggle";
 import ProfileMenu from "./ProfileMenu";
 import { useEffect, useState } from "react";
 import { readEmbed, backToHost } from "@/lib/embed";
+import ReportButton from "./student/ReportButton";
 
 type MiniUser = { id: string; name: string; role: string; className?: string | null; avatar?: string | null; anonymous?: boolean };
 
@@ -82,10 +83,14 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
           </nav>
           {!me.anonymous && (
             <Link href="/inbox" className={`tbtn inbox-link ${on("/inbox")}`} style={{ textDecoration: "none", position: "relative" }}>
-              ✉ Messages
+              ✉ Replies
               {unread > 0 && <span className="navbadge">{unread}</span>}
             </Link>
           )}
+          {/* Always visible, on every page, saying what it does. The inbox
+              already allowed a student to message an admin and nobody would
+              ever have found it. */}
+          <ReportButton />
           <ThemeToggle />
           <ProfileMenu me={me} onSignOut={logout} embed={embed} />
         </>
