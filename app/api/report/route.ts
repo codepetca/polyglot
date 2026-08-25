@@ -37,6 +37,9 @@ export async function GET(req: Request) {
   const admin = await reportRecipient();
   if (!admin) return NextResponse.json({ admin: null, messages: [] });
   if (admin.id === me.id) return NextResponse.json({ admin: null, messages: [], self: true });
+  // Both faces, so the thread reads like two people talking rather than a
+  // ticket queue with one avatar in it.
+  const adminRow = await prisma.user.findUnique({ where: { id: admin.id }, select: { avatar: true } });
 
   const thread = await prisma.message.findMany({
     where: { OR: [{ fromId: me.id, toId: admin.id }, { fromId: admin.id, toId: me.id }] },
@@ -54,7 +57,9 @@ export async function GET(req: Request) {
   }
 
   return NextResponse.json({
-    admin: { id: admin.id, name: admin.name },
+    admin: { id: admin.id, name: admin.name, avatar: adminRow?.avatar || null },
+    meAvatar: me.avatar || null,
+    meName: me.name,
     unread: thread.filter((m) => m.toId === me.id && !m.readAt).length,
     messages: thread.map((m) => ({
       id: m.id,

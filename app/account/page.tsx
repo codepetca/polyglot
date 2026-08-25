@@ -6,11 +6,16 @@ import PasswordForm from "@/components/PasswordForm";
 import TotpSetup from "@/components/account/TotpSetup";
 import AskTeacherToggle from "@/components/teacher/AskTeacherToggle";
 import { getSetting } from "@/lib/settings";
+import ReadingSettings from "@/components/account/ReadingSettings";
+import MyBadges from "@/components/account/MyBadges";
 
 export default async function AccountPage() {
   const me = await currentUser();
   if (!me) redirect("/login");
-  if (!me.passwordHash) redirect("/lessons");
+  // NO PASSWORD IS NOT A REASON TO BOUNCE. Join-code students have none, and
+  // neither will anyone arriving from Pika — and they are exactly the people
+  // who need the language setting on this page. The password section is hidden
+  // for them instead.
   const prefs = await getSetting<{ askTeacher?: boolean }>(`prefs:${me.id}`, {});
 
   return (
@@ -25,9 +30,21 @@ export default async function AccountPage() {
       </div>
 
       <div className="panel">
-        <h2>Change password</h2>
-        <PasswordForm />
+        <h2>Reading help</h2>
+        <ReadingSettings />
       </div>
+
+      <div className="panel">
+        <h2>Badges</h2>
+        <MyBadges />
+      </div>
+
+      {me.passwordHash && (
+        <div className="panel">
+          <h2>Change password</h2>
+          <PasswordForm />
+        </div>
+      )}
 
       {me.role !== "STUDENT" && (
         <div className="panel">

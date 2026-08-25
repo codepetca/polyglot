@@ -1495,37 +1495,54 @@ pre.flowcode.ro { margin: 0; }
 .frask .reportbtn:hover { border-color: var(--accent); color: var(--accent); }
 .frask { margin-bottom: 14px; }
 
-.reportpanel { position: absolute; right: 0; top: calc(100% + 9px); z-index: 96; width: min(370px, calc(100vw - 28px));
-  background: var(--card); color: var(--ink); border: 1.5px solid var(--line); border-radius: 13px;
-  box-shadow: 0 20px 50px rgb(26 28 30 / .28); display: flex; flex-direction: column; overflow: hidden; }
-.rphead { display: flex; align-items: center; gap: 10px; padding: 11px 14px;
-  border-bottom: 1.5px solid var(--line); background: var(--paper); }
-.rphead div { display: flex; flex-direction: column; line-height: 1.3; }
-.rphead b { font-size: 14px; }
-.rphead span { font-size: 11.5px; color: var(--muted); }
+/* Room to have a conversation in. The first pass was a 370px tooltip with a
+   300px scroll area, which makes any exchange longer than two lines feel like
+   texting through a letterbox. */
+.reportpanel { position: absolute; right: 0; top: calc(100% + 10px); z-index: 96;
+  width: min(460px, calc(100vw - 28px)); height: min(560px, calc(100vh - 130px));
+  background: var(--card); color: var(--ink); border: 1.5px solid var(--line); border-radius: 16px;
+  box-shadow: 0 26px 60px rgb(26 28 30 / .32); display: flex; flex-direction: column; overflow: hidden; }
+.rphead { display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  border-bottom: 1.5px solid var(--line); background: var(--paper); flex-shrink: 0; }
+.rphead div { display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
+.rphead b { font-size: 15px; }
+.rphead span { font-size: 12px; color: var(--muted); }
 .rphead button { margin-left: auto; background: transparent; border: 0; color: var(--muted);
-  font-size: 13px; cursor: pointer; padding: 4px; }
+  font-size: 14px; cursor: pointer; padding: 5px; flex-shrink: 0; }
 .rphead button:hover { color: var(--ink); }
 
-.rpthread { max-height: 300px; overflow-y: auto; padding: 13px 14px;
-  display: flex; flex-direction: column; gap: 9px; }
-.rpintro { margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--muted); }
-.rpmsg { font-size: 13.5px; line-height: 1.5; padding: 9px 12px; border-radius: 11px;
+/* Both faces. A thread with one avatar in it reads as a ticket queue. */
+.rpface { width: 30px; height: 30px; border-radius: 99px; flex-shrink: 0; overflow: hidden;
+  display: grid; place-items: center; background: var(--accent); color: #fff;
+  font-family: var(--sans); font-size: 13px; font-weight: 700; }
+.rpface.big { width: 40px; height: 40px; font-size: 16px; }
+.rpface img { width: 100%; height: 100%; object-fit: cover; }
+.rprow.mine .rpface { background: var(--ink); }
+
+.rpthread { flex: 1; min-height: 0; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px; }
+.rpintro { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--muted);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.rprow { display: flex; align-items: flex-end; gap: 9px; }
+.rprow.mine { flex-direction: row-reverse; }
+.rpmsg { font-size: 14px; line-height: 1.55; padding: 10px 14px; border-radius: 14px;
   background: var(--paper); border: 1px solid var(--line); white-space: pre-wrap;
-  align-self: flex-start; max-width: 92%; }
-.rpmsg.mine { align-self: flex-end; background: var(--accent); border-color: var(--accent); color: #fff; }
-.rpchosen { margin: 0; font-family: var(--mono); font-size: 11px; color: var(--accent);
+  max-width: 78%; word-break: break-word; }
+.rprow.mine .rpmsg { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rpchosen { margin: 0; font-family: var(--mono); font-size: 11.5px; color: var(--accent);
   display: flex; align-items: center; gap: 8px; }
-.rpchosen button { background: transparent; border: 0; color: var(--muted); font-size: 11px;
+.rpchosen button { background: transparent; border: 0; color: var(--muted); font-size: 11.5px;
   text-decoration: underline; cursor: pointer; }
 
-.rpcompose { display: flex; gap: 8px; padding: 10px 12px; border-top: 1.5px solid var(--line); }
-.rpcompose textarea { flex: 1; font-family: var(--sans); font-size: 13.5px; line-height: 1.5;
-  padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 9px; resize: none;
-  background: var(--paper); color: var(--ink); }
+.rpcompose { display: flex; gap: 9px; padding: 12px 14px; border-top: 1.5px solid var(--line);
+  flex-shrink: 0; background: var(--paper); }
+.rpcompose textarea { flex: 1; font-family: var(--sans); font-size: 14px; line-height: 1.5;
+  padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 11px; resize: none;
+  background: var(--card); color: var(--ink); }
 .rpcompose textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.rpcompose .frgo { padding: 8px 15px; font-size: 13.5px; align-self: flex-end; }
-.rpfoot { margin: 0; padding: 0 13px 11px; font-size: 11px; color: var(--muted); }
+.rpcompose .frgo { padding: 9px 17px; font-size: 14px; align-self: flex-end; }
+.rpfoot { margin: 0; padding: 0 16px 12px; font-size: 11.5px; color: var(--muted); flex-shrink: 0;
+  background: var(--paper); }
 
 .reasons { display: flex; flex-wrap: wrap; gap: 6px; }
 .reason { border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
@@ -1534,3 +1551,21 @@ pre.flowcode.ro { margin: 0; }
 .reporterr { margin: 0; padding: 0 14px 8px; color: var(--bad); font-size: 12.5px; }
 
 .reportsent h2 { margin-bottom: 6px; }
+
+/* Badges — the admin's own, for what XP cannot see. */
+.badgegrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.badgecard { display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--line);
+  border-radius: 12px; padding: 12px 14px; background: var(--paper); }
+.badgeimg { width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0; overflow: hidden;
+  display: grid; place-items: center; font-size: 24px; background: var(--card);
+  border: 1.5px solid var(--line); }
+.badgeimg img { width: 100%; height: 100%; object-fit: cover; }
+.badgecard div { display: flex; flex-direction: column; min-width: 0; }
+.badgecard b { font-size: 14.5px; }
+.badgenote { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.badgemake { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.badgeimg.big { width: 62px; height: 62px; font-size: 34px; border-radius: 14px; }
+.badgefields { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 8px; }
+.badgeimgrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.badgeimgrow .f { flex: 1; min-width: 130px; }
+.badgeimgrow .f.emoji { flex: 0 0 62px; text-align: center; font-size: 18px; }

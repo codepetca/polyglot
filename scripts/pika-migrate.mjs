@@ -23,12 +23,34 @@ const db = await connect();
 console.log(`· connected via ${db.via}\n`);
 try {
   await db.q(`alter table "User" add column if not exists "pikaSubject" text`);
+  // Badges: the admin's own rewards. Same shape as Pal's collection items so
+  // they can be mirrored there later rather than becoming a rival system.
+  await db.q(`create table if not exists "Badge" (
+    "id" text primary key,
+    "name" text not null,
+    "image" text not null,
+    "description" text not null default '',
+    "createdAt" timestamp(3) not null default current_timestamp
+  )`);
+  await db.q(`create table if not exists "BadgeAward" (
+    "id" text primary key,
+    "badgeId" text not null references "Badge"("id") on delete cascade,
+    "userId" text not null references "User"("id") on delete cascade,
+    "note" text not null default '',
+    "createdAt" timestamp(3) not null default current_timestamp
+  )`);
+  await db.q(`create unique index if not exists "BadgeAward_badgeId_userId_key" on "BadgeAward" ("badgeId", "userId")`);
+  await db.q(`create index if not exists "BadgeAward_userId_createdAt_idx" on "BadgeAward" ("userId", "createdAt")`);
   await db.q(`create unique index if not exists "User_pikaSubject_key" on "User" ("pikaSubject")`);
   const rows = await db.q(
     `select column_name from information_schema.columns where table_name = 'User' and column_name = 'pikaSubject'`,
   );
   const found = Array.isArray(rows) ? rows.length : (rows?.rows?.length ?? 0);
+  const tRes = await db.q(
+    `select table_name from information_schema.tables where table_name in ('Badge','BadgeAward')`);
+  const tables = Array.isArray(tRes) ? tRes : tRes?.rows || [];
   console.log(found ? "✓ User.pikaSubject present, unique index in place" : "✗ column still missing");
+  console.log(`${tables.length === 2 ? "✓" : "✗"} badge tables: ${tables.map((t) => t.table_name).join(", ") || "none"}`);
   process.exitCode = found ? 0 : 1;
 } catch (e) {
   console.error(e);
