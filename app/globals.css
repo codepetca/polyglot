@@ -541,15 +541,14 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 }
 
 /* ─── FlowPlayer — the interactive lesson experience ─── */
-/* THE BOTTOM HALF WAS EMPTY because the step was pinned to the top of a tall
-   viewport. Centring it splits that space evenly, so what is left reads as
-   margin rather than a void — and the answer buttons stay right under the
-   content instead of being pushed to the bottom edge, which was the other
-   half of the complaint. */
-.flowplay { margin: 18px 0; min-height: calc(100vh - 190px);
-  display: flex; flex-direction: column; justify-content: center; }
-.flowplay > .flowbar { flex-shrink: 0; }
-.flowplay > .panel { flex-shrink: 0; }
+/* CENTRING WAS THE WRONG FIX and made it worse — it split one void into two,
+   putting 250px of nothing above the card as well as below.
+   The emptiness was never about where the card sat. It was density: a code
+   block 1470px wide holding 50-character lines, with its output stacked
+   underneath doubling the height for no reason, and body type sized for a
+   laptop on a screen twice that size. So the content gets denser and larger
+   instead, and the card starts where it should — near the top. */
+.flowplay { margin: 14px 0 0; }
 .flowbar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
 .flowdots { display: flex; gap: 5px; align-items: center; }
 /* Dots are buttons now (any step you've reached is a way back to it), so the
@@ -1586,4 +1585,35 @@ pre.flowcode.ro { margin: 0; }
 @media (max-height: 720px) {
   .flowplay { min-height: 0; justify-content: flex-start; }
   .flowstep .cm-wrap .cm-editor { min-height: 170px; }
+}
+
+/* ── Wide screens: use the width, so the height stops looking empty ──────── */
+@media (min-width: 1180px) {
+  /* Snippet and its output, side by side. Everything else spans both columns. */
+  .flowstep.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0 18px; align-content: start; }
+  .flowstep.split > * { grid-column: 1 / -1; }
+  .flowstep.split > .flowcode { grid-column: 1; align-self: stretch; margin-top: 12px; }
+  .flowstep.split > .teachcard { grid-column: 2; align-self: stretch; }
+  .flowstep.split > .teachcard .flowout { margin-top: 12px !important; }
+  .flowstep.split > .teachcard .flowout pre { min-height: calc(100% - 26px); }
+}
+
+/* Type scaled for the screen it is actually on. The lesson was set for a
+   laptop and read as tiny on anything larger, which is half of why the page
+   looked empty — the words were not filling the space they had. */
+@media (min-width: 1500px) {
+  .flowq { font-size: 23px; }
+  .teachbody p { font-size: 16.5px; }
+  .flowcode { font-size: 15.5px; }
+  .flowout pre { font-size: 15px; }
+  .flowopt { font-size: 15.5px; }
+  .flowstep { padding: 28px 32px; }
+}
+@media (min-width: 1800px) {
+  .flowq { font-size: 25px; }
+  .teachbody p { font-size: 17.5px; }
+  .flowcode { font-size: 16.5px; }
+  .flowout pre { font-size: 16px; }
+  .flowstep { padding: 32px 38px; }
 }

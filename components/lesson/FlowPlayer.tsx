@@ -521,7 +521,11 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
   const advanceReady = won || (reveal && step.kind !== "fill" && step.kind !== "bucket");
 
   return (
-    <div className={`panel flowstep ${won ? "won" : ""}`}>
+    // `split` lets the snippet and its output sit SIDE BY SIDE on a wide screen.
+    // A 1470px-wide box holding 50-character lines is most of where the empty
+    // space was coming from, and stacking the output under it doubled the
+    // height for no reason.
+    <div className={`panel flowstep ${won ? "won" : ""} ${step.code && step.output !== undefined ? "split" : ""}`}>
       {(() => {
         const body = step.body || [];
         const altQ: string | undefined = assist?.instruction;
