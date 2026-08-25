@@ -129,13 +129,26 @@ The "id" values are opaque — copy each one back CHARACTER FOR CHARACTER and ne
 
   if (!used) throw new Error("translator returned items but none matched this lesson");
 
+  // SPARSE ARRAYS ARE THE BUG THAT KILLED THE FIRST BATCH RUN.
+  //
+  // The model does not always return every item, and it does not always return
+  // them in order. When body[0] and body[2] come back but body[1] does not,
+  // setAt leaves a HOLE, and a hole reads back as `undefined` — which Prisma's
+  // Json serializer refuses, failing the whole lesson with an error that named
+  // the Chinese text and looked like an encoding problem.
+  //
+  // A JSON round-trip turns holes into null and drops undefined outright. The
+  // client already treats a missing entry as "no translation for this line",
+  // so a null simply shows the English, which is the correct fallback anyway.
+  const safe: FlowTranslation = JSON.parse(JSON.stringify(cleaned));
+
   // Merge into the existing map rather than replacing other languages.
   const current = ((lesson.flowI18n as any) || {}) as Record<string, FlowTranslation>;
-  current[locale] = cleaned;
+  current[locale] = safe;
   await prisma.lesson.update({ where: { id: lesson.id }, data: { flowI18n: current as any } });
 
   return {
-    translated: Object.keys(cleaned).length,
+    translated: Object.keys(safe).length,
     of: steps.length,
     strings: used,
     ofStrings: items.length,

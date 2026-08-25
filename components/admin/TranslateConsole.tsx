@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { readPrefs, LANG_LABELS } from "@/lib/i18n/prefs";
 
 // Translate lessons into one language, one at a time, with the failures shown.
 //
@@ -13,7 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 // language, so re-running after a failure costs nothing for the ones that
 // worked.
 
-type Lesson = { code: string; title: string; have: string[] };
+type Lesson = { code: string; shown: string; title: string; have: string[] };
 type Lang = { code: string; name: string; label: string };
 type Row = { code: string; state: "queued" | "running" | "done" | "failed"; note?: string };
 
@@ -25,6 +26,15 @@ export default function TranslateConsole() {
   const [busy, setBusy] = useState(false);
   const [stop, setStop] = useState(false);
   const [err, setErr] = useState("");
+  // Which language THIS browser will actually render. Translating zh-Hant and
+  // then reading with zh-Hans selected shows nothing, and looks like the
+  // translation failed — which is exactly what happened the first time.
+  const [reading, setReading] = useState<{ esl: boolean; lang: string } | null>(null);
+  useEffect(() => {
+    const p = readPrefs();
+    setReading({ esl: p.esl, lang: p.lang });
+    if (p.esl && p.lang) setLocale(p.lang);
+  }, []);
 
   const load = useCallback(async () => {
     const r = await fetch("/api/curriculum/translate").then((x) => x.json());
@@ -99,6 +109,15 @@ export default function TranslateConsole() {
         <span className="trcount">
           {lessons.length - missing.length} of {lessons.length} lessons already have this language
         </span>
+        {reading && (
+          <span className={`trreading ${reading.esl && reading.lang === locale ? "match" : "warn"}`}>
+            {!reading.esl
+              ? "Reading help is OFF in this browser — you will not see the result until you turn it on under your name."
+              : reading.lang === locale
+                ? `You are reading in ${LANG_LABELS[reading.lang] || reading.lang} — this matches.`
+                : `You are reading in ${LANG_LABELS[reading.lang] || reading.lang}. Translating ${LANG_LABELS[locale] || locale} will not show up until you switch.`}
+          </span>
+        )}
         <span style={{ flex: 1 }} />
         {busy ? (
           <button className="btn" onClick={() => setStop(true)}>
@@ -137,7 +156,7 @@ export default function TranslateConsole() {
             return (
               <tr key={l.code} className={r?.state === "failed" ? "bad" : undefined}>
                 <td>
-                  <code>{l.code}</code> {l.title}
+                  <code>{l.shown}</code> {l.title}
                 </td>
                 <td className="trhave">{l.have.length ? l.have.join(" ") : "—"}</td>
                 <td>

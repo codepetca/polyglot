@@ -1308,3 +1308,6 @@ pre.flowcode.ro { margin: 0; }
 .trstate.done { color: var(--ok); font-weight: 600; }
 .trstate.failed { color: var(--bad); font-weight: 600; }
 .trstate.running { color: var(--warn); font-weight: 600; }
+.trreading { flex-basis: 100%; font-size: 12.5px; }
+.trreading.match { color: var(--ok); }
+.trreading.warn { color: var(--warn); }
