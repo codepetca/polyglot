@@ -136,7 +136,21 @@ export default function ProfileMenu({ me, onSignOut }: { me: MiniUser; onSignOut
             <Link href="/docs" onClick={() => setOpen(false)}>
               Java reference
             </Link>
-            {!me.anonymous && (
+            {/* A GUEST MUST HAVE A WAY OUT. Sign out was hidden for anonymous
+                sessions — reasonable on its own, since there is no account to
+                sign out OF — but combined with a staff-only Account link it
+                left a guest with no route to the login page at all except
+                typing the URL. That is how the owner got stuck in one. */}
+            {me.anonymous ? (
+              <>
+                <Link href="/login" onClick={() => setOpen(false)}>
+                  Sign in to an account
+                </Link>
+                <button onClick={onSignOut} className="pmsignout">
+                  Leave guest session
+                </button>
+              </>
+            ) : (
               <button onClick={onSignOut} className="pmsignout">
                 Sign out
               </button>
