@@ -620,12 +620,11 @@ pre.flowcode.ro { margin: 0; }
 .flowout { margin-top: 12px; }
 .flowout pre { margin: 0; background: #101317; color: #d9efe0; border-radius: 10px; padding: 10px 14px; font-family: var(--mono); font-size: 14px; white-space: pre-wrap; }
 .flowout.err pre { color: #f2c4bd; }
-/* Short options pair up on a wide screen; a long one (multi-line program
-   output) still takes the full width, because auto-fit will not split below
-   the min. A single stacked column is what made a four-option question look
-   lost in half a screen of white. */
-.flowopts { display: grid; gap: 8px; margin-top: 6px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+/* ONE PER ROW. Pairing them up was wrong: at 1500px auto-fit produced four
+   columns of mostly air, and wrapped "Load ing ..." across three lines. An
+   answer list is read top to bottom, and each row should be as wide as the
+   question it belongs to. */
+.flowopts { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; max-width: 760px; }
 .optbtn { text-align: left; font-family: var(--mono); font-size: 14px; padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--line); background: transparent; color: inherit; cursor: pointer; transition: all .15s; }
 .optbtn:hover:not(:disabled) { border-color: var(--ink); transform: translateX(3px); }
 .optbtn.right { border-color: var(--accent); background: rgba(46,125,80,.09); }
@@ -1593,10 +1592,9 @@ pre.flowcode.ro { margin: 0; }
   .flowstep.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 0 18px; align-content: start; }
   .flowstep.split > * { grid-column: 1 / -1; }
-  .flowstep.split > .flowcode { grid-column: 1; align-self: stretch; margin-top: 12px; }
-  .flowstep.split > .teachcard { grid-column: 2; align-self: stretch; }
+  .flowstep.split > .flowcode { grid-column: 1; align-self: start; margin-top: 12px; }
+  .flowstep.split > .teachcard { grid-column: 2; align-self: start; }
   .flowstep.split > .teachcard .flowout { margin-top: 12px !important; }
-  .flowstep.split > .teachcard .flowout pre { min-height: calc(100% - 26px); }
 }
 
 /* Type scaled for the screen it is actually on. The lesson was set for a
@@ -1608,12 +1606,39 @@ pre.flowcode.ro { margin: 0; }
   .flowcode { font-size: 15.5px; }
   .flowout pre { font-size: 15px; }
   .flowopt { font-size: 15.5px; }
-  .flowstep { padding: 28px 32px; }
 }
 @media (min-width: 1800px) {
   .flowq { font-size: 25px; }
   .teachbody p { font-size: 17.5px; }
   .flowcode { font-size: 16.5px; }
   .flowout pre { font-size: 16px; }
-  .flowstep { padding: 32px 38px; }
 }
+
+/* ── Several questions on one screen ──
+   One MCQ on a large monitor is a heading, three lines of code and four short
+   answers — a third of the height and two thirds of nothing. Stretching the box
+   made a bigger empty box. A run of questions is actual content, and answering
+   them before any reveal is better practice too: the second cannot be inferred
+   from feedback on the first. */
+.quizgroup { display: flex; flex-direction: column; }
+.qgtop { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  padding-bottom: 12px; border-bottom: 1.5px solid var(--line); margin-bottom: 4px; }
+.qgtop h3 { font-family: var(--serif); font-size: 20px; margin: 0; }
+.qgtop .meta { margin: 0; }
+.qglist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.qg { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.qg:last-child { border-bottom: 0; }
+.qgq { display: flex; gap: 12px; align-items: baseline; font-family: var(--serif);
+  font-size: 17px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; }
+.qgn { flex-shrink: 0; width: 24px; height: 24px; border-radius: 99px; background: var(--sunk, var(--line));
+  color: var(--muted); font-family: var(--mono); font-size: 12px; font-weight: 700;
+  display: grid; place-items: center; align-self: flex-start; }
+.qg.right .qgn { background: var(--accent); color: #fff; }
+.qg.wrong .qgn { background: var(--bad); color: #fff; }
+.qgcode { margin-bottom: 10px; max-height: 30vh; }
+.qg .flowopts { margin-top: 0; }
+/* After checking: what they chose, and whether it was right. Unpicked options
+   stay quiet rather than shouting the answer key. */
+.optbtn.picked-right { border-color: var(--accent); background: rgba(46,125,80,.12); font-weight: 700; }
+.optbtn.picked-wrong { border-color: var(--bad); background: rgba(179,53,46,.10); font-weight: 700; }
+.qg .flowwhy { margin-top: 10px; }

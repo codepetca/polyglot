@@ -182,6 +182,25 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
   const done = i >= steps.length;
   const step = done ? null : steps[i];
 
+  // A RUN OF QUESTIONS BECOMES ONE SCREEN. Consecutive `predict` steps are
+  // shown as a list and checked together — one question on a large screen is
+  // a third of a page of content and two thirds of nothing, and stretching
+  // the box only produced a larger empty box.
+  //
+  // Only `predict` groups. `trace` already carries its own sub-questions, and
+  // everything else needs its own screen to work in.
+  const group = (() => {
+    if (done || !steps.length) return [] as Step[];
+    const run: Step[] = [];
+    for (let j = i; j < steps.length; j++) {
+      const s = steps[j];
+      if (s.kind !== "predict" || !(s.opts || []).length) break;
+      run.push(s);
+      if (run.length >= 4) break; // more than four on one screen is a wall
+    }
+    return run;
+  })();
+
   function completed(stepId: string, wasFirstTry: boolean) {
     if (wasFirstTry) setFirstTry((n) => n + 1);
     fetch("/api/lesson/flow", {
@@ -264,6 +283,18 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
 
       {done ? (
         <FlowDone total={steps.length} firstTry={firstTry} nextHref={nextHref} />
+      ) : group.length > 1 ? (
+        <QuizGroup
+          key={group[0].id}
+          steps={group}
+          lessonCode={lessonCode}
+          assist={assist}
+          lang={lang}
+          onDone={(allFirstTry) => {
+            for (const st of group) completed(st.id, allFirstTry);
+            setI((n) => n + group.length);
+          }}
+        />
       ) : (
         <StepView
           key={step!.id}
@@ -291,6 +322,128 @@ export default function FlowPlayer({ lessonCode, lessonTitle, nextHref }: { less
           }}
         />
       )}
+    </div>
+  );
+}
+
+/**
+ * Several questions on one screen, answered together.
+ *
+ * WHY. One multiple-choice question on a 2000×1250 screen is a heading, three
+ * lines of code and four short answers — perhaps a third of the height, with
+ * the rest blank. Stretching the box only makes a bigger empty box, which is
+ * what the last two attempts did. The honest fix is more content: a run of
+ * questions shown as a list, answered in one pass, and checked together.
+ *
+ * It also happens to be better practice. Answering four in a row without a
+ * reveal between them means the second question cannot be inferred from the
+ * feedback on the first.
+ *
+ * Only consecutive `predict` steps group. Everything else — teach, write,
+ * trace with its own sub-questions — keeps its own screen.
+ */
+function QuizGroup({
+  steps,
+  lessonCode,
+  assist,
+  lang,
+  onDone,
+}: {
+  steps: Step[];
+  lessonCode: string;
+  assist?: Record<string, Record<string, any>> | null;
+  lang: string;
+  onDone: (allFirstTry: boolean) => void;
+}) {
+  const [chosen, setChosen] = useState<Record<string, number>>({});
+  const [results, setResults] = useState<Record<string, { correct: boolean; why?: string }> | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const answered = steps.filter((s) => chosen[s.id] !== undefined).length;
+  const allAnswered = answered === steps.length;
+
+  async function checkAll() {
+    if (!allAnswered || busy) return;
+    setBusy(true);
+    const out: Record<string, { correct: boolean; why?: string }> = {};
+    // Graded one at a time through the same endpoint a single question uses,
+    // so the answer key never reaches the browser.
+    for (const st of steps) {
+      const d = await fetch("/api/lesson/flow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonCode, stepId: st.id, action: "answer", choice: chosen[st.id], attempt: 1 }),
+      })
+        .then((r) => r.json())
+        .catch(() => ({ correct: false }));
+      out[st.id] = { correct: Boolean(d.correct), why: d.why };
+    }
+    setResults(out);
+    setBusy(false);
+  }
+
+  const right = results ? Object.values(results).filter((r) => r.correct).length : 0;
+
+  return (
+    <div className="panel flowstep quizgroup">
+      <div className="qgtop">
+        <h3>{steps.length} questions</h3>
+        <span className="meta">
+          {results ? `${right} of ${steps.length} right` : `${answered} of ${steps.length} answered — check them together`}
+        </span>
+      </div>
+
+      <ol className="qglist">
+        {steps.map((st, qi) => {
+          const res = results?.[st.id];
+          const a = assist?.[st.id];
+          return (
+            <li key={st.id} className={res ? (res.correct ? "qg right" : "qg wrong") : "qg"}>
+              <div className="qgq">
+                <span className="qgn">{qi + 1}</span>
+                <div>
+                  {st.instruction}
+                  {a?.instruction && <Alt text={a.instruction} lang={lang} />}
+                </div>
+              </div>
+              {st.code && <pre className="flowcode ro qgcode">{st.code}</pre>}
+              <div className="flowopts">
+                {(st.opts || []).map((o, oi) => {
+                  const picked = chosen[st.id] === oi;
+                  const mark = res ? (picked ? (res.correct ? " picked-right" : " picked-wrong") : "") : picked ? " on" : "";
+                  return (
+                    <button
+                      key={oi}
+                      className={`optbtn${mark}`}
+                      disabled={Boolean(results)}
+                      onClick={() => setChosen((c) => ({ ...c, [st.id]: oi }))}
+                    >
+                      {o}
+                    </button>
+                  );
+                })}
+              </div>
+              {res?.why && (
+                <p className={`flowwhy ${res.correct ? "yes" : "no"}`}>
+                  <b>{res.correct ? "✓" : "Not quite —"}</b> {res.why}
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+
+      <div className="flownext">
+        {results ? (
+          <button className="btn green" style={{ fontSize: 15, padding: "10px 30px" }} onClick={() => onDone(right === steps.length)} autoFocus>
+            Next →
+          </button>
+        ) : (
+          <button className="btn green" style={{ fontSize: 15, padding: "10px 30px" }} disabled={!allAnswered || busy} onClick={checkAll}>
+            {busy ? "Checking…" : allAnswered ? "Check all" : `Answer all ${steps.length}`}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
