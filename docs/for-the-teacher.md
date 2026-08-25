@@ -110,6 +110,45 @@ want it said out loud rather than discovered later.
 
 ---
 
+## Data and privacy — the short version
+
+You will be asked about this, so here it is in plain terms.
+
+**Pika keeps the students. classOS never learns who they are.**
+
+What crosses over is a scrambled id — `SHA256(salt + student id)`. It cannot be
+reversed without your salt, which stays on your server. classOS stores that
+string and nothing else that identifies anybody. A name and email are sent only
+so the screen can say hello, and nothing authenticates on them.
+
+| | |
+| --- | --- |
+| Passwords on the classOS side | **None.** There is no login on this path, so there is no credential to lose. |
+| Writes into Pika's database | **None.** You pull results when you want them. I hold no credential of yours. |
+| How long a pass lasts | Five minutes, signed, for one student. Anything longer is refused outright. |
+| Who else can call it | Only browser origins you name. Everything else is refused before the pass is even read. |
+
+**What the AI sees.** The lesson text, the student's question, and the code they
+wrote. Not their name, not their email, not their id — the tutor is never told
+who it is talking to. Calls are logged as a count for the cost dashboard, not as
+a transcript tied to a person.
+
+**Deletion.** Practice accounts can erase themselves from a button today. For
+Pika students, deleting them in Pika is the instruction — send it to us and the
+row goes with it. If the board wants that in writing, I will write it.
+
+**Where it lives.** The database is Neon; the app runs on Vercel. If the board
+requires Canadian residency, tell me before September and I will move the
+database — it is a config change and a restore, not a rewrite. Better to know
+now than after there is real data in it.
+
+**One honest caveat.** The AI runs on Google Vertex. If the board's policy is
+that no student-written text may go to a third-party model, then the tutor has
+to be off for your class — which is a switch, not a rebuild. The lessons, the
+code runner and the reference all work without it.
+
+---
+
 ## Why a frame and not merging the code
 
 Pika is Next 14 / React 18 / Supabase. classOS is Next 15 / React 19 / Prisma.
