@@ -1663,3 +1663,76 @@ pre.flowcode.ro { margin: 0; }
 .aisw-btn:hover:not(:disabled) { border-color: var(--fg); }
 .aisw-btn:disabled { opacity: .5; cursor: default; }
 .aisw-msg { flex-basis: 100%; margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+
+/* The two-sentence privacy answer: sized to be read first, not skimmed past. */
+.privsum { margin: 20px 0 8px; padding: 14px 18px; border-left: 3px solid var(--accent);
+  background: var(--sunk, transparent); border-radius: 0 8px 8px 0; }
+.privsum p { margin: 0; font-size: 15.5px; line-height: 1.6; }
+
+/* ── The questionnaire, student side ──
+   Sized and spaced like the "Tell me" panel it replaces, so the top bar does
+   not visibly reshuffle when the switch is thrown. */
+.qnwrap { position: relative; }
+.qndot { background: var(--violet, var(--accent)); }
+.qnpanel { position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
+  width: 460px; max-width: calc(100vw - 24px); max-height: 70vh; overflow-y: auto;
+  background: var(--bg); border: 1.5px solid var(--line); border-radius: 12px;
+  box-shadow: 0 18px 48px rgba(0,0,0,.20); padding: 0 16px 14px; }
+.qnhead { position: sticky; top: 0; background: var(--bg); display: flex; align-items: center;
+  gap: 10px; padding: 14px 0 10px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+.qnhead b { flex: 1; font-family: var(--serif); font-size: 17px; }
+.qnhead button { border: 0; background: none; font: inherit; color: var(--muted); cursor: pointer; }
+.qnintro { margin: 0 0 8px; font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+.qnlist { list-style: none; margin: 0; padding: 0; }
+.qnq { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.qnq:last-child { border-bottom: 0; }
+.qnqt { display: flex; gap: 10px; align-items: baseline; margin: 0 0 8px;
+  font-family: var(--serif); font-size: 15px; font-weight: 700; line-height: 1.35; }
+.qnn { flex-shrink: 0; width: 21px; height: 21px; border-radius: 99px; background: var(--sunk, var(--line));
+  color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 700;
+  display: grid; place-items: center; align-self: flex-start; }
+.qnopts { display: flex; flex-direction: column; gap: 6px; }
+.qnopts .optbtn { padding: 8px 12px; font-size: 14px; }
+.qnnote { display: flex; flex-direction: column; gap: 5px; margin-top: 12px; }
+.qnnote span { font-size: 13px; color: var(--muted); }
+.qnnote textarea { width: 100%; font: inherit; font-size: 14px; padding: 8px 10px;
+  border: 1.5px solid var(--line); border-radius: 8px; background: transparent; color: inherit; resize: vertical; }
+.qnfoot { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.qnmuted { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.qndone { padding: 14px 0 6px; }
+.qnbig { margin: 0 0 6px; font-family: var(--serif); font-size: 18px; }
+
+/* ── The questionnaire, admin side ── */
+.switches { display: flex; flex-direction: column; gap: 12px; margin: 14px 0 22px; }
+.brandrow { border-left-color: var(--violet, var(--accent)); }
+.brandedit { display: flex; gap: 8px; align-items: center; }
+.brandedit input { font: inherit; font-weight: 700; padding: 9px 12px; width: 190px;
+  border: 1.5px solid var(--line); border-radius: 8px; background: transparent; color: inherit; }
+.qh { font-family: var(--serif); font-size: 19px; margin: 22px 0 10px; }
+.qh3 { font-family: var(--serif); font-size: 15px; margin: 18px 0 8px; }
+.qmuted { font-size: 13px; color: var(--muted); font-weight: 400; }
+.qres { border: 1.5px solid var(--line); border-radius: 10px; padding: 4px 18px 18px; }
+.qresq { margin-top: 14px; }
+.qrest { margin: 0 0 8px; font-weight: 700; font-size: 14.5px; }
+.qbar { display: grid; grid-template-columns: minmax(90px, 26%) 1fr 34px; gap: 10px;
+  align-items: center; margin-bottom: 5px; font-size: 13.5px; }
+.qbarlab { color: var(--muted); overflow-wrap: anywhere; }
+.qbartrack { height: 9px; border-radius: 99px; background: var(--sunk, var(--line)); overflow: hidden; }
+.qbarfill { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.qbarn { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.qnotes blockquote { margin: 0 0 8px; padding: 9px 13px; border-left: 3px solid var(--line);
+  font-size: 14px; line-height: 1.5; color: var(--muted); }
+.qedit { margin-top: 8px; }
+.qfield { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.qfield span { font-size: 13px; color: var(--muted); }
+.qfield input, .qfield textarea, .qeqt, .qeqo { font: inherit; font-size: 14px; padding: 8px 11px;
+  border: 1.5px solid var(--line); border-radius: 8px; background: transparent; color: inherit; width: 100%; }
+.qeq { border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+.qeqhead { display: flex; gap: 9px; align-items: center; margin-bottom: 8px; }
+.qeqt { font-weight: 700; }
+.qeqo { font-family: var(--mono); font-size: 13px; resize: vertical; }
+.qdel { flex-shrink: 0; border: 0; background: none; color: var(--muted); font: inherit; cursor: pointer; padding: 4px; }
+.qdel:hover { color: var(--bad); }
+.qrow { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+.qcheck { display: flex; gap: 8px; align-items: baseline; font-size: 14px; line-height: 1.45; cursor: pointer; }

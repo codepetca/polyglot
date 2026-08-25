@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "./db";
 import type { User } from "@prisma/client";
+import { getFeatureFlags } from "@/lib/settings";
 
 // Who may message whom:
 // - ADMIN ↔ anyone
@@ -30,6 +31,10 @@ export async function allowedRecipients(me: User): Promise<{ id: string; name: s
 }
 
 export async function canMessage(me: User, toId: string): Promise<boolean> {
+  // The board's rule is about students, so it is enforced where the student is,
+  // not across the whole product: staff still need to talk to each other about
+  // a class. Hiding the button was never the control — this is.
+  if (!(await getFeatureFlags()).chat && me.role === "STUDENT") return false;
   return (await allowedRecipients(me)).some((r) => r.id === toId);
 }
 

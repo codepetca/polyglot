@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { unreadCount } from "@/lib/messaging";
+import { getFeatureFlags, getBrand } from "@/lib/settings";
 import Nav from "@/components/Nav";
 
 export const metadata: Metadata = {
@@ -18,6 +19,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const cost = isStaff ? await prisma.aiCall.aggregate({ _sum: { cost: true }, _count: true }) : null;
   const cls = me?.classId ? await prisma.class.findUnique({ where: { id: me.classId } }) : null;
   const unread = me ? await unreadCount(me.id) : 0;
+  const { chat } = await getFeatureFlags();
+  const brand = await getBrand();
 
   return (
     <html lang="en">
@@ -39,6 +42,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           me={me ? { id: me.id, name: me.name, role: me.role, className: cls?.name, avatar: me.avatar, anonymous: me.role === "STUDENT" && !me.email } : null}
           cost={cost ? { total: cost._sum.cost || 0, calls: cost._count } : null}
           unread={unread}
+          chat={chat}
+          brand={brand}
         />
         {children}
       </body>

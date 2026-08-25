@@ -34,6 +34,19 @@ export function decryptSecret(blob: string): string {
   }
 }
 
+// ─── What this thing is called ──────────────────────────────────────────────
+// A second school wanting a different name for the same product is a string,
+// not a fork and not an argument. The repository, the licence and the
+// canonical deployment keep their own name regardless of what any particular
+// deployment puts in its top bar.
+
+export async function getBrand(): Promise<string> {
+  return (await getSetting<string>("brand", "classOS")) || "classOS";
+}
+export async function saveBrand(name: string): Promise<void> {
+  await setSetting("brand", String(name || "").trim().slice(0, 32) || "classOS");
+}
+
 // ─── The master AI switch ───────────────────────────────────────────────────
 // The teacher's position is that NOBODY should be paying for this — not the
 // school and not the student who built it. A spend cap does not answer that,
@@ -52,8 +65,22 @@ export function decryptSecret(blob: string): string {
 export interface FeatureFlags {
   /** Master switch. Off means every AI call serves the offline stub. */
   ai: boolean;
+  /**
+   * Free-text messaging between students and staff: the "Tell me" thread and
+   * the inbox.
+   *
+   * DEFAULT OFF, unlike ai. The school's board does not permit unmonitored
+   * two-way messaging with students, and a default that has to be remembered
+   * on deploy day is a default that ships wrong. Turning it on is a decision
+   * somebody makes; leaving it off is not.
+   *
+   * The questionnaire is deliberately NOT covered by this flag. It is one-way
+   * and structured — a student answers fixed questions and nobody replies —
+   * which is the thing the policy allows.
+   */
+  chat: boolean;
 }
-const DEFAULT_FEATURES: FeatureFlags = { ai: true };
+const DEFAULT_FEATURES: FeatureFlags = { ai: true, chat: false };
 
 export async function getFeatureFlags(): Promise<FeatureFlags> {
   return { ...DEFAULT_FEATURES, ...(await getSetting<Partial<FeatureFlags>>("features", {})) };

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireRoleApi } from "@/lib/auth";
-import { saveLLMConfig, saveBudgetConfig, saveFeatureFlags } from "@/lib/settings";
+import { saveLLMConfig, saveBudgetConfig, saveFeatureFlags, saveBrand } from "@/lib/settings";
 import { saveMasteryConfig } from "@/lib/mastery";
 import { saveSmtpConfig, sendMail } from "@/lib/email";
 
@@ -9,6 +9,17 @@ export async function POST(req: Request) {
   const gate = await requireRoleApi("ADMIN");
   if (gate instanceof NextResponse) return gate;
   const body = await req.json();
+
+  if (body.questionnaire) {
+    const { saveQuestionnaire } = await import("@/lib/questionnaire");
+    await saveQuestionnaire(body.questionnaire);
+    if (!body.brand && !body.features && !body.smtp && !body.keys && !body.budget && !body.mastery) return NextResponse.json({ ok: true });
+  }
+
+  if (typeof body.brand === "string") {
+    await saveBrand(body.brand);
+    if (!body.features && !body.smtp && !body.keys && !body.budget && !body.mastery) return NextResponse.json({ ok: true });
+  }
 
   // The master AI switch. Checked first and returns on its own, so flipping it
   // never has to carry the whole settings payload with it.

@@ -4,6 +4,7 @@ import { resolveActor } from "@/lib/actor";
 import { reportRecipient } from "@/lib/messaging";
 import { rateLimit } from "@/lib/ratelimit";
 import { studentCode } from "@/lib/curriculum/codehs";
+import { getFeatureFlags } from "@/lib/settings";
 
 // "Tell the person who built this."
 //
@@ -33,6 +34,11 @@ const KINDS: Record<string, string> = {
 export async function GET(req: Request) {
   const me = await resolveActor(req);
   if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
+  // Off means gone, not hidden. A student who kept the page open across the
+  // switch being thrown gets an empty thread, not their old one.
+  if (!(await getFeatureFlags()).chat && me.role === "STUDENT") {
+    return NextResponse.json({ admin: null, messages: [], disabled: true });
+  }
 
   const admin = await reportRecipient();
   if (!admin) return NextResponse.json({ admin: null, messages: [] });
@@ -73,6 +79,9 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const me = await resolveActor(req);
   if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
+  if (!(await getFeatureFlags()).chat && me.role === "STUDENT") {
+    return NextResponse.json({ error: "Messaging is turned off." }, { status: 403 });
+  }
   // Generous, but enough to stop a stuck key filling the inbox.
   if (!rateLimit(`report:${me.id}`, 6, 5 * 60 * 1000)) {
     return NextResponse.json({ error: "You've sent a few already — give it five minutes." }, { status: 429 });

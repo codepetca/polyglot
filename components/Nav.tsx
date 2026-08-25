@@ -7,10 +7,11 @@ import ProfileMenu from "./ProfileMenu";
 import { useEffect, useState } from "react";
 import { readEmbed, backToHost } from "@/lib/embed";
 import ReportButton from "./student/ReportButton";
+import QuestionnaireButton from "./student/QuestionnaireButton";
 
 type MiniUser = { id: string; name: string; role: string; className?: string | null; avatar?: string | null; anonymous?: boolean };
 
-export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cost: { total: number; calls: number } | null; unread?: number }) {
+export default function Nav({ me, cost, unread = 0, chat = true, brand = "classOS" }: { me: MiniUser | null; cost: { total: number; calls: number } | null; unread?: number; chat?: boolean; brand?: string }) {
   const path = usePathname();
   const router = useRouter();
   // Inside Pika the bar stays — it carries Notes, Reference, theme and the ESL
@@ -37,7 +38,9 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
       ) : (
         <>
           <Link href="/" className="logo">
-            class<em>OS</em>
+            {/* The name is a setting. A second school wanting its own word for
+                this is a string, not an argument, and not a fork. */}
+            {brand === "classOS" ? <>class<em>OS</em></> : brand}
           </Link>
           <div className="proto">SELF-HOSTED</div>
         </>
@@ -77,21 +80,23 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
                 <Link href="/admin/translate" className={on("/admin/translate")}>Translate</Link>
                 <Link href="/admin/badges" className={on("/admin/badges")}>Badges</Link>
                 <Link href="/admin/reach" className={on("/admin/reach")}>Reach</Link>
+                <Link href="/admin/questionnaire" className={on("/admin/questionnaire")}>Ask</Link>
                 <Link href="/admin/usage" className={on("/admin/usage")}>Usage</Link>
                 <Link href="/admin/settings" className={on("/admin/settings")}>Settings</Link>
               </>
             )}
           </nav>
-          {!me.anonymous && (
+          {chat && !me.anonymous && (
             <Link href="/inbox" className={`tbtn inbox-link ${on("/inbox")}`} style={{ textDecoration: "none", position: "relative" }}>
               ✉ Replies
               {unread > 0 && <span className="navbadge">{unread}</span>}
             </Link>
           )}
-          {/* Always visible, on every page, saying what it does. The inbox
-              already allowed a student to message an admin and nobody would
-              ever have found it. */}
-          <ReportButton />
+          {/* With chat on, the button opens the thread. With chat off — which is
+              the default, because the board does not allow unmonitored two-way
+              messaging with students — its place is taken by the questionnaire,
+              which hides itself entirely when there is nothing to ask. */}
+          {chat ? <ReportButton /> : <QuestionnaireButton />}
           <ThemeToggle />
           <ProfileMenu me={me} onSignOut={logout} embed={embed} />
         </>
