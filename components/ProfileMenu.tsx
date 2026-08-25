@@ -13,7 +13,16 @@ import { LANG_LABELS, readPrefs, writePrefs, DEFAULT_PREFS, type EslPrefs } from
 
 type MiniUser = { name: string; role: string; className?: string | null; avatar?: string | null; anonymous?: boolean };
 
-export default function ProfileMenu({ me, onSignOut }: { me: MiniUser; onSignOut: () => void }) {
+export default function ProfileMenu({
+  me,
+  onSignOut,
+  embed = "",
+}: {
+  me: MiniUser;
+  onSignOut: () => void;
+  /** Set when classOS is running inside a host that owns identity. */
+  embed?: "" | "pika";
+}) {
   const [open, setOpen] = useState(false);
   const [p, setP] = useState<EslPrefs>(DEFAULT_PREFS);
   const [loaded, setLoaded] = useState(false);
@@ -130,9 +139,16 @@ export default function ProfileMenu({ me, onSignOut }: { me: MiniUser; onSignOut
           </div>
 
           <div className="pmsection pmlinks">
-            <Link href="/account" onClick={() => setOpen(false)}>
-              Account
-            </Link>
+            {/* Account and Sign out are Pika's to offer when Pika owns
+                identity. Signing out of classOS from inside a Pika tab would
+                leave a student in a tab they cannot use, in a session they did
+                not know they had. The reading settings stay, because they are
+                genuinely ours. */}
+            {!embed && (
+              <Link href="/account" onClick={() => setOpen(false)}>
+                Account
+              </Link>
+            )}
             <Link href="/docs" onClick={() => setOpen(false)}>
               Java reference
             </Link>
@@ -141,7 +157,7 @@ export default function ProfileMenu({ me, onSignOut }: { me: MiniUser; onSignOut
                 sign out OF — but combined with a staff-only Account link it
                 left a guest with no route to the login page at all except
                 typing the URL. That is how the owner got stuck in one. */}
-            {me.anonymous ? (
+            {embed ? null : me.anonymous ? (
               <>
                 <Link href="/login" onClick={() => setOpen(false)}>
                   Sign in to an account

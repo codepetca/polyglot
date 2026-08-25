@@ -4,12 +4,19 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import ProfileMenu from "./ProfileMenu";
+import { useEffect, useState } from "react";
+import { readEmbed, backToHost } from "@/lib/embed";
 
 type MiniUser = { id: string; name: string; role: string; className?: string | null; avatar?: string | null; anonymous?: boolean };
 
 export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cost: { total: number; calls: number } | null; unread?: number }) {
   const path = usePathname();
   const router = useRouter();
+  // Inside Pika the bar stays — it carries Notes, Reference, theme and the ESL
+  // switch, all of which a student wants mid-lesson. Only the half Pika already
+  // owns is swapped out. See lib/embed.ts.
+  const [embed, setEmbed] = useState<"" | "pika">("");
+  useEffect(() => setEmbed(readEmbed()), []);
   const on = (p: string) => (path === p || path.startsWith(p + "/") ? "on" : "");
 
   async function logout() {
@@ -20,10 +27,20 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
 
   return (
     <div className="topbar">
-      <Link href="/" className="logo">
-        class<em>OS</em>
-      </Link>
-      <div className="proto">SELF-HOSTED</div>
+      {embed ? (
+        // The way back lives in the bar rather than in a strip of its own, so
+        // there is still only one bar on screen.
+        <button className="backhost" onClick={backToHost}>
+          <span aria-hidden>←</span> Back to Pika
+        </button>
+      ) : (
+        <>
+          <Link href="/" className="logo">
+            class<em>OS</em>
+          </Link>
+          <div className="proto">SELF-HOSTED</div>
+        </>
+      )}
       <div className="spacer" />
       {me ? (
         <>
@@ -70,7 +87,7 @@ export default function Nav({ me, cost, unread = 0 }: { me: MiniUser | null; cos
             </Link>
           )}
           <ThemeToggle />
-          <ProfileMenu me={me} onSignOut={logout} />
+          <ProfileMenu me={me} onSignOut={logout} embed={embed} />
         </>
       ) : (
         <nav className="viewswitch">

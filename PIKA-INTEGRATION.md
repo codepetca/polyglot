@@ -111,9 +111,34 @@ argued iframe-versus-new-window for years and landed on the same hybrid: the
 tab is the entry point, the tool goes full-window for the work.
 
 On Pika's side this is a route with no rail rather than anything exotic —
-`/classroom/:id/lessons/:code` renders the frame full-bleed. On ours it needs an
-**embedded mode**: no top bar, no logo, no sign-out, because Pika owns identity
-and a second account menu is exactly the duplicated chrome we are removing.
+`/classroom/:id/lessons/:code` renders the frame full-bleed.
+
+On ours, **the classOS top bar stays and the way back goes into it.** An earlier
+draft hid the bar and added a slim strip with a back arrow and a progress
+indicator; the owner pointed out that this is a second bar wearing a disguise.
+Worse, the real bar carries Notes, Reference, the theme toggle and the ESL
+switch — all things a student wants mid-lesson — so hiding it threw away useful
+controls and then rebuilt a poorer version of them.
+
+What is swapped is only the half Pika already owns:
+
+| Stays | Goes |
+| --- | --- |
+| Notes, Java reference | The logo and the SELF-HOSTED badge — replaced by "← Back to Pika" |
+| Theme toggle | Account |
+| Reading help (ESL) settings | Sign out |
+
+Signing out of classOS from inside a Pika tab would leave a student in a tab
+they cannot use, in a session they did not know they had.
+
+Detection is `?embed=pika` on the frame's src, kept in sessionStorage for the
+tab's lifetime, **not** `window.self !== window.top`. That is true of any
+embedding, including ones we know nothing about, and this decides what a student
+can click. The back button posts `classos:back` to the parent so Pika can route
+without a page load, falling back to `history.back()` for a host that is not
+listening — better than hard-coding a URL we would have to keep in step with
+theirs. Seven checks in place, including that a fresh tab does not inherit the
+mode and that a blocked sessionStorage degrades instead of crashing.
 
 ### Why the big surface is an iframe
 

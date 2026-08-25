@@ -1425,3 +1425,11 @@ pre.flowcode.ro { margin: 0; }
 /* What was fixed, kept after the animation ends. */
 .fixrecord { font-family: var(--mono); font-size: 11.5px; color: var(--ok); font-weight: 600;
   border: 1px solid var(--ok); border-radius: 99px; padding: 3px 10px; white-space: nowrap; }
+
+/* Running inside Pika: the way back replaces the logo, so the bar keeps doing
+   one job instead of growing a second bar underneath it. */
+.backhost { display: inline-flex; align-items: center; gap: 8px; background: transparent;
+  border: 1.5px solid rgba(233,228,216,.3); border-radius: 9px; padding: 7px 13px;
+  font-family: var(--sans); font-size: 13.5px; font-weight: 600; color: #e9e4d8; cursor: pointer; }
+.backhost:hover { border-color: #7fd6b8; color: #7fd6b8; }
+.backhost:focus-visible { outline: 2px solid #7fd6b8; outline-offset: 2px; }
