@@ -88,6 +88,33 @@ So it arrives as two different things:
 | A `lessons` tab | The whole classOS app, filling the content pane | It needs its own shell. Nothing smaller preserves it. |
 | `today` and `achievements` | A small progress card, a real widget package | Compact, read-only, fits Pika's card rhythm. This is what makes it feel native rather than bolted on. |
 
+### The tab is a lobby. The lesson takes the whole screen.
+
+**Nesting the app inside the content pane was wrong, and the owner caught it.**
+Pika's rail plus the classOS sidebar and top bar puts two navigations on screen
+at once: half the width is chrome and neither one is clearly in charge.
+
+So there are two states, and you are only ever in one of them.
+
+| | What is on screen |
+| --- | --- |
+| **The tab** | Pika's own cards — units, progress, "Continue: 6.4". No classOS chrome at all, because it is not classOS; it is Pika showing where you are. |
+| **The lesson** | classOS with the viewport to itself. Pika's rail is gone, and so is our top bar. One slim strip: back to the classroom, and progress. |
+
+Clicking a lesson moves between them. There is no moment where both sets of
+navigation are visible.
+
+**This is the settled answer elsewhere, not a preference.** Babbel makes every
+lesson full-screen with the navigation stripped out, on the reasoning that you
+remove everything but the task the moment someone starts it. The LMS world
+argued iframe-versus-new-window for years and landed on the same hybrid: the
+tab is the entry point, the tool goes full-window for the work.
+
+On Pika's side this is a route with no rail rather than anything exotic —
+`/classroom/:id/lessons/:code` renders the frame full-bleed. On ours it needs an
+**embedded mode**: no top bar, no logo, no sign-out, because Pika owns identity
+and a second account menu is exactly the duplicated chrome we are removing.
+
 ### Why the big surface is an iframe
 
 Pika is Next 14 / React 18 / Supabase. classOS is Next 15 / React 19 / Prisma.
