@@ -541,7 +541,15 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 }
 
 /* ─── FlowPlayer — the interactive lesson experience ─── */
-.flowplay { margin: 18px 0; }
+/* THE BOTTOM HALF WAS EMPTY because the step was pinned to the top of a tall
+   viewport. Centring it splits that space evenly, so what is left reads as
+   margin rather than a void — and the answer buttons stay right under the
+   content instead of being pushed to the bottom edge, which was the other
+   half of the complaint. */
+.flowplay { margin: 18px 0; min-height: calc(100vh - 190px);
+  display: flex; flex-direction: column; justify-content: center; }
+.flowplay > .flowbar { flex-shrink: 0; }
+.flowplay > .panel { flex-shrink: 0; }
 .flowbar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
 .flowdots { display: flex; gap: 5px; align-items: center; }
 /* Dots are buttons now (any step you've reached is a way back to it), so the
@@ -601,7 +609,9 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 .flowstep { padding: 22px 26px; transition: border-color .3s; }
 .flowstep.won { border-color: var(--accent); }
 .flowq { font-family: var(--serif); font-size: 20px; font-weight: 700; margin-bottom: 14px; line-height: 1.35; max-width: 62ch; }
-.flowcode { width: 100%; font-family: var(--mono); font-size: 14.5px; line-height: 1.6; background: #14171c; color: #e6e1d6; border: 1.5px solid #2a2f37; border-radius: 10px; padding: 14px 16px; white-space: pre; overflow-x: auto; }
+/* max-height in vh rather than a pixel box: a long snippet uses the screen it
+   has instead of scrolling inside a small window on a large monitor. */
+.flowcode { width: 100%; font-family: var(--mono); font-size: 14.5px; line-height: 1.6; background: #14171c; color: #e6e1d6; border: 1.5px solid #2a2f37; border-radius: 10px; padding: 14px 16px; white-space: pre; overflow: auto; max-height: 52vh; }
 textarea.flowcode { resize: vertical; }
 pre.flowcode.ro { margin: 0; }
 .flowtarget { margin-top: 12px; }
@@ -627,9 +637,9 @@ pre.flowcode.ro { margin: 0; }
 .flowwhy { margin-top: 12px; padding: 10px 14px; border-radius: 10px; font-size: 14.5px; line-height: 1.5; }
 .flowwhy.yes { background: rgba(46,125,80,.09); border-left: 3px solid var(--accent); }
 .flowwhy.no { background: rgba(179,53,46,.07); border-left: 3px solid #b3352e; }
-.flowhelp { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+.flowhelp { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
 .flowhelp .hinttext { font-size: 13.5px; color: var(--muted); background: rgba(90,74,158,.08); border-radius: 8px; padding: 7px 12px; flex: 1; min-width: 200px; }
-.flownext { display: flex; justify-content: flex-end; margin-top: 16px; align-items: center; }
+.flownext { display: flex; justify-content: flex-end; margin-top: 10px; align-items: center; gap: 10px; }
 .skiplink { background: none; border: none; color: var(--muted); font-size: 12.5px; cursor: pointer; font-family: var(--mono); }
 .skiplink:hover { text-decoration: underline; }
 .flowarrange .pool { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
@@ -1569,3 +1579,11 @@ pre.flowcode.ro { margin: 0; }
 .badgeimgrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .badgeimgrow .f { flex: 1; min-width: 130px; }
 .badgeimgrow .f.emoji { flex: 0 0 62px; text-align: center; font-size: 18px; }
+
+/* An editable step is the one that most wants the height — the student is
+   typing into it, not reading it. */
+.flowstep .cm-wrap .cm-editor { min-height: 240px; max-height: 50vh; }
+@media (max-height: 720px) {
+  .flowplay { min-height: 0; justify-content: flex-start; }
+  .flowstep .cm-wrap .cm-editor { min-height: 170px; }
+}
