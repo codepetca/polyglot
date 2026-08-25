@@ -66,6 +66,80 @@ this is a dependency with a short turnaround, not a blocker. The asks are in
 
 ---
 
+## How classOS appears inside Pika
+
+Pika is a left rail of tabs and a content pane on the right. Its student tabs
+today are `today`, `achievements`, `assignments`, `tests`, `calendar`,
+`resources`, `announcements`, defined in `src/lib/classroom-feature-visibility.ts`.
+
+### The decision: two surfaces, split by size
+
+**classOS is not widget-shaped, and that is the whole answer.** Pal's widget is
+a panel — an achievements card, a companion sprite — which drops into a content
+pane happily. classOS is a three-column application: lesson list, lesson,
+workbench with an editor, a terminal, a tutor and a reference. Shrinking that
+into a card is not a port, it is a rewrite, and it would lose the thing that
+makes it work.
+
+So it arrives as two different things:
+
+| Surface | Shape | Why |
+| --- | --- | --- |
+| A `lessons` tab | The whole classOS app, filling the content pane | It needs its own shell. Nothing smaller preserves it. |
+| `today` and `achievements` | A small progress card, a real widget package | Compact, read-only, fits Pika's card rhythm. This is what makes it feel native rather than bolted on. |
+
+### Why the big surface is an iframe
+
+Pika is Next 14 / React 18 / Supabase. classOS is Next 15 / React 19 / Prisma.
+An iframe means those two never have to meet — no shared bundle, no version
+negotiation, no data-layer bridge. Both keep their own deploy and their own
+release cadence.
+
+The usual objection to an iframe is authentication, because browsers block
+third-party cookies inside one. **That problem is already solved here**, and by
+accident: `lib/actor.ts` authenticates every AI and runner request from either a
+cookie OR a Pika bearer token. classOS inside a frame simply never uses a
+cookie. Nothing else needs changing.
+
+The token arrives by `postMessage`, not in the URL — a URL lands in history,
+server logs and the referer header, and this one names a student.
+
+Navigation goes the same way: Pika posts `{ type: "classos:open", lesson: "6.3" }`
+and the frame routes to it, so "continue where you left off" on the `today` tab
+can deep-link into a lesson.
+
+### Why not the alternatives
+
+- **Port classOS into the pika repo.** Two framework majors, a data layer and an
+  auth system. Months, and it blocks everything behind it.
+- **A widget for the lessons too.** See above: the shell is the product.
+- **Link out to classos.arronwang.com.** The student leaves Pika, loses the tab
+  they were in, and it stops feeling like one thing. Worst option for the only
+  metric that matters, which is whether the teacher keeps using it in week three.
+
+### The escape hatch, so this is not a one-way door
+
+If the frame ever feels wrong, the same-origin version is a config change rather
+than a rebuild: `rewrites` in Pika pointing `/java/*` at classOS, plus
+`basePath: "/java"` on our side. Same token auth, same code, no frame. Worth
+knowing before committing, so nobody has to argue about it now.
+
+### What the teacher actually has to add
+
+Small, and worth saying plainly when asking:
+
+1. `'lessons'` added to `ClassroomTabId`, plus a `classwork`-style key in
+   `TAB_FEATURES` so it respects the existing per-classroom visibility.
+2. `POST /api/student/classos/read-token` — a copy of the Pal one with
+   `aud: "classos"`.
+3. One component: the iframe, plus the `postMessage` handshake.
+4. Later, the progress-card widget on `today` / `achievements`.
+
+Everything else — verification, identity, the results feed, the theme bridge —
+is already built on our side.
+
+---
+
 ## The contract
 
 Mirrors `pal/docs/integration.md`, endpoint for endpoint.
