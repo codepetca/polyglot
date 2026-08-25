@@ -259,7 +259,19 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
           <div className={`benchbody ${dir > 0 ? "fromright" : "fromleft"}`} key={pane}>
             {pane === "scratchpad" && <ScratchpadPanel code={code} setCode={setCode} lessonCode={lessonCode} />}
             {pane === "reference" && <ReferencePane sections={reference} here={here} lessonCode={lessonCode} />}
-            {pane === "tutor" && <TutorPanel lessonCode={lessonCode} scratchCode={code} seed={seed} />}
+            {pane === "tutor" && (
+              <TutorPanel
+                lessonCode={lessonCode}
+                scratchCode={code}
+                seed={seed}
+                // The tutor and the editor share this rail, so a snippet it
+                // writes should land in the editor rather than be retyped.
+                onUseCode={(snippet, mode) => {
+                  setCode((cur) => (mode === "append" && cur.trim() ? `${cur.replace(/\s+$/, "")}\n\n${snippet}` : snippet));
+                  setPane("scratchpad");
+                }}
+              />
+            )}
           </div>
         </BenchFrame>
       )}

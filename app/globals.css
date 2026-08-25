@@ -358,8 +358,10 @@ td.name { font-weight: 700; }
 /* ─── Scratchpad v2 layout ─── */
 .padgrid { flex: 1; display: flex; gap: 10px; min-height: 200px; flex-wrap: wrap; }
 .padcode { flex: 1 1 320px; min-width: 280px; min-height: 200px; display: flex; }
-.padcode .cm-wrap { flex: 1; display: flex; flex-direction: column; }
-.padcode .cm-wrap > div { flex: 1; }
+.padcode .cm-wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; height: 100%; }
+.padcode .cm-wrap > div { flex: 1; min-height: 0; }
+.padcode .cm-editor { height: 100%; }
+.padcode .cm-scroller { overflow: auto; }
 .padgrid .console { flex: 1 1 240px; min-width: 220px; min-height: 160px; }
 .padai { border-top: 1.5px dashed var(--line); padding-top: 10px; }
 .padai-msgs { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
@@ -1002,40 +1004,32 @@ pre.flowcode.ro { margin: 0; }
 .docsfold summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .docsfold .factswrap { margin-top: 8px; margin-bottom: 0; }
 
-/* scopes: one colour-coded BOX per variable, beside the code.
-   Lines were wrong — a 7px hairline reads as a bracket or a scrollbar. Scope
-   is a region, and a region needs an inside and an outside. Each box is
-   filled, bordered and headed with the variable's name, so "the variable
-   exists on these lines and nowhere else" is what the picture says. */
+/* scopes: the box is drawn ON the code.
+   Two earlier versions put it in a lane to the right — first a hairline, then a
+   box — and both made the student track a horizontal line back to the code to
+   see which lines were covered. Wrapping the lines themselves removes that
+   step: what is inside the box is where the variable exists. */
 .scopewrap { margin: 4px 0 2px; }
-.scopes { display: grid; align-items: stretch; justify-content: start; width: max-content; min-width: 100%;
-  font-family: var(--mono); font-size: 14px;
-  line-height: 1.9; background: #14171c; color: #e6e1d6; border: 1.5px solid #2a2f37; border-radius: 10px 10px 0 0;
-  padding: 16px 16px 14px; overflow-x: auto; }
-/* justify-content:start matters. Without it the min-width stretch is handed to
-   the max-content code column, which opens a dead gap between a line and the
-   box that is supposed to be pointing at it. */
-.scopeline { white-space: pre; padding-right: 14px; }
-.scopecell { position: relative; }
+.scopes { --scope-line: 26px; background: #14171c; color: #e6e1d6; border: 1.5px solid #2a2f37;
+  border-radius: 10px 10px 0 0; padding: 16px 18px 14px; overflow-x: auto; }
+.scopecode { position: relative; width: max-content; min-width: 100%; font-family: var(--mono); font-size: 14px; }
+.scopeline { height: var(--scope-line); line-height: var(--scope-line); white-space: pre; position: relative; z-index: 1; }
 
-/* The box body: full lane width, so it is unmistakably an area. */
-.scopecell.in::before { content: ""; position: absolute; left: 4px; right: 4px; top: 0; bottom: 0;
-  background: var(--sc-fill); border-left: 2px solid var(--sc-edge); border-right: 2px solid var(--sc-edge); }
-.scopecell.in.first::before { top: 2px; border-top: 2px solid var(--sc-edge); border-radius: 9px 9px 0 0; }
-.scopecell.in.last::before { bottom: 2px; border-bottom: 2px solid var(--sc-edge); border-radius: 0 0 9px 9px; }
-.scopecell.in.first.last::before { border-radius: 9px; }
+/* One box per variable, spanning exactly its lines. Nested scopes are inset so
+   the nesting is visible rather than implied. */
+.scopebox { position: absolute; border-radius: 8px; pointer-events: none; z-index: 0;
+  background: var(--sc-fill); border: 1.5px solid var(--sc-edge); }
+/* The name rides the top edge, the way a fieldset legend does, so it never
+   covers a line of code. */
+.scopename { position: absolute; top: -9px; left: 9px; padding: 0 6px; border-radius: 5px;
+  font-family: var(--sans); font-size: 10px; font-weight: 700; line-height: 15px; letter-spacing: .02em;
+  color: #14171c; background: var(--sc-edge); white-space: nowrap; }
 
 /* One hue per kind of variable, tinted for the fill and solid for the edge. */
-.scopecell.sk-instance, .scopekey.sk-instance { --sc-fill: rgba(127,227,176,.15); --sc-edge: rgba(127,227,176,.85); }
-.scopecell.sk-local,    .scopekey.sk-local    { --sc-fill: rgba(146,180,255,.15); --sc-edge: rgba(146,180,255,.85); }
-.scopecell.sk-loop,     .scopekey.sk-loop     { --sc-fill: rgba(240,190,110,.16); --sc-edge: rgba(240,190,110,.90); }
-.scopecell.sk-param,    .scopekey.sk-param    { --sc-fill: rgba(206,150,240,.15); --sc-edge: rgba(206,150,240,.85); }
-
-/* The name is the box's header bar, not a label floating over a line. */
-.scopename { position: absolute; left: 4px; right: 4px; top: 2px; z-index: 2;
-  font-family: var(--sans); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
-  letter-spacing: -.01em; color: #14171c; background: var(--sc-edge); border-radius: 7px 7px 0 0;
-  padding: 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scopebox.sk-instance, .scopekey.sk-instance { --sc-fill: rgba(127,227,176,.10); --sc-edge: rgba(127,227,176,.85); }
+.scopebox.sk-local,    .scopekey.sk-local    { --sc-fill: rgba(146,180,255,.10); --sc-edge: rgba(146,180,255,.85); }
+.scopebox.sk-loop,     .scopekey.sk-loop     { --sc-fill: rgba(240,190,110,.11); --sc-edge: rgba(240,190,110,.90); }
+.scopebox.sk-param,    .scopekey.sk-param    { --sc-fill: rgba(206,150,240,.10); --sc-edge: rgba(206,150,240,.85); }
 
 /* Legend. Four colours mean nothing without it. */
 .scopelegend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
@@ -1155,6 +1149,14 @@ pre.flowcode.ro { margin: 0; }
 /* Scratchpad: editor over a console you can type into. */
 .padwrap { display: flex; flex-direction: column; height: 100%; min-height: 0; gap: 8px; padding: 10px; }
 .padtop { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+/* SCROLLS. Once the code was taller than the pane the bottom of it could not be
+   reached — which is every class you write from Unit 5 on.
+   The cause was the flexbox min-height trap, not the overflow rule: a flex item
+   defaults to min-height:auto, so it refuses to shrink below its content and
+   grows out of the pane instead of letting its child scroll. The chain below
+   has to be min-height:0 the whole way down for CodeMirror's own scroller to
+   get a definite height to work against. Adding overflow:auto here instead
+   just produces two nested scrollbars. */
 .padcode { flex: 1 1 55%; min-height: 120px; overflow: hidden; border: 1.5px solid var(--line); border-radius: 10px; }
 .padterm { flex: 1 1 45%; min-height: 90px; overflow-y: auto; background: #14171c; color: #e6e1d6;
   border: 1.5px solid #2a2f37; border-radius: 10px; padding: 11px 13px; font-family: var(--mono);
@@ -1328,3 +1330,14 @@ pre.flowcode.ro { margin: 0; }
 .trreading.warn { color: var(--warn); }
 .trmodel { font-family: var(--mono); font-size: 12.5px; padding: 7px 9px; width: 210px;
   border: 1.5px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); }
+
+/* Code the tutor wrote, with a way to get it into the editor. */
+.tutorcode { margin: 8px 0; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; background: #14171c; }
+.tutorcode pre { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 12.5px; line-height: 1.6;
+  color: #e6e1d6; white-space: pre; overflow-x: auto; }
+.tutorcodebar { display: flex; gap: 6px; padding: 7px 9px; background: #1a1e24; border-top: 1px solid #2a2f37; }
+.tutorcodebar button { font-family: var(--sans); font-size: 11.5px; font-weight: 600; padding: 4px 9px;
+  border-radius: 7px; border: 1px solid #3a3f47; background: transparent; color: #cfc9bc; cursor: pointer; }
+.tutorcodebar button:hover { background: #262b32; color: #fff; }
+.tutortext { margin: 0 0 6px; }
+.tutortext:last-child { margin-bottom: 0; }

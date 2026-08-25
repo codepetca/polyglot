@@ -11,6 +11,9 @@ import { sanitizeInline } from "@/lib/sanitize";
 import { rateLimit } from "@/lib/ratelimit";
 import type { Exercise, QuizQuestion } from "@/lib/curriculum/blocks";
 
+// Flash for the interactive features. Cheap, fast, and plenty for a hint.
+const TUTOR_MODEL = "gemini-flash-latest";
+
 const STUDENT_DAILY_AI_CAP = 150;
 
 export async function POST(req: Request) {
@@ -41,6 +44,9 @@ export async function POST(req: Request) {
   // ─── Tutor ─────────────────────────────────────────────────────────────────
   if (feature === "tutor") {
     const record = await performanceSummary(me.id, lesson.id);
+    const keypoints = ((((lesson.flow as any)?.steps as any[]) || [])
+      .map((st) => st.keypoint)
+      .filter((k: unknown): k is string => typeof k === "string" && k.trim().length > 0));
     const r = await complete<never>(
       {
         feature: "tutor",
@@ -48,6 +54,14 @@ export async function POST(req: Request) {
           lessonTitle: lesson.title,
           goal: lesson.goal,
           objectives: objectives ? `Learning objectives (stay within these): ${objectives}` : "",
+          // The lesson's own key points — the sentences it decided were worth
+          // remembering. Objectives say what the lesson is FOR; these say what
+          // it actually claims, in the words it uses, so the tutor stops
+          // paraphrasing the topic from general Java knowledge and starts
+          // answering from this lesson.
+          keypoints: keypoints.length
+            ? `What this lesson teaches, in its own words:\n${keypoints.map((k) => `- ${k}`).join("\n")}`
+            : "",
           record: record ? `Student record: ${record}` : "",
           exercise: exercise?.prompt ? `Current exercise: ${exercise.prompt}` : "",
         }),
@@ -55,6 +69,10 @@ export async function POST(req: Request) {
         // Generous: thinking models (e.g. Gemini flash) spend hidden reasoning
         // tokens inside this budget — a tight cap strangles the visible reply.
         maxTokens: 3000,
+        // Flash: a tutor reply is short, and this is the highest-volume AI
+        // call in the platform. The reasoning model costs many times more for
+        // no gain on "why does 7 / 2 give 3".
+        model: TUTOR_MODEL,
         // A one-hint tutor reply doesn't need deep reasoning — cap hidden
         // "thinking" tokens (they're billed as output but invisible in the
         // reply; uncapped they can be most of the real per-call cost).
@@ -97,6 +115,10 @@ export async function POST(req: Request) {
         messages: [{ role: "user", content: `Student code:\n${body.code}\n\n${body.compiled === false ? `Compiler error:\n${body.error}` : `Program output:\n${body.stdout}`}` }],
         json: true,
         maxTokens: 3000,
+        // Flash: a tutor reply is short, and this is the highest-volume AI
+        // call in the platform. The reasoning model costs many times more for
+        // no gain on "why does 7 / 2 give 3".
+        model: TUTOR_MODEL,
       },
       { userId: me.id }
     );
