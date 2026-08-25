@@ -65,7 +65,16 @@ export async function POST(req: Request) {
           record: record ? `Student record: ${record}` : "",
           exercise: exercise?.prompt ? `Current exercise: ${exercise.prompt}` : "",
         }),
-        messages: [{ role: "user", content: `Student question: ${body.message}\n\nTheir current code:\n${body.code || "(none)"}` }],
+        // The conversation so far, then the new question. Without this the
+        // tutor answered every message cold, so a follow-up of "why?" had
+        // nothing to refer to.
+        messages: [
+          ...(Array.isArray(body.history) ? body.history : [])
+            .filter((h: any) => h && (h.role === "user" || h.role === "assistant") && typeof h.text === "string")
+            .slice(-8)
+            .map((h: any) => ({ role: h.role as "user" | "assistant", content: String(h.text).slice(0, 4000) })),
+          { role: "user" as const, content: `Student question: ${body.message}\n\nTheir current code:\n${body.code || "(none)"}` },
+        ],
         // Generous: thinking models (e.g. Gemini flash) spend hidden reasoning
         // tokens inside this budget — a tight cap strangles the visible reply.
         maxTokens: 3000,

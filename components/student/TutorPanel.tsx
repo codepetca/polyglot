@@ -5,6 +5,7 @@
 // scratchpad code so "review my code" works.
 
 import { useEffect, useRef, useState } from "react";
+import { loadChat, saveChat, clearChat, chatContext, type ChatMsg } from "@/lib/tutor-history";
 
 /**
  * Split a reply into prose and ```java blocks.
@@ -43,7 +44,19 @@ export default function TutorPanel({
    *  in the same rail as the editor. */
   onUseCode?: (code: string, mode: "replace" | "append") => void;
 }) {
-  const [msgs, setMsgs] = useState<{ role: "u" | "a"; text: string; meta?: string }[]>([]);
+  const [msgs, setMsgs] = useState<ChatMsg[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  // ONE THREAD PER LESSON, restored on mount. The panel is unmounted every time
+  // the rail swaps pane — and "Put in scratchpad" swaps pane — so holding the
+  // conversation in component state alone deleted it mid-sentence.
+  useEffect(() => {
+    setMsgs(loadChat(lessonCode));
+    setLoaded(true);
+  }, [lessonCode]);
+  useEffect(() => {
+    if (loaded) saveChat(lessonCode, msgs);
+  }, [msgs, lessonCode, loaded]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -51,13 +64,16 @@ export default function TutorPanel({
 
   async function ask(message: string) {
     if (!message.trim() || busy) return;
+    // Snapshot the thread BEFORE adding this turn: the model should see what
+    // was said before the question, not the question twice.
+    const prior = chatContext(msgs);
     setMsgs((m) => [...m, { role: "u", text: message }]);
     setInput("");
     setBusy(true);
     const r = await fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ feature: "tutor", lessonCode, message, code: scratchCode }),
+      body: JSON.stringify({ feature: "tutor", lessonCode, message, code: scratchCode, history: prior }),
     }).then((x) => x.json());
     setMsgs((m) => [...m, { role: "a", text: r.text || r.error || "…", meta: r.meta }]);
     setBusy(false);
@@ -120,6 +136,18 @@ export default function TutorPanel({
         {busy && <div className="msg a think">tutor is thinking…</div>}
       </div>
       <div className="quick">
+        {msgs.length > 0 && (
+          <button
+            className="chip"
+            title="Start this lesson's conversation again"
+            onClick={() => {
+              setMsgs([]);
+              clearChat(lessonCode);
+            }}
+          >
+            New chat
+          </button>
+        )}
         <button className="chip" onClick={() => ask("Can you review the code in my scratchpad?")}>Review my code</button>
         <button className="chip" onClick={() => ask("I'm stuck — a hint please?")}>Hint</button>
         <button className="chip" onClick={() => ask("What is wrong with my scratchpad code? Show me the fixed version.")}>Fix my code</button>

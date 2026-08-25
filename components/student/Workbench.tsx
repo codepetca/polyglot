@@ -24,6 +24,7 @@ import TutorPanel from "./TutorPanel";
 import BenchFrame, { type BenchMode, type BenchGeom } from "./BenchFrame";
 import BenchIcon from "./BenchIcon";
 import { allSections, sectionsForLesson, type Section } from "@/lib/curriculum/reference";
+import { snapshot } from "@/lib/tutor-history";
 
 const SCRATCH_KEY = "classos_scratchpad";
 const OPEN_KEY = "classos_bench_open";
@@ -267,7 +268,13 @@ export default function Workbench({ askTeacher }: { askTeacher: { id: string; na
                 // The tutor and the editor share this rail, so a snippet it
                 // writes should land in the editor rather than be retyped.
                 onUseCode={(snippet, mode) => {
-                  setCode((cur) => (mode === "append" && cur.trim() ? `${cur.replace(/\s+$/, "")}\n\n${snippet}` : snippet));
+                  setCode((cur) => {
+                    // Replacing the buffer throws away whatever was there, so
+                    // keep a version first. This is the one action in the app
+                    // that destroys a student's own work.
+                    snapshot(cur, mode === "append" ? "before appending tutor code" : "before tutor code replaced it");
+                    return mode === "append" && cur.trim() ? `${cur.replace(/\s+$/, "")}\n\n${snippet}` : snippet;
+                  });
                   setPane("scratchpad");
                 }}
               />

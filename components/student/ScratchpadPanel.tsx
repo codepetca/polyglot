@@ -22,6 +22,7 @@
 import { useEffect, useRef, useState } from "react";
 import CodeEditor from "../CodeEditor";
 import { needsMethodsMode, ensureRun } from "@/lib/java/detect";
+import { loadSnapshots, snapshot, describeAge, type Snapshot } from "@/lib/tutor-history";
 
 const WANTS_INPUT = /NoSuchElementException/;
 
@@ -40,6 +41,8 @@ export default function ScratchpadPanel({
   const [busy, setBusy] = useState(false);
   const [ran, setRan] = useState(false);
   const [typed, setTyped] = useState("");
+  const [histOpen, setHistOpen] = useState(false);
+  const [snaps, setSnaps] = useState<Snapshot[]>([]);
   const linesRef = useRef<string[]>([]);
   const consoleRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,6 +79,8 @@ export default function ScratchpadPanel({
 
   function run() {
     if (busy) return;
+    // Every run is a version worth getting back to.
+    snapshot(code, "before a run");
     linesRef.current = [];
     setTyped("");
     setError("");
@@ -104,7 +109,41 @@ export default function ScratchpadPanel({
           {busy ? "Running…" : "▶ Run"}
         </button>
         <span className="runnote">⌘/Ctrl + Enter</span>
+        <span style={{ flex: 1 }} />
+        {/* One control, not a toolbar. It only exists because replacing the
+            buffer — which the tutor's "Put in scratchpad" does — is otherwise
+            destructive with no undo. */}
+        <button
+          className={`tbtn2 ${histOpen ? "on" : ""}`}
+          title="Earlier versions of this code"
+          onClick={() => {
+            setSnaps(loadSnapshots());
+            setHistOpen(!histOpen);
+          }}
+        >
+          ⟲
+        </button>
       </div>
+
+      {histOpen && (
+        <div className="padhist">
+          {snaps.length === 0 && <p className="mutedtx">No earlier versions yet. One is kept every time you run.</p>}
+          {snaps.map((sn) => (
+            <button
+              key={sn.at}
+              onClick={() => {
+                snapshot(code, "replaced from history");
+                setCode(sn.code);
+                setHistOpen(false);
+              }}
+            >
+              <span className="padhistwhen">{describeAge(sn.at)}</span>
+              <span className="padhistnote">{sn.note}</span>
+              <span className="padhistcode">{sn.code.split("\n")[0].slice(0, 44)}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="padcode">
         <CodeEditor value={code} onChange={setCode} height="100%" />
