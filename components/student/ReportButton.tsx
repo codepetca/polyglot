@@ -1,149 +1,192 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
-// "Tell the person who built this."
+// Talking to the person who built this.
 //
-// NOT A DM. The inbox exists and students can already message an admin through
-// it, which nobody would ever discover and which frames the thing wrongly
-// anyway: picking a name out of a contact list and composing a message is a
-// social act, and reporting a broken lesson should not feel like one.
+// IT IS A CHAT, NOT A FORM. The first version was a modal with named reasons, a
+// text box and a Send button — which is a suggestion box, and nobody uses a
+// suggestion box twice, because nothing ever comes back out of it. Replies had
+// nowhere to land except an inbox a student had no reason to open.
 //
-// So: a button that says what it does, in the same place on every lesson, with
-// the reason pre-named. A student picks "Something is broken", types a line,
-// and it goes. They never choose a recipient, and they never have to work out
-// who is responsible for the thing that annoyed them.
+// So the same button now opens the thread. Reasons survive as chips, but only
+// on the FIRST message, where they help someone who does not know what this is
+// for; after that it is a conversation and stamping every line like a support
+// ticket is exactly what made it feel long.
 //
-// The lesson code rides along automatically, because a report naming the lesson
-// is actionable and "the array thing is broken" is not.
+// The badge is the whole point. Two-way communication does not happen because
+// a channel exists, it happens because a student can see that the last time
+// they said something, a person answered.
 
 const REASONS = [
-  { id: "broken", label: "Something is broken", hint: "A button does nothing, the code will not run, a page looks wrong." },
-  { id: "confusing", label: "This is confusing", hint: "The lesson lost you. Say where." },
-  { id: "language", label: "Add my language", hint: "Tell me which one and it can be added." },
-  { id: "idea", label: "I have an idea", hint: "Anything you wish this did." },
+  { id: "broken", label: "Something is broken" },
+  { id: "confusing", label: "This is confusing" },
+  { id: "language", label: "Add my language" },
+  { id: "idea", label: "I have an idea" },
 ] as const;
 
 type Reason = (typeof REASONS)[number]["id"];
+type Msg = { id: string; mine: boolean; body: string; at: string };
 
 export default function ReportButton({ initialReason }: { initialReason?: Reason }) {
   const path = usePathname() || "";
   const lessonCode = decodeURIComponent(path.split("/lessons/")[1] || "").split("/")[0];
 
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState<Reason>(initialReason || "broken");
+  const [admin, setAdmin] = useState<{ id: string; name: string } | null>(null);
+  const [msgs, setMsgs] = useState<Msg[]>([]);
+  const [unread, setUnread] = useState(0);
+  const [reason, setReason] = useState<Reason | null>(initialReason ?? null);
   const [text, setText] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const scroller = useRef<HTMLDivElement>(null);
   const box = useRef<HTMLDivElement>(null);
+
+  const load = useCallback(async (markRead: boolean) => {
+    const r = await fetch(`/api/report${markRead ? "?read=1" : ""}`)
+      .then((x) => x.json())
+      .catch(() => null);
+    if (!r || r.error) return;
+    setAdmin(r.admin || null);
+    setMsgs(Array.isArray(r.messages) ? r.messages : []);
+    setUnread(markRead ? 0 : r.unread || 0);
+  }, []);
+
+  // Check for a reply on load, and now and then while the page is open. Polling
+  // rather than sockets: a reply arriving within a minute is soon enough for a
+  // conversation that runs over days.
+  useEffect(() => {
+    load(false);
+    const t = setInterval(() => {
+      if (!document.hidden) load(false);
+    }, 60_000);
+    return () => clearInterval(t);
+  }, [load]);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onDown = (e: MouseEvent) => {
+      if (!box.current?.contains(e.target as Node)) setOpen(false);
+    };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onDown);
+    };
   }, [open]);
 
+  useEffect(() => {
+    if (open) scroller.current?.scrollTo(0, scroller.current.scrollHeight);
+  }, [open, msgs]);
+
+  function show() {
+    setOpen(true);
+    load(true);
+  }
+
   async function send() {
-    if (!text.trim() || state === "sending") return;
-    setState("sending");
+    const body = text.trim();
+    if (!body || busy) return;
+    setBusy(true);
+    setErr("");
     let code = "";
-    try {
-      code = localStorage.getItem("classos_scratchpad") || "";
-    } catch {
-      /* not important enough to fail the report */
+    if (reason === "broken") {
+      try {
+        code = localStorage.getItem("classos_scratchpad") || "";
+      } catch {
+        /* not worth failing the message over */
+      }
     }
     const r = await fetch("/api/report", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      // The scratchpad only goes with a "broken" report, where it is evidence.
-      body: JSON.stringify({ kind: reason, body: text, lessonCode, code: reason === "broken" ? code : "" }),
+      body: JSON.stringify({ kind: msgs.length === 0 ? reason : "", body, lessonCode, code }),
     })
       .then((x) => x.json())
       .catch(() => null);
 
     if (r?.ok) {
-      setState("sent");
       setText("");
-      setTimeout(() => {
-        setOpen(false);
-        setState("idle");
-      }, 1900);
+      setReason(null);
+      await load(true);
     } else {
       setErr(r?.error || "That did not send. Try again in a moment.");
-      setState("error");
     }
+    setBusy(false);
   }
 
-  const current = REASONS.find((r) => r.id === reason)!;
-
   return (
-    <>
-      <button className="reportbtn" onClick={() => setOpen(true)}>
+    <div className="reportwrap" ref={box}>
+      <button className="reportbtn" onClick={() => (open ? setOpen(false) : show())} aria-expanded={open}>
         <span aria-hidden>✎</span> Tell me
+        {unread > 0 && <span className="reportdot">{unread}</span>}
       </button>
 
       {open && (
-        <div className="reportwrap" role="dialog" aria-modal="true" aria-label="Tell me">
-          <div className="reportcard" ref={box}>
-            <button className="frx" onClick={() => setOpen(false)} aria-label="Close">✕</button>
+        <div className="reportpanel" role="dialog" aria-label="Talk to the person who built this">
+          <header className="rphead">
+            <div>
+              <b>{admin ? admin.name : "classOS"}</b>
+              <span>built this · replies here</span>
+            </div>
+            <button onClick={() => setOpen(false)} aria-label="Close">✕</button>
+          </header>
 
-            {state === "sent" ? (
-              <div className="reportsent">
-                <p className="bigtick" aria-hidden>✓</p>
-                <h2>Sent.</h2>
-                <p className="frnote">It goes straight to me. Replies land in Messages.</p>
+          <div className="rpthread" ref={scroller}>
+            {/* A blank box gets a blank response. Saying who is on the other end,
+                and that it is one person, is most of what makes anyone type. */}
+            <p className="rpintro">
+              Hi — I built classOS. If something is broken, confusing, or missing, tell me here and I will actually
+              read it. Nobody else sees this.
+            </p>
+            {msgs.map((m) => (
+              <div key={m.id} className={`rpmsg ${m.mine ? "mine" : ""}`}>
+                {m.body}
               </div>
-            ) : (
-              <>
-                <p className="freyebrow">Straight to the person who built this</p>
-                <h2>What is up?</h2>
-                <p className="frnote">
-                  Anything at all — broken, confusing, missing, or just an idea. It is not a survey and nobody
-                  else sees it.
-                </p>
-
-                <div className="reasons">
-                  {REASONS.map((r) => (
-                    <button
-                      key={r.id}
-                      className={`reason ${reason === r.id ? "on" : ""}`}
-                      onClick={() => setReason(r.id)}
-                    >
-                      {r.label}
-                    </button>
-                  ))}
-                </div>
-
-                <p className="frnote small">{current.hint}</p>
-
-                <textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder={
-                    reason === "language"
-                      ? "Which language do you speak at home?"
-                      : "A line or two is plenty."
-                  }
-                  rows={4}
-                  autoFocus
-                />
-
-                {lessonCode && <p className="frnote small">Lesson {lessonCode} is attached, so I know where you were.</p>}
-                {state === "error" && <p className="reporterr">{err}</p>}
-
-                <div className="frrow">
-                  <button className="frghost" onClick={() => setOpen(false)}>Cancel</button>
-                  <button className="frgo" onClick={send} disabled={!text.trim() || state === "sending"}>
-                    {state === "sending" ? "Sending…" : "Send"}
+            ))}
+            {msgs.length === 0 && reason === null && (
+              <div className="reasons">
+                {REASONS.map((r) => (
+                  <button key={r.id} className="reason" onClick={() => setReason(r.id)}>
+                    {r.label}
                   </button>
-                </div>
-              </>
+                ))}
+              </div>
+            )}
+            {msgs.length === 0 && reason && (
+              <p className="rpchosen">
+                {REASONS.find((r) => r.id === reason)!.label}
+                <button onClick={() => setReason(null)} aria-label="Change">change</button>
+              </p>
             )}
           </div>
+
+          {err && <p className="reporterr">{err}</p>}
+
+          <div className="rpcompose">
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
+              rows={2}
+              placeholder={reason === "language" ? "Which language do you speak at home?" : "Type here…"}
+            />
+            <button className="frgo" onClick={send} disabled={!text.trim() || busy}>
+              {busy ? "…" : "Send"}
+            </button>
+          </div>
+          {lessonCode && <p className="rpfoot">Lesson {lessonCode} is attached, so I know where you were.</p>}
         </div>
       )}
-    </>
+    </div>
   );
 }
