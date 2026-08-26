@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { offeredLangs, readPrefs, writePrefs, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
+import { offeredLangs, readPrefs, writePrefs, onPrefsChange, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
 
 // The same reading settings as the profile menu, with room to explain them.
 //
@@ -14,6 +14,7 @@ export default function ReadingSettings() {
   useEffect(() => {
     setP(readPrefs());
     setLoaded(true);
+    return onPrefsChange(setP);
   }, []);
 
   function update(patch: Partial<EslPrefs>) {

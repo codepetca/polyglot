@@ -55,11 +55,19 @@ export async function GET(req: Request) {
   // now return immediately; if the assist isn't ready the client asks for it
   // separately (assistOnly=1) and drops it in when it arrives.
   const cached = locale && all[locale] ? assistForClient(flow.steps, all[locale] as any) : null;
-  const assistPending = Boolean(locale && LANGUAGES[locale] && !all[locale]);
+  const assistPending = Boolean(locale && LANGUAGES[locale] && !all[locale] && me.role !== "STUDENT");
 
   if (url.searchParams.get("assistOnly") === "1") {
     if (!locale || !LANGUAGES[locale]) return NextResponse.json({ assist: null });
     if (cached) return NextResponse.json({ assist: cached });
+    // STAFF ONLY BEYOND THIS POINT. Generating a missing translation is a full
+    // AI pass over the lesson: it costs money, takes the better part of a
+    // minute, and fails outright when the AI switch is off. Any signed-in
+    // student used to trigger one just by choosing a language — invisibly, and
+    // once per lesson they opened. A student now simply gets the English,
+    // which the player already renders correctly; the owner translates
+    // deliberately at /admin/translate.
+    if (me.role === "STUDENT") return NextResponse.json({ assist: null });
     try {
       await translateLesson(lessonCode, locale, me.id);
       const fresh = await prisma.lesson.findUnique({ where: { code: lessonCode }, select: { flowI18n: true } });

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { offeredLangs, readPrefs, writePrefs, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
+import { offeredLangs, readPrefs, writePrefs, onPrefsChange, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
 
 // Quick settings, behind the name and avatar in the top bar.
 //
@@ -28,9 +28,15 @@ export default function ProfileMenu({
   const [loaded, setLoaded] = useState(false);
   const box = useRef<HTMLDivElement>(null);
 
+  // SUBSCRIBE, don't just read once. The top bar mounts before the first-run
+  // popup does, so a student who picked their language in that popup left this
+  // menu holding the defaults — they'd open it, see "Reading help" unticked
+  // while the lesson was visibly translated, and untick-then-retick to fix a
+  // setting that was already on. It only corrected itself on a full reload.
   useEffect(() => {
     setP(readPrefs());
     setLoaded(true);
+    return onPrefsChange(setP);
   }, []);
 
   // Close on an outside click or Escape — a menu you cannot dismiss is worse

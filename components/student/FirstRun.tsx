@@ -23,7 +23,7 @@ const SEEN = "classos_firstrun_v1";
 
 export default function FirstRun() {
   const ai = useAi();
-  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [step, setStep] = useState<0 | 1>(0);
   const [show, setShow] = useState(false);
   const [lang, setLang] = useState("");
 
@@ -51,7 +51,7 @@ export default function FirstRun() {
       <div className="frcard">
         {step === 0 && (
           <>
-            <p className="freyebrow">Before you start</p>
+            <p className="freyebrow">Before you start · 1 of 2</p>
             <h2>Is English your first language?</h2>
             <p className="frnote">
               If not, classOS can show every lesson twice — English on one side, your language on the other. Java
@@ -94,55 +94,27 @@ export default function FirstRun() {
 
         {step === 1 && (
           <>
-            <p className="freyebrow">Step 2 of 2</p>
+            <p className="freyebrow">One more thing</p>
             <h2>{ai ? "Three tools live on the right" : "Two tools live on the right"}</h2>
             <ul className="frtools">
               <li>
                 <b>Scratchpad</b> — write Java and run it. Nothing here is marked, so try things.
               </li>
               <li>
-                <b>Reference</b> — every piece of syntax in the course. It opens at the part this lesson uses.
+                <b>Reference</b> — every piece of syntax in the course, opened at the part this lesson uses.
               </li>
               {ai && (
                 <li>
-                  <b>AI Tutor</b> — ask anything about the lesson or your code. It can write code and fix yours.
+                  <b>AI Tutor</b> — ask about the lesson or your code. It can write code and fix yours.
                 </li>
               )}
             </ul>
-            <p className="frnote">
-              Open one from the right edge, then swap between them with <kbd>←</kbd> <kbd>→</kbd>. Drag the panel
-              out if you want it bigger.
-            </p>
-            <div className="frrow">
-              <button className="frghost" onClick={done}>
-                Skip
-              </button>
-              <button className="frgo" onClick={() => setStep(2)}>
-                One more thing
-              </button>
-            </div>
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <p className="freyebrow">Last one</p>
-            <h2>Stuck is normal</h2>
-            {ai ? (
+            {ai && (
               <p className="frnote">
-                When your code will not run, the red message has a <b>“What does this mean?”</b> button under it. It
-                explains the error in plain words and shows the line to fix.
-              </p>
-            ) : (
-              <p className="frnote">
-                When your code will not run, read the red message from the top. The first line names the file and the
-                line number, and that line is where to look first.
+                And when your code will not run, the red error has a <b>“What does this mean?”</b> button under it
+                that explains it in plain words.
               </p>
             )}
-            <p className="frnote">
-              Every key point you meet is saved in <b>Notes</b>, so you can look it up later without hunting
-              through the lesson again.
-            </p>
             <div className="frrow">
               <span />
               <button className="frgo" onClick={done}>
