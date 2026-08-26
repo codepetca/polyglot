@@ -20,8 +20,8 @@ export default function TryStep() {
   const [picked, setPicked] = useState<number | null>(null);
 
   return (
-    <div className="panel flowstep" style={{ padding: "22px 24px" }}>
-      <div className="meta" style={{ margin: "0 0 8px" }}>REAL STEP FROM LESSON 2.1 · NO SIGNUP NEEDED</div>
+    <div className="panel flowstep trystep">
+      <div className="meta" style={{ margin: "0 0 8px" }}>A REAL STEP FROM THE COURSE · NO SIGNUP NEEDED</div>
       <div className="flowq">What does this print?</div>
       <pre className="flowcode ro">{'System.out.println("1" + 2 + 3);'}</pre>
       <div className="flowopts" style={{ marginTop: 12 }}>

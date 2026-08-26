@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { LANG_LABELS, readPrefs, writePrefs, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
+import { offeredLangs, readPrefs, writePrefs, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
 
 // Quick settings, behind the name and avatar in the top bar.
 //
@@ -95,7 +95,7 @@ export default function ProfileMenu({
               <span className="pmlabel">Language</span>
               <select value={p.lang} disabled={!p.esl} onChange={(e) => update({ lang: e.target.value, esl: true })}>
                 {!p.lang && <option value="">Choose…</option>}
-                {Object.entries(LANG_LABELS).map(([code, label]) => (
+                {offeredLangs().map(([code, label]) => (
                   <option key={code} value={code}>
                     {label}
                   </option>

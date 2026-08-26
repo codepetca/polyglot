@@ -1,113 +1,138 @@
 # classOS
 
-A self-hosted, editable, AI-integrated platform for teaching intro Java. It collapses the
-three prototypes (`classOS-prototype-v4`, `classOS-lessons`, `classOS-editor`) into one real
-app with a database behind it.
+A self-hosted platform for teaching intro Java. Lessons are **interactive first**: a student
+runs code, predicts output and fixes bugs, and the explanation arrives after they act rather
+than as a wall of text before it.
 
-Guiding principle: **maximum freedom** — you own the content, the data, the keys, the deploy.
+**57 lessons · 762 steps · no account required to use it.**
+
+Live at [classos.arronwang.com](https://classos.arronwang.com). MIT licensed.
+
+Guiding principle: **you own the content, the data, the keys and the deploy.**
 
 ---
 
-## Run it (zero accounts, ~2 minutes)
+## Run it locally
 
 ```bash
 npm install
-npm run setup      # generates Prisma client, creates the SQLite DB, seeds Unit 2 + demo users
+npm run setup      # Prisma client + schema + seed
 npm run dev        # http://localhost:3000
 ```
 
-That's it. No API key, no Postgres, no Docker. The app boots on:
-- **SQLite** (a local `prisma/dev.db` file) instead of Postgres
-- an **offline "stub" AI provider** (canned tutor/grading) instead of a paid key
-- **Compiler Explorer's free API** for real Java execution (the public Piston API went
-  whitelist-only in Feb 2026; set `PISTON_URL` to use a self-hosted Piston instead)
+No API key needed. With no AI provider configured the app serves an offline stub, and Java
+runs on Compiler Explorer's free API. (The public Piston API went whitelist-only in Feb 2026 —
+set `PISTON_URL` to point at your own Piston instead. See **RUNNER.md**.)
 
-### Sign in (real accounts — seeded for you)
+### Getting in
+
 | Who | How |
 |---|---|
-| **Student** | Go to `/join`, enter class code **JAVA26** + any name — no email/password. |
-| **Teacher** | `/login` → `teacher@classos.dev` / password **printed by the seed** |
-| **Admin (you)** | `/login` → `admin@classos.dev` / password **printed by the seed** |
-
-Staff passwords are **random on every seed** (no public defaults) — the seed prints them, so
-copy them from the terminal. Pin them with `ADMIN_PASSWORD` / `TEACHER_PASSWORD` env vars if
-you prefer, and change them any time at `/account`.
-
-- **Student** → open a lesson, use the scratchpad, run the graded exercise, take practice + the
-  🔒 clean quiz (the only thing that turns a lesson **MASTERED**), ask the AI tutor.
-- **Teacher** → classes + join codes, the mastery matrix, flags, recent activity.
-- **Admin** → everything above plus the lesson **Editor** and **Settings** (AI keys).
-
-Teachers create classes on the Teacher page; each gets a short join code students type at
-`/join`. A returning student who enters the same name in the same class gets their progress
-back — simple on purpose (no student emails), same tradeoff Kahoot/ClassDojo make.
+| **Anyone** | The landing page's **Start practicing** button. No name, no email, no signup. |
+| **Student in a class** | `/join` with the class code their teacher gives them. |
+| **Staff** | `/login`. The seed prints random passwords — no public defaults. |
 
 ---
 
-## Adding a real AI key (whenever your boss sponsors one)
+## The three switches that matter
 
-Go to **Admin → Settings**. Pick a provider, paste the key, hit **Test key**, **Save**. No redeploy.
-- **Recommended free start: Google Gemini Flash** (~1,500 req/day, no card).
-- **Groq** and **OpenRouter** are fast free fallbacks.
-- Keys are **encrypted at rest** and never sent to the browser.
-- Heads-up shown in the UI: most free tiers train on submitted prompts — fine for lesson content
-  and synthetic practice; weigh it before sending real student data.
+All three live in **Admin → Settings** and take effect immediately, with no redeploy.
 
-Nothing is hardcoded to one provider — Groq / Gemini / OpenRouter share one OpenAI-compatible
-client; Anthropic has a thin path. See `lib/llm/`.
+| Switch | Off means |
+|---|---|
+| **AI** | The tutor, the ✦ error explainer and code review are *hidden*, not disabled. No request reaches a paid provider, so nothing can be billed. Enforced in `complete()` (`lib/llm/index.ts`), the one function every AI call passes through — so a new AI feature is off by construction, not by remembering. Default **on**. |
+| **Student messaging** | Students cannot send free text to anyone; `/inbox` is closed to them by URL as well as by menu. The one-way questionnaire still works. Default **off** — school boards generally do not permit unmonitored two-way messaging with students. |
+| **Name** | What this deployment calls itself in the top bar. The repo, the licence and the source stay named classOS. |
 
 ---
 
-## How it's laid out
+## What's in it
+
+- **Interactive lesson player** — 17 step kinds (`teach`, `predict`, `write`, `fix`, `trace`,
+  `bucket`, `fill`, `match`, `arrange`, `workout`…). Answers are graded server-side and never
+  reach the browser.
+- **Real Java execution** with interactive stdin, plus a scratchpad with run history.
+- **A reference sheet** whose every snippet is compiled by `scripts/reference-check.ts` —
+  documentation that does not compile is worse than none.
+- **Reading help (ESL)** — the lesson in a second language beside or beneath the English, with
+  Java keywords always left in English. Six languages ship translated: 简体中文, 繁體中文,
+  हिन्दी, 한국어, 日本語, Français.
+- **AI tutor** (optional) — lesson-aware, per-lesson history, explains compiler errors, can
+  write into the scratchpad. Spend cap and per-student daily limit.
+- **Mastery model** — a skills/evidence ledger; only a passing server-graded quiz sets
+  `MASTERED`.
+- **Teacher view** — classes, join codes, the mastery matrix, recent activity.
+- **Questionnaire** — fixed-answer, one-way, with tallies at `/admin/questionnaire`.
+
+---
+
+## Layout
 
 ```
 app/
-  lessons/[code]/     student reader + interactive workspace
-  teacher/            mastery dashboard (reads real attempts)
-  admin/editor/       lesson CMS (live preview, export/import)
-  admin/settings/     provider/key config
-  api/                run (Java) · ai (adapter) · auth · classes · progress · curriculum · settings
+  page.tsx            public landing page
+  lessons/[code]/     the lesson player
+  teacher/            mastery dashboard
+  admin/              editor · settings · translate · usage · reach · questionnaire
+  api/                run · ai · lesson/flow · auth · progress · settings · pika
 components/
-  LessonRenderer      ONE renderer, used by the reader AND the editor preview
-  LessonWorkspace     scratchpad · graded exercise · practice · tutor · summative
-  Quiz · CodeEditor · Editor · SettingsForm · Nav
+  lesson/FlowPlayer   the step player — every step kind lives here
+  student/Workbench   scratchpad · reference · tutor, one rail
 lib/
-  llm/                provider-agnostic adapter (stub/gemini/groq/openrouter/anthropic),
-                      JSON repair, fallback lanes, cost tracking
-  java/piston.ts      real Java execution (Compiler Explorer / self-hosted Piston) + input() template
-  progress.ts         THE honesty chokepoint — only a passing summative → MASTERED
-  settings.ts         DB-backed config + encrypted keys
-  auth.ts             real auth: scrypt passwords, signed sessions, class join codes
+  llm/                provider-agnostic adapter, fallback lanes, cost tracking
+  java/               wrapper (CodeHS parity: readLine, never Scanner) + execution
+  curriculum/         flow types, verification, reference, i18n extraction
+  settings.ts         DB-backed config, encrypted keys, feature switches
+  progress.ts         the honesty chokepoint — only a passing quiz → MASTERED
 prisma/
-  schema.prisma       Chapter · Lesson · User · Attempt · Progress · AiCall · Setting
-  seed.ts             Unit 2 starter lessons + demo class
+  schema.prisma       Chapter · Lesson · User · Attempt · Progress · AiCall · Setting …
+  flows.json          every lesson's flow, in git, restorable with scripts/flows.mjs
 ```
 
 ---
 
-## Maturing it (the seams are already in place)
+## Authoring lessons
 
-Each is a self-contained upgrade — the surrounding code doesn't change:
+Lessons live in the database, and `prisma/flows.json` is the version-controlled copy.
 
-| Step | What to do | Where |
-|---|---|---|
-| **Postgres** | Change datasource to `postgresql`, set `DATABASE_URL` (Neon/Supabase), `db:push` | `prisma/schema.prisma` |
-| **Deploy** | Push to Vercel; it builds from this repo | — |
-| **Self-host Java** | Point `PISTON_URL` at your own Piston (Docker) when class size grows | `.env` |
-| **Fallback lanes** | Configure a 2nd provider so a hit rate-limit auto-fails-over | Settings + `lib/llm` |
-| **Cost caps** | Per-student/day call caps + global kill switch (guard in `lib/llm`) | roadmap |
-| **CSV export** | Dump `Attempt`/`Progress` for the teacher | roadmap |
-| **Author remaining exercises** | 11 of the 15 lessons don't have a graded exercise/quiz bank yet — add them in the editor's Exercise & Quiz sections | `admin/editor` |
+```bash
+npx tsx scripts/lesson.ts verify my-lesson.json   # compile-check every snippet
+node --env-file=.env scripts/flows.mjs diff       # what would change
+node --env-file=.env scripts/flows.mjs restore    # file → DB
+node scripts/flows.mjs audit                      # course-wide quality checks
+```
+
+**Every code snippet is compiled before it ships.** The audit also reports answer-position
+skew, deprecated constructs and missing prose. House style and the step-kind reference are in
+**LESSON-AUTHORING.md**; what each unit covers is in **LESSON-PLANS.md**.
+
+> If port 5432 is blocked on your network, `flows.mjs` falls back to Neon over HTTPS
+> automatically. Prisma migrations do not — run those from somewhere that allows 5432.
 
 ---
 
-## Notes / rough edges (it's a prototype)
+## Privacy
 
-- Hosting it? Follow **DEPLOY.md** — it's a complete first-time walkthrough including the
-  security model and a post-deploy test checklist.
-- The graded exercise's pass/fail is **output-comparison** (authoritative); the AI only writes
-  the coaching — so grading never depends on a hallucinated verdict.
-- All 15 Unit 2 lessons are seeded (from `prisma/curriculum.seed.json`); 4 of them (2.1, 2.2,
-  2.10, 2.11) have graded exercises + quiz banks, the rest need theirs authored in the editor.
-  Lessons without a quiz bank hide the practice/clean-quiz panels; without an exercise, hide
-  the coding panel. The scratchpad, generator, and tutor work on every lesson.
+No name, no email, no school. Work is stored against a random session id. With AI off, no
+student text reaches any third party at all. `/privacy` states this in two sentences and
+tracks the AI switch, so it cannot claim more than is true.
+
+Relevant if you are in Ontario: O. Reg. 52/26 requires boards to inventory all software and
+run privacy impact assessments. `docs/for-the-teacher.md` covers the data questions a board
+will ask.
+
+---
+
+## Other documents
+
+| | |
+|---|---|
+| **DEPLOY.md** | First-time hosting walkthrough and the security model |
+| **RUNNER.md** | Self-hosting the Java runner |
+| **LESSON-AUTHORING.md** | House style, step kinds, the compiler gate |
+| **ARCHITECTURE.md** | How the pieces fit |
+| **STUDENT-MODEL.md** | The competency model and event layer |
+| **PIKA-INTEGRATION.md** | Embedding in a host platform (parked — see below) |
+
+**Status:** standalone. A planned integration with a host platform is on hold; classOS ships
+and deploys on its own.

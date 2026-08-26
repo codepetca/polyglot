@@ -1555,9 +1555,6 @@ pre.flowcode.ro { margin: 0; }
 .reportdot { background: var(--accent-2, #e0532f); color: #fff; border-radius: var(--r-pill);
   min-width: 17px; height: 17px; padding: 0 5px; font-size: var(--t-3xs); font-weight: 700;
   display: grid; place-items: center; }
-.frask .reportbtn { color: var(--ink); border-color: var(--line); }
-.frask .reportbtn:hover { border-color: var(--accent); color: var(--accent); }
-.frask { margin-bottom: 14px; }
 
 /* Room to have a conversation in. The first pass was a 370px tooltip with a
    300px scroll area, which makes any exchange longer than two lines feel like
@@ -1792,3 +1789,26 @@ pre.flowcode.ro { margin: 0; }
 .qdel:hover { color: var(--bad); }
 .qrow { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
 .qcheck { display: flex; gap: 8px; align-items: baseline; font-size: var(--t-base); line-height: 1.45; cursor: pointer; }
+
+/* ── Landing page ──
+   One column, one message, everything on the type scale. The old page set its
+   sizes inline (34px, 16.5px, 19px, 13.5px, 14.5px) because it predates the
+   scale — which made the first screen a visitor sees the least consistent one
+   in the product. */
+.landing { max-width: 660px; }
+.landing h1 { font-family: var(--serif); font-size: var(--t-6xl); line-height: 1.1;
+  letter-spacing: -.02em; margin: 6px 0 12px; text-wrap: balance; }
+.landing .lede { font-size: var(--t-lg); line-height: 1.6; margin: 0 0 26px; max-width: 54ch; }
+.trystep { padding: 22px 24px; }
+.landgo { margin: 20px 0 32px; }
+.landfacts { list-style: none; margin: 0 0 28px; padding: 26px 0 0;
+  border-top: 1.5px solid var(--line); display: flex; flex-direction: column; gap: 14px; }
+.landfacts li { font-size: var(--t-md); line-height: 1.6; max-width: 60ch; }
+.landfacts b { font-weight: 700; }
+.landfacts .mono { font-family: var(--mono); font-size: var(--t-sm); }
+.landfacts a, .landfoot a { text-decoration: underline; text-underline-offset: 2px; }
+.landfoot { color: var(--muted); font-size: var(--t-sm); line-height: 1.6; margin: 0 0 4px; }
+@media (max-width: 640px) {
+  .landing h1 { font-size: var(--t-5xl); }
+  .trystep { padding: 16px 16px; }
+}

@@ -34,6 +34,29 @@ export const LANG_LABELS: Record<string, string> = {
   es: "Español",
 };
 
+/**
+ * The languages a student is actually offered.
+ *
+ * SEPARATE FROM LANG_LABELS ON PURPOSE. That map is every language we have a
+ * name for; this list is the ones with a real translation behind them. Offering
+ * a language and then showing English is worse than not offering it — a student
+ * who picks their own language and gets nothing concludes the feature is broken
+ * and never tries again.
+ *
+ * Measured, not guessed. As of 2026-08-26 these six cover all 57 lessons at 93%
+ * of steps or better; Tamil, Spanish and Persian sat at 3%, 2% and 1%, and Urdu,
+ * Punjabi, Tagalog and Vietnamese had never been run at all.
+ *
+ * To add one back: translate it at /admin/translate, confirm the coverage, then
+ * add the code here. The label is already in LANG_LABELS waiting for it.
+ */
+export const AVAILABLE_LANGS = ["zh-Hans", "zh-Hant", "hi", "ko", "ja", "fr"] as const;
+
+/** [code, label] pairs for a picker, in the order above. */
+export function offeredLangs(): [string, string][] {
+  return AVAILABLE_LANGS.map((c) => [c, LANG_LABELS[c]]);
+}
+
 /** Right-to-left scripts. Only the translated column flips; code never does. */
 export const RTL = new Set(["ur", "fa", "ar"]);
 

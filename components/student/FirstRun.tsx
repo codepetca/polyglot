@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LANG_LABELS, readPrefs, writePrefs } from "@/lib/i18n/prefs";
-import ReportButton from "./ReportButton";
+import { offeredLangs, readPrefs, writePrefs } from "@/lib/i18n/prefs";
 import { useAi } from "@/lib/features";
 
 // What a student meets the first time they open a lesson.
@@ -59,7 +58,7 @@ export default function FirstRun() {
               words like <code>println</code> always stay in English, because those are the words your exam uses.
             </p>
             <div className="frlangs">
-              {Object.entries(LANG_LABELS).map(([code, label]) => (
+              {offeredLangs().map(([code, label]) => (
                 <button
                   key={code}
                   className={`frlang ${lang === code ? "on" : ""}`}
@@ -71,11 +70,9 @@ export default function FirstRun() {
               ))}
             </div>
             <p className="frnote small">
-              Not listed? Ask for it — the translation is automatic, so it is a small job.
+              More languages are being added. You can change or switch this off any time from the menu with your name
+              on it.
             </p>
-            <div className="frask">
-              <ReportButton initialReason="language" />
-            </div>
             <div className="frrow">
               <button className="frghost" onClick={() => setStep(1)}>
                 English is fine
@@ -145,10 +142,6 @@ export default function FirstRun() {
             <p className="frnote">
               Every key point you meet is saved in <b>Notes</b>, so you can look it up later without hunting
               through the lesson again.
-            </p>
-            <p className="frnote">
-              And <b>Tell me</b>, at the top of every page, goes straight to the person who built this. Broken,
-              confusing, missing a language, or just an idea — say so. It is not a survey and nobody else sees it.
             </p>
             <div className="frrow">
               <span />

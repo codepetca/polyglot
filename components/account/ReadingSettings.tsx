@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LANG_LABELS, readPrefs, writePrefs, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
+import { offeredLangs, readPrefs, writePrefs, DEFAULT_PREFS, type EslPrefs } from "@/lib/i18n/prefs";
 
 // The same reading settings as the profile menu, with room to explain them.
 //
@@ -42,7 +42,7 @@ export default function ReadingSettings() {
       </label>
 
       <div className="frlangs" style={{ marginTop: 10 }}>
-        {Object.entries(LANG_LABELS).map(([code, label]) => (
+        {offeredLangs().map(([code, label]) => (
           <button
             key={code}
             className={`frlang ${p.lang === code ? "on" : ""}`}

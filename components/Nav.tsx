@@ -80,7 +80,6 @@ export default function Nav({ me, cost, unread = 0, chat = true, brand = "classO
                 <Link href="/admin/translate" className={on("/admin/translate")}>Translate</Link>
                 <Link href="/admin/badges" className={on("/admin/badges")}>Badges</Link>
                 <Link href="/admin/reach" className={on("/admin/reach")}>Reach</Link>
-                <Link href="/admin/questionnaire" className={on("/admin/questionnaire")}>Ask</Link>
                 <Link href="/admin/usage" className={on("/admin/usage")}>Usage</Link>
                 <Link href="/admin/settings" className={on("/admin/settings")}>Settings</Link>
               </>
