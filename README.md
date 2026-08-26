@@ -8,8 +8,6 @@ than as a wall of text before it.
 
 Live at [classos.arronwang.com](https://classos.arronwang.com). MIT licensed.
 
-Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
-
 Guiding principle: **you own the content, the data, the keys and the deploy.**
 
 ---
