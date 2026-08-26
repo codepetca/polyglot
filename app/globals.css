@@ -1805,3 +1805,5 @@ pre.flowcode.ro { margin: 0; }
 @media (max-width: 640px) {
   .landing h1 { font-size: var(--t-5xl); }
 }
+.trstale { color: var(--warn); font-weight: 700; }
+.trpart { font-family: var(--mono); font-size: var(--t-2xs); color: var(--warn); }

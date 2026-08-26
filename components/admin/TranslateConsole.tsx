@@ -14,7 +14,7 @@ import { readPrefs, LANG_LABELS } from "@/lib/i18n/prefs";
 // language, so re-running after a failure costs nothing for the ones that
 // worked.
 
-type Lesson = { code: string; shown: string; title: string; have: string[] };
+type Lesson = { code: string; shown: string; title: string; steps: number; have: Record<string, number> };
 type Lang = { code: string; name: string; label: string };
 type Row = { code: string; state: "queued" | "running" | "done" | "failed"; note?: string };
 
@@ -52,7 +52,12 @@ export default function TranslateConsole() {
     load();
   }, [load]);
 
-  const missing = lessons.filter((l) => !l.have.includes(locale));
+  // Incomplete, not absent. A lesson holding orphaned entries for this locale
+  // needs the work just as much as one holding none — more so, because it
+  // looks finished.
+  const isComplete = (l: Lesson) => l.steps > 0 && (l.have[locale] ?? 0) >= l.steps;
+  const missing = lessons.filter((l) => !isComplete(l));
+  const stale = lessons.filter((l) => !isComplete(l) && (l.have[locale] ?? 0) > 0);
 
   async function one(code: string) {
     setRows((s) => ({ ...s, [code]: { code, state: "running" } }));
@@ -132,7 +137,10 @@ export default function TranslateConsole() {
           />
         </label>
         <span className="trcount">
-          {lessons.length - missing.length} of {lessons.length} lessons already have this language
+          {lessons.length - missing.length} of {lessons.length} lessons complete
+          {stale.length > 0 && (
+            <b className="trstale"> · {stale.length} went stale when the lesson was rewritten</b>
+          )}
         </span>
         {reading && (
           <span className={`trreading ${reading.esl && reading.lang === locale ? "match" : "warn"}`}>
@@ -151,7 +159,7 @@ export default function TranslateConsole() {
         ) : (
           <>
             <button className="btn" disabled={!missing.length} onClick={() => runAll(missing)}>
-              Translate {missing.length} missing
+              Translate {missing.length} incomplete
             </button>
             <button className="btn blue" disabled={!lessons.length} onClick={() => runAll(lessons)}>
               Redo all {lessons.length}
@@ -210,7 +218,17 @@ export default function TranslateConsole() {
                 <td>
                   <code>{l.shown}</code> {l.title}
                 </td>
-                <td className="trhave">{l.have.length ? l.have.join(" ") : "—"}</td>
+                <td className="trhave">
+                  {Object.keys(l.have).length
+                    ? Object.entries(l.have)
+                        .map(([loc, n]) => (n >= l.steps ? loc : n > 0 ? `${loc}⚠` : null))
+                        .filter(Boolean)
+                        .join(" ") || "—"
+                    : "—"}
+                  {(l.have[locale] ?? 0) > 0 && (l.have[locale] ?? 0) < l.steps && (
+                    <span className="trpart"> {l.have[locale]}/{l.steps}</span>
+                  )}
+                </td>
                 <td>
                   {r ? (
                     <span className={`trstate ${r.state}`}>

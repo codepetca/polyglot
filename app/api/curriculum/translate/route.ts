@@ -32,7 +32,25 @@ export async function GET() {
       .filter((l) => !l.chapter.title.startsWith("__") && (((l.flow as any)?.steps || []).length > 0))
       // `shown` is the number the student sees. The internal code is one unit
       // behind, so a page listing 2.1 looks like a unit that does not exist.
-      .map((l) => ({ code: l.code, shown: studentCode(l.code), title: l.title, have: Object.keys((l.flowI18n as any) || {}) })),
+      .map((l) => {
+        // COUNT WHAT MATCHES, NOT WHAT IS STORED.
+        //
+        // This used to return Object.keys(flowI18n) — merely which locales had
+        // ever been written. Translations are keyed by STEP ID, so rewriting a
+        // lesson orphans every entry for it: the locale is still "there", the
+        // console said 57 of 57 lessons have Simplified Chinese, "Translate 0
+        // missing" was the only option offered, and a fifth of the course
+        // quietly served English. There was no way to notice or to fix it from
+        // this screen.
+        const ids: string[] = (((l.flow as any)?.steps || []) as { id: string }[]).map((x) => x.id);
+        const i18n = ((l.flowI18n as any) || {}) as Record<string, Record<string, unknown>>;
+        const have: Record<string, number> = {};
+        for (const [loc, map] of Object.entries(i18n)) {
+          const keys = Object.keys(map || {});
+          have[loc] = ids.filter((id) => keys.includes(id)).length;
+        }
+        return { code: l.code, shown: studentCode(l.code), title: l.title, steps: ids.length, have };
+      }),
   });
 }
 
