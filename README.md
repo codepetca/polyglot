@@ -8,6 +8,8 @@ than as a wall of text before it.
 
 Live at [classos.arronwang.com](https://classos.arronwang.com). MIT licensed.
 
+Created and written by **Arron Wang** ([@weAllHateMicrosoft](https://github.com/weAllHateMicrosoft)), July–August 2026 — see [AUTHORS.md](AUTHORS.md). Contributions welcome: [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Guiding principle: **you own the content, the data, the keys and the deploy.**
 
 ---
