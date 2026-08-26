@@ -134,5 +134,19 @@ will ask.
 | **STUDENT-MODEL.md** | The competency model and event layer |
 | **PIKA-INTEGRATION.md** | Embedding in a host platform (parked — see below) |
 
+## Discord PR notifications
+
+The `#polyglot` Discord channel gets one quiet, clickable line when a non-draft
+PR is opened or reopened. Drafts wait until they are marked ready for review.
+The PR title is the summary; bodies and rich previews are not posted.
+
+```text
+🔀 polyglot #42: Make Discord PR updates concise
+```
+
+The workflow uses the repository Actions secret `DISCORD_PR_WEBHOOK_URL`. It
+must contain a standard incoming Discord webhook for `#polyglot`. Treat the URL
+like a password.
+
 **Status:** standalone. A planned integration with a host platform is on hold; classOS ships
 and deploys on its own.
