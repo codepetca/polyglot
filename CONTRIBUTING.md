@@ -25,8 +25,8 @@ caught a lot; do not route around it. The same applies to the reference sheet
 
 ## Write commit messages that explain the decision
 
-Not "fix bug". What was wrong, why it was wrong, and what you chose instead. The existing
-history does this and it is the most useful documentation in the project — most of what you
+Not "fix bug". What was wrong, why it was wrong, and what you chose instead. The history
+does this already and it is the most useful documentation in the project — most of what you
 need to know about a decision is in the commit that made it.
 
 ## Assert your anchors

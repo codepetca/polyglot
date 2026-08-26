@@ -6,7 +6,7 @@ implemented and deployed on the classOS side unless it says otherwise.
 **Keep this file current.** It is the contract, and a stale contract is worse
 than none — if you change something here, change it here first.
 
-- classOS lives at `https://classos.arronwang.com`, repo `weAllHateMicrosoft/lcl`.
+- classOS lives at `https://classos.arronwang.com`, repo `arronwang01/lcl`.
 - Last verified against production: 2026-08-25.
 
 ---
@@ -141,7 +141,7 @@ is decided, awards sit in classOS and can be replayed.
 - **We never write to Supabase.**
 - **We store no raw Pika ids** — only the hashed subject.
 - If you need something from us, the fastest path is an issue on
-  `weAllHateMicrosoft/lcl`.
+  `arronwang01/lcl`.
 
 ---
 
