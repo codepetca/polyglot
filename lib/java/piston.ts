@@ -1,5 +1,6 @@
 import "server-only";
 import { wrapAs, type WrapMode } from "./wrapper";
+import { LANGS, langOf, type LangId, type LangSpec } from "@/lib/run/languages";
 
 // Java execution, with failover.
 //
@@ -58,13 +59,16 @@ function remapErrors(text: string, offset: number): string {
 
 type Lane = { name: string; run: (source: string, stdin: string, offset: number) => Promise<RunResult> };
 
-function lanes(): Lane[] {
+function lanes(spec: LangSpec = LANGS.java): Lane[] {
   const out: Lane[] = [];
   // Self-hosted Piston first when configured: it's the only lane on a host the
-  // owner controls, so it should absorb traffic rather than a free service.
-  if (PISTON_URL) out.push({ name: "piston(self-hosted)", run: runViaPiston });
-  for (const c of GODBOLT_COMPILERS) {
-    out.push({ name: `godbolt/${c}`, run: (s, i, o) => runViaGodbolt(s, i, o, c) });
+  // owner controls, so it should absorb traffic rather than a free service. It
+  // is also the only lane that can serve anything but Java.
+  if (PISTON_URL) out.push({ name: "piston(self-hosted)", run: (s, i, o) => runViaPiston(s, i, o, spec) });
+  if (spec.godbolt) {
+    for (const c of GODBOLT_COMPILERS) {
+      out.push({ name: `godbolt/${c}`, run: (s, i, o) => runViaGodbolt(s, i, o, c) });
+    }
   }
   return out;
 }
@@ -102,16 +106,30 @@ class LaneDown extends Error {}
 export async function runJava(
   code: string,
   stdin = "",
-  opts: { wrapBeginner?: boolean; mode?: WrapMode; append?: string } = {}
+  opts: { wrapBeginner?: boolean; mode?: WrapMode; append?: string; lang?: LangId } = {}
 ): Promise<RunResult> {
-  const wrapped = opts.wrapBeginner ? wrapAs(code, opts.mode || "beginner") : { source: code, offset: 0 };
+  const spec = langOf(opts.lang);
+  // Only Java gets a wrapper. TypeScript is already a whole program, and
+  // wrapping it in a class would be nonsense rather than a convenience.
+  const shouldWrap = spec.wraps && opts.wrapBeginner;
+  const wrapped = shouldWrap ? wrapAs(code, opts.mode || "beginner") : { source: code, offset: 0 };
   // `append` goes AFTER the wrapper closes, so it lands as a sibling top-level
   // class. Folding it in with the student's code instead would nest it inside
   // main() or inside Main, which changes what it means and usually will not
   // compile. The offset is unaffected, since nothing was added above their code.
   const source = opts.append ? `${wrapped.source}\n\n${opts.append}` : wrapped.source;
   const offset = wrapped.offset;
-  const all = lanes();
+  // The Compiler Explorer lane is Java-only (see lib/run/languages.ts). For any
+  // other language there is exactly one lane, and if it is not configured the
+  // student deserves to be told that rather than shown a failover error.
+  const all = lanes(spec);
+  if (!all.length) {
+    return {
+      compiled: false,
+      stdout: "",
+      error: `${spec.label} needs the self-hosted runner, which is not configured on this deployment (PISTON_URL).`,
+    };
+  }
   // Healthy lanes first, but still fall back to cooling-down ones rather than
   // give up — a 60s cooldown shouldn't hard-fail a student if it's recovered.
   const order = [...all.filter((l) => !isSick(l.name)), ...all.filter((l) => isSick(l.name))];
@@ -188,7 +206,7 @@ async function runViaGodbolt(source: string, stdin: string, offset: number, comp
 
 // ─── Self-hosted Piston (set PISTON_URL) ─────────────────────────────────────
 
-async function runViaPiston(source: string, stdin: string, offset: number): Promise<RunResult> {
+async function runViaPiston(source: string, stdin: string, offset: number, spec: LangSpec = LANGS.java): Promise<RunResult> {
   let res: Response;
   try {
     res = await fetch(`${PISTON_URL}/execute`, {
@@ -198,9 +216,9 @@ async function runViaPiston(source: string, stdin: string, offset: number): Prom
         ...(PISTON_TOKEN ? { "X-Runner-Token": PISTON_TOKEN } : {}),
       },
       body: JSON.stringify({
-        language: "java",
-        version: PISTON_JAVA,
-        files: [{ name: "Main.java", content: source }],
+        language: spec.piston,
+        version: spec.pistonVersion,
+        files: [{ name: spec.filename, content: source }],
         stdin,
         compile_timeout: 10000,
         run_timeout: 5000,
@@ -210,7 +228,22 @@ async function runViaPiston(source: string, stdin: string, offset: number): Prom
   } catch (e) {
     throw new LaneDown(`piston unreachable: ${(e as Error).message.slice(0, 80)}`);
   }
-  if (!res.ok) throw new LaneDown(`piston HTTP ${res.status}`);
+  if (!res.ok) {
+    // A MISSING LANGUAGE IS NOT AN OUTAGE. Piston answers 400 with "…runtime is
+    // unknown" when the package is not installed, and the generic handler turns
+    // that into "the runner is unavailable, try again in a minute" — which is
+    // false, and sends a student back to press Run forever. Say what is
+    // actually wrong so somebody can install it.
+    const body = await res.text().catch(() => "");
+    if (res.status === 400 && /unknown|not (found|supported)|no such runtime/i.test(body)) {
+      return {
+        compiled: false,
+        stdout: "",
+        error: `${spec.label} is not installed on the code runner. Trying again will not help — the runner needs the ${spec.piston} package.`,
+      };
+    }
+    throw new LaneDown(`piston HTTP ${res.status}`);
+  }
 
   let data: any;
   try {

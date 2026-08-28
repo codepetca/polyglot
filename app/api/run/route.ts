@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { resolveActor } from "@/lib/actor";
 import { runJava } from "@/lib/java/piston";
+import { isLangId } from "@/lib/run/languages";
 import { rateLimit } from "@/lib/ratelimit";
 import { logEvent, EVENT } from "@/lib/events";
 import { prisma } from "@/lib/db";
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ compiled: false, stdout: "", error: "Slow down — max 20 runs per minute." });
   }
 
-  const { code, stdin, wrap, wrapMode, lessonCode, stepId } = await req.json();
+  const { code, stdin, wrap, wrapMode, lessonCode, stepId, lang } = await req.json();
   if (typeof code !== "string") return NextResponse.json({ error: "code required" }, { status: 400 });
 
   // Hidden library classes. A step can hand the student classes to USE without
@@ -40,6 +41,9 @@ export async function POST(req: Request) {
   const result = await runJava(code, stdin || "", {
     append: library || undefined,
     wrapBeginner: wrap !== false,
+    // Lessons never send this, so they stay Java by default and nothing about
+    // the course changes. Only the scratchpad offers a choice.
+    lang: isLangId(lang) ? lang : undefined,
     // "methods" puts the snippet at class level so a student can define methods.
     mode: wrapMode === "methods" ? "methods" : "beginner",
   });
