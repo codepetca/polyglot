@@ -1,0 +1,80 @@
+{
+  "code": "T1.4", "title": "Numbers",
+  "objectives": ["use the arithmetic operators", "say why 7 / 2 is 3.5", "round with Math", "turn text into a number"],
+  "flow": { "v": 1, "lang": "typescript", "steps": [
+    { "id": "t14_ops", "kind": "teach",
+      "instruction": "The five operators.",
+      "code": "console.log(7 + 2);\nconsole.log(7 - 2);\nconsole.log(7 * 2);\nconsole.log(7 / 2);\nconsole.log(7 % 2);",
+      "target": "9\n5\n14\n3.5\n1",
+      "body": ["Same symbols as Java. % is the remainder."],
+      "keypoint": "+ - * / and % for the remainder." },
+
+    { "id": "t14_divide", "kind": "teach",
+      "instruction": "Division does not throw the decimal away.",
+      "code": "console.log(7 / 2);",
+      "target": "3.5",
+      "body": ["In Java, 7 / 2 is 3, because both sides are int.", "TypeScript has one number type, so 7 / 2 is 3.5.", "This surprises people who learned Java first."],
+      "keypoint": "7 / 2 is 3.5, not 3." },
+
+    { "id": "t14_p1", "kind": "predict",
+      "instruction": "What comes out?",
+      "code": "console.log(9 / 2);\nconsole.log(9 % 2);",
+      "opts": ["4 then 1", "4.5 then 1", "4.5 then 0.5", "4 then 4.5"],
+      "correct": 1,
+      "why": "Division keeps the decimal, so 4.5. The remainder of 9 divided by 2 is 1.",
+      "skills": ["divide without integer truncation"] },
+
+    { "id": "t14_floor", "kind": "teach",
+      "instruction": "When you do want a whole number.",
+      "code": "console.log(Math.floor(3.7));\nconsole.log(Math.ceil(3.2));\nconsole.log(Math.round(3.5));",
+      "target": "3\n4\n4",
+      "body": ["floor goes down. ceil goes up. round goes to the nearest."],
+      "keypoint": "Math.floor, Math.ceil, Math.round." },
+
+    { "id": "t14_w1", "kind": "live", "goal": "output",
+      "instruction": "Print 17 divided by 5, then the same division rounded down.",
+      "code": "", "target": "3.4\n3",
+      "solution": "console.log(17 / 5);\nconsole.log(Math.floor(17 / 5));",
+      "hint": "Math.floor(17 / 5)",
+      "after": "The decimal is there unless you ask for it to go." },
+
+    { "id": "t14_shorthand", "kind": "teach",
+      "instruction": "Changing a number by a bit.",
+      "code": "let score = 10;\nscore += 5;\nscore -= 3;\nscore++;\nconsole.log(score);",
+      "target": "13",
+      "body": ["+= adds to what is there. ++ adds one.", "Same as Java."],
+      "keypoint": "score += 5 means score = score + 5." },
+
+    { "id": "t14_const", "kind": "live", "goal": "error", "expectCode": 2588,
+      "instruction": "Try to add 1 to a const.",
+      "code": "const total = 10;\n",
+      "solution": "const total = 10;\ntotal++;",
+      "hint": "total++",
+      "after": "const means it never changes, and ++ is a change." },
+
+    { "id": "t14_text", "kind": "teach",
+      "instruction": "Text that looks like a number is still text.",
+      "code": "const typed = \"42\";\nconsole.log(typed + 1);\nconsole.log(Number(typed) + 1);",
+      "target": "421\n43",
+      "body": ["\"42\" + 1 joins them, giving \"421\".", "Number(\"42\") turns the text into 42, so the second one adds."],
+      "keypoint": "Number(text) converts. Without it, + joins." },
+
+    { "id": "t14_fill", "kind": "fill",
+      "instruction": "Fill in the blanks.",
+      "code": "const input = \"8\";\nconst n = ⟦1⟧(input);\nconsole.log(n ⟦2⟧ 2);\nconsole.log(Math.⟦3⟧(n / 3));",
+      "blanks": [
+        { "chips": ["Number", "String", "Boolean"], "answer": 0 },
+        { "chips": ["%", "+", "/"], "answer": 0 },
+        { "chips": ["floor", "round", "ceil"], "answer": 0 }
+      ],
+      "hint": "The remainder of 8 and 2 is 0. 8 / 3 rounded down is 2.",
+      "after": "Convert first, then the arithmetic behaves." },
+
+    { "id": "t14_final", "kind": "live", "goal": "output",
+      "instruction": "A class of 27 students sits 4 to a table. Print how many full tables there are, then how many students are left over.",
+      "code": "const students = 27;\nconst perTable = 4;\n", "target": "6\n3",
+      "solution": "const students = 27;\nconst perTable = 4;\nconsole.log(Math.floor(students / perTable));\nconsole.log(students % perTable);",
+      "hint": "Math.floor for the tables, % for the leftovers.",
+      "after": "Divide and round down for how many fit. Remainder for what is left." }
+  ] }
+}

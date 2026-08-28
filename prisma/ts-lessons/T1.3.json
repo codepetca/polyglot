@@ -1,0 +1,87 @@
+{
+  "code": "T1.3", "title": "Strings",
+  "objectives": ["join text with template literals", "read .length", "use .toUpperCase and .includes", "reach one character by index"],
+  "flow": { "v": 1, "lang": "typescript", "steps": [
+    { "id": "t13_join", "kind": "teach",
+      "instruction": "Two ways to join text.",
+      "code": "const name = \"Ada\";\nconsole.log(\"Hi, \" + name + \"!\");\nconsole.log(`Hi, ${name}!`);",
+      "target": "Hi, Ada!\nHi, Ada!",
+      "body": ["The first uses +, like Java.", "The second uses backticks and ${ }. The value drops straight into the text."],
+      "keypoint": "`text ${value} text` — backticks, not quotes." },
+
+    { "id": "t13_w1", "kind": "live", "goal": "output",
+      "instruction": "Use a template literal to print \"Ada is 15\".",
+      "code": "const name = \"Ada\";\nconst age = 15;\n", "target": "Ada is 15",
+      "solution": "const name = \"Ada\";\nconst age = 15;\nconsole.log(`${name} is ${age}`);",
+      "hint": "console.log(`${name} is ${age}`);",
+      "after": "No quotes to close and reopen. That is the whole point." },
+
+    { "id": "t13_len", "kind": "teach",
+      "instruction": "How long is it?",
+      "code": "const word = \"Markham\";\nconsole.log(word.length);",
+      "target": "7",
+      "body": [".length counts the characters.", "No brackets after it. It is a value, not something you call."],
+      "keypoint": "word.length — no brackets." },
+
+    { "id": "t13_case", "kind": "teach",
+      "instruction": "Change the case.",
+      "code": "const word = \"Ada\";\nconsole.log(word.toUpperCase());\nconsole.log(word.toLowerCase());\nconsole.log(word);",
+      "target": "ADA\nada\nAda",
+      "body": ["These have brackets, because they do something.", "The original is unchanged. They hand back a new string."],
+      "keypoint": "toUpperCase() returns a new string. The old one stays." },
+
+    { "id": "t13_p1", "kind": "predict",
+      "instruction": "What comes out?",
+      "code": "const w = \"Ada\";\nw.toUpperCase();\nconsole.log(w);",
+      "opts": ["ADA", "Ada", "ada", "nothing"],
+      "correct": 1,
+      "why": "toUpperCase() returns a new string, and nothing catches it. w never changed.",
+      "skills": ["say what a string method returns"] },
+
+    { "id": "t13_index", "kind": "teach",
+      "instruction": "One character at a time.",
+      "code": "const word = \"Ada\";\nconsole.log(word[0]);\nconsole.log(word[word.length - 1]);",
+      "target": "A\na",
+      "body": ["Counting starts at 0, like arrays in Java.", "The last one is at length - 1."],
+      "keypoint": "word[0] is the first character. word[word.length - 1] is the last." },
+
+    { "id": "t13_w2", "kind": "live", "goal": "output",
+      "instruction": "Print the first character of city, then how many characters it has.",
+      "code": "const city = \"Markham\";\n", "target": "M\n7",
+      "solution": "const city = \"Markham\";\nconsole.log(city[0]);\nconsole.log(city.length);",
+      "hint": "city[0] and city.length",
+      "after": "Index for a character, length for a count." },
+
+    { "id": "t13_includes", "kind": "teach",
+      "instruction": "Is it in there?",
+      "code": "const s = \"Markham\";\nconsole.log(s.includes(\"ark\"));\nconsole.log(s.includes(\"z\"));",
+      "target": "true\nfalse",
+      "body": ["includes() answers true or false.", "It is case sensitive. \"m\" and \"M\" are different."],
+      "keypoint": "includes(\"...\") gives true or false." },
+
+    { "id": "t13_fill", "kind": "fill",
+      "instruction": "Fill in the blanks.",
+      "code": "const s = \"Ontario\";\nconsole.log(s.⟦1⟧);\nconsole.log(s.⟦2⟧());\nconsole.log(s.⟦3⟧(\"tar\"));",
+      "blanks": [
+        { "chips": ["length", "length()", "size"], "answer": 0 },
+        { "chips": ["toUpperCase", "upper", "toUpper"], "answer": 0 },
+        { "chips": ["includes", "contains", "has"], "answer": 0 }
+      ],
+      "hint": "One of these takes no brackets.",
+      "after": "length is a value. The other two are called." },
+
+    { "id": "t13_numplus", "kind": "live", "goal": "error", "expectCode": 2339,
+      "instruction": "Try calling .toUpperCase() on the number 15.",
+      "code": "const age = 15;\n",
+      "solution": "const age = 15;\nconsole.log(age.toUpperCase());",
+      "hint": "age.toUpperCase()",
+      "after": "A number has no toUpperCase. TypeScript knows age is a number, so it stops you." },
+
+    { "id": "t13_final", "kind": "live", "goal": "output",
+      "instruction": "Given a first and last name, print them joined with a space and in capitals.",
+      "code": "const first = \"ada\";\nconst last = \"lovelace\";\n", "target": "ADA LOVELACE",
+      "solution": "const first = \"ada\";\nconst last = \"lovelace\";\nconsole.log(`${first} ${last}`.toUpperCase());",
+      "hint": "Build the full name first, then call toUpperCase() on it.",
+      "after": "A template literal makes the name, then one call shouts it." }
+  ] }
+}
