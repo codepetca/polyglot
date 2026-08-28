@@ -130,12 +130,25 @@ so the screen can say hello, and nothing authenticates on them.
 
 **What the AI sees.** The lesson text, the student's question, and the code they
 wrote. Not their name, not their email, not their id — the tutor is never told
-who it is talking to. Calls are logged as a count for the cost dashboard, not as
-a transcript tied to a person.
+who it is talking to.
 
-**Deletion.** Practice accounts can erase themselves from a button today. For
-Pika students, deleting them in Pika is the instruction — send it to us and the
-row goes with it. If the board wants that in writing, I will write it.
+**What we keep.** The question, truncated, for thirty days, so a teacher can see
+what their class is stuck on. Not the AI's answer — that is never stored. After
+thirty days the text is stripped and only the count remains. Corrected in
+August 2026: an earlier version of this document said calls were logged as a
+count and not as a transcript. That was wrong — the question and the full reply
+were both being kept indefinitely. It was found in review, and fixed.
+
+**Deletion.** Any student whose record exists only for their own progress can
+erase it from a button — an anonymous practice session, or a Pika student. It
+removes every row, immediately, with nothing soft-deleted. A student who joined
+a class with a real email is excluded, because that record is their teacher's
+gradebook too; a teacher removes those.
+
+**What crosses over from Pika.** The hashed subject and nothing else. Name and
+email are read from the token for the length of one request and never written
+down — so classOS holds no way to identify a Pika student, by design and now
+also in fact.
 
 **Where it lives.** The database is Neon; the app runs on Vercel. If the board
 requires Canadian residency, tell me before September and I will move the

@@ -98,7 +98,20 @@ export async function POST(req: Request) {
     );
     // Analytics substrate: keep the actual exchange, not just the token bill.
     // Learners only — staff (you) never pollute the data.
-    if (me.role === "STUDENT") logEvent({ type: EVENT.TUTOR_MESSAGE, userId: me.id, classId: me.classId, lessonId: lesson.id, lessonCode, question: body.message, reply: r.text });
+    // WHAT IS KEPT, AND FOR HOW LONG.
+    //
+    // This used to store the student's whole question AND the whole AI reply,
+    // against their user id, forever. Nothing ever read the reply — the two
+    // features that use this (lib/oversee.ts and the class mastery page) read
+    // the question only — so the reply was pure retained liability.
+    //
+    // The question stays because a teacher seeing what their class is stuck on
+    // is the point of the feature, but it is truncated and it expires. See
+    // expireTutorText below.
+    if (me.role === "STUDENT") {
+      logEvent({ type: EVENT.TUTOR_MESSAGE, userId: me.id, classId: me.classId, lessonId: lesson.id, lessonCode, question: String(body.message || "").slice(0, 300) });
+      expireTutorText();
+    }
     return NextResponse.json({ text: r.text, meta: metaLine(r) });
   }
 
@@ -148,7 +161,7 @@ export async function POST(req: Request) {
       .map((n) => ({ line: Math.round(n.line), note: n.note.trim() }));
 
     if (me.role === "STUDENT") {
-      logEvent({ type: EVENT.TUTOR_MESSAGE, userId: me.id, classId: me.classId, lessonId: lesson.id, lessonCode, question: errorMode ? "(explain error)" : "(explain code)", reply: r.text });
+      logEvent({ type: EVENT.TUTOR_MESSAGE, userId: me.id, classId: me.classId, lessonId: lesson.id, lessonCode, question: errorMode ? "(explain error)" : "(explain code)" });
     }
     return NextResponse.json({
       summary: (r.data?.summary || "").trim(),
@@ -243,4 +256,29 @@ export async function POST(req: Request) {
 
 function metaLine(r: { provider: string; model: string; usage: { input: number; output: number }; cost: number }) {
   return `${r.provider}/${r.model} · ${r.usage.input}in/${r.usage.output}out · $${r.cost.toFixed(5)}`;
+}
+
+// A RETENTION WINDOW WITHOUT A CRON JOB.
+//
+// "We keep it forever" is not an answer anyone should accept, and this deploy
+// has no scheduler to hang a nightly clean-up off. So the write path does it:
+// every time a student asks something, question text older than the window is
+// stripped from the older rows. The events themselves survive — the counts a
+// teacher dashboard draws stay accurate — only the free text goes.
+//
+// Self-maintaining, no infrastructure, and it cannot silently stop running,
+// because the thing that triggers it is the thing that creates the data.
+const TUTOR_TEXT_DAYS = 30;
+let lastExpiry = 0;
+function expireTutorText() {
+  const now = Date.now();
+  if (now - lastExpiry < 60 * 60 * 1000) return; // at most once an hour
+  lastExpiry = now;
+  const cutoff = new Date(now - TUTOR_TEXT_DAYS * 24 * 60 * 60 * 1000);
+  prisma.$executeRawUnsafe(
+    `update "Event" set payload = payload - 'question'
+      where type = $1 and at < $2 and payload ->> 'question' is not null`,
+    EVENT.TUTOR_MESSAGE,
+    cutoff
+  ).catch((e) => console.error("[retention] tutor text expiry failed:", (e as Error).message));
 }
