@@ -10,8 +10,27 @@ import { currentUser, endSession } from "@/lib/auth";
 export async function POST() {
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: "not signed in" }, { status: 401 });
-  if (me.role !== "STUDENT" || me.email) {
-    return NextResponse.json({ error: "this only applies to anonymous practice sessions" }, { status: 403 });
+  // WHO MAY ERASE THEMSELVES.
+  //
+  // The rule used to be "students with no email", which sounded like it meant
+  // anonymous practice sessions and actually meant something worse: a Pika
+  // student had an email written onto their row at first sight, so this refused
+  // every single one of them. The people with the least account here had the
+  // least ability to leave.
+  //
+  // Now: anyone whose record exists only for their own progress may delete it.
+  // That is an anonymous practice session, or a Pika student — Pika owns their
+  // identity and can erase them there, but their classOS rows are theirs.
+  //
+  // A student who joined a class with a real email is still excluded, because
+  // that record belongs to their teacher's gradebook as well as to them, and
+  // unilaterally deleting half of somebody's marks is a different question.
+  const selfOwned = me.role === "STUDENT" && (!me.email || !!me.pikaSubject);
+  if (!selfOwned) {
+    return NextResponse.json(
+      { error: "Your record belongs to your class as well. Ask your teacher to remove it." },
+      { status: 403 }
+    );
   }
 
   await prisma.$transaction([

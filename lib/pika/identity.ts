@@ -28,29 +28,37 @@ export async function resolvePikaStudent(claims: PikaClaims): Promise<Resolved> 
   });
   if (existing) return { userId: existing.id, created: false };
 
-  // Email and name are copied for display only, and are whatever Pika last
-  // said. classOS never authenticates against either, so a change on Pika's
-  // side is not a security event here.
-  let email = (claims.email || "").trim().toLowerCase() || null;
-
-  // User.email still carries a unique index from the old account system. Email
-  // is now decoration, so a collision must never fail the request — drop it and
-  // carry on. pikaSubject is the identifier that has to be unique.
-  if (email) {
-    const taken = await prisma.user.findUnique({ where: { email }, select: { id: true } });
-    if (taken) email = null;
-  }
+  // NOTHING IDENTIFYING IS WRITTEN DOWN.
+  //
+  // This used to copy the name and email out of the token and store them on the
+  // row, "for display only". That defeated the entire point: the subject is a
+  // salted hash precisely so classOS cannot tell who the student is, and a row
+  // holding alice@school.org next to that hash tells anyone who reads it. We
+  // were paying the cost of anonymisation and keeping none of the benefit.
+  //
+  // So the row gets a stable pseudonym derived from the hash, and no email at
+  // all. The student is inside Pika, which already shows them their real name;
+  // classOS never needs it, and now never has it.
   const created = await prisma.user.create({
     data: {
-      name: claims.name?.trim() || email?.split("@")[0] || "Student",
-      // Left null when Pika sends no email. The unique index is on
-      // pikaSubject, which is the only identifier that matters.
-      email,
-      emailVerifiedAt: email ? new Date() : null,
+      name: pseudonym(subject),
+      email: null,
       role: "STUDENT",
       pikaSubject: subject,
     },
     select: { id: true },
   });
   return { userId: created.id, created: true };
+}
+
+// A friendly, stable label for a hashed subject — the same shape the
+// account-free practice mode uses, so the two paths look alike on screen.
+// Derived from the hash, so it never changes for the same student and cannot
+// be turned back into anything.
+const ADJ = ["Quiet", "Bright", "Steady", "Swift", "Clever", "Bold", "Calm", "Keen"];
+const NOUN = ["Otter", "Falcon", "Fox", "Wren", "Lynx", "Heron", "Badger", "Comet"];
+function pseudonym(subject: string): string {
+  let h = 0;
+  for (let i = 0; i < subject.length; i++) h = (h * 31 + subject.charCodeAt(i)) >>> 0;
+  return `${ADJ[h % ADJ.length]} ${NOUN[(h >> 5) % NOUN.length]} ${(h >> 10) % 900 + 100}`;
 }
