@@ -15,7 +15,8 @@
     "db:reset": "prisma db push --force-reset && prisma db seed",
     "db:studio": "prisma studio",
     "import:lessons": "node scripts/import-lessons.mjs",
-    "setup": "prisma generate && prisma db push && prisma db seed"
+    "setup": "prisma generate && prisma db push && prisma db seed",
+    "ts:check": "tsx scripts/ts-check.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
