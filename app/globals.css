@@ -1812,3 +1812,18 @@ pre.flowcode.ro { margin: 0; }
 .padlang { font: inherit; font-size: var(--t-xs); padding: 4px 7px; border-radius: var(--r-sm);
   border: 1.5px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; }
 .padlang:hover { color: var(--ink); border-color: var(--ink); }
+
+/* ── live: the TypeScript step that checks as you type ── */
+.live { display: flex; flex-direction: column; gap: 10px; }
+.livebar { align-self: flex-start; font-family: var(--mono); font-size: var(--t-xs);
+  padding: 5px 11px; border-radius: var(--r-pill); border: 1.5px solid var(--line); color: var(--muted); }
+.livebar.busy { opacity: .6; }
+.livebar.good { border-color: var(--accent); color: var(--accent); }
+.livebar.bad { border-color: var(--bad); color: var(--bad); }
+.livediags { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.livediags li { display: grid; grid-template-columns: 62px 1fr auto; gap: 10px; align-items: baseline;
+  padding: 9px 12px; border-left: 3px solid var(--bad); background: var(--sunk, transparent);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0; font-size: var(--t-sm); line-height: 1.5; }
+.livediags b { font-family: var(--mono); font-size: var(--t-2xs); color: var(--muted); }
+.livediags code { font-family: var(--mono); font-size: var(--t-2xs); color: var(--muted); }
+.livehint { margin: 0; font-size: var(--t-sm); color: var(--muted); }

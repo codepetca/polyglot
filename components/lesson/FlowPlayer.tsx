@@ -6,6 +6,7 @@ import Link from "next/link";
 import CodeBox from "./CodeBox";
 import { readPrefs, onPrefsChange, RTL, LANG_LABELS, type EslPrefs } from "@/lib/i18n/prefs";
 import { useAi } from "@/lib/features";
+import LiveStep from "./LiveStep";
 
 // The interactive lesson player — one step per screen, do-first, near-zero
 // text. 15 step kinds (see lib/curriculum/flow.ts, the canonical spec):
@@ -1146,6 +1147,13 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
           )}
           {explainReply && <div className={`flowwhy ${won ? "yes" : "no"}`} aria-live="polite">{won ? "✓ " : ""}{explainReply}</div>}
         </div>
+      )}
+
+      {step.kind === "live" && (
+        <LiveStep
+          step={step as any}
+          onDone={(firstTry) => { if (!firstTry) onAttempt(step.id); onDone(firstTry); }}
+        />
       )}
 
       {step.kind === "branch" && (

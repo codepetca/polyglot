@@ -32,7 +32,16 @@
 
 export type FlowStep = {
   id: string;
-  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch" | "card" | "walk" | "workout";
+  kind: "teach" | "run" | "tweak" | "note" | "ask" | "predict" | "spot" | "trace" | "fix" | "write" | "arrange" | "fill" | "bucket" | "match" | "table" | "compare" | "explain" | "branch" | "card" | "walk" | "workout" | "live";
+  /**
+   * live: what counts as done.
+   *   "clean"  — no type errors left
+   *   "error"  — provoke the error named by expectCode
+   *   "output" — the compiled program prints `target`
+   */
+  goal?: "clean" | "error" | "output";
+  /** live + goal "error": the TypeScript error code the student must provoke. */
+  expectCode?: number;
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
@@ -323,6 +332,16 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
           if (fl.sample === undefined || fl.sample === "") errors.push(`${at}: field ${i + 1} needs a sample (server-only, for the compiler gate)`);
         });
         break;
+      case "live":
+        if (!s.instruction) errors.push(`${at}: needs an instruction`);
+        if (!s.goal) errors.push(`${at}: needs goal — "clean", "error" or "output"`);
+        if (s.goal === "error" && typeof s.expectCode !== "number") {
+          // Naming the code is what stops "make it complain" being satisfied by
+          // any typo. The lesson means a SPECIFIC mistake.
+          errors.push(`${at}: goal "error" needs expectCode (the TS error number)`);
+        }
+        if (s.goal === "output" && s.target === undefined) errors.push(`${at}: goal "output" needs target`);
+        break;
       case "predict":
         if (!s.code || !s.opts || s.opts.length < 2 || typeof s.correct !== "number" || !s.why) errors.push(`${at}: needs code, 2+ opts, correct, why`);
         else if (s.correct < 0 || s.correct >= s.opts.length) errors.push(`${at}: correct out of range`);
@@ -394,6 +413,10 @@ export function validateFlow(flow: unknown): { ok: boolean; errors: string[] } {
 export function stripStepForClient(s: FlowStep): Record<string, unknown> {
   const base = { id: s.id, kind: s.kind, instruction: s.instruction, hint: s.hint, after: s.after, code: s.code, target: s.target, stdin: s.stdin, highlight: s.highlight, wrap: s.wrap, harness: s.harness, keypoint: s.keypoint, facts: s.facts, body: s.body };
   switch (s.kind) {
+    // The goal and the expected error code are not answers — a student cannot
+    // satisfy them without writing the code that satisfies them, and knowing
+    // "this should produce TS2322" is the task, not a shortcut past it.
+    case "live": return { ...base, goal: s.goal, expectCode: s.expectCode };
     case "predict": return { ...base, opts: s.opts };
     case "spot": return base;
     case "trace": return { ...base, questions: (s.questions || []).map((q) => ({ prompt: q.prompt, opts: q.opts })) };
