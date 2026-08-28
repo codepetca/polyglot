@@ -75,6 +75,29 @@ nothing on your side. Smaller blast radius, and one fewer secret to rotate.
 
 ---
 
+## 3b. The sandbox — build against this first
+
+Fixture versions of both endpoints. **No token, no allowlist, open CORS, and no
+database behind them** — every response is computed from a checked-in file of
+lesson codes and titles. Build the lessons tab against these, then swap two URLs
+when we have a shared secret.
+
+```
+GET /api/pika/v1/sandbox                        index — lists everything below
+GET /api/pika/v1/sandbox/summary?student=…      same shape as /student/summary
+GET /api/pika/v1/sandbox/results?student=…      same shape as /student/results
+```
+
+`student` is `fresh`, `partway` (default) or `done`, so you can see an empty
+state, a half-finished one and a completed one without inventing data. Responses
+are deterministic — the same call always renders the same screen.
+
+Real lesson codes and titles, all 57 of them, so the tab looks like the thing it
+will be rather than like lorem ipsum.
+
+For the iframe, `/lessons/6.1?embed=pika` works today. It will bounce to `/join`
+without a session; one click on **Start practicing** gets you in, no signup.
+
 ## 4. CORS
 
 `CLASSOS_ALLOWED_WIDGET_ORIGINS` is an exact list. Send us every browser origin
