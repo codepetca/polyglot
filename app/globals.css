@@ -1815,15 +1815,24 @@ pre.flowcode.ro { margin: 0; }
 
 /* ── live: the TypeScript step that checks as you type ── */
 .live { display: flex; flex-direction: column; gap: 10px; }
-.livebar { align-self: flex-start; font-family: var(--mono); font-size: var(--t-xs);
-  padding: 5px 11px; border-radius: var(--r-pill); border: 1.5px solid var(--line); color: var(--muted); }
-.livebar.busy { opacity: .6; }
-.livebar.good { border-color: var(--accent); color: var(--accent); }
-.livebar.bad { border-color: var(--bad); color: var(--bad); }
-.livediags { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.livediags li { display: grid; grid-template-columns: 62px 1fr auto; gap: 10px; align-items: baseline;
-  padding: 9px 12px; border-left: 3px solid var(--bad); background: var(--sunk, transparent);
-  border-radius: 0 var(--r-sm) var(--r-sm) 0; font-size: var(--t-sm); line-height: 1.5; }
-.livediags b { font-family: var(--mono); font-size: var(--t-2xs); color: var(--muted); }
-.livediags code { font-family: var(--mono); font-size: var(--t-2xs); color: var(--muted); }
+/* A sentence, not a chip. The pill version read as a stray tag floating under
+   the editor with no stated relationship to it. */
+.livebar { display: flex; align-items: center; gap: 9px; font-size: var(--t-sm);
+  color: var(--muted); line-height: 1.5; }
+.livedot { width: 8px; height: 8px; border-radius: var(--r-pill); flex-shrink: 0;
+  background: var(--line); transition: background .2s ease; }
+.livebar.busy { opacity: .65; }
+.livebar.good { color: var(--accent); }
+.livebar.good .livedot { background: var(--accent); }
+.livebar.bad { color: var(--bad); }
+.livebar.bad .livedot { background: var(--bad); }
+.livediags { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.livediags li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: baseline;
+  padding: 10px 14px; border-left: 3px solid var(--bad); background: var(--sunk, transparent);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0; line-height: 1.5; }
+.livediags b { font-family: var(--mono); font-size: var(--t-2xs); color: var(--muted); font-weight: 400; }
+.livediags span { display: block; font-size: var(--t-md); }
+/* The compiler's own wording, kept but demoted — searchable, not shouted. */
+.livediags em { display: block; margin-top: 3px; font-style: normal;
+  font-family: var(--mono); font-size: var(--t-2xs); color: var(--muted); }
 .livehint { margin: 0; font-size: var(--t-sm); color: var(--muted); }

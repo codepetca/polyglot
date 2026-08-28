@@ -787,7 +787,10 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
         />
       ) : editable ? (
         <CodeBox value={code} onChange={(v) => { setCode(v); setWon(false); }} />
-      ) : step.code ? (
+      ) : step.code && step.kind !== "live" ? (
+        // A live step's code IS the editor. Rendering it read-only above the
+        // editor as well showed the same two lines twice and made the step look
+        // like it had duplicated itself.
         // Tint the lines that are NEW on this step, so a program that grows
         // across a lesson shows what just arrived rather than re-presenting
         // itself whole each time.

@@ -26,6 +26,38 @@ const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
 type Diag = { line: number; col: number; length: number; message: string; code: number };
 type Goal = "clean" | "error" | "output";
 
+// The compiler writes for people who write compilers. These are the errors a
+// beginner actually hits, said the way a person would say them. The original
+// message is still shown underneath, quieter — a student who searches the web
+// for it should find the same thing everyone else finds.
+function plain(d: Diag): string {
+  const m = d.message;
+  switch (d.code) {
+    case 2322: {
+      const g = /Type '(.+?)' is not assignable to type '(.+?)'/.exec(m);
+      return g ? `That is ${g[1]}, but this holds ${g[2]}.` : m;
+    }
+    case 2588: return "This was made with const, so it cannot be changed.";
+    case 7006: return "TypeScript cannot tell what type this is. Write it after a colon.";
+    case 2345: {
+      const g = /Argument of type '(.+?)' is not assignable to parameter of type '(.+?)'/.exec(m);
+      return g ? `You passed ${g[1]}, but it expects ${g[2]}.` : m;
+    }
+    case 2339: {
+      const g = /Property '(.+?)' does not exist on type '(.+?)'/.exec(m);
+      return g ? `${g[2]} has no ${g[1]}.` : m;
+    }
+    case 2367: return "These two can never be equal, because they are different types.";
+    case 18047: return "This might be null, so check it before using it.";
+    case 2304: {
+      const g = /Cannot find name '(.+?)'/.exec(m);
+      return g ? `Nothing called ${g[1]} exists here. Check the spelling.` : m;
+    }
+    case 1005: case 1109: case 1128: return "Something is missing here — often a bracket, a quote or a semicolon.";
+    default: return m;
+  }
+}
+
 export default function LiveStep({
   step,
   onDone,
@@ -96,8 +128,8 @@ export default function LiveStep({
 
   return (
     <div className="live">
-      <p className="flowq">{step.instruction}</p>
-
+      {/* The instruction is rendered by FlowPlayer, above every step. Repeating
+          it here printed it twice, one paragraph under the other. */}
       <div className="cm-wrap">
         <CodeMirror
           value={code}
@@ -110,10 +142,11 @@ export default function LiveStep({
       </div>
 
       <div className={`livebar ${busy ? "busy" : errs.length ? "bad" : diags ? "good" : ""}`}>
-        {busy ? "checking…"
-          : diags === null ? "start typing"
-          : errs.length === 0 ? "no type errors"
-          : `${errs.length} type ${errs.length === 1 ? "error" : "errors"}`}
+        <span className="livedot" aria-hidden />
+        {busy ? "checking as you type…"
+          : diags === null ? "TypeScript is watching. Start typing."
+          : errs.length === 0 ? "TypeScript found no problems."
+          : `TypeScript found ${errs.length} problem${errs.length === 1 ? "" : "s"}:`}
       </div>
 
       {errs.length > 0 && (
@@ -121,8 +154,10 @@ export default function LiveStep({
           {errs.slice(0, 4).map((d, i) => (
             <li key={i}>
               <b>line {d.line}</b>
-              <span>{d.message}</span>
-              <code>TS{d.code}</code>
+              <div>
+                <span>{plain(d)}</span>
+                <em>{d.message}</em>
+              </div>
             </li>
           ))}
         </ul>
