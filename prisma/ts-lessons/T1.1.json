@@ -19,7 +19,7 @@
         "target": "Hello",
         "body": [
           "console.log prints. The text in quotes is what comes out.",
-          "Java writes System.out.println. TypeScript writes console.log. Same job, shorter."
+          "Anything inside the quotes comes out exactly as written."
         ],
         "keypoint": "console.log(...) prints one line."
       },
@@ -65,7 +65,7 @@
         "body": [
           "score was set to 0, so TypeScript decided it holds numbers.",
           "\"ten\" is text, not a number.",
-          "Java would tell you this too — but only after you compiled it."
+          "You never pressed a button. It knew as soon as you typed it."
         ],
         "keypoint": "Once a variable has a type, it keeps it."
       },

@@ -6,14 +6,14 @@
       "instruction": "The five operators.",
       "code": "console.log(7 + 2);\nconsole.log(7 - 2);\nconsole.log(7 * 2);\nconsole.log(7 / 2);\nconsole.log(7 % 2);",
       "target": "9\n5\n14\n3.5\n1",
-      "body": ["Same symbols as Java. % is the remainder."],
+      "body": ["The first four are the ones from maths. % gives the remainder after dividing."],
       "keypoint": "+ - * / and % for the remainder." },
 
     { "id": "t14_divide", "kind": "teach",
       "instruction": "Division does not throw the decimal away.",
       "code": "console.log(7 / 2);",
       "target": "3.5",
-      "body": ["In Java, 7 / 2 is 3, because both sides are int.", "TypeScript has one number type, so 7 / 2 is 3.5.", "This surprises people who learned Java first."],
+      "body": ["Dividing keeps the decimal part.", "7 / 2 is 3.5, not 3.", "If you want a whole number, you have to ask for one. That is the next step."],
       "keypoint": "7 / 2 is 3.5, not 3." },
 
     { "id": "t14_p1", "kind": "predict",
@@ -42,7 +42,7 @@
       "instruction": "Changing a number by a bit.",
       "code": "let score = 10;\nscore += 5;\nscore -= 3;\nscore++;\nconsole.log(score);",
       "target": "13",
-      "body": ["+= adds to what is there. ++ adds one.", "Same as Java."],
+      "body": ["+= adds to what is there. ++ adds one.", "score++ is the shortest way to add one."],
       "keypoint": "score += 5 means score = score + 5." },
 
     { "id": "t14_const", "kind": "live", "goal": "error", "expectCode": 2588,

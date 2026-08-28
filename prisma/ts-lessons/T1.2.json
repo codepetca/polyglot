@@ -1,94 +1,196 @@
 {
-  "code": "T1.2", "title": "Types you write down",
-  "objectives": ["annotate a variable with a type", "use string, number and boolean", "recognise an implicit any", "say why any is a last resort"],
-  "flow": { "v": 1, "lang": "typescript", "steps": [
-    { "id": "t12_ann", "kind": "teach",
-      "instruction": "You can write the type yourself. Put it after a colon.",
-      "code": "let age: number = 15;\nconsole.log(age);", "target": "15",
-      "body": ["TypeScript already worked this out from 15.", "Writing it down says what you meant, so a wrong value is caught at the line you wrote it."],
-      "keypoint": "let age: number = 15;" },
-
-    { "id": "t12_three", "kind": "teach",
-      "instruction": "Three types cover most values.",
-      "code": "let name: string = \"Ada\";\nlet age: number = 15;\nlet student: boolean = true;\nconsole.log(name, age, student);",
-      "target": "Ada 15 true",
-      "body": ["string for text. number for any number, whole or decimal. boolean for true and false.", "All lowercase. String with a capital S is a different thing and not what you want."],
-      "keypoint": "string · number · boolean — always lowercase." },
-
-    { "id": "t12_w1", "kind": "live", "goal": "output",
-      "instruction": "Declare three variables with types written out: a string, a number, a boolean. Print all three.",
-      "code": "", "target": "Markham 2026 true",
-      "solution": "let city: string = \"Markham\";\nlet year: number = 2026;\nlet open: boolean = true;\nconsole.log(city, year, open);",
-      "hint": "let city: string = \"Markham\";",
-      "after": "The colon says what goes in. The value has to match." },
-
-    { "id": "t12_mismatch", "kind": "live", "goal": "error", "expectCode": 2322,
-      "instruction": "Change 15 to \"fifteen\" and watch.",
-      "code": "let age: number = 15;\nconsole.log(age);",
-      "solution": "let age: number = \"fifteen\";\nconsole.log(age);",
-      "hint": "Put quotes around fifteen.",
-      "after": "You said number. Text is not a number." },
-
-    { "id": "t12_no_java", "kind": "teach",
-      "instruction": "One number type, not four.",
-      "code": "let whole: number = 7;\nlet decimal: number = 7.5;\nconsole.log(whole, decimal);",
-      "target": "7 7.5",
-      "body": ["Java has int, long, float and double. TypeScript has number, and it holds both.", "Fewer choices to get wrong."],
-      "keypoint": "number covers whole numbers and decimals." },
-
-    { "id": "t12_p1", "kind": "predict",
-      "instruction": "Which line will TypeScript reject?",
-      "code": "let a: string = \"5\";\nlet b: number = 5;\nlet c: boolean = \"true\";\nlet d: number = 5.5;",
-      "opts": ["let a: string = \"5\";", "let b: number = 5;", "let c: boolean = \"true\";", "let d: number = 5.5;"],
-      "correct": 2,
-      "why": "\"true\" in quotes is text. A boolean is true or false with no quotes.",
-      "skills": ["tell a boolean from the text true"] },
-
-    { "id": "t12_infer", "kind": "teach",
-      "instruction": "You do not always have to write it.",
-      "code": "let city = \"Markham\";\nlet count = 3;\nconsole.log(city, count);",
-      "target": "Markham 3",
-      "body": ["TypeScript reads the value and decides.", "Most code leaves the type off when the value makes it obvious."],
-      "keypoint": "Write the type when it is not obvious. Otherwise let TypeScript read it." },
-
-    { "id": "t12_fill", "kind": "fill",
-      "instruction": "Fill in the types.",
-      "code": "let title: ⟦1⟧ = \"Ada\";\nlet chapters: ⟦2⟧ = 12;\nlet finished: ⟦3⟧ = false;",
-      "blanks": [
-        { "chips": ["number", "string", "boolean"], "answer": 1 },
-        { "chips": ["string", "number", "boolean"], "answer": 1 },
-        { "chips": ["number", "string", "boolean"], "answer": 2 }
-      ],
-      "hint": "Look at each value. Quotes, digits, or true and false.",
-      "after": "The value tells you the type." },
-
-    { "id": "t12_anyparam", "kind": "live", "goal": "error", "expectCode": 7006,
-      "instruction": "Write a function called double that takes x and returns x times 2. Do not write any types.",
-      "code": "",
-      "solution": "function double(x) {\n  return x * 2;\n}",
-      "hint": "function double(x) { return x * 2; }",
-      "after": "TypeScript cannot tell what x is, so it refuses to guess." },
-
-    { "id": "t12_fixany", "kind": "live", "goal": "output",
-      "instruction": "Fix it. Tell TypeScript that x is a number, then print double(21).",
-      "code": "function double(x) {\n  return x * 2;\n}\nconsole.log(double(21));",
-      "target": "42",
-      "solution": "function double(x: number) {\n  return x * 2;\n}\nconsole.log(double(21));",
-      "hint": "x: number",
-      "after": "Now it knows what goes in, so it knows what comes out." },
-
-    { "id": "t12_any", "kind": "teach",
-      "instruction": "any switches the checking off.",
-      "code": "let thing: any = \"text\";\nthing = 5;\nthing = true;\nconsole.log(thing);",
-      "target": "true",
-      "body": ["any accepts everything and reports nothing.", "It is a way to silence TypeScript, which is the opposite of why you are using it.", "Use it when you genuinely do not know yet. Not to make an error go away."],
-      "keypoint": "any turns off type checking. Reach for it last." },
-
-    { "id": "t12_final", "kind": "live", "goal": "output",
-      "instruction": "Write a function greet that takes a name of type string and returns \"Hi, \" followed by the name. Print greet(\"Ada\").",
-      "code": "", "target": "Hi, Ada",
-      "solution": "function greet(name: string) {\n  return \"Hi, \" + name;\n}\nconsole.log(greet(\"Ada\"));",
-      "hint": "function greet(name: string) { return \"Hi, \" + name; }",
-      "after": "A typed parameter, a value back, and no warnings." }
-  ] }
+  "code": "T1.2",
+  "title": "Types you write down",
+  "objectives": [
+    "annotate a variable with a type",
+    "use string, number and boolean",
+    "recognise an implicit any",
+    "say why any is a last resort"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "t12_ann",
+        "kind": "teach",
+        "instruction": "You can write the type yourself. Put it after a colon.",
+        "code": "let age: number = 15;\nconsole.log(age);",
+        "target": "15",
+        "body": [
+          "TypeScript already worked this out from 15.",
+          "Writing it down says what you meant, so a wrong value is caught at the line you wrote it."
+        ],
+        "keypoint": "let age: number = 15;"
+      },
+      {
+        "id": "t12_three",
+        "kind": "teach",
+        "instruction": "Three types cover most values.",
+        "code": "let name: string = \"Ada\";\nlet age: number = 15;\nlet student: boolean = true;\nconsole.log(name, age, student);",
+        "target": "Ada 15 true",
+        "body": [
+          "string for text. number for any number, whole or decimal. boolean for true and false.",
+          "All lowercase. String with a capital S is a different thing and not what you want."
+        ],
+        "keypoint": "string · number · boolean — always lowercase."
+      },
+      {
+        "id": "t12_w1",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Declare three variables with types written out: a string, a number, a boolean. Print all three.",
+        "code": "",
+        "target": "Markham 2026 true",
+        "solution": "let city: string = \"Markham\";\nlet year: number = 2026;\nlet open: boolean = true;\nconsole.log(city, year, open);",
+        "hint": "let city: string = \"Markham\";",
+        "after": "The colon says what goes in. The value has to match."
+      },
+      {
+        "id": "t12_mismatch",
+        "kind": "live",
+        "goal": "error",
+        "expectCode": 2322,
+        "instruction": "Change 15 to \"fifteen\" and watch.",
+        "code": "let age: number = 15;\nconsole.log(age);",
+        "solution": "let age: number = \"fifteen\";\nconsole.log(age);",
+        "hint": "Put quotes around fifteen.",
+        "after": "You said number. Text is not a number."
+      },
+      {
+        "id": "t12_no_java",
+        "kind": "teach",
+        "instruction": "One number type, not four.",
+        "code": "let whole: number = 7;\nlet decimal: number = 7.5;\nconsole.log(whole, decimal);",
+        "target": "7 7.5",
+        "body": [
+          "There is one number type. It holds whole numbers and decimals alike.",
+          "So you never have to pick between them."
+        ],
+        "keypoint": "number covers whole numbers and decimals."
+      },
+      {
+        "id": "t12_p1",
+        "kind": "predict",
+        "instruction": "Which line will TypeScript reject?",
+        "code": "let a: string = \"5\";\nlet b: number = 5;\nlet c: boolean = \"true\";\nlet d: number = 5.5;",
+        "opts": [
+          "let a: string = \"5\";",
+          "let b: number = 5;",
+          "let c: boolean = \"true\";",
+          "let d: number = 5.5;"
+        ],
+        "correct": 2,
+        "why": "\"true\" in quotes is text. A boolean is true or false with no quotes.",
+        "skills": [
+          "tell a boolean from the text true"
+        ]
+      },
+      {
+        "id": "t12_infer",
+        "kind": "teach",
+        "instruction": "You do not always have to write it.",
+        "code": "let city = \"Markham\";\nlet count = 3;\nconsole.log(city, count);",
+        "target": "Markham 3",
+        "body": [
+          "TypeScript reads the value and decides.",
+          "Most code leaves the type off when the value makes it obvious."
+        ],
+        "keypoint": "Write the type when it is not obvious. Otherwise let TypeScript read it."
+      },
+      {
+        "id": "t12_fill",
+        "kind": "fill",
+        "instruction": "Fill in the types.",
+        "code": "let title: ⟦1⟧ = \"Ada\";\nlet chapters: ⟦2⟧ = 12;\nlet finished: ⟦3⟧ = false;",
+        "blanks": [
+          {
+            "chips": [
+              "number",
+              "string",
+              "boolean"
+            ],
+            "answer": 1
+          },
+          {
+            "chips": [
+              "string",
+              "number",
+              "boolean"
+            ],
+            "answer": 1
+          },
+          {
+            "chips": [
+              "number",
+              "string",
+              "boolean"
+            ],
+            "answer": 2
+          }
+        ],
+        "hint": "Look at each value. Quotes, digits, or true and false.",
+        "after": "The value tells you the type."
+      },
+      {
+        "id": "t12_fn",
+        "kind": "teach",
+        "instruction": "A function is a piece of code with a name.",
+        "code": "function double(x: number) {\n  return x * 2;\n}\n\nconsole.log(double(5));\nconsole.log(double(21));",
+        "target": "10\n42",
+        "body": [
+          "double(5) runs the code inside with x set to 5.",
+          "return is the value that comes back out.",
+          "Write it once, use it as often as you like."
+        ],
+        "keypoint": "function name(input: type) { return value; }"
+      },
+      {
+        "id": "t12_anyparam",
+        "kind": "live",
+        "goal": "error",
+        "expectCode": 7006,
+        "instruction": "Write a function called double that takes x and returns x times 2. Do not write any types.",
+        "code": "",
+        "solution": "function double(x) {\n  return x * 2;\n}",
+        "hint": "function double(x) { return x * 2; }",
+        "after": "TypeScript cannot tell what x is, so it refuses to guess."
+      },
+      {
+        "id": "t12_fixany",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Fix it. Tell TypeScript that x is a number, then print double(21).",
+        "code": "function double(x) {\n  return x * 2;\n}\nconsole.log(double(21));",
+        "target": "42",
+        "solution": "function double(x: number) {\n  return x * 2;\n}\nconsole.log(double(21));",
+        "hint": "x: number",
+        "after": "Now it knows what goes in, so it knows what comes out."
+      },
+      {
+        "id": "t12_any",
+        "kind": "teach",
+        "instruction": "any switches the checking off.",
+        "code": "let thing: any = \"text\";\nthing = 5;\nthing = true;\nconsole.log(thing);",
+        "target": "true",
+        "body": [
+          "any accepts everything and reports nothing.",
+          "It is a way to silence TypeScript, which is the opposite of why you are using it.",
+          "Use it when you genuinely do not know yet. Not to make an error go away."
+        ],
+        "keypoint": "any turns off type checking. Reach for it last."
+      },
+      {
+        "id": "t12_final",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Write a function greet that takes a name of type string and returns \"Hi, \" followed by the name. Print greet(\"Ada\").",
+        "code": "",
+        "target": "Hi, Ada",
+        "solution": "function greet(name: string) {\n  return \"Hi, \" + name;\n}\nconsole.log(greet(\"Ada\"));",
+        "hint": "function greet(name: string) { return \"Hi, \" + name; }",
+        "after": "A typed parameter, a value back, and no warnings."
+      }
+    ]
+  }
 }
