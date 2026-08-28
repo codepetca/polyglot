@@ -16,7 +16,8 @@
     "db:studio": "prisma studio",
     "import:lessons": "node scripts/import-lessons.mjs",
     "setup": "prisma generate && prisma db push && prisma db seed",
-    "ts:check": "tsx scripts/ts-check.ts"
+    "ts:check": "tsx scripts/ts-check.ts",
+    "ts:lesson": "tsx scripts/ts-lesson.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

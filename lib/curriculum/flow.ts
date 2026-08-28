@@ -42,6 +42,9 @@ export type FlowStep = {
   goal?: "clean" | "error" | "output";
   /** live + goal "error": the TypeScript error code the student must provoke. */
   expectCode?: number;
+  // live reuses `solution` below — the same server-only worked answer that fix
+  // and write steps carry, used by the compiler gate to prove a step is
+  // possible at all.
   instruction: string;
   skills?: string[];
   hint?: string; // shown on demand after 1 failure
