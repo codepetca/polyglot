@@ -6,7 +6,7 @@
       "instruction": "Two ways to join text.",
       "code": "const name = \"Ada\";\nconsole.log(\"Hi, \" + name + \"!\");\nconsole.log(`Hi, ${name}!`);",
       "target": "Hi, Ada!\nHi, Ada!",
-      "body": ["The first uses +, like Java.", "The second uses backticks and ${ }. The value drops straight into the text."],
+      "body": ["The first glues the pieces together with +.", "The second uses backticks and ${ }. The value drops straight into the text."],
       "keypoint": "`text ${value} text` — backticks, not quotes." },
 
     { "id": "t13_w1", "kind": "live", "goal": "output",
@@ -42,7 +42,7 @@
       "instruction": "One character at a time.",
       "code": "const word = \"Ada\";\nconsole.log(word[0]);\nconsole.log(word[word.length - 1]);",
       "target": "A\na",
-      "body": ["Counting starts at 0, like arrays in Java.", "The last one is at length - 1."],
+      "body": ["Counting starts at 0, so the first character is at 0, not 1.", "The last one is at length - 1."],
       "keypoint": "word[0] is the first character. word[word.length - 1] is the last." },
 
     { "id": "t13_w2", "kind": "live", "goal": "output",

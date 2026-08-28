@@ -19,7 +19,7 @@
         "target": "Pass",
         "body": [
           "The test in brackets is true or false.",
-          "Same shape as Java."
+          "The braces hold what happens in each case."
         ],
         "keypoint": "if (test) { ... } else { ... }"
       },

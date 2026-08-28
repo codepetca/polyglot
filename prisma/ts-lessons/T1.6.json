@@ -20,7 +20,7 @@
       "instruction": "Repeat a fixed number of times.",
       "code": "for (let i = 0; i < 3; i++) {\n  console.log(i);\n}",
       "target": "0\n1\n2",
-      "body": ["Start at 0, keep going while i is under 3, add one each pass.", "Same three parts as Java."],
+      "body": ["Start at 0, keep going while i is under 3, add one each pass.", "Three parts: where to start, when to stop, what to do each pass."],
       "keypoint": "for (let i = 0; i < n; i++)" },
 
     { "id": "t16_w1", "kind": "live", "goal": "output",
