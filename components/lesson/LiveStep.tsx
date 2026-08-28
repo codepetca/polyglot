@@ -60,10 +60,11 @@ function plain(d: Diag): string {
 
 export default function LiveStep({
   step,
-  onDone,
+  onSolved,
 }: {
   step: { id: string; instruction: string; code?: string; goal?: Goal; expectCode?: number; target?: string; hint?: string; after?: string };
-  onDone: (firstTry: boolean) => void;
+  /** Fired once, when the goal is met. The player shows Next; it does not skip ahead. */
+  onSolved: (firstTry: boolean) => void;
 }) {
   const goal: Goal = step.goal || "clean";
   const [code, setCode] = useState(step.code || "");
@@ -123,8 +124,8 @@ export default function LiveStep({
     : out !== null && out.trim() === (step.target || "").trim();
 
   useEffect(() => {
-    if (met && !won) { setWon(true); onDone(!touched); }
-  }, [met, won, touched, onDone]);
+    if (met && !won) { setWon(true); onSolved(!touched); }
+  }, [met, won, touched, onSolved]);
 
   return (
     <div className="live">
