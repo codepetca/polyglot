@@ -1,0 +1,191 @@
+{
+  "code": "T1.1",
+  "title": "Printing and variables",
+  "objectives": [
+    "print with console.log",
+    "declare with let and const",
+    "let TypeScript infer a type",
+    "recognise a type error"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "t11_hello",
+        "kind": "teach",
+        "instruction": "This is a TypeScript program. It prints one line.",
+        "code": "console.log(\"Hello\");",
+        "target": "Hello",
+        "body": [
+          "console.log prints. The text in quotes is what comes out.",
+          "Java writes System.out.println. TypeScript writes console.log. Same job, shorter."
+        ],
+        "keypoint": "console.log(...) prints one line."
+      },
+      {
+        "id": "t11_w1",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Print your own name.",
+        "code": "console.log(\"\");",
+        "target": "Ada",
+        "hint": "Put Ada between the quotes.",
+        "after": "Whatever is in the quotes comes out exactly.",
+        "solution": "console.log(\"Ada\");"
+      },
+      {
+        "id": "t11_let",
+        "kind": "teach",
+        "instruction": "A variable holds a value. let makes one.",
+        "code": "let score = 0;\nscore = 10;\nconsole.log(score);",
+        "target": "10",
+        "body": [
+          "No type is written. TypeScript reads 0 and decides score holds numbers.",
+          "score = 10 works, because 10 is a number."
+        ],
+        "keypoint": "let name = value; — TypeScript works out the type from the value."
+      },
+      {
+        "id": "t11_break",
+        "kind": "live",
+        "goal": "error",
+        "expectCode": 2322,
+        "instruction": "Add a line that sets score to the text \"ten\". Do not run anything — watch what happens as you type.",
+        "code": "let score = 0;\n",
+        "hint": "score = \"ten\";",
+        "after": "You never pressed Run. TypeScript already knew.",
+        "solution": "let score = 0;\nscore = \"ten\";"
+      },
+      {
+        "id": "t11_why",
+        "kind": "teach",
+        "instruction": "Why that was an error.",
+        "code": "let score = 0;\nscore = \"ten\";",
+        "body": [
+          "score was set to 0, so TypeScript decided it holds numbers.",
+          "\"ten\" is text, not a number.",
+          "Java would tell you this too — but only after you compiled it."
+        ],
+        "keypoint": "Once a variable has a type, it keeps it."
+      },
+      {
+        "id": "t11_w2",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Declare name holding \"Ada\" and city holding \"Markham\". Print name, then city.",
+        "code": "",
+        "target": "Ada\nMarkham",
+        "hint": "let name = \"Ada\"; then a console.log for each.",
+        "after": "Two variables, two lines out.",
+        "solution": "let name = \"Ada\";\nlet city = \"Markham\";\nconsole.log(name);\nconsole.log(city);"
+      },
+      {
+        "id": "t11_const",
+        "kind": "teach",
+        "instruction": "const holds a value that never changes.",
+        "code": "const school = \"Bur Oak\";\nconsole.log(school);",
+        "target": "Bur Oak",
+        "body": [
+          "let can be reassigned later. const cannot.",
+          "Use const unless you know the value has to change."
+        ],
+        "keypoint": "const for values that stay put, let for values that change."
+      },
+      {
+        "id": "t11_fixconst",
+        "kind": "live",
+        "goal": "clean",
+        "instruction": "This will not compile. Change one word so it does.",
+        "code": "const count = 1;\ncount = 2;\nconsole.log(count);",
+        "hint": "count changes, so it cannot be const.",
+        "after": "count changes value, so it needs let.",
+        "solution": "let count = 1;\ncount = 2;\nconsole.log(count);"
+      },
+      {
+        "id": "t11_p1",
+        "kind": "predict",
+        "instruction": "Which line does TypeScript reject?",
+        "code": "let a = 5;\nconst b = \"hi\";\na = 7;\nb = \"bye\";",
+        "opts": [
+          "let a = 5;",
+          "const b = \"hi\";",
+          "a = 7;",
+          "b = \"bye\";"
+        ],
+        "correct": 3,
+        "why": "b is const, so it cannot be given a new value. a is let, so a = 7 is fine.",
+        "skills": [
+          "tell let and const apart"
+        ]
+      },
+      {
+        "id": "t11_many",
+        "kind": "teach",
+        "instruction": "One console.log can print several values.",
+        "code": "const name = \"Ada\";\nconst age = 15;\nconsole.log(name, age);",
+        "target": "Ada 15",
+        "body": [
+          "Separate them with commas.",
+          "A space is put between them automatically."
+        ],
+        "keypoint": "console.log(a, b) prints both, separated by a space."
+      },
+      {
+        "id": "t11_fill",
+        "kind": "fill",
+        "instruction": "Fill in the blanks.",
+        "code": "⟦1⟧ city = \"Markham\";\n⟦2⟧ visits = 0;\nvisits = 3;\n⟦3⟧(city, visits);",
+        "blanks": [
+          {
+            "chips": [
+              "const",
+              "let",
+              "var"
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "const",
+              "let",
+              "var"
+            ],
+            "answer": 1
+          },
+          {
+            "chips": [
+              "console.log",
+              "print",
+              "System.out.println"
+            ],
+            "answer": 0
+          }
+        ],
+        "after": "city never changes, so const. visits does, so let."
+      },
+      {
+        "id": "t11_w3",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Declare three constants: a string, a number, and true or false. Print all three on one line.",
+        "code": "",
+        "target": "Ada 15 true",
+        "hint": "const name = \"Ada\"; const age = 15; const student = true; then one console.log with all three.",
+        "after": "Three types, one line. TypeScript worked out all three without being told.",
+        "solution": "const name = \"Ada\";\nconst age = 15;\nconst student = true;\nconsole.log(name, age, student);"
+      },
+      {
+        "id": "t11_final",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Write a program that stores a name and a score, then prints them on separate lines.",
+        "code": "",
+        "target": "Ada\n42",
+        "hint": "Two variables, two console.log lines.",
+        "after": "That is a whole TypeScript program.",
+        "solution": "const name = \"Ada\";\nconst score = 42;\nconsole.log(name);\nconsole.log(score);"
+      }
+    ]
+  }
+}
