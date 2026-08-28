@@ -24,6 +24,7 @@ import CodeEditor from "../CodeEditor";
 import { needsMethodsMode, ensureRun } from "@/lib/java/detect";
 import { loadSnapshots, snapshot, describeAge, type Snapshot } from "@/lib/tutor-history";
 import { useAi } from "@/lib/features";
+import { LANGS, type LangId } from "@/lib/run/languages";
 
 const WANTS_INPUT = /NoSuchElementException/;
 
@@ -37,6 +38,17 @@ export default function ScratchpadPanel({
   lessonCode: string;
 }) {
   const ai = useAi();
+  // Remembered, and Java by default — a student who never touches this sees
+  // exactly what they saw before.
+  const [lang, setLang] = useState<LangId>("java");
+  useEffect(() => {
+    try {
+      const v = localStorage.getItem("classos_pad_lang");
+      if (v && v in LANGS) setLang(v as LangId);
+    } catch {
+      /* private mode: stay on the default */
+    }
+  }, []);
   const [out, setOut] = useState("");
   const [error, setError] = useState("");
   const [waiting, setWaiting] = useState(false);
@@ -93,15 +105,17 @@ export default function ScratchpadPanel({
 
   async function exec(lines: string[]) {
     setBusy(true);
-    const methods = needsMethodsMode(code);
+    const isJava = lang === "java";
+    const methods = isJava && needsMethodsMode(code);
     const r = await fetch("/api/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         code: methods ? ensureRun(code) : code,
         stdin: lines.join("\n"),
-        wrap: true,
+        wrap: isJava,
         wrapMode: methods ? "methods" : "beginner",
+        lang,
         lessonCode,
       }),
     }).then((x) => x.json());
@@ -148,6 +162,23 @@ export default function ScratchpadPanel({
           {busy ? "Running…" : "▶ Run"}
         </button>
         <span className="runnote">⌘/Ctrl + Enter</span>
+        {/* The scratchpad is the only place this is offered. Lessons are Java
+            and send no language, so the course is untouched by this existing. */}
+        <select
+          className="padlang"
+          value={lang}
+          aria-label="Language"
+          onChange={(e) => {
+            const v = e.target.value as LangId;
+            setLang(v);
+            try { localStorage.setItem("classos_pad_lang", v); } catch { /* ignore */ }
+            if (!code.trim() || code.trim() === LANGS[lang].starter.trim()) setCode(LANGS[v].starter);
+          }}
+        >
+          {Object.values(LANGS).map((l) => (
+            <option key={l.id} value={l.id}>{l.label}</option>
+          ))}
+        </select>
         <span style={{ flex: 1 }} />
         {/* One control, not a toolbar. It only exists because replacing the
             buffer — which the tutor's "Put in scratchpad" does — is otherwise

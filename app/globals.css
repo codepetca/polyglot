@@ -1807,3 +1807,8 @@ pre.flowcode.ro { margin: 0; }
 }
 .trstale { color: var(--warn); font-weight: 700; }
 .trpart { font-family: var(--mono); font-size: var(--t-2xs); color: var(--warn); }
+/* Language picker in the scratchpad toolbar. Quiet — it is a preference, not
+   an action, and it sits beside Run which is the actual button. */
+.padlang { font: inherit; font-size: var(--t-xs); padding: 4px 7px; border-radius: var(--r-sm);
+  border: 1.5px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; }
+.padlang:hover { color: var(--ink); border-color: var(--ink); }
