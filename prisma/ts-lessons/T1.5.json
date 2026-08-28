@@ -1,0 +1,171 @@
+{
+  "code": "T1.5",
+  "title": "Conditionals",
+  "objectives": [
+    "branch with if and else",
+    "compare with === and !==",
+    "combine tests with && and ||",
+    "narrow a union with typeof"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "t15_if",
+        "kind": "teach",
+        "instruction": "Do something only when a test passes.",
+        "code": "const score = 72;\nif (score >= 50) {\n  console.log(\"Pass\");\n} else {\n  console.log(\"Fail\");\n}",
+        "target": "Pass",
+        "body": [
+          "The test in brackets is true or false.",
+          "Same shape as Java."
+        ],
+        "keypoint": "if (test) { ... } else { ... }"
+      },
+      {
+        "id": "t15_eq",
+        "kind": "teach",
+        "instruction": "Three equals, not two.",
+        "code": "let a = 1;\nlet b = 1;\nlet c = 2;\nconsole.log(a === b);\nconsole.log(\"x\" === \"x\");\nconsole.log(a !== c);",
+        "target": "true\ntrue\ntrue",
+        "body": [
+          "=== checks the value and the type. !== is the opposite.",
+          "== also exists and converts before comparing, which produces surprises. Use ===."
+        ],
+        "keypoint": "Always === and !==. Never == in TypeScript."
+      },
+      {
+        "id": "t15_typemismatch",
+        "kind": "live",
+        "goal": "error",
+        "expectCode": 2367,
+        "instruction": "Compare the number 5 with the text \"5\" using ===.",
+        "code": "const n = 5;\n",
+        "solution": "const n = 5;\nconsole.log(n === \"5\");",
+        "hint": "n === \"5\"",
+        "after": "TypeScript stops you comparing a number with text, because the answer is always false and you probably did not mean it."
+      },
+      {
+        "id": "t15_w1",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Print \"Old enough\" when age is 16 or more, otherwise \"Too young\".",
+        "code": "const age = 15;\n",
+        "target": "Too young",
+        "solution": "const age = 15;\nif (age >= 16) {\n  console.log(\"Old enough\");\n} else {\n  console.log(\"Too young\");\n}",
+        "hint": "if (age >= 16) { ... } else { ... }",
+        "after": "One test, two paths."
+      },
+      {
+        "id": "t15_andor",
+        "kind": "teach",
+        "instruction": "Combining tests.",
+        "code": "const age = 17;\nconst hasCard = true;\nconsole.log(age >= 16 && hasCard);\nconsole.log(age >= 18 || hasCard);\nconsole.log(!hasCard);",
+        "target": "true\ntrue\nfalse",
+        "body": [
+          "&& needs both. || needs one. ! flips it."
+        ],
+        "keypoint": "&& both · || either · ! not"
+      },
+      {
+        "id": "t15_p1",
+        "kind": "predict",
+        "instruction": "What comes out?",
+        "code": "const n = 8;\nif (n > 5 && n % 2 === 0) {\n  console.log(\"big and even\");\n} else if (n > 5) {\n  console.log(\"big\");\n} else {\n  console.log(\"small\");\n}",
+        "opts": [
+          "small",
+          "big",
+          "big and even",
+          "nothing"
+        ],
+        "correct": 2,
+        "why": "8 is more than 5, and 8 % 2 is 0, so both sides of && are true. The first branch runs and the rest are skipped.",
+        "skills": [
+          "read a chain of if and else if"
+        ]
+      },
+      {
+        "id": "t15_chain",
+        "kind": "teach",
+        "instruction": "More than two paths.",
+        "code": "const mark = 68;\nif (mark >= 80) {\n  console.log(\"A\");\n} else if (mark >= 70) {\n  console.log(\"B\");\n} else if (mark >= 60) {\n  console.log(\"C\");\n} else {\n  console.log(\"F\");\n}",
+        "target": "C",
+        "body": [
+          "It stops at the first test that passes.",
+          "Order matters. Put the narrowest test first."
+        ],
+        "keypoint": "else if chains stop at the first match."
+      },
+      {
+        "id": "t15_fill",
+        "kind": "fill",
+        "instruction": "Fill in the blanks.",
+        "code": "const temp = 30;\nconst sunny = true;\nif (temp > 25 ⟦1⟧ sunny) {\n  console.log(\"beach\");\n} ⟦2⟧ {\n  console.log(\"inside\");\n}\nconsole.log(temp ⟦3⟧ 30);",
+        "blanks": [
+          {
+            "chips": [
+              "&&",
+              "||",
+              "!"
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "else",
+              "else if",
+              "then"
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "===",
+              "==",
+              "="
+            ],
+            "answer": 0
+          }
+        ],
+        "hint": "Both conditions must hold. And comparison is always three equals.",
+        "after": "&& for both, else for the fallback, === to compare."
+      },
+      {
+        "id": "t15_union",
+        "kind": "teach",
+        "instruction": "A value that could be one of two types.",
+        "code": "function show(id: string | number) {\n  if (typeof id === \"number\") {\n    console.log(id * 2);\n  } else {\n    console.log(id.toUpperCase());\n  }\n}\nshow(7);\nshow(\"abc\");",
+        "target": "14\nABC",
+        "body": [
+          "string | number means either is allowed.",
+          "Inside the if, TypeScript knows it is a number, so * 2 is fine.",
+          "In the else it knows it is a string, so toUpperCase is fine."
+        ],
+        "keypoint": "typeof x === \"number\" tells TypeScript which one it is."
+      },
+      {
+        "id": "t15_narrow",
+        "kind": "live",
+        "goal": "error",
+        "expectCode": 2339,
+        "instruction": "Call toUpperCase on id without checking what it is first.",
+        "code": "function show(id: string | number) {\n\n}",
+        "solution": "function show(id: string | number) {\n  console.log(id.toUpperCase());\n}",
+        "hint": "console.log(id.toUpperCase());",
+        "after": "id might be a number, and numbers have no toUpperCase. Check with typeof first and the error goes."
+      },
+      {
+        "id": "t15_final",
+        "kind": "live",
+        "goal": "output",
+        "instruction": "Print \"even\" or \"odd\" for n, and \"big\" on a second line only when n is over 100.",
+        "code": "const n = 128;\n",
+        "target": "even\nbig",
+        "solution": "const n = 128;\nif (n % 2 === 0) {\n  console.log(\"even\");\n} else {\n  console.log(\"odd\");\n}\nif (n > 100) {\n  console.log(\"big\");\n}",
+        "hint": "Two separate ifs. The second one has no else.",
+        "after": "An if does not need an else when there is nothing to do otherwise."
+      }
+    ]
+  }
+}

@@ -17,7 +17,8 @@
     "import:lessons": "node scripts/import-lessons.mjs",
     "setup": "prisma generate && prisma db push && prisma db seed",
     "ts:check": "tsx scripts/ts-check.ts",
-    "ts:lesson": "tsx scripts/ts-lesson.ts"
+    "ts:lesson": "tsx scripts/ts-lesson.ts",
+    "ts:unit": "for f in prisma/ts-lessons/*.json; do tsx scripts/ts-lesson.ts $f || exit 1; done"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

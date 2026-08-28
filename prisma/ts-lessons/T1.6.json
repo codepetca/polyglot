@@ -1,0 +1,87 @@
+{
+  "code": "T1.6", "title": "Loops and arrays",
+  "objectives": ["hold many values in an array", "repeat with for and while", "walk an array with for...of", "say why a typed array refuses the wrong value"],
+  "flow": { "v": 1, "lang": "typescript", "steps": [
+    { "id": "t16_arr", "kind": "teach",
+      "instruction": "An array holds many values under one name.",
+      "code": "const scores: number[] = [90, 72, 85];\nconsole.log(scores[0]);\nconsole.log(scores.length);",
+      "target": "90\n3",
+      "body": ["number[] means an array of numbers.", "Positions start at 0, so scores[0] is the first."],
+      "keypoint": "const scores: number[] = [90, 72, 85];" },
+
+    { "id": "t16_wrongtype", "kind": "live", "goal": "error", "expectCode": 2345,
+      "instruction": "Try to push the text \"100\" onto this array of numbers.",
+      "code": "const scores: number[] = [90, 72];\n",
+      "solution": "const scores: number[] = [90, 72];\nscores.push(\"100\");",
+      "hint": "scores.push(\"100\")",
+      "after": "The array was declared to hold numbers, so text is refused." },
+
+    { "id": "t16_for", "kind": "teach",
+      "instruction": "Repeat a fixed number of times.",
+      "code": "for (let i = 0; i < 3; i++) {\n  console.log(i);\n}",
+      "target": "0\n1\n2",
+      "body": ["Start at 0, keep going while i is under 3, add one each pass.", "Same three parts as Java."],
+      "keypoint": "for (let i = 0; i < n; i++)" },
+
+    { "id": "t16_w1", "kind": "live", "goal": "output",
+      "instruction": "Print the numbers 1 to 5, one per line.",
+      "code": "", "target": "1\n2\n3\n4\n5",
+      "solution": "for (let i = 1; i <= 5; i++) {\n  console.log(i);\n}",
+      "hint": "Start at 1 and keep going while i <= 5.",
+      "after": "Where you start and when you stop are both yours to choose." },
+
+    { "id": "t16_forof", "kind": "teach",
+      "instruction": "Walk an array without counting.",
+      "code": "const names = [\"Ada\", \"Ben\", \"Mia\"];\nfor (const n of names) {\n  console.log(n);\n}",
+      "target": "Ada\nBen\nMia",
+      "body": ["Each pass hands you the next value.", "No index, no length, nothing to get wrong."],
+      "keypoint": "for (const item of array) — when you do not need the position." },
+
+    { "id": "t16_p1", "kind": "predict",
+      "instruction": "What comes out?",
+      "code": "const xs = [2, 4, 6];\nlet total = 0;\nfor (const x of xs) {\n  total += x;\n}\nconsole.log(total);",
+      "opts": ["6", "12", "3", "246"],
+      "correct": 1,
+      "why": "total collects 2, then 4, then 6. 2 + 4 + 6 is 12.",
+      "skills": ["add up an array with for...of"] },
+
+    { "id": "t16_w2", "kind": "live", "goal": "output",
+      "instruction": "Print each name in capitals, one per line.",
+      "code": "const names = [\"ada\", \"ben\"];\n", "target": "ADA\nBEN",
+      "solution": "const names = [\"ada\", \"ben\"];\nfor (const n of names) {\n  console.log(n.toUpperCase());\n}",
+      "hint": "for (const n of names) { ... }",
+      "after": "TypeScript knows n is a string, so toUpperCase is allowed." },
+
+    { "id": "t16_while", "kind": "teach",
+      "instruction": "Repeat while something stays true.",
+      "code": "let n = 8;\nwhile (n > 1) {\n  n = n / 2;\n}\nconsole.log(n);",
+      "target": "1",
+      "body": ["Use while when you do not know how many passes it takes.", "Something inside must change, or it never stops."],
+      "keypoint": "while (test) { ... } — the test must eventually become false." },
+
+    { "id": "t16_push", "kind": "teach",
+      "instruction": "Arrays can grow.",
+      "code": "const found: string[] = [];\nfound.push(\"gem\");\nfound.push(\"rope\");\nconsole.log(found.length);\nconsole.log(found);",
+      "target": "2\ngem,rope",
+      "body": ["Start empty, add as you go.", "push adds to the end."],
+      "keypoint": "arr.push(value) adds one to the end." },
+
+    { "id": "t16_fill", "kind": "fill",
+      "instruction": "Fill in the blanks.",
+      "code": "const words: ⟦1⟧ = [\"a\", \"bb\", \"ccc\"];\nlet total = 0;\nfor (const w ⟦2⟧ words) {\n  total ⟦3⟧ w.length;\n}\nconsole.log(total);",
+      "blanks": [
+        { "chips": ["string[]", "number[]", "string"], "answer": 0 },
+        { "chips": ["of", "in", "="], "answer": 0 },
+        { "chips": ["+=", "=", "=="], "answer": 0 }
+      ],
+      "hint": "The values are text. Each pass gives you one word. total collects.",
+      "after": "string[] for text, of to walk it, += to collect." },
+
+    { "id": "t16_final", "kind": "live", "goal": "output",
+      "instruction": "Count how many scores are 50 or more, and print that count.",
+      "code": "const scores: number[] = [90, 40, 72, 30, 85];\n", "target": "3",
+      "solution": "const scores: number[] = [90, 40, 72, 30, 85];\nlet passed = 0;\nfor (const s of scores) {\n  if (s >= 50) {\n    passed++;\n  }\n}\nconsole.log(passed);",
+      "hint": "A counter starting at 0, a for...of loop, and an if inside it.",
+      "after": "A counter, a loop and a test. That pattern turns up constantly." }
+  ] }
+}
