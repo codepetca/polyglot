@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 // The gradebook feed. Pika PULLS this and writes its own grades.
 //
-// classOS never pushes into Pika and never holds a Supabase credential. That
+// polyglot never pushes into Pika and never holds a Supabase credential. That
 // keeps the port one-directional for writes, which is the smallest version of
 // this that still delivers gradable assignments. See PIKA-INTEGRATION.md.
 
@@ -41,7 +41,7 @@ export async function GET(req: Request) {
         lesson: studentCode(l.code),
         title: l.title,
         status: p.status,
-        // readiness is classOS's own 0..1 evidence toward mastery, so it is the
+        // readiness is polyglot's own 0..1 evidence toward mastery, so it is the
         // honest score to hand a gradebook. Reported only once a student has
         // actually started: a lesson nobody reached is not a lesson failed, and
         // sending 0 for it would quietly tank a real grade.

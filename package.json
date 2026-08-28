@@ -2,7 +2,7 @@
   "name": "classos",
   "version": "0.1.0",
   "private": true,
-  "description": "classOS — self-hosted, editable, AI-integrated Java teaching platform",
+  "description": "polyglot — self-hosted, editable, AI-integrated Java teaching platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

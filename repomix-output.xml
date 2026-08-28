@@ -332,7 +332,7 @@ export async function GET(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: `Hello class! This announcement was posted automatically by classOS on ${new Date().toLocaleTimeString()}!`,
+        text: `Hello class! This announcement was posted automatically by polyglot on ${new Date().toLocaleTimeString()}!`,
         state: "PUBLISHED",
       }),
     });
@@ -347,7 +347,7 @@ export async function GET(req: Request) {
       },
       body: JSON.stringify({
         title: `AP Java Homework ${Math.floor(Math.random() * 100)}`,
-        description: "Complete Unit 2.1 Graded Coding Exercise on printing inside your classOS workspace.",
+        description: "Complete Unit 2.1 Graded Coding Exercise on printing inside your polyglot workspace.",
         workType: "ASSIGNMENT",
         state: "PUBLISHED",
         maxPoints: 10,
@@ -563,7 +563,7 @@ export async function POST(req: Request) {
     if (user) {
       const c = await issueCode(cleanEmail, "reset");
       try {
-        await sendMail(cleanEmail, "classOS password reset", `Your password reset code is: ${c}\n\nIt expires in 15 minutes. If you didn't ask for this, ignore it.`);
+        await sendMail(cleanEmail, "polyglot password reset", `Your password reset code is: ${c}\n\nIt expires in 15 minutes. If you didn't ask for this, ignore it.`);
       } catch {
         return NextResponse.json({ error: "Couldn't send email — try again later." }, { status: 502 });
       }
@@ -1165,7 +1165,7 @@ export default function TotpSetup({ enabled: initialEnabled }: { enabled: boolea
         <form onSubmit={confirm}>
           <ol style={{ margin: "0 0 10px 20px", lineHeight: 1.9, fontSize: 14 }}>
             <li>Open <b>Google Authenticator</b> → + → <b>Enter a setup key</b>.</li>
-            <li>Account: <code>classOS</code> · Key: <code style={{ userSelect: "all" }}>{setup.secret}</code> (time-based)</li>
+            <li>Account: <code>polyglot</code> · Key: <code style={{ userSelect: "all" }}>{setup.secret}</code> (time-based)</li>
             <li>Type the 6-digit code it shows:</li>
           </ol>
           <div className="runrow">
@@ -2303,7 +2303,7 @@ export async function sendMail(to: string, subject: string, text: string): Promi
     secure: cfg.port === 465,
     auth: { user: cfg.user, pass: decryptSecret(cfg.encryptedPass) },
   });
-  await transporter.sendMail({ from: `"classOS" <${cfg.user}>`, to, subject, text });
+  await transporter.sendMail({ from: `"polyglot" <${cfg.user}>`, to, subject, text });
 }
 
 // ─── Verification codes ──────────────────────────────────────────────────────
@@ -2559,7 +2559,7 @@ export function verifyTotp(secret: string, code: string): boolean {
 }
 
 export function otpauthUri(accountLabel: string, secret: string): string {
-  return `otpauth://totp/${encodeURIComponent("classOS")}:${encodeURIComponent(accountLabel)}?secret=${secret}&issuer=classOS&digits=6&period=30`;
+  return `otpauth://totp/${encodeURIComponent("polyglot")}:${encodeURIComponent(accountLabel)}?secret=${secret}&issuer=polyglot&digits=6&period=30`;
 }
 </file>
 
@@ -4117,7 +4117,7 @@ yarn-error.log*
 </file>
 
 <file path="ARCHITECTURE.md">
-# classOS — Architecture Map
+# polyglot — Architecture Map
 
 Read this first when changing anything. It tells you the **one place** to edit for a given
 feature, so you never have to read the whole codebase.
@@ -4204,7 +4204,7 @@ A feature is usually one file in each layer it touches — not scattered.
 </file>
 
 <file path="BUILD-BRIEF.md">
-# classOS — Build Brief (Production v1)
+# polyglot — Build Brief (Production v1)
 
 Companion to `SPEC.md`. This is the brief for turning the prototypes into a **real,
 self-hosted, editable, AI-integrated platform** that the owner runs and fully controls.
@@ -4333,7 +4333,7 @@ hold entirely, and which no longer depends on this chat to change.
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>classOS — Lesson Editor (Admin)</title>
+<title>polyglot — Lesson Editor (Admin)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -4580,7 +4580,7 @@ load();
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>classOS — Java Lessons (Unit 2)</title>
+<title>polyglot — Java Lessons (Unit 2)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -5282,7 +5282,7 @@ renderLesson(0);
 </file>
 
 <file path="DEPLOY.md">
-# Hosting classOS — first-timer's walkthrough
+# Hosting polyglot — first-timer's walkthrough
 
 You'll end up with: your app at `https://<something>.vercel.app` (Vercel runs the code),
 your data in a real Postgres database at Neon (accounts, progress, curriculum, keys), and
@@ -5437,7 +5437,7 @@ If all seven pass, you're hosted and the honesty engine holds up against devtool
 </file>
 
 <file path="WORKING-SOLO.md">
-# Working on classOS by yourself (no money, quota-limited)
+# Working on polyglot by yourself (no money, quota-limited)
 
 You don't need me for everything. This is how to keep moving when your Claude quota is out,
 using free tools, even without strong coding skills. Read it once; keep it open while you work.
@@ -5668,7 +5668,7 @@ export async function POST(req: Request) {
   if (await isEmailConfigured()) {
     const codeStr = await issueCode(cleanEmail, "join", { classId: cls.id, name: cleanName, passwordHash });
     try {
-      await sendMail(cleanEmail, "Your classOS code", `Hi ${cleanName},\n\nYour verification code is: ${codeStr}\n\nIt expires in 15 minutes. If you didn't request this, ignore this email.`);
+      await sendMail(cleanEmail, "Your polyglot code", `Hi ${cleanName},\n\nYour verification code is: ${codeStr}\n\nIt expires in 15 minutes. If you didn't request this, ignore this email.`);
     } catch (e) {
       return NextResponse.json({ error: "Couldn't send the email — tell your teacher (SMTP problem)." }, { status: 502 });
     }
@@ -5733,7 +5733,7 @@ export async function POST(req: Request) {
   if (!user.emailVerifiedAt && (await isEmailConfigured())) {
     const code = await issueCode(user.email!, "verify");
     try {
-      await sendMail(user.email!, "Your classOS verification code", `Your verification code is: ${code}\n\nIt expires in 15 minutes.`);
+      await sendMail(user.email!, "Your polyglot verification code", `Your verification code is: ${code}\n\nIt expires in 15 minutes.`);
     } catch {
       /* SMTP hiccup: fall through and let them in rather than locking everyone out */
       await prisma.user.update({ where: { id: user.id }, data: { failedLogins: 0 } });
@@ -7862,7 +7862,7 @@ async function runViaGodbolt(source: string, stdin: string, offset: number): Pro
   try {
     res = await fetch(`${GODBOLT_URL}/api/compiler/${GODBOLT_JAVA}/compile`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", "User-Agent": "classOS-edu/1.0" },
+      headers: { "Content-Type": "application/json", Accept: "application/json", "User-Agent": "polyglot-edu/1.0" },
       body: JSON.stringify({
         source,
         lang: "java",
@@ -8388,7 +8388,7 @@ export default nextConfig;
 </file>
 
 <file path="README.md">
-# classOS
+# polyglot
 
 A self-hosted, editable, AI-integrated platform for teaching intro Java. It collapses the
 three prototypes (`classOS-prototype-v4`, `classOS-lessons`, `classOS-editor`) into one real
@@ -10204,7 +10204,7 @@ const UNIT2: SeedLesson[] = [
 const DEMO_STUDENTS = ["Ada Lovelace", "Grace Hopper", "Alan Turing", "Katherine Johnson", "Linus Torvalds"];
 
 async function main() {
-  console.log("Seeding classOS…");
+  console.log("Seeding polyglot…");
 
   // clean slate (safe for a dev prototype DB)
   await prisma.attempt.deleteMany();
@@ -10295,7 +10295,7 @@ main()
   "name": "classos",
   "version": "0.1.0",
   "private": true,
-  "description": "classOS — self-hosted, editable, AI-integrated Java teaching platform",
+  "description": "polyglot — self-hosted, editable, AI-integrated Java teaching platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10476,7 +10476,7 @@ export async function POST(req: Request) {
     await saveSmtpConfig(body.smtp);
     if (body.smtp.testTo) {
       try {
-        await sendMail(body.smtp.testTo, "classOS email test", "It works! Email verification and password resets are now active.");
+        await sendMail(body.smtp.testTo, "polyglot email test", "It works! Email verification and password resets are now active.");
         return NextResponse.json({ ok: true, message: `Test email sent to ${body.smtp.testTo} ✓` });
       } catch (e) {
         return NextResponse.json({ ok: false, message: `Saved, but sending failed: ${(e as Error).message.slice(0, 160)}` });
@@ -10672,7 +10672,7 @@ import { unreadCount } from "@/lib/messaging";
 import Nav from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "classOS",
+  title: "polyglot",
   description: "Self-hosted, editable, AI-integrated Java teaching platform",
 };
 
@@ -12045,7 +12045,7 @@ export default async function LessonPage({
 </file>
 
 <file path="PLAN.md">
-# classOS — Standing Plan
+# polyglot — Standing Plan
 
 The prototypes are the bar: **prototype-v4's UI + classOS-lessons' content + classOS-editor's
 authoring flow**, with a real database underneath. Any change that makes the app feel *thinner*
@@ -12192,7 +12192,7 @@ groups following questions)`. Subject-agnostic on purpose (works for English/his
 </file>
 
 <file path="app/globals.css">
-/* classOS design system — ported from classOS-prototype-v4 + classOS-editor.
+/* polyglot design system — ported from classOS-prototype-v4 + classOS-editor.
    Those prototypes are the visual source of truth; keep changes additive. */
 
 :root {
@@ -12689,7 +12689,7 @@ input.f, select.f, textarea.f { width: 100%; padding: 9px 12px; border-radius: 8
 </file>
 
 <file path="prisma/schema.prisma">
-// classOS data model.
+// polyglot data model.
 //
 // Prototype phase uses SQLite (file-based, zero setup). To mature to Postgres:
 //   1. change `provider` below to "postgresql"

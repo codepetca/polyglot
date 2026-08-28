@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // The exact import schema, embedded in a prompt you paste (with your syllabus)
 // into a strong model. It returns JSON you paste back below to append lessons.
-const PROMPT = `You are building curriculum for "classOS", a self-hosted teaching platform. Convert the SYLLABUS at the bottom into JSON that exactly matches this schema. Output ONLY the JSON, no commentary, no markdown fences.
+const PROMPT = `You are building curriculum for "polyglot", a self-hosted teaching platform. Convert the SYLLABUS at the bottom into JSON that exactly matches this schema. Output ONLY the JSON, no commentary, no markdown fences.
 
 TOP LEVEL:
 { "chapters": [ { "title": "Unit name", "lessons": [ LESSON, ... ] } ] }

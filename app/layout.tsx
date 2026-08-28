@@ -7,7 +7,7 @@ import { getFeatureFlags, getBrand } from "@/lib/settings";
 import Nav from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "classOS",
+  title: "polyglot",
   description: "Self-hosted, editable, AI-integrated Java teaching platform",
 };
 

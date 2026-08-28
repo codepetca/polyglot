@@ -41,10 +41,10 @@ export function decryptSecret(blob: string): string {
 // deployment puts in its top bar.
 
 export async function getBrand(): Promise<string> {
-  return (await getSetting<string>("brand", "classOS")) || "classOS";
+  return (await getSetting<string>("brand", "polyglot")) || "polyglot";
 }
 export async function saveBrand(name: string): Promise<void> {
-  await setSetting("brand", String(name || "").trim().slice(0, 32) || "classOS");
+  await setSetting("brand", String(name || "").trim().slice(0, 32) || "polyglot");
 }
 
 // ─── The master AI switch ───────────────────────────────────────────────────

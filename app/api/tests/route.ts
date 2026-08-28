@@ -20,7 +20,7 @@ async function syncTestToGoogle(req: Request, testId: string): Promise<{ synced:
   if (!test?.published || !test.class?.googleCourseId || !test.ownerId) return null;
   const r = await syncTestAssignment(test.ownerId, test.class.googleCourseId, {
     title: test.title,
-    description: `Take this test in classOS. (Do not submit here — your marks come from classOS.)`,
+    description: `Take this test in polyglot. (Do not submit here — your marks come from polyglot.)`,
     maxPoints: maxPoints(normalizeQuestions(test.questions as any[])),
     examUrl: `${originOf(req)}/exam/test/${test.id}`,
     closeAt: test.closeAt,

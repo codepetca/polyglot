@@ -2,17 +2,17 @@ import "server-only";
 import { prisma } from "@/lib/db";
 import type { PikaClaims } from "@/lib/pika/token";
 
-// Resolving a Pika student to the row classOS hangs their progress off.
+// Resolving a Pika student to the row polyglot hangs their progress off.
 //
 // THIS IS NOT AN ACCOUNT SYSTEM. Pika owns identity: it authenticates, it holds
-// the email and the name, it decides who is in which classroom. All classOS
+// the email and the name, it decides who is in which classroom. All polyglot
 // keeps is a row keyed by the hashed subject, because Progress needs something
 // to point at. No password, no session, no login screen, no way in except a
 // valid Pika token.
 //
-// EARLIER VERSIONS OF THIS FILE linked to an existing classOS account by email,
+// EARLIER VERSIONS OF THIS FILE linked to an existing polyglot account by email,
 // to save progress made before the merge. That is gone: every account currently
-// on classOS is the owner's own testing, so there is nothing to preserve and no
+// on polyglot is the owner's own testing, so there is nothing to preserve and no
 // reason to carry a matching rule that can mis-fire. If real standalone
 // progress ever needs importing, it comes back as a deliberate migration, not
 // as a branch that runs on every request.
@@ -29,7 +29,7 @@ export async function resolvePikaStudent(claims: PikaClaims): Promise<Resolved> 
   if (existing) return { userId: existing.id, created: false };
 
   // Email and name are copied for display only, and are whatever Pika last
-  // said. classOS never authenticates against either, so a change on Pika's
+  // said. polyglot never authenticates against either, so a change on Pika's
   // side is not a security event here.
   let email = (claims.email || "").trim().toLowerCase() || null;
 

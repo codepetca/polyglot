@@ -90,7 +90,7 @@ export default function PlatformSwitches({ ai, chat, brand }: { ai: boolean; cha
           <b>NAME</b>
           <span>
             What this deployment calls itself in the top bar. The repository, the licence and the source stay named
-            classOS whatever this says — this is the sign on the door, not the deed.
+            polyglot whatever this says — this is the sign on the door, not the deed.
           </span>
         </div>
         <div className="brandedit">

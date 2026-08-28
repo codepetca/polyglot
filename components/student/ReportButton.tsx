@@ -141,9 +141,9 @@ export default function ReportButton({ initialReason }: { initialReason?: Reason
       {open && (
         <div className="reportpanel" role="dialog" aria-label="Talk to the person who built this">
           <header className="rphead">
-            <Face who={admin ? { name: admin.name, avatar: admin.avatar } : { name: "classOS", avatar: null }} big />
+            <Face who={admin ? { name: admin.name, avatar: admin.avatar } : { name: "polyglot", avatar: null }} big />
             <div>
-              <b>{admin ? admin.name : "classOS"}</b>
+              <b>{admin ? admin.name : "polyglot"}</b>
               <span>Maker of ClassOS. Replies here</span>
             </div>
             <button onClick={() => setOpen(false)} aria-label="Close">✕</button>
@@ -153,7 +153,7 @@ export default function ReportButton({ initialReason }: { initialReason?: Reason
             {/* A blank box gets a blank response. Saying who is on the other end,
                 and that it is one person, is most of what makes anyone type. */}
             <p className="rpintro">
-              Hi! I built classOS. Talk to me about anything and I will actually read it and reply. Nobody else sees
+              Hi! I built polyglot. Talk to me about anything and I will actually read it and reply. Nobody else sees
               this — not even Mr. Chan.
             </p>
             {msgs.map((m) => (

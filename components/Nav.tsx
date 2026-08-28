@@ -11,7 +11,7 @@ import QuestionnaireButton from "./student/QuestionnaireButton";
 
 type MiniUser = { id: string; name: string; role: string; className?: string | null; avatar?: string | null; anonymous?: boolean };
 
-export default function Nav({ me, cost, unread = 0, chat = true, brand = "classOS" }: { me: MiniUser | null; cost: { total: number; calls: number } | null; unread?: number; chat?: boolean; brand?: string }) {
+export default function Nav({ me, cost, unread = 0, chat = true, brand = "polyglot" }: { me: MiniUser | null; cost: { total: number; calls: number } | null; unread?: number; chat?: boolean; brand?: string }) {
   const path = usePathname();
   const router = useRouter();
   // Inside Pika the bar stays — it carries Notes, Reference, theme and the ESL
@@ -40,7 +40,7 @@ export default function Nav({ me, cost, unread = 0, chat = true, brand = "classO
           <Link href="/" className="logo">
             {/* The name is a setting. A second school wanting its own word for
                 this is a string, not an argument, and not a fork. */}
-            {brand === "classOS" ? <>class<em>OS</em></> : brand}
+            {brand === "polyglot" ? <>poly<em>glot</em></> : brand}
           </Link>
           <div className="proto">SELF-HOSTED</div>
         </>

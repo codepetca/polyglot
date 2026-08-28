@@ -1,4 +1,4 @@
-/* classOS design system — ported from classOS-prototype-v4 + classOS-editor.
+/* polyglot design system — ported from classOS-prototype-v4 + classOS-editor.
    Those prototypes are the visual source of truth; keep changes additive. */
 
 :root {
@@ -47,7 +47,7 @@
   --t-5xl: 30px;
   --t-6xl: 34px;
 
-  /* Elevation. TWO families, because classOS has two and flattening them into
+  /* Elevation. TWO families, because polyglot has two and flattening them into
      one would erase the house style rather than tidy it.
 
      The hard offset shadow is the letterpress look the lesson cards are built

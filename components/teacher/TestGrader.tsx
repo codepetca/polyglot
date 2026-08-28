@@ -121,7 +121,7 @@ function Marking({ sub, qById, testId, onBack, onSaved }: { sub: Sub; qById: Map
 
   async function saveGrade() {
     const d = await fetch(`/api/tests/${testId}/grade`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ submissionId: sub.id, results }) }).then((x) => x.json());
-    if (d.google && !d.google.pushed) alert(`Grade saved in classOS ✓\nGoogle Classroom push failed: ${d.google.error || "unknown"}`);
+    if (d.google && !d.google.pushed) alert(`Grade saved in polyglot ✓\nGoogle Classroom push failed: ${d.google.error || "unknown"}`);
     onSaved();
   }
 

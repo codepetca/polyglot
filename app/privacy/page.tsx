@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getFeatureFlags } from "@/lib/settings";
 
-export const metadata = { title: "Privacy — classOS" };
+export const metadata = { title: "Privacy — polyglot" };
 
 // A real, specific statement — not boilerplate. Written to be true, checkable
 // against the actual code, and readable by a student or a skeptical teacher.
@@ -21,14 +21,14 @@ export default async function PrivacyPage() {
       <blockquote className="privsum">
         {ai ? (
           <p>
-            classOS never asks for a name, an email or a school, so there is nothing on file to identify a student
+            polyglot never asks for a name, an email or a school, so there is nothing on file to identify a student
             with — work is stored against a random session id and nothing else. The only thing that leaves this
             server is what a student types at the AI tutor, sent to Google&rsquo;s model together with the lesson text
             and their own code, and never with a name, because one was never collected.
           </p>
         ) : (
           <p>
-            classOS never asks for a name, an email or a school, so there is nothing on file to identify a student
+            polyglot never asks for a name, an email or a school, so there is nothing on file to identify a student
             with — work is stored against a random session id and nothing else. No student text reaches any AI
             provider at all: the AI is switched off, and that is enforced at the single function every AI call in the
             product passes through, not by a page remembering to check.
@@ -59,7 +59,7 @@ export default async function PrivacyPage() {
         <p>
           The AI tutor is switched off. Nothing you type — not a question, not your code, not an error message — is sent to
           any AI provider, and the tutor is not shown anywhere in the app. This is not a setting each page checks; every AI
-          call in classOS goes through one function, and that function has no paid provider to reach while the switch is off.
+          call in polyglot goes through one function, and that function has no paid provider to reach while the switch is off.
         </p>
       )}
 
