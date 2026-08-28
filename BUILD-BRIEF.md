@@ -1,4 +1,4 @@
-# classOS — Build Brief (Production v1)
+# polyglot — Build Brief (Production v1)
 
 Companion to `SPEC.md`. This is the brief for turning the prototypes into a **real,
 self-hosted, editable, AI-integrated platform** that the owner runs and fully controls.

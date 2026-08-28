@@ -1,4 +1,4 @@
-// classOS data model.
+// polyglot data model.
 //
 // Prototype phase uses SQLite (file-based, zero setup). To mature to Postgres:
 //   1. change `provider` below to "postgresql"

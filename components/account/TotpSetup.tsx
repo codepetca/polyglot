@@ -57,7 +57,7 @@ export default function TotpSetup({ enabled: initialEnabled }: { enabled: boolea
         <form onSubmit={confirm}>
           <ol style={{ margin: "0 0 10px 20px", lineHeight: 1.9, fontSize: 14 }}>
             <li>Open <b>Google Authenticator</b> → + → <b>Enter a setup key</b>.</li>
-            <li>Account: <code>classOS</code> · Key: <code style={{ userSelect: "all" }}>{setup.secret}</code> (time-based)</li>
+            <li>Account: <code>polyglot</code> · Key: <code style={{ userSelect: "all" }}>{setup.secret}</code> (time-based)</li>
             <li>Type the 6-digit code it shows:</li>
           </ol>
           <div className="runrow">

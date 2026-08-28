@@ -1,12 +1,12 @@
 # Handoff to whoever builds the Pika side
 
 Written for the agent working in `codepetca/pika`. Everything below is
-implemented and deployed on the classOS side unless it says otherwise.
+implemented and deployed on the polyglot side unless it says otherwise.
 
 **Keep this file current.** It is the contract, and a stale contract is worse
 than none — if you change something here, change it here first.
 
-- classOS lives at `https://classos.arronwang.com`, repo `arronwang01/lcl`.
+- polyglot lives at `https://classos.arronwang.com`, repo `arronwang01/lcl`.
 - Last verified against production: 2026-08-25.
 
 ---
@@ -26,7 +26,7 @@ the Pal one with a different audience.
 | --- | --- |
 | `sub` | `SHA256(salt + raw_student_id)` — never a raw Pika id |
 | `classroom` | Pika classroom id |
-| `email`, `name`, `role` | display only; classOS never authenticates on them |
+| `email`, `name`, `role` | display only; polyglot never authenticates on them |
 | `iat`, `exp` | five minutes, ten maximum |
 | `aud` | `"classos"` |
 | `iss` | `"pika"` |
@@ -50,7 +50,7 @@ Implementation: `lib/pika/jwt.ts` (pure), `lib/pika/token.ts` (env),
 We resolve `sub` to a local row and create one on first sight. No password, no
 session, no login. That row exists because progress needs something to point at.
 
-**classOS roles are not derived from Pika.** A Pika student gets
+**polyglot roles are not derived from Pika.** A Pika student gets
 `role: "STUDENT"`. The owner's own account has `role: "ADMIN"` and no
 `pikaSubject`, and is untouched by any of this — he authors and reads stats
 while teaching a different class.
@@ -70,7 +70,7 @@ Bearer token on every request. Both are `GET`, both are read-only.
 read that as zero. A lesson nobody reached is not a lesson failed, and turning
 it into a 0 would tank a real grade.
 
-**You pull; we never push.** classOS holds no Supabase credential and writes
+**You pull; we never push.** polyglot holds no Supabase credential and writes
 nothing on your side. Smaller blast radius, and one fewer secret to rotate.
 
 ---
@@ -126,8 +126,8 @@ Load `https://classos.arronwang.com/lessons/<code>?embed=pika`.
 
 | Direction | Message | Meaning |
 | --- | --- | --- |
-| classOS → Pika | `{ type: "classos:back" }` | student pressed Back. Route them to the lessons tab. |
-| Pika → classOS | `{ type: "classos:open", lesson: "6.3" }` | *(not implemented yet — tell us if you want it and we will add it)* |
+| polyglot → Pika | `{ type: "classos:back" }` | student pressed Back. Route them to the lessons tab. |
+| Pika → polyglot | `{ type: "classos:open", lesson: "6.3" }` | *(not implemented yet — tell us if you want it and we will add it)* |
 
 If nobody is listening for `classos:back` we fall back to `history.back()`.
 
@@ -140,25 +140,25 @@ naming a student lands in history, server logs and the referer header.
 
 Nothing here is implemented yet; it is the shape we would build to.
 
-**Works against your v1 contract as it stands.** A classOS lesson is a learning
+**Works against your v1 contract as it stands.** A polyglot lesson is a learning
 item, so `learning_item.viewed` and `learning_item.completed` need no changes to
 Pal — they earn the 75 XP and the on-time bonus, feed Weekly Rhythm, and
 therefore drive the existing keepsake ladder. `learner_id` must be the opaque
 hashed token, never a raw id.
 
-**Not settled: admin-granted badges.** classOS can already create and award
+**Not settled: admin-granted badges.** polyglot can already create and award
 them locally (`Badge`, `BadgeAward`, `/admin/badges`, recipients restricted to
 students with a `pikaSubject`). They are meant to end up in Pal, with its claim
 animation and its collection — but Pal's collection is *derived* from earned
 Weekly Rhythms and the v1 contract has no event meaning "a person granted this".
 That is a product decision for your side, not something to work around. Until it
-is decided, awards sit in classOS and can be replayed.
+is decided, awards sit in polyglot and can be replayed.
 
 ---
 
 ## 7. Ground rules
 
-- **classOS ships independently.** Own repo, own deploy, own release day.
+- **polyglot ships independently.** Own repo, own deploy, own release day.
   Nothing we ship runs inside your build, so nothing we ship can break Pika. The
   token contract is the only shared surface and changes only by agreement.
 - **We never write to Supabase.**

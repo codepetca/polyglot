@@ -29,7 +29,7 @@ export default async function Home() {
       <p className="landfoot">
         Free and self-hosted, for intro Java and AP CSA.{" "}
         <Link href="/privacy">Privacy</Link> · <Link href="/login">Teacher sign-in</Link>
-        {brand !== "classOS" && <> · {brand} is built on classOS</>}
+        {brand !== "polyglot" && <> · {brand} is built on polyglot</>}
       </p>
     </div>
   );

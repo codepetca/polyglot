@@ -1,4 +1,4 @@
-# classOS — Student Model & Data Layer (design)
+# polyglot — Student Model & Data Layer (design)
 
 > Status: **design, not yet built.** This pins the model on paper before we touch
 > the schema, because it's the platform's spine — easy to get subtly wrong, expensive

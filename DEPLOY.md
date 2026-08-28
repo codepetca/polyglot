@@ -1,4 +1,4 @@
-# Hosting classOS — first-timer's walkthrough
+# Hosting polyglot — first-timer's walkthrough
 
 You'll end up with: your app at `https://<something>.vercel.app` (Vercel runs the code),
 your data in a real Postgres database at Neon (accounts, progress, curriculum, keys), and

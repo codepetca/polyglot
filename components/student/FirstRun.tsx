@@ -54,7 +54,7 @@ export default function FirstRun() {
             <p className="freyebrow">Before you start · 1 of 2</p>
             <h2>Is English your first language?</h2>
             <p className="frnote">
-              If not, classOS can show every lesson twice — English on one side, your language on the other. Java
+              If not, polyglot can show every lesson twice — English on one side, your language on the other. Java
               words like <code>println</code> always stay in English, because those are the words your exam uses.
             </p>
             <div className="frlangs">

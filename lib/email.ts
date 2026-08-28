@@ -42,7 +42,7 @@ export async function sendMail(to: string, subject: string, text: string): Promi
     secure: cfg.port === 465,
     auth: { user: cfg.user, pass: decryptSecret(cfg.encryptedPass) },
   });
-  await transporter.sendMail({ from: `"classOS" <${cfg.user}>`, to, subject, text });
+  await transporter.sendMail({ from: `"polyglot" <${cfg.user}>`, to, subject, text });
 }
 
 // ─── Verification codes ──────────────────────────────────────────────────────

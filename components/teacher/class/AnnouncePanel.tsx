@@ -24,7 +24,7 @@ export default function AnnouncePanel({ classId, googleLinked, posts }: { classI
     <>
       <div className="panel">
         <h2>Post an announcement</h2>
-        <p style={{ fontSize: 14 }}>Goes to every student's classOS inbox{googleLinked ? " and the Google Classroom stream" : ""}.</p>
+        <p style={{ fontSize: 14 }}>Goes to every student's polyglot inbox{googleLinked ? " and the Google Classroom stream" : ""}.</p>
         <textarea className="f" rows={3} value={text} onChange={(e) => setText(e.target.value)} placeholder="Reminder: the While Loops quiz closes Friday…" />
         <div className="runrow">
           <button className="btn green" onClick={post} disabled={busy || !text.trim()}>{busy ? "posting…" : "Post"}</button>

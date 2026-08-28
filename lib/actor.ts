@@ -9,9 +9,9 @@ import { resolvePikaStudent } from "@/lib/pika/identity";
  * Who is making this request, however they arrived.
  *
  * WHY THIS EXISTS. Every AI and runner route authenticated with currentUser(),
- * which reads a cookie session. That is fine while classOS is its own site and
+ * which reads a cookie session. That is fine while polyglot is its own site and
  * useless the moment it is a tab inside Pika: a student there carries a Pika
- * bearer token, has no classOS cookie, and would be turned away by the very
+ * bearer token, has no polyglot cookie, and would be turned away by the very
  * features the tab exists to provide. A per-student AI limit that only counts
  * cookie sessions is, as the owner put it, pointless.
  *

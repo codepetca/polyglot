@@ -24,7 +24,7 @@ export async function GET(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: `Hello class! This announcement was posted automatically by classOS on ${new Date().toLocaleTimeString()}!`,
+        text: `Hello class! This announcement was posted automatically by polyglot on ${new Date().toLocaleTimeString()}!`,
         state: "PUBLISHED",
       }),
     });
@@ -39,7 +39,7 @@ export async function GET(req: Request) {
       },
       body: JSON.stringify({
         title: `AP Java Homework ${Math.floor(Math.random() * 100)}`,
-        description: "Complete Unit 2.1 Graded Coding Exercise on printing inside your classOS workspace.",
+        description: "Complete Unit 2.1 Graded Coding Exercise on printing inside your polyglot workspace.",
         workType: "ASSIGNMENT",
         state: "PUBLISHED",
         maxPoints: 10,

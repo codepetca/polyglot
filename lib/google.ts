@@ -167,7 +167,7 @@ export const createCoursework = (userId: string, courseId: string, work: Record<
   googleFetch(userId, `/courses/${courseId}/courseWork`, { method: "POST", body: JSON.stringify({ workType: "ASSIGNMENT", state: "PUBLISHED", ...work }) });
 
 // Change an assignment's state (PUBLISHED ↔ DRAFT) — used when a test is
-// unpublished in classOS so it hides from students in Google too.
+// unpublished in polyglot so it hides from students in Google too.
 export const setCourseworkState = (userId: string, courseId: string, courseWorkId: string, state: "PUBLISHED" | "DRAFT") =>
   googleFetch(userId, `/courses/${courseId}/courseWork/${courseWorkId}?updateMask=state`, { method: "PATCH", body: JSON.stringify({ state }) });
 
@@ -197,7 +197,7 @@ export async function pushGrade(
   return { ok: true };
 }
 
-// Create or update a Google Classroom assignment that links to a classOS test.
+// Create or update a Google Classroom assignment that links to a polyglot test.
 // closeAt → the assignment's dueDate/dueTime (shows on students' Google Calendar).
 export async function syncTestAssignment(
   userId: string,

@@ -1,4 +1,4 @@
-# Working on classOS by yourself (no money, quota-limited)
+# Working on polyglot by yourself (no money, quota-limited)
 
 You don't need me for everything. This is how to keep moving when your Claude quota is out,
 using free tools, even without strong coding skills. Read it once; keep it open while you work.

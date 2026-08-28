@@ -1,6 +1,6 @@
 # Google Classroom integration
 
-classOS is the control center; it syncs *out* to each teacher's own Google Classroom.
+polyglot is the control center; it syncs *out* to each teacher's own Google Classroom.
 
 ## Architecture (multi-teacher from day one)
 - Each teacher connects **their own** Google account → we store **their** encrypted
@@ -12,7 +12,7 @@ classOS is the control center; it syncs *out* to each teacher's own Google Class
 
 ## Scopes (`lib/google.ts` → `GOOGLE_SCOPES`)
 - `classroom.courses.readonly` — list the teacher's courses (for the import picker)
-- `classroom.rosters.readonly` — match Google students ↔ classOS students
+- `classroom.rosters.readonly` — match Google students ↔ polyglot students
 - `classroom.announcements` — post to the class stream
 - `classroom.coursework.students` — **create assignments + push grades** (this replaced the
   broken `coursework.me`, which caused the 403 on CreateCourseWork)
@@ -46,7 +46,7 @@ Set in `.env` (local) **and** Vercel (production):
 - [x] Step 2 — Connect banner + Disconnect in ClassManager; per-class course picker
       (`/api/google` GET lists courses, POST link/unlink); `Class.googleCourseId/Name`.
 - [x] Step 3a — **assignment sync on Test publish**: publishing a test whose class is linked
-      creates/updates a Google assignment (link material → the classOS exam URL, `maxPoints`,
+      creates/updates a Google assignment (link material → the polyglot exam URL, `maxPoints`,
       `dueDate`/`dueTime` from `closeAt`). Stored on `Test.googleCourseWorkId` (no dupes).
 - [ ] Step 3b — **grade passback** (needs student ↔ Google-submission mapping by email;
       `studentSubmissions.patch` with `draftGrade`/`assignedGrade` then `.return`).

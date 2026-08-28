@@ -130,7 +130,7 @@ const UNIT2: SeedLesson[] = [
 const DEMO_STUDENTS = ["Ada Lovelace", "Grace Hopper", "Alan Turing", "Katherine Johnson", "Linus Torvalds"];
 
 async function main() {
-  console.log("Seeding classOS…");
+  console.log("Seeding polyglot…");
 
   // clean slate (safe for a dev prototype DB)
   await prisma.attempt.deleteMany();

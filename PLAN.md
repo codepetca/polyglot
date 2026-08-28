@@ -1,4 +1,4 @@
-# classOS — Standing Plan
+# polyglot — Standing Plan
 
 The prototypes are the bar: **prototype-v4's UI + classOS-lessons' content + classOS-editor's
 authoring flow**, with a real database underneath. Any change that makes the app feel *thinner*

@@ -164,7 +164,7 @@ async function runViaGodbolt(source: string, stdin: string, offset: number, comp
   try {
     res = await fetch(`${GODBOLT_URL}/api/compiler/${compilerId}/compile`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", "User-Agent": "classOS-edu/1.0" },
+      headers: { "Content-Type": "application/json", Accept: "application/json", "User-Agent": "polyglot-edu/1.0" },
       body: JSON.stringify({
         source,
         lang: "java",

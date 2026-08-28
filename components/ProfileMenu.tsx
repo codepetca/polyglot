@@ -20,7 +20,7 @@ export default function ProfileMenu({
 }: {
   me: MiniUser;
   onSignOut: () => void;
-  /** Set when classOS is running inside a host that owns identity. */
+  /** Set when polyglot is running inside a host that owns identity. */
   embed?: "" | "pika";
 }) {
   const [open, setOpen] = useState(false);
@@ -146,7 +146,7 @@ export default function ProfileMenu({
 
           <div className="pmsection pmlinks">
             {/* Account and Sign out are Pika's to offer when Pika owns
-                identity. Signing out of classOS from inside a Pika tab would
+                identity. Signing out of polyglot from inside a Pika tab would
                 leave a student in a tab they cannot use, in a session they did
                 not know they had. The reading settings stay, because they are
                 genuinely ours. */}
