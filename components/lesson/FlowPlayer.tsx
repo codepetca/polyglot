@@ -1155,7 +1155,13 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
       {step.kind === "live" && (
         <LiveStep
           step={step as any}
-          onDone={(firstTry) => { if (!firstTry) onAttempt(step.id); onDone(firstTry); }}
+          // SOLVED IS NOT THE SAME AS DONE. Calling onDone here advanced the
+          // lesson the instant the goal was met, which on a live step means the
+          // instant the student stopped typing — so the "here is why that
+          // happened" line flashed past and the next step was on screen before
+          // they had looked up. Every other kind sets `won`, shows its
+          // explanation, and waits for Next. This does that now.
+          onSolved={(firstTry) => { if (!firstTry) onAttempt(step.id); setWon(true); }}
         />
       )}
 
