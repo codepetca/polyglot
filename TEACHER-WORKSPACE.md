@@ -1,4 +1,4 @@
-# classOS — Teacher Experience Design
+# polyglot — Teacher Experience Design
 
 The platform has a lot of working capability but it's organized *by feature*, not *by how a
 teacher thinks*. This doc is the target design we build toward.
@@ -49,10 +49,10 @@ area; a class's Assignments pull from it.
 
 ## 3. "Never worry about syncing" — the sync principle
 
-- **Outbound (classOS → Google): automatic on every change.** Editing a published test re-upserts
+- **Outbound (polyglot → Google): automatic on every change.** Editing a published test re-upserts
   the assignment; changing the close date updates the due date; saving a grade pushes it; posting
   an announcement posts it. **No "sync" buttons anywhere.**
-- **Inbound (Google → classOS): auto-refresh.** Roster re-syncs when the Students tab opens (+ a
+- **Inbound (Google → polyglot): auto-refresh.** Roster re-syncs when the Students tab opens (+ a
   manual refresh). True real-time from Google needs push notifications (Cloud Pub/Sub) — a later
   upgrade.
 - Every linked class shows a quiet **"in sync ✓ · updated 2m ago"** so teachers *trust* it and

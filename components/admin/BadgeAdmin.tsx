@@ -9,7 +9,7 @@ type Person = { id: string; name: string; role: string };
 //
 // THESE ARE MEANT TO END UP IN PAL, not here. Pal owns the reward surface: the
 // companion, the celebration animation, the collection in the world. A badge
-// that only exists in classOS is a second, worse rewards system sitting next to
+// that only exists in polyglot is a second, worse rewards system sitting next to
 // a good one.
 //
 // Pal cannot accept them yet. Its collection is DERIVED — keepsakes unlock from

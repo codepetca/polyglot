@@ -46,5 +46,5 @@ export function verifyTotp(secret: string, code: string): boolean {
 }
 
 export function otpauthUri(accountLabel: string, secret: string): string {
-  return `otpauth://totp/${encodeURIComponent("classOS")}:${encodeURIComponent(accountLabel)}?secret=${secret}&issuer=classOS&digits=6&period=30`;
+  return `otpauth://totp/${encodeURIComponent("polyglot")}:${encodeURIComponent(accountLabel)}?secret=${secret}&issuer=polyglot&digits=6&period=30`;
 }

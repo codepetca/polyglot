@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   if (await isEmailConfigured()) {
     const codeStr = await issueCode(cleanEmail, "join", { classId: cls.id, name: cleanName, passwordHash });
     try {
-      await sendMail(cleanEmail, "Your classOS code", `Hi ${cleanName},\n\nYour verification code is: ${codeStr}\n\nIt expires in 15 minutes. If you didn't request this, ignore this email.`);
+      await sendMail(cleanEmail, "Your polyglot code", `Hi ${cleanName},\n\nYour verification code is: ${codeStr}\n\nIt expires in 15 minutes. If you didn't request this, ignore this email.`);
     } catch (e) {
       return NextResponse.json({ error: "Couldn't send the email — tell your teacher (SMTP problem)." }, { status: 502 });
     }

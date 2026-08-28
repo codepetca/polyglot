@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     if (user) {
       const c = await issueCode(cleanEmail, "reset");
       try {
-        await sendMail(cleanEmail, "classOS password reset", `Your password reset code is: ${c}\n\nIt expires in 15 minutes. If you didn't ask for this, ignore it.`);
+        await sendMail(cleanEmail, "polyglot password reset", `Your password reset code is: ${c}\n\nIt expires in 15 minutes. If you didn't ask for this, ignore it.`);
       } catch {
         return NextResponse.json({ error: "Couldn't send email — try again later." }, { status: 502 });
       }

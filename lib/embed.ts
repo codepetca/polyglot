@@ -1,15 +1,15 @@
 "use client";
 
-// Is classOS running inside Pika?
+// Is polyglot running inside Pika?
 //
-// WHY NOT A SECOND BAR. The first design hid the classOS top bar and added a
+// WHY NOT A SECOND BAR. The first design hid the polyglot top bar and added a
 // slim strip with a back arrow and a progress bar. That was wrong twice over:
 // it threw away controls a student wants mid-lesson — Notes, Reference, theme,
 // the ESL switch — and then rebuilt a worse bar to replace them. Keeping the
 // bar and putting the way back INTO it is one bar doing one job.
 //
 // What does have to go is the half of it that Pika already owns: the logo, the
-// self-hosted badge, Account, and Sign out. Signing out of classOS from inside
+// self-hosted badge, Account, and Sign out. Signing out of polyglot from inside
 // Pika would leave a student in a tab they cannot use, in a session they did
 // not know they had.
 //

@@ -2,7 +2,7 @@ import DocsBrowser from "@/components/DocsBrowser";
 import { allSections, lessonsUsingSection } from "@/lib/curriculum/reference";
 import { studentCode } from "@/lib/curriculum/codehs";
 
-export const metadata = { title: "Java reference — classOS" };
+export const metadata = { title: "Java reference — polyglot" };
 
 // The whole reference, browsable.
 //

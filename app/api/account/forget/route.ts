@@ -20,7 +20,7 @@ export async function POST() {
   //
   // Now: anyone whose record exists only for their own progress may delete it.
   // That is an anonymous practice session, or a Pika student — Pika owns their
-  // identity and can erase them there, but their classOS rows are theirs.
+  // identity and can erase them there, but their polyglot rows are theirs.
   //
   // A student who joined a class with a real email is still excluded, because
   // that record belongs to their teacher's gradebook as well as to them, and

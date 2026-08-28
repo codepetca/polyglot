@@ -21,7 +21,7 @@ async function runJava(code: string, mode: WrapMode, stdin = ""): Promise<{ ok: 
     try {
       const r = await fetch("https://godbolt.org/api/compiler/java2102/compile", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json", "User-Agent": "classOS-edu/1.0" },
+        headers: { "Content-Type": "application/json", Accept: "application/json", "User-Agent": "polyglot-edu/1.0" },
         body: JSON.stringify({
           source, lang: "java", allowStoreCodeDebug: false,
           options: { userArguments: "", executeParameters: { args: [], stdin }, compilerOptions: { executorRequest: true }, filters: { execute: true } },

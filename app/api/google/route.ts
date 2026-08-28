@@ -80,7 +80,7 @@ export async function POST(req: Request) {
         const r = await createAnnouncement(me.id, cls.googleCourseId, text);
         google = r.ok ? { posted: true } : { posted: false, error: r.data?.error?.message || `HTTP ${r.status}` };
       }
-      // Also drop it in every student's classOS inbox.
+      // Also drop it in every student's polyglot inbox.
       if (cls.students.length) {
         await prisma.message.createMany({ data: cls.students.map((s) => ({ fromId: me.id, toId: s.id, body: text, kind: "announcement" })) });
       }

@@ -1,4 +1,4 @@
-# classOS
+# polyglot
 
 A self-hosted platform for teaching intro Java. Lessons are **interactive first**: a student
 runs code, predicts output and fixes bugs, and the explanation arrives after they act rather
@@ -42,7 +42,7 @@ All three live in **Admin → Settings** and take effect immediately, with no re
 |---|---|
 | **AI** | The tutor, the ✦ error explainer and code review are *hidden*, not disabled. No request reaches a paid provider, so nothing can be billed. Enforced in `complete()` (`lib/llm/index.ts`), the one function every AI call passes through — so a new AI feature is off by construction, not by remembering. Default **on**. |
 | **Student messaging** | Students cannot send free text to anyone; `/inbox` is closed to them by URL as well as by menu. The one-way questionnaire still works. Default **off** — school boards generally do not permit unmonitored two-way messaging with students. |
-| **Name** | What this deployment calls itself in the top bar. The repo, the licence and the source stay named classOS. |
+| **Name** | What this deployment calls itself in the top bar. The repo, the licence and the source stay named polyglot. |
 
 ---
 
@@ -148,5 +148,5 @@ The workflow uses the repository Actions secret `DISCORD_PR_WEBHOOK_URL`. It
 must contain a standard incoming Discord webhook for `#polyglot`. Treat the URL
 like a password.
 
-**Status:** standalone. A planned integration with a host platform is on hold; classOS ships
+**Status:** standalone. A planned integration with a host platform is on hold; polyglot ships
 and deploys on its own.

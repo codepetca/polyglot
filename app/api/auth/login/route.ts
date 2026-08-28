@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   if (!user.emailVerifiedAt && (await isEmailConfigured())) {
     const code = await issueCode(user.email!, "verify");
     try {
-      await sendMail(user.email!, "Your classOS verification code", `Your verification code is: ${code}\n\nIt expires in 15 minutes.`);
+      await sendMail(user.email!, "Your polyglot verification code", `Your verification code is: ${code}\n\nIt expires in 15 minutes.`);
     } catch {
       /* SMTP hiccup: fall through and let them in rather than locking everyone out */
       await prisma.user.update({ where: { id: user.id }, data: { failedLogins: 0 } });

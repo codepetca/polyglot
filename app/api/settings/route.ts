@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     await saveSmtpConfig(body.smtp);
     if (body.smtp.testTo) {
       try {
-        await sendMail(body.smtp.testTo, "classOS email test", "It works! Email verification and password resets are now active.");
+        await sendMail(body.smtp.testTo, "polyglot email test", "It works! Email verification and password resets are now active.");
         return NextResponse.json({ ok: true, message: `Test email sent to ${body.smtp.testTo} ✓` });
       } catch (e) {
         return NextResponse.json({ ok: false, message: `Saved, but sending failed: ${(e as Error).message.slice(0, 160)}` });

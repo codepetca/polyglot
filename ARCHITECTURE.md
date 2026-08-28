@@ -1,4 +1,4 @@
-# classOS — Architecture Map
+# polyglot — Architecture Map
 
 Read this first when changing anything. It tells you the **one place** to edit for a given
 feature, so you never have to read the whole codebase.
