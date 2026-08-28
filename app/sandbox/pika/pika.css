@@ -1,0 +1,41 @@
+/* Pika's palette and geometry, not polyglot's — see PikaShell.tsx for why.
+   Scoped under .pk so none of it leaks into the app. */
+.pk {
+  --pg: #f9fafb; --sf: #ffffff; --bd: #e5e7eb; --tx: #111827; --mu: #4b5563;
+  --pri: #1d4ed8; --sel: #dbeafe; --r: .5rem;
+  position: fixed; inset: 0; display: flex; background: var(--pg); color: var(--tx);
+  font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px;
+}
+.pk *, .pk *::before, .pk *::after { box-sizing: border-box; }
+.pk-rail { width: 216px; flex-shrink: 0; background: var(--sf); border-right: 1px solid var(--bd);
+  display: flex; flex-direction: column; padding: 14px 10px; gap: 4px; transition: width .18s ease; }
+.pk-rail.collapsed { width: 60px; }
+.pk-brand { display: flex; align-items: center; gap: 9px; padding: 4px 8px 14px; font-size: 16px; }
+.pk-mark { width: 26px; height: 26px; border-radius: var(--r); background: var(--pri); color: #fff;
+  display: grid; place-items: center; font-weight: 700; flex-shrink: 0; }
+.pk-rail nav { display: flex; flex-direction: column; gap: 2px; }
+.pk-tab { display: flex; align-items: center; gap: 11px; padding: 9px 10px; border: 0; border-radius: var(--r);
+  background: none; font: inherit; color: var(--mu); cursor: pointer; text-align: left; width: 100%; }
+.pk-tab:hover { background: #f3f4f6; }
+.pk-tab.on { background: var(--sel); color: var(--pri); font-weight: 600; }
+.pk-icon { width: 18px; text-align: center; flex-shrink: 0; }
+.pk-collapse { margin-top: auto; border: 0; background: none; font: inherit; font-size: 12px;
+  color: var(--mu); cursor: pointer; padding: 8px; text-align: left; }
+.pk-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.pk-top { display: flex; align-items: center; gap: 14px; padding: 12px 18px;
+  background: var(--sf); border-bottom: 1px solid var(--bd); flex-shrink: 0; }
+.pk-title { font-size: 15px; }
+.pk-spacer { flex: 1; }
+.pk-back { border: 1px solid var(--bd); background: var(--sf); border-radius: var(--r);
+  padding: 7px 13px; font: inherit; color: var(--pri); font-weight: 600; cursor: pointer; }
+.pk-switch { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--mu); }
+.pk-switch select { font: inherit; padding: 5px 8px; border: 1px solid var(--bd);
+  border-radius: var(--r); background: var(--sf); color: var(--tx); }
+.pk-frame { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.pk-frame iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+.pk-note { margin: 0; padding: 7px 18px; font-size: 12px; color: var(--mu);
+  background: var(--sf); border-top: 1px solid var(--bd); }
+.pk-stub { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+.pk-card { background: var(--sf); border: 1px solid var(--bd); border-radius: var(--r); padding: 18px 20px; }
+.pk-card p { margin: 6px 0 0; color: var(--mu); }
+.pk-card.ghost { height: 78px; }
