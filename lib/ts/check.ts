@@ -43,12 +43,14 @@ const GLOBALS = "globals.d.ts";
 // So the globals are written out instead. What is declared here is what exists,
 // which makes the environment part of the lesson design rather than an accident
 // of which lib file got loaded.
+import { SANDBOX_DECL } from "./sandbox";
+
 const GLOBAL_SRC = `
 declare const console: {
   log(...values: any[]): void;
   error(...values: any[]): void;
 };
-`;
+` + SANDBOX_DECL;
 
 // STRICT ON PURPOSE. With strict off, noImplicitAny is off, null is assignable
 // to everything, and roughly half the errors a lesson is built to demonstrate

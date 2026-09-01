@@ -1,0 +1,273 @@
+{
+  "code": "A1.1",
+  "title": "How LLMs actually work",
+  "objectives": [
+    "say what a token is",
+    "say what next-token prediction means",
+    "say what the context window holds",
+    "say what a training cutoff is"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a11_tokens",
+        "kind": "teach",
+        "instruction": "It does not read English. Your sentence is cut into pieces first.",
+        "facts": {
+          "columns": [
+            "text",
+            "cut into",
+            "pieces"
+          ],
+          "rows": [
+            [
+              "Ottawa",
+              "Ottawa",
+              "1"
+            ],
+            [
+              "Ontario",
+              "Ont | ario",
+              "2"
+            ],
+            [
+              "strawberry",
+              "str | aw | berry",
+              "3"
+            ],
+            [
+              "console.log",
+              "console | . | log",
+              "3"
+            ]
+          ]
+        },
+        "body": [
+          "These pieces are called tokens. A token is about four characters.",
+          "Common words are one token. Rare words get chopped up.",
+          "The model never sees your letters. It sees the pieces."
+        ],
+        "keypoint": "Text is cut into tokens before the model sees any of it."
+      },
+      {
+        "id": "a11_count",
+        "instruction": "This asks the model to measure the text. What does it print?",
+        "code": "const text = \"Ottawa is in Ontario.\";\nconsole.log(ai.count(text));",
+        "after": "21 characters, 6 tokens. You never guess this. You ask.",
+        "kind": "predict",
+        "opts": [
+          "21",
+          "6",
+          "4",
+          "Ottawa is in Ontario."
+        ],
+        "correct": 1,
+        "why": "ai.count returns tokens, not characters. 21 characters is about 6 tokens, because a token is roughly four characters."
+      },
+      {
+        "id": "a11_predict_one",
+        "kind": "teach",
+        "instruction": "Now the whole trick. The model does exactly one thing.",
+        "body": [
+          "Given every token so far, it picks the token most likely to come next.",
+          "That is it. There is no plan, no outline, no sentence it is working towards.",
+          "It picks one token, adds it to the end, and looks again."
+        ],
+        "keypoint": "The model chooses the next token. Then it does that again."
+      },
+      {
+        "id": "a11_walk",
+        "kind": "walk",
+        "instruction": "Watch it write one sentence. Step through, one token at a time.",
+        "code": "let out = \"\";\nout += \"Ottawa\";\nout += \" is\";\nout += \" in\";\nout += \" Ontario\";\nconsole.log(out);",
+        "frames": [
+          {
+            "line": 0,
+            "note": "Nothing written yet. The prompt was: name one city in Ontario.",
+            "vars": {
+              "so far": "(empty)",
+              "choosing between": "Ottawa / Toronto / The"
+            },
+            "out": ""
+          },
+          {
+            "line": 1,
+            "note": "It picks Ottawa. Not because it knows geography. Because those tokens most often follow that question.",
+            "vars": {
+              "so far": "Ottawa",
+              "choosing between": "is / , / ."
+            },
+            "out": ""
+          },
+          {
+            "line": 2,
+            "note": "Now it looks again, with Ottawa included. The next token is easy.",
+            "vars": {
+              "so far": "Ottawa is",
+              "choosing between": "in / a / the"
+            },
+            "out": ""
+          },
+          {
+            "line": 3,
+            "note": "Again. Every step re-reads everything, including what it just wrote.",
+            "vars": {
+              "so far": "Ottawa is in",
+              "choosing between": "Ontario / Canada"
+            },
+            "out": ""
+          },
+          {
+            "line": 4,
+            "note": "Ontario. Four tokens in, and it has never once looked ahead.",
+            "vars": {
+              "so far": "Ottawa is in Ontario",
+              "choosing between": ". / , / and"
+            },
+            "out": ""
+          },
+          {
+            "line": 5,
+            "note": "It picks a stop token, and the answer is finished.",
+            "vars": {
+              "so far": "Ottawa is in Ontario",
+              "choosing between": "(stop)"
+            },
+            "out": "Ottawa is in Ontario"
+          }
+        ],
+        "after": "Five choices. No plan at any point.",
+        "keypoint": "Every token is chosen with the whole text so far in view, and no view of what comes next."
+      },
+      {
+        "id": "a11_stream",
+        "kind": "predict",
+        "instruction": "That loop explains something you have seen. Why does a reply appear word by word instead of all at once?",
+        "code": "let out = \"\";\nout += \"Ottawa\";\nout += \" is\";\nout += \" in\";\nout += \" Ontario\";",
+        "opts": [
+          "The app adds a typing effect to look friendly",
+          "The tokens are made one at a time, so they can be sent one at a time",
+          "The network sends text in small packets",
+          "It is waiting for you to read"
+        ],
+        "correct": 1,
+        "why": "Nothing is faked. The first token exists about a second before the last one does, so an app can show it immediately.",
+        "after": "Every streaming AI app you have used is showing you this loop as it runs.",
+        "keypoint": "Replies stream because they are generated in pieces, not because of an effect."
+      },
+      {
+        "id": "a11_same",
+        "kind": "teach",
+        "instruction": "It does not always take the top choice.",
+        "code": "const first: string = \"Ottawa is in Ontario\";\nconst second: string = \"Ottawa, in Ontario\";\nconsole.log(first === second);",
+        "target": "false",
+        "body": [
+          "At each step there are several likely tokens. It samples from them.",
+          "So the same question can come back worded differently.",
+          "The meaning holds. The exact words do not."
+        ],
+        "keypoint": "Same prompt, different words. Never compare two replies expecting a match."
+      },
+      {
+        "id": "a11_cmp",
+        "instruction": "Sending a question, and reading the reply.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"Name one city in Ontario.\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "That is a real reply object. Same shape the real API returns.",
+        "kind": "teach",
+        "target": "Ottawa is the answer.",
+        "body": [
+          "The reply is an object. The words are at content[0].text, never at reply itself."
+        ]
+      },
+      {
+        "id": "a11_window",
+        "kind": "teach",
+        "instruction": "Everything it can see at once has a name: the context window.",
+        "body": [
+          "The context window holds your instructions, your question, and what it has written so far.",
+          "That is all it has. Nothing from last week, nothing from another user, nothing from your database.",
+          "It is measured in tokens, and it has a ceiling."
+        ],
+        "keypoint": "The context window is everything the model can see. If it is not in there, it does not exist."
+      },
+      {
+        "id": "a11_fill",
+        "kind": "fill",
+        "instruction": "Which of these can the model see?",
+        "code": "const contextWindow = {\n  systemPrompt: ⟦1⟧,\n  thisQuestion: ⟦2⟧,\n  yourDatabase: ⟦3⟧\n};",
+        "blanks": [
+          {
+            "chips": [
+              "\"visible\"",
+              "\"invisible\""
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "\"visible\"",
+              "\"invisible\""
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "\"visible\"",
+              "\"invisible\""
+            ],
+            "answer": 1
+          }
+        ],
+        "after": "Your database is invisible until you put some of it in the prompt yourself.",
+        "keypoint": "You choose what goes in the window. It cannot reach for anything else.",
+        "skills": [
+          "say what the context window holds"
+        ]
+      },
+      {
+        "id": "a11_cutoff",
+        "kind": "teach",
+        "instruction": "One more limit: it learned from text up to a date, and then stopped.",
+        "body": [
+          "That date is the training cutoff.",
+          "Anything after it, the model has never read. Yesterday's news, your new code, this morning's score.",
+          "It will still answer. It just has nothing real to answer from."
+        ],
+        "keypoint": "Training cutoff: it read up to a date and stopped. After that, it is guessing."
+      },
+      {
+        "id": "a11_cutoffq",
+        "kind": "predict",
+        "instruction": "Which of these can the model answer from what it learned?",
+        "code": "const questions = [\n  \"What is the capital of Canada?\",\n  \"What did I score on today's quiz?\",\n  \"What is in my notes app?\",\n  \"What happened in the news this morning?\"\n];",
+        "opts": [
+          "What did I score on today's quiz?",
+          "What is in my notes app?",
+          "What is the capital of Canada?",
+          "What happened in the news this morning?"
+        ],
+        "correct": 2,
+        "why": "The capital of Canada was in the training text and has not changed. The other three are either after the cutoff or private to you, so the only honest source is your own prompt.",
+        "after": "Three of those four are answerable, but only if YOU put the answer in the prompt first.",
+        "keypoint": "Public and old, it may know. Recent or yours, you have to supply."
+      },
+      {
+        "id": "a11_final",
+        "instruction": "A chat four turns in. What does this print?",
+        "code": "const conversation = \"My name is Ada. Hello Ada. What is in Ontario? Ottawa is.\";\nconsole.log(ai.count(conversation));",
+        "after": "Every one of those is resent on the next call, because nothing is remembered.",
+        "kind": "predict",
+        "opts": [
+          "4",
+          "15",
+          "60",
+          "0"
+        ],
+        "correct": 1,
+        "why": "It counts the tokens in the whole conversation, because all of it is resent on the next call. Nothing is remembered."
+      }
+    ]
+  }
+}

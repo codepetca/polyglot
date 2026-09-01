@@ -1,0 +1,220 @@
+{
+  "code": "A1.8",
+  "title": "Streaming",
+  "objectives": [
+    "say what streaming actually changes",
+    "accumulate chunks into a finished answer",
+    "show partial text safely",
+    "say when not to stream"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a18_wait",
+        "kind": "teach",
+        "instruction": "A long answer takes seconds. Where those seconds go decides how your app feels.",
+        "body": [
+          "Without streaming: you wait for the last token, then render everything. Blank screen the whole time.",
+          "With streaming: the first words appear almost immediately and keep coming.",
+          "Remember A1.1. It writes one token at a time, so the early ones exist long before the last one."
+        ],
+        "keypoint": "The tokens were always arriving one at a time. Streaming just stops hiding that."
+      },
+      {
+        "id": "a18_chunks",
+        "instruction": "The same answer, streamed. How many pieces?",
+        "code": "const chunks = ai.stream({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(chunks.length);",
+        "after": "Three pieces. In a real app each one arrives a moment apart, and each one can be shown.",
+        "kind": "predict",
+        "opts": [
+          "1",
+          "3",
+          "20",
+          "It depends on the network"
+        ],
+        "correct": 1,
+        "why": "Three. In a real app each one lands a moment after the last, and each one can be shown immediately."
+      },
+      {
+        "id": "a18_walk",
+        "kind": "walk",
+        "instruction": "Step through the arrival. Watch what the user can see at each moment.",
+        "code": "let shown = \"\";\nshown += \"Paris is\";\nshown += \" the ans\";\nshown += \"wer.\";\nconsole.log(shown);",
+        "frames": [
+          {
+            "line": 0,
+            "note": "Nothing yet. Without streaming, the user sits here for the whole reply.",
+            "vars": {
+              "on screen": "(blank)",
+              "elapsed": "0.0s"
+            },
+            "out": ""
+          },
+          {
+            "line": 1,
+            "note": "First chunk lands. The user is already reading while the model is still writing.",
+            "vars": {
+              "on screen": "Paris is",
+              "elapsed": "0.3s"
+            },
+            "out": ""
+          },
+          {
+            "line": 2,
+            "note": "Second chunk appends. It never replaces what is there, it adds to it.",
+            "vars": {
+              "on screen": "Paris is the ans",
+              "elapsed": "0.6s"
+            },
+            "out": ""
+          },
+          {
+            "line": 3,
+            "note": "Last chunk. Done at exactly the same moment the non-streamed version would have been.",
+            "vars": {
+              "on screen": "Paris is the answer.",
+              "elapsed": "0.9s"
+            },
+            "out": "Paris is the answer."
+          }
+        ],
+        "after": "Same 0.9 seconds either way. One of them felt instant.",
+        "keypoint": "Streaming does not save time. It moves the waiting to after the reading starts."
+      },
+      {
+        "id": "a18_join",
+        "instruction": "The pieces, joined back into the answer.",
+        "code": "const chunks = ai.stream({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(chunks.join(\"\"));",
+        "after": "Nothing between the pieces. They are cut mid-word, so any separator corrupts the text.",
+        "kind": "teach",
+        "target": "Paris is the answer.",
+        "body": [
+          "Nothing between them. They are cut mid-word, so any separator corrupts the text."
+        ]
+      },
+      {
+        "id": "a18_append",
+        "kind": "spot",
+        "instruction": "One of these lines loses everything that arrived before it. Tap it.",
+        "code": "let shown = \"\";\nshown += chunkOne;\nshown = chunkTwo;\nshown += chunkThree;",
+        "correct": 2,
+        "why": "= replaces, += appends. That single missing character makes the answer flicker and lose its first half, and it is the most common streaming bug there is.",
+        "after": "One character. Hours of confusion.",
+        "keypoint": "Chunks append. Never assign.",
+        "skills": [
+          "accumulate a streamed reply"
+        ]
+      },
+      {
+        "id": "a18_running",
+        "instruction": "Printing after every chunk. What does the middle line look like?",
+        "code": "const chunks = ai.stream({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nlet shown = \"\";\nfor (const c of chunks) {\n  shown += c;\n  console.log(shown);\n}",
+        "after": "Three snapshots of the same screen, a third of a second apart.",
+        "kind": "predict",
+        "opts": [
+          "Paris is the answer.",
+          "Paris is the ans",
+          "Paris",
+          "the ans"
+        ],
+        "correct": 1,
+        "why": "Cut mid-word, and that is fine to show. It is not fine to count words in, or search for a closing brace in."
+      },
+      {
+        "id": "a18_mid",
+        "kind": "teach",
+        "instruction": "Look closely at that middle line. Chunks do not respect words.",
+        "body": [
+          "The screen showed \"Paris is the ans\" for a moment. That is normal and it is fine.",
+          "It is not fine if you are counting words, cutting at a length, or looking for a closing bracket.",
+          "Partial text is safe to show. It is not safe to reason about."
+        ],
+        "keypoint": "Show partial text. Never make a decision from it."
+      },
+      {
+        "id": "a18_timeout",
+        "kind": "teach",
+        "instruction": "There is a second reason to stream, and it has nothing to do with feel.",
+        "body": [
+          "A long reply on a slow model can outlast a request timeout, and you lose the whole thing.",
+          "A stream is delivering the whole time, so nothing sits idle waiting to be cut off.",
+          "For anything long, streaming is the safer transport, not just the nicer one."
+        ],
+        "keypoint": "Long replies stream, or they risk timing out entirely."
+      },
+      {
+        "id": "a18_predict",
+        "kind": "predict",
+        "instruction": "Total time from pressing send to the last word appearing. Streamed against not streamed?",
+        "code": "const streamed = ai.stream({ model: \"small\", messages: [{ role: \"user\", content: \"What is the capital of France?\" }] });\nconst whole = ai.ask({ model: \"small\", messages: [{ role: \"user\", content: \"What is the capital of France?\" }] });",
+        "opts": [
+          "Streaming is faster overall",
+          "Almost exactly the same, but streaming starts showing much sooner",
+          "Streaming is slower because of the extra pieces",
+          "It depends on the model"
+        ],
+        "correct": 1,
+        "why": "The model does identical work either way. The last token arrives at the same moment. All that changed is that the first token was shown instead of held.",
+        "after": "Perceived speed is not a trick. It is the honest difference between waiting and reading.",
+        "keypoint": "Same finish line. Very different wait."
+      },
+      {
+        "id": "a18_when",
+        "kind": "bucket",
+        "instruction": "Deal each job into whether streaming helps it.",
+        "buckets": [
+          "Stream it",
+          "Wait for the whole thing"
+        ],
+        "items": [
+          {
+            "text": "a chat reply a person reads",
+            "bucket": 0
+          },
+          {
+            "text": "JSON you are about to parse",
+            "bucket": 1
+          },
+          {
+            "text": "a long explanation of an error",
+            "bucket": 0
+          },
+          {
+            "text": "a one-word tag for a note",
+            "bucket": 1
+          },
+          {
+            "text": "a story being written live",
+            "bucket": 0
+          }
+        ],
+        "after": "The rule: if a human reads it as it arrives, stream. If code eats it whole, wait.",
+        "keypoint": "Stream what people read. Wait for what code parses."
+      },
+      {
+        "id": "a18_json",
+        "kind": "teach",
+        "instruction": "That JSON case deserves its own sentence.",
+        "body": [
+          "Half a JSON object is not JSON. It is a syntax error waiting for its other half.",
+          "You cannot parse it early, and you cannot show it, so streaming buys nothing.",
+          "Ask for it whole, parse it once."
+        ],
+        "keypoint": "Never stream something you are going to parse."
+      },
+      {
+        "id": "a18_final",
+        "instruction": "Accumulated, complete, measurable.",
+        "code": "const chunks = ai.stream({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nlet shown = \"\";\nfor (const c of chunks) {\n  shown += c;\n}\nconsole.log(shown, shown.length);",
+        "after": "Accumulated, complete, and measurable. That is the whole streaming pattern.",
+        "kind": "teach",
+        "target": "Paris is the answer. 20",
+        "body": [
+          "That is the whole streaming pattern: append every chunk, use the result only when it is done."
+        ]
+      }
+    ]
+  }
+}

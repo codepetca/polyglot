@@ -1,0 +1,221 @@
+{
+  "code": "A1.10",
+  "title": "Project: build the whole thing",
+  "objectives": [
+    "plan a feature before writing it",
+    "assemble prompt, call, parse and guard into one flow",
+    "handle the paths where it goes wrong",
+    "say what you would check before showing anyone"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a110_brief",
+        "kind": "teach",
+        "instruction": "Nine lessons of pieces. Now build one real feature: a note tagger.",
+        "pipeline": [
+          {
+            "label": "the browser",
+            "kind": "file",
+            "note": "a student writes a note"
+          },
+          {
+            "label": "your guard",
+            "kind": "tool",
+            "note": "signed in, not empty, not enormous"
+          },
+          {
+            "label": "your prompt",
+            "kind": "tool",
+            "note": "instruction, format, the note"
+          },
+          {
+            "label": "the model",
+            "kind": "tool",
+            "note": "returns a tag, as JSON"
+          },
+          {
+            "label": "your check",
+            "kind": "tool",
+            "note": "parsed, and one of your real tags"
+          },
+          {
+            "label": "the browser",
+            "kind": "end",
+            "note": "shows the tag, or nothing at all"
+          }
+        ],
+        "body": [
+          "Notes go in. One tag comes back, from a list you control.",
+          "Six stops. Only one of them is the model, and the other five are the reason it works."
+        ],
+        "keypoint": "The model is one step in the middle. The engineering is everything around it."
+      },
+      {
+        "id": "a110_plan",
+        "kind": "arrange",
+        "instruction": "Put the build in order. Tap the steps into the sequence you would write them.",
+        "lines": [
+          "Guard the input: signed in, not empty, not too long",
+          "Write the system prompt: task, allowed tags, JSON only",
+          "Send the note as a user message",
+          "Parse the reply safely, never throwing",
+          "Check the tag is one of yours",
+          "Show the tag, or show nothing"
+        ],
+        "target": "ok",
+        "after": "Guard first, because everything after it costs money. Check last, because the model is a suggestion, not a decision.",
+        "keypoint": "Guard, prompt, send, parse, check, show."
+      },
+      {
+        "id": "a110_guard",
+        "instruction": "An empty note arrives. What should happen first?",
+        "code": "const note = \"\";\nconsole.log(note.trim().length === 0 ? \"rejected\" : \"ok\");",
+        "after": "An empty note is a free call you were about to pay for.",
+        "kind": "predict",
+        "opts": [
+          "Send it and see",
+          "rejected, before any call",
+          "Ask the model to handle it",
+          "Crash"
+        ],
+        "correct": 1,
+        "why": "An empty note is a call you were about to pay for that could not possibly produce a useful tag."
+      },
+      {
+        "id": "a110_prompt",
+        "instruction": "The prompt asks for JSON with no fences. What comes back?",
+        "code": "const note = \"What is the capital of France?\";\nconst system = \"Return ONLY valid JSON, no fences.\";\nconst reply = ai.ask({\n  model: \"small\",\n  system: system,\n  messages: [{ role: \"user\", content: note }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Clean JSON, first time, because you asked for it properly. A1.5 and A1.7 in one line.",
+        "kind": "predict",
+        "opts": [
+          "Sure! Here is your tag",
+          "{\"answer\": \"Paris\"}",
+          "Paris",
+          "chemistry"
+        ],
+        "correct": 1,
+        "why": "Clean JSON, because the prompt asked for it properly. A1.5 and A1.7 in a single line."
+      },
+      {
+        "id": "a110_model",
+        "kind": "predict",
+        "instruction": "Tagging runs on every note a student saves. Which model?",
+        "code": "const request = { model: \"?\", max_tokens: 20, messages: [{ role: \"user\", content: \"Chemistry test Thursday.\" }] };",
+        "opts": [
+          "large, tags should be accurate",
+          "small, it is one step and it runs constantly",
+          "large, it is the newest",
+          "whichever the docs show first"
+        ],
+        "correct": 1,
+        "why": "Tagging is a single-step job on a short input, and it happens on every save. That is exactly the shape the cheap fast model is built for. A1.3.",
+        "after": "High volume, simple job. The answer is the same every time.",
+        "keypoint": "Volume plus simplicity means the small model."
+      },
+      {
+        "id": "a110_parse",
+        "instruction": "Parsed without ever throwing.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Return ONLY valid JSON, no fences.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconst text = reply.content[0].text;\nlet tag = \"unavailable\";\ntry {\n  tag = JSON.parse(text).answer;\n} catch {\n  tag = \"unavailable\";\n}\nconsole.log(tag);",
+        "after": "It parsed. And on the day it does not, this prints unavailable instead of taking the page down.",
+        "kind": "teach",
+        "target": "Paris",
+        "body": [
+          "On the day the reply is malformed, this prints unavailable instead of taking the page down."
+        ]
+      },
+      {
+        "id": "a110_trust",
+        "kind": "spot",
+        "instruction": "This version trusts the model completely. Tap the line that does it.",
+        "code": "const tag = JSON.parse(text).answer;\nsaveNoteWithTag(note, tag);\nconsole.log(\"saved\");\nshowTagOnPage(tag);",
+        "correct": 1,
+        "why": "It writes whatever came back straight into your database, with no check that it is one of your real tags. One odd reply and your tag list quietly grows a category nobody made.",
+        "after": "The model suggested. Your code committed. That gap is where the check belongs.",
+        "keypoint": "Never write a model's output into your data without checking it first."
+      },
+      {
+        "id": "a110_check",
+        "instruction": "The model suggested Paris. Your tags are chemistry, physics, history. What prints?",
+        "code": "const tags = [\"chemistry\", \"physics\", \"history\"];\nconst suggested = \"Paris\";\nconsole.log(tags.includes(suggested) ? suggested : \"unsorted\");",
+        "after": "The model was confident and wrong. Your one line caught it. A1.2, doing its job.",
+        "kind": "predict",
+        "opts": [
+          "Paris",
+          "unsorted",
+          "chemistry",
+          "An error"
+        ],
+        "correct": 1,
+        "why": "Not one of yours, so it does not go in. Without this line, Paris quietly becomes a tag nobody created."
+      },
+      {
+        "id": "a110_stop",
+        "instruction": "max_tokens was 2, so the reply was truncated. What prints?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  max_tokens: 2,\n  messages: [{ role: \"user\", content: \"What is the capital of Canada?\" }]\n});\nconsole.log(reply.stop_reason === \"end_turn\" ? reply.content[0].text : \"cut off\");",
+        "after": "A cap set too low produces half a word. Now it produces a handled case.",
+        "kind": "predict",
+        "opts": [
+          "Ottawa i",
+          "cut off",
+          "Ottawa",
+          "An error"
+        ],
+        "correct": 1,
+        "why": "stop_reason was max_tokens, so the text is half a word. Checking it turns a broken display into a handled case."
+      },
+      {
+        "id": "a110_evals",
+        "kind": "teach",
+        "instruction": "Before this goes near a class, one more thing that is not code.",
+        "rules": [
+          {
+            "text": "Write down ten real notes and the tag each should get.",
+            "example": "\"Chem test Thursday\" should be chemistry"
+          },
+          {
+            "text": "Run all ten after every prompt change. Count how many are right.",
+            "example": "8 of 10, and you know which two broke"
+          },
+          {
+            "text": "Keep the score. A change that fixes one and breaks two is a loss.",
+            "example": "before 8, after 7, revert it"
+          }
+        ],
+        "body": [
+          "Without this, tuning a prompt is guessing, and you cannot tell improvement from noise.",
+          "Ten cases in a file is not a testing framework. It is thirty minutes that saves the feature."
+        ],
+        "keypoint": "Ten known inputs, run after every change. That is the whole discipline."
+      },
+      {
+        "id": "a110_score",
+        "instruction": "Two of three tags matched. What does the score print?",
+        "code": "const expected = [\"chemistry\", \"physics\", \"history\"];\nconst got = [\"chemistry\", \"physics\", \"geography\"];\nlet right = 0;\nfor (let i = 0; i < expected.length; i++) {\n  if (got[i] === expected[i]) {\n    right++;\n  }\n}\nconsole.log(right);",
+        "after": "Two out of three. Change the prompt, run it again, and now you know if you helped.",
+        "kind": "predict",
+        "opts": [
+          "3",
+          "2",
+          "1",
+          "0"
+        ],
+        "correct": 1,
+        "why": "Two right. Run this after every prompt change and you can tell an improvement from a coincidence."
+      },
+      {
+        "id": "a110_final",
+        "instruction": "The whole feature, in one function.",
+        "code": "const tags = [\"chemistry\", \"physics\", \"history\"];\nconst note = \"What is the capital of France?\";\nif (note.trim().length === 0 || ai.count(note) > 100) {\n  console.log(\"rejected\");\n} else {\n  const reply = ai.ask({\n    model: \"small\",\n    system: \"Return ONLY valid JSON, no fences.\",\n    messages: [{ role: \"user\", content: note }]\n  });\n  let tag = \"unavailable\";\n  try {\n    tag = JSON.parse(reply.content[0].text).answer;\n  } catch {\n    tag = \"unavailable\";\n  }\n  console.log(tags.includes(tag) ? tag : \"unsorted\");\n}",
+        "after": "Six steps, one function, and every failure has an answer. That is a feature, not a demo.",
+        "kind": "teach",
+        "target": "unsorted",
+        "body": [
+          "Guard, prompt, send, parse, check, show. Every failure has an answer."
+        ]
+      }
+    ]
+  }
+}

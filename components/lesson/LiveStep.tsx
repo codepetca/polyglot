@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { SANDBOX_RUNTIME } from "@/lib/ts/sandbox";
 import { javascript } from "@codemirror/lang-javascript";
 
 // The TypeScript step: errors appear while you type.
@@ -110,6 +111,7 @@ export default function LiveStep({
     const html = `<script>
       const lines = [];
       const console = { log: (...a) => lines.push(a.join(" ")), error: (...a) => lines.push(a.join(" ")) };
+      ${SANDBOX_RUNTIME}
       try { ${js} } catch (e) { lines.push(String(e)); }
       parent.postMessage({ __polyglot: ${JSON.stringify(step.id)}, out: lines.join("\\n") }, "*");
     <\/script>`;
