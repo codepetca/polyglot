@@ -61,7 +61,7 @@ export default function TestResult({ id }: { id: string }) {
             </div>
             <div className="gradeans"><b>Your answer:</b> <span style={{ whiteSpace: "pre-wrap" }}>{it.yourAnswer}</span></div>
             {!full && it.correctAnswer && (
-              <div className="gradeans" style={{ background: "#e7f2ec", borderLeft: "3px solid var(--accent)" }}>
+              <div className="gradeans" style={{ borderLeft: "3px solid var(--accent)" }}>
                 <b>Answer:</b> <span style={{ whiteSpace: "pre-wrap" }}>{it.correctAnswer}</span>
               </div>
             )}

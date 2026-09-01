@@ -1341,12 +1341,12 @@ function StepView({ step, lessonCode, assist, lang, layout, onDone, onSkip, onGo
           {(step.pipeline || []).length > 0 && (
             <div className="pipe">
               {(step.pipeline || []).map((st, j) => (
-                <div className="pipestage" key={j}>
+                <div className="pipestage" key={j} style={{ ["--i" as string]: j }}>
                   <div className={`pipebox pb-${st.kind || "tool"}`}>
                     <span className="pipelabel">{st.label}</span>
                     {st.note && <span className="pipenote">{st.note}</span>}
                   </div>
-                  {j < (step.pipeline || []).length - 1 && <span className="pipearrow" aria-hidden="true">↓</span>}
+                  {j < (step.pipeline || []).length - 1 && <span className="pipearrow" aria-hidden="true" />}
                 </div>
               ))}
             </div>

@@ -39,7 +39,7 @@ export default function CoachCard({
       ) : (
         <p className="meta" style={{ marginTop: 8 }}>Your coach reads your actual work — lessons, answers, questions you ask — and leaves you a short note with your next step.</p>
       )}
-      {err && <p className="meta" style={{ marginTop: 6, color: "#b3352e" }}>{err}</p>}
+      {err && <p className="meta" style={{ marginTop: 6, color: "var(--bad)" }}>{err}</p>}
     </div>
   );
 }

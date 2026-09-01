@@ -23,7 +23,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const brand = await getBrand();
 
   return (
-    <html lang="en">
+    // The inline script below sets data-theme before paint, so the server HTML
+    // and the first client render disagree on that one attribute by design.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

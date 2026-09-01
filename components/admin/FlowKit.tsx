@@ -163,7 +163,7 @@ export default function FlowKit({ lessons }: { lessons: { code: string; title: s
       </div>
 
       {report && (
-        <div className="panel" style={{ marginTop: 10, borderColor: report.ok ? "var(--accent)" : "#b3352e" }}>
+        <div className="panel" style={{ marginTop: 10, borderColor: report.ok ? "var(--accent)" : "var(--bad)" }}>
           {report.ok ? (
             <b>
               {report.verifiedOnly
@@ -171,10 +171,10 @@ export default function FlowKit({ lessons }: { lessons: { code: string; title: s
                 : `✓ imported — ${report.steps} steps${report.tagged ? `, ${report.tagged} skill tags` : ""}. The lesson now opens as an interactive flow.`}
             </b>
           ) : (
-            <b style={{ color: "#b3352e" }}>✗ rejected — the live lesson was not touched.</b>
+            <b style={{ color: "var(--bad)" }}>✗ rejected — the live lesson was not touched.</b>
           )}
           {(report.failures || []).map((f, i) => (
-            <div key={i} className="meta" style={{ margin: "4px 0", color: "#b3352e" }}>✗ {f}</div>
+            <div key={i} className="meta" style={{ margin: "4px 0", color: "var(--bad)" }}>✗ {f}</div>
           ))}
 
           {/* The fix loop, made one click: copy this straight back to the AI
