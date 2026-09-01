@@ -18,6 +18,7 @@
 //   npx tsx scripts/ts-lesson.ts <lesson.json>
 import { readFileSync } from "node:fs";
 import { check } from "../lib/ts/check";
+import { SANDBOX_RUNTIME } from "../lib/ts/sandbox";
 import { validateFlow } from "../lib/curriculum/flow";
 
 const file = process.argv[2];
@@ -42,7 +43,7 @@ function outputOf(js: string): string {
   const lines: string[] = [];
   const console_ = { log: (...a: unknown[]) => lines.push(a.map(String).join(" ")), error: (...a: unknown[]) => lines.push(a.map(String).join(" ")) };
   try {
-    new Function("console", js)(console_);
+    new Function("console", SANDBOX_RUNTIME + "\n" + js)(console_);
   } catch (e) {
     return `<<threw>> ${(e as Error).message}`;
   }

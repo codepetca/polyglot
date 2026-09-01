@@ -1,0 +1,233 @@
+{
+  "code": "A1.6",
+  "title": "Giving the model what it needs",
+  "objectives": [
+    "recognise missing context as the real cause of bad output",
+    "resend conversation history so it remembers",
+    "put your own data in the prompt",
+    "stop it answering from outside the text you gave it"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a16_blame",
+        "kind": "teach",
+        "instruction": "Your output is wrong, so you reach for a bigger model. It is still wrong.",
+        "body": [
+          "Three things make output bad: no context, an unclear instruction, or a genuinely hard problem.",
+          "Only the third is the model's fault, and it is the rarest of the three.",
+          "Almost every time, the model was not missing intelligence. It was missing information."
+        ],
+        "keypoint": "Most bad output is missing context, not a bad model."
+      },
+      {
+        "id": "a16_noname",
+        "instruction": "Nothing in this call mentions a name. What comes back?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"What is my name?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "It has never met you. So it produced a name. Not an error, not a question. A name.",
+        "kind": "predict",
+        "opts": [
+          "An error",
+          "An empty reply",
+          "Brightwater",
+          "What is my name?"
+        ],
+        "correct": 2,
+        "why": "It has never met you, cannot refuse, and cannot ask. So it produces a name. Missing context does not error, it invents."
+      },
+      {
+        "id": "a16_history",
+        "instruction": "Now the earlier turns are included. What comes back?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  messages: [\n    { role: \"user\", content: \"My name is Ada.\" },\n    { role: \"assistant\", content: \"Hello Ada.\" },\n    { role: \"user\", content: \"What is my name?\" }\n  ]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Same model, same question, right answer. Nothing changed except what you sent.",
+        "kind": "predict",
+        "opts": [
+          "Brightwater",
+          "Ada",
+          "An error",
+          "I do not know"
+        ],
+        "correct": 1,
+        "why": "Same model, same question, right answer. The only thing that changed is what you sent."
+      },
+      {
+        "id": "a16_walk",
+        "kind": "walk",
+        "instruction": "That is what a chat app does every single turn. Step through one request being built.",
+        "code": "const system = \"You are a study helper.\";\nconst history = [\"My name is Ada.\", \"Hello Ada.\"];\nconst notes = \"Club meets Tuesday.\";\nconst question = \"When does the club meet?\";\nconsole.log(system + history.join(\" \") + notes + question);",
+        "frames": [
+          {
+            "line": 0,
+            "note": "First the standing instruction. Who it is and how to answer.",
+            "vars": {
+              "so far": "system prompt",
+              "tokens": "6"
+            },
+            "out": ""
+          },
+          {
+            "line": 1,
+            "note": "Then everything already said. It remembers none of this, so you carry it.",
+            "vars": {
+              "so far": "system + 2 turns",
+              "tokens": "13"
+            },
+            "out": ""
+          },
+          {
+            "line": 2,
+            "note": "Then the data it could not possibly know. Your notes, pulled from your own app.",
+            "vars": {
+              "so far": "+ notes",
+              "tokens": "18"
+            },
+            "out": ""
+          },
+          {
+            "line": 3,
+            "note": "Then the question, last, where it is freshest.",
+            "vars": {
+              "so far": "+ question",
+              "tokens": "25"
+            },
+            "out": ""
+          },
+          {
+            "line": 4,
+            "note": "And only now do you send. Four ingredients, assembled by you, every single time.",
+            "vars": {
+              "sent": "one request",
+              "tokens": "25"
+            },
+            "out": "You are a study helper.My name is Ada. Hello Ada.Club meets Tuesday.When does the club meet?"
+          }
+        ],
+        "after": "Instruction, history, data, question. That order, every turn.",
+        "keypoint": "You assemble the context. The model just reads what arrives."
+      },
+      {
+        "id": "a16_yours",
+        "kind": "teach",
+        "instruction": "That third ingredient is the one that unlocks real apps.",
+        "body": [
+          "It has never seen your notes, your users, your timetable, or anything you built.",
+          "You do not retrain it. You find the relevant piece and paste it into the prompt.",
+          "Every \"chat with your documents\" product you have used is doing exactly this."
+        ],
+        "keypoint": "You cannot teach it your data. You can hand it your data, one question at a time."
+      },
+      {
+        "id": "a16_search",
+        "instruction": "Find the relevant note first, then prompt.",
+        "code": "const notes = [\n  \"Football practice is Monday.\",\n  \"Chemistry test is Thursday.\",\n  \"Library closes at six.\"\n];\nconsole.log(notes.filter(n => n.toLowerCase().includes(\"chemistry\"))[0]);",
+        "after": "Search first, then prompt. That order matters, and it is the next step.",
+        "kind": "teach",
+        "target": "Chemistry test is Thursday.",
+        "body": [
+          "Search narrows 500 notes to the one that matters. That one goes in the prompt."
+        ]
+      },
+      {
+        "id": "a16_why",
+        "kind": "predict",
+        "instruction": "You have 500 notes and one question. What goes in the prompt?",
+        "code": "const notes: string[] = [];\nconst question = \"When is the chemistry test?\";",
+        "opts": [
+          "All 500, so it has everything",
+          "The two or three that match the question",
+          "None, and let the model work it out",
+          "A summary of all 500, written by the model first"
+        ],
+        "correct": 1,
+        "why": "All 500 will not fit, and even where it fits, burying the answer in 499 irrelevant notes makes the answer worse. Search narrows it to what matters, and the model reads a short, relevant prompt.",
+        "after": "More context is not better. Relevant context is better.",
+        "keypoint": "Search first. Send the few that matter, not everything you own."
+      },
+      {
+        "id": "a16_budget",
+        "kind": "teach",
+        "instruction": "There is a hard limit too, and a soft one.",
+        "body": [
+          "The hard limit is the context window. Past it, the call is rejected.",
+          "The soft limit arrives earlier: a question buried in noise gets a worse answer than a question on its own.",
+          "So keeping the prompt tight is not about saving anything. It is about being answered well."
+        ],
+        "keypoint": "A short relevant prompt beats a long complete one."
+      },
+      {
+        "id": "a16_ground",
+        "kind": "teach",
+        "instruction": "One line changes everything about answering from your data.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Answer only from the text below.\",\n  messages: [{ role: \"user\", content: \"Notes: club meets Tuesday. Question: what is the capital of France?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "target": "I cannot answer from the text provided.",
+        "body": [
+          "Without that line, it answers from training data and you never know which parts came from your notes.",
+          "With it, a question your notes cannot answer gets an honest refusal.",
+          "That refusal is the feature. It is the difference between a lookup tool and a rumour mill."
+        ],
+        "keypoint": "Say answer only from the text below, and a missing answer becomes a refusal instead of an invention."
+      },
+      {
+        "id": "a16_spot",
+        "kind": "spot",
+        "instruction": "Tap the line that lets the model answer from outside the notes you supplied.",
+        "code": "const system = \"You are a helpful study assistant.\";\nconst notes = \"Club meets Tuesday.\";\nconst question = \"What is the capital of France?\";\nconsole.log(system);",
+        "correct": 0,
+        "why": "Helpful is not a boundary. With no instruction to stay inside the notes, the model treats everything it ever read as fair game, and you cannot tell the difference in the answer.",
+        "after": "One missing sentence in the system prompt, and your notes app starts inventing.",
+        "keypoint": "Helpful is not a boundary. Only the instruction is."
+      },
+      {
+        "id": "a16_fill",
+        "kind": "fill",
+        "instruction": "Put the four ingredients in the order they should be assembled.",
+        "code": "const prompt = [\n  ⟦1⟧,\n  ⟦2⟧,\n  ⟦3⟧\n].join(\"\\n\");",
+        "blanks": [
+          {
+            "chips": [
+              "instruction",
+              "question",
+              "notes"
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "instruction",
+              "question",
+              "notes"
+            ],
+            "answer": 2
+          },
+          {
+            "chips": [
+              "instruction",
+              "question",
+              "notes"
+            ],
+            "answer": 1
+          }
+        ],
+        "after": "Instruction, then the data, then the question last where it is freshest.",
+        "keypoint": "Instruction, data, question. In that order."
+      },
+      {
+        "id": "a16_final",
+        "instruction": "Grounded to the notes, asked something the notes do not cover. What comes back?",
+        "code": "const notes = [\n  \"Football practice is Monday.\",\n  \"Chemistry test is Thursday.\"\n];\nconst found = notes.filter(n => n.toLowerCase().includes(\"chemistry\"))[0];\nconst reply = ai.ask({\n  model: \"small\",\n  system: \"Answer only from the text below.\",\n  messages: [{ role: \"user\", content: \"Notes: \" + found + \" Question: what is the capital of France?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Searched, grounded, and honest when the notes do not cover it. That is a real feature.",
+        "kind": "predict",
+        "opts": [
+          "Paris",
+          "I cannot answer from the text provided.",
+          "An error",
+          "Chemistry test is Thursday."
+        ],
+        "correct": 1,
+        "why": "The instruction said answer only from the text. The notes say nothing about France, so it says so instead of inventing. That refusal is the feature."
+      }
+    ]
+  }
+}

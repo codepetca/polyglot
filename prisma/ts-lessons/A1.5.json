@@ -1,0 +1,239 @@
+{
+  "code": "A1.5",
+  "title": "Prompt engineering",
+  "objectives": [
+    "write an instruction the model can actually follow",
+    "show the format instead of describing it",
+    "say what to do rather than what to avoid",
+    "debug a prompt that stopped working"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a15_vague",
+        "kind": "teach",
+        "instruction": "Same model, same question. The only difference is the system prompt.",
+        "code": "const vague = ai.ask({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(vague.content[0].text);",
+        "target": "Paris is the answer.",
+        "body": [
+          "No instruction at all. You get a sentence, when you wanted a word.",
+          "Nothing is broken. You just did not say what you wanted."
+        ],
+        "keypoint": "With no instruction, you get whatever shape it feels like."
+      },
+      {
+        "id": "a15_specific",
+        "instruction": "The system prompt says answer in one word. What comes back?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Answer in one word.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Four words of English. No code changed. That is the whole discipline.",
+        "kind": "predict",
+        "opts": [
+          "Paris is the answer.",
+          "Paris",
+          "The capital of France is Paris.",
+          "one word"
+        ],
+        "correct": 1,
+        "why": "Four words of English changed the shape of the output. No code changed."
+      },
+      {
+        "id": "a15_three",
+        "kind": "teach",
+        "instruction": "A prompt that works has three parts. Most broken prompts are missing one.",
+        "rules": [
+          {
+            "text": "Who it is talking to. A beginner, a teacher, a machine reading JSON.",
+            "example": "You help a grade 11 student."
+          },
+          {
+            "text": "What to do. One task, said plainly.",
+            "example": "Explain the error in their code."
+          },
+          {
+            "text": "What shape to answer in. Length, format, what to leave out.",
+            "example": "Two sentences. No code."
+          }
+        ],
+        "body": [
+          "The one people skip is the third, and it is the one that makes output unusable.",
+          "\"Explain this\" is a task with no shape, so you get whatever length it fancies."
+        ],
+        "keypoint": "Audience, task, shape. Missing the shape is why output is unusable."
+      },
+      {
+        "id": "a15_build",
+        "instruction": "Audience, task, shape, all three in one prompt.",
+        "code": "const system = \"You help a student. Answer the question. Answer in one word.\";\nconst reply = ai.ask({\n  model: \"small\",\n  system: system,\n  messages: [{ role: \"user\", content: \"What is the largest planet?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Audience, task, shape. The shape is the part that changed the output.",
+        "kind": "teach",
+        "target": "Jupiter",
+        "body": [
+          "The shape is the part people leave out, and it is the part that makes output usable."
+        ]
+      },
+      {
+        "id": "a15_example",
+        "kind": "teach",
+        "instruction": "Now the strongest single trick. Show it, do not describe it.",
+        "body": [
+          "Describing a format: \"return the answer as a short lowercase tag\".",
+          "Showing it: \"Example. Input: my chemistry homework. Output: chemistry\".",
+          "It copies shape far better than it follows description. One example beats a paragraph of rules."
+        ],
+        "keypoint": "One worked example is worth three sentences of instructions."
+      },
+      {
+        "id": "a15_pred",
+        "kind": "predict",
+        "instruction": "Four prompts for the same tagging job. Which returns a consistent format every time?",
+        "code": "const a = \"Tag this note.\";\nconst b = \"Tag this note. Be concise.\";\nconst c = \"Tag this note. Example. Input: chemistry homework. Output: chemistry\";\nconst d = \"Tag this note. Do not be verbose.\";",
+        "opts": [
+          "a, because it is short and leaves room",
+          "b, because concise means short",
+          "c, because it shows exactly what the output looks like",
+          "d, because it rules out the bad case"
+        ],
+        "correct": 2,
+        "why": "Concise and not verbose are opinions. An example is a specification: it fixes the length, the case, and the punctuation all at once.",
+        "after": "The other three all still leave the model guessing what you meant.",
+        "keypoint": "An example specifies. An adjective only hints."
+      },
+      {
+        "id": "a15_negative",
+        "kind": "teach",
+        "instruction": "Say what to do, not what to avoid.",
+        "body": [
+          "\"Do not write a long answer\" leaves every length except long.",
+          "\"Answer in one sentence\" leaves one.",
+          "A ban rules out a corner of the field. An instruction picks the spot."
+        ],
+        "keypoint": "A ban rules out one thing. An instruction picks the one thing."
+      },
+      {
+        "id": "a15_fix",
+        "kind": "fill",
+        "instruction": "Repair this prompt. Swap each ban for an instruction.",
+        "code": "const system = [\n  ⟦1⟧,\n  ⟦2⟧\n].join(\" \");",
+        "blanks": [
+          {
+            "chips": [
+              "\"Answer in one word.\"",
+              "\"Do not ramble.\""
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "\"Use lowercase.\"",
+              "\"Avoid capital letters.\""
+            ],
+            "answer": 0
+          }
+        ],
+        "after": "Both versions mean the same to you. Only one of them is a specification.",
+        "keypoint": "Positive instructions are testable. Bans are not.",
+        "skills": [
+          "write an instruction the model can follow"
+        ]
+      },
+      {
+        "id": "a15_room",
+        "kind": "teach",
+        "instruction": "One more, and it is counter-intuitive: give it room to think.",
+        "body": [
+          "On a hard question, demanding the answer alone makes it worse.",
+          "\"Work through it, then give the answer on the last line\" makes it better.",
+          "It has no scratchpad. The only place it can work is in the tokens it writes."
+        ],
+        "keypoint": "Its reasoning happens in the output. Leave room for it, then read the last line."
+      },
+      {
+        "id": "a15_roomq",
+        "kind": "predict",
+        "instruction": "Which of these gets better when you tell it to work through it first?",
+        "code": "const jobs = [\n  \"Translate hello into French.\",\n  \"Which of these three plans is cheapest, and why?\",\n  \"Convert this name to lowercase.\",\n  \"What colour is the sky?\"\n];",
+        "opts": [
+          "Translate hello into French",
+          "Which of these three plans is cheapest, and why",
+          "Convert this name to lowercase",
+          "What colour is the sky"
+        ],
+        "correct": 1,
+        "why": "Only the plans question has steps in it: compare, weigh, decide. The others are one lookup, and thinking room just costs tokens and time.",
+        "after": "Room to reason helps multi-step questions. On easy ones it is waste.",
+        "keypoint": "Give room where there are steps. Not everywhere."
+      },
+      {
+        "id": "a15_filler",
+        "kind": "bucket",
+        "instruction": "Deal each line into what it actually does to the output.",
+        "buckets": [
+          "Changes the output",
+          "Does nothing"
+        ],
+        "items": [
+          {
+            "text": "Answer in one word.",
+            "bucket": 0
+          },
+          {
+            "text": "Do your best.",
+            "bucket": 1
+          },
+          {
+            "text": "Return only lowercase letters.",
+            "bucket": 0
+          },
+          {
+            "text": "Be creative and think carefully.",
+            "bucket": 1
+          },
+          {
+            "text": "If you are unsure, reply unknown.",
+            "bucket": 0
+          },
+          {
+            "text": "This is very important to me.",
+            "bucket": 1
+          }
+        ],
+        "after": "The right column is the encouragement people add when a prompt is not working. It never helps.",
+        "keypoint": "If a line does not change what a correct answer looks like, delete it."
+      },
+      {
+        "id": "a15_debug",
+        "kind": "teach",
+        "instruction": "Last: your prompt worked for weeks, and today it returns paragraphs.",
+        "rules": [
+          {
+            "text": "Keep the old prompt. You cannot compare against something you deleted.",
+            "example": "const v1 = ...; const v2 = ...;"
+          },
+          {
+            "text": "Change one thing at a time. Two changes and you learn nothing.",
+            "example": "add the example OR shorten it"
+          },
+          {
+            "text": "Test on the input that broke, not a fresh easy one.",
+            "example": "the note that produced the paragraph"
+          }
+        ],
+        "keypoint": "One change, kept versions, tested on the input that actually broke."
+      },
+      {
+        "id": "a15_final",
+        "instruction": "The repaired prompt.",
+        "code": "const broken = \"Answer in one word.\";\nconst reply = ai.ask({\n  model: \"small\",\n  system: broken,\n  messages: [{ role: \"user\", content: \"What is the capital of Canada?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "You did not change a line of code. You changed the English, and the output changed shape.",
+        "kind": "teach",
+        "target": "Ottawa",
+        "body": [
+          "Do not be wordy leaves every length except wordy. Answer in one word leaves one.",
+          "Same model, same question. Only the English changed."
+        ]
+      }
+    ]
+  }
+}

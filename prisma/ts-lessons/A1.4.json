@@ -1,0 +1,250 @@
+{
+  "code": "A1.4",
+  "title": "First API call",
+  "objectives": [
+    "keep the key on the server, never the client",
+    "tell system and user messages apart",
+    "read the text and the stop reason out of a response",
+    "handle the errors that will actually happen"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a14_shape",
+        "kind": "teach",
+        "instruction": "Your app does not hold the model. It sends a message to a computer that does.",
+        "pipeline": [
+          {
+            "label": "the browser",
+            "kind": "file",
+            "note": "the user types a question"
+          },
+          {
+            "label": "your server",
+            "kind": "tool",
+            "note": "the only place your key is stored"
+          },
+          {
+            "label": "the model API",
+            "kind": "tool",
+            "note": "checks the key, runs the model"
+          },
+          {
+            "label": "your server",
+            "kind": "tool",
+            "note": "gets the reply, decides what to show"
+          },
+          {
+            "label": "the browser",
+            "kind": "end",
+            "note": "shows the answer"
+          }
+        ],
+        "body": [
+          "Five stops, and the interesting one is the second.",
+          "The browser never talks to the model API. It talks to you.",
+          "That middle stop is where the key lives, and where you decide who is allowed to ask."
+        ],
+        "keypoint": "Browser to your server. Your server to the API. Never browser straight to the API."
+      },
+      {
+        "id": "a14_key",
+        "kind": "spot",
+        "instruction": "This runs in the browser. Tap the line that hands your key to anyone who opens the page.",
+        "code": "const key = \"sk-ant-secret\";\nconst question = \"Summarise my notes.\";\nconsole.log(question);\nconsole.log(key);",
+        "correct": 3,
+        "why": "Anything the browser holds, the user can read. The question is fine to show. The key is your account and your money, so it never goes past your server.",
+        "after": "Bots scan public code for strings starting sk-. This is the most common way beginners lose a key.",
+        "keypoint": "The question can live in the browser. The key cannot.",
+        "skills": [
+          "keep an API key off the client"
+        ]
+      },
+      {
+        "id": "a14_req",
+        "kind": "teach",
+        "instruction": "Now the call itself. A request is an object with a few named fields.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  max_tokens: 100,\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "target": "Paris is the answer.",
+        "annotate": [
+          {
+            "token": "model",
+            "note": "which model answers"
+          },
+          {
+            "token": "max_tokens",
+            "note": "longest reply allowed"
+          },
+          {
+            "token": "messages",
+            "note": "the conversation so far"
+          }
+        ],
+        "body": [
+          "role is \"user\" because you are the one talking.",
+          "The reply is an object too. The words live at content[0].text."
+        ],
+        "keypoint": "A request names the model, a cap, and the messages. That is the whole thing."
+      },
+      {
+        "id": "a14_first",
+        "instruction": "The whole call, start to finish.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  max_tokens: 100,\n  messages: [{ role: \"user\", content: \"What is the largest planet?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "That is a working API call. Everything else in this unit is shaping what goes in and checking what comes out.",
+        "kind": "teach",
+        "target": "Jupiter is the answer.",
+        "body": [
+          "model, max_tokens, messages go in. content[0].text comes out.",
+          "Everything else in this unit is shaping what goes in and checking what comes out."
+        ]
+      },
+      {
+        "id": "a14_system",
+        "kind": "teach",
+        "instruction": "There is a second place to put words, and it is not a message.",
+        "body": [
+          "system is the standing instruction: who the model is, how it should answer, what shape to use.",
+          "messages is the conversation: what was actually said, and by whom.",
+          "The user sees the messages. The user never sees the system prompt."
+        ],
+        "keypoint": "system is the job description. messages is the conversation."
+      },
+      {
+        "id": "a14_sys",
+        "instruction": "Same question, but now with a system prompt. What changes?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Answer in one word.\",\n  messages: [{ role: \"user\", content: \"What is the largest planet?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Same question, same model, same code. One line of English changed the output.",
+        "kind": "predict",
+        "opts": [
+          "Jupiter is the answer.",
+          "Jupiter",
+          "An error",
+          "Nothing changes"
+        ],
+        "correct": 1,
+        "why": "The system prompt asked for one word, so one word came back. The code did not change at all."
+      },
+      {
+        "id": "a14_resp",
+        "kind": "teach",
+        "instruction": "The response carries more than words.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  messages: [{ role: \"user\", content: \"What is the capital of Canada?\" }]\n});\nconsole.log(reply.stop_reason, reply.usage.output_tokens);",
+        "target": "end_turn 6",
+        "body": [
+          "stop_reason says why it stopped. end_turn means it finished on its own.",
+          "usage says how much text went each way, counted in tokens.",
+          "Read both. A reply that stopped for the wrong reason is not an answer."
+        ],
+        "keypoint": "Every reply carries the text, why it stopped, and what it used."
+      },
+      {
+        "id": "a14_errors",
+        "kind": "teach",
+        "instruction": "Now the part every tutorial skips. It will fail, and how it failed matters.",
+        "facts": {
+          "columns": [
+            "status",
+            "means",
+            "what to do"
+          ],
+          "rows": [
+            [
+              "401",
+              "your key is wrong or missing",
+              "fix your setup, never retry"
+            ],
+            [
+              "400",
+              "your request is malformed",
+              "fix your code, never retry"
+            ],
+            [
+              "429",
+              "you sent too many too fast",
+              "wait, then retry"
+            ],
+            [
+              "500",
+              "their problem, not yours",
+              "wait, then retry"
+            ]
+          ]
+        },
+        "body": [
+          "Two of these are your fault and retrying is pointless.",
+          "Two are temporary and retrying is exactly right.",
+          "Telling them apart is the whole job."
+        ],
+        "keypoint": "401 and 400 are yours to fix. 429 and 500 are worth retrying."
+      },
+      {
+        "id": "a14_bucket",
+        "kind": "bucket",
+        "instruction": "Deal each failure into what your code should do.",
+        "buckets": [
+          "Retry it",
+          "Stop and fix your code"
+        ],
+        "items": [
+          {
+            "text": "429 too many requests",
+            "bucket": 0
+          },
+          {
+            "text": "401 invalid key",
+            "bucket": 1
+          },
+          {
+            "text": "500 server error",
+            "bucket": 0
+          },
+          {
+            "text": "400 unknown field in request",
+            "bucket": 1
+          }
+        ],
+        "after": "Retrying a 401 fails 401 times, a little more expensively each time.",
+        "keypoint": "Retry what is temporary. Fix what is yours."
+      },
+      {
+        "id": "a14_retry",
+        "instruction": "A 401 means your key is wrong. What does isRetryable say?",
+        "code": "function isRetryable(status: number): boolean {\n  return status === 429 || status >= 500;\n}\nconsole.log(isRetryable(401));",
+        "after": "Four words of logic that stop your app hammering a wall.",
+        "kind": "predict",
+        "opts": [
+          "true",
+          "false",
+          "401",
+          "an error"
+        ],
+        "correct": 1,
+        "why": "False, and that is the point. Retrying a bad key fails identically every time, just more expensively."
+      },
+      {
+        "id": "a14_friendly",
+        "kind": "teach",
+        "instruction": "And whatever fails, the user must never meet the failure raw.",
+        "body": [
+          "A stack trace tells a student they broke something. They did not.",
+          "Return a sentence a person can read, and log the real error where you can find it.",
+          "Something is better than nothing: a canned answer beats an empty screen."
+        ],
+        "keypoint": "Degrade, never crash. The user gets a sentence, you get the log."
+      },
+      {
+        "id": "a14_final",
+        "instruction": "A first call done properly.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Answer in one word.\",\n  messages: [{ role: \"user\", content: \"What is the capital of Canada?\" }]\n});\nconsole.log(reply.stop_reason === \"end_turn\" ? reply.content[0].text : \"Sorry, try again in a moment.\");",
+        "after": "Key on the server, system prompt shaping the answer, stop reason checked. That is a first call done properly.",
+        "kind": "teach",
+        "target": "Ottawa",
+        "body": [
+          "Key on the server, system prompt shaping the answer, stop_reason checked before showing."
+        ]
+      }
+    ]
+  }
+}

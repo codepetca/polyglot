@@ -1,0 +1,208 @@
+{
+  "code": "A1.7",
+  "title": "Structured output",
+  "objectives": [
+    "ask for JSON and know it will not always obey",
+    "say why JSON.parse throws on a real reply",
+    "strip fences and parse defensively",
+    "validate the shape and fall back when it is wrong"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a17_string",
+        "kind": "teach",
+        "instruction": "Everything it returns is a string. Your app almost never wants a string.",
+        "body": [
+          "You want an array of tags, a score, a list of steps. Things your code can loop over.",
+          "The model has one output channel: text.",
+          "So you ask for text shaped like data, and then you turn it into data."
+        ],
+        "keypoint": "It returns a string. Turning that into an object is your job, and it is where this breaks."
+      },
+      {
+        "id": "a17_ask",
+        "instruction": "You asked for JSON. What actually comes back?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Return JSON.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "There is your JSON, wrapped in a greeting and a code fence. This is what real models do.",
+        "kind": "predict",
+        "opts": [
+          "{\"answer\": \"Paris\"}",
+          "Paris",
+          "A greeting, a code fence, and the JSON inside",
+          "An error"
+        ],
+        "correct": 2,
+        "why": "The JSON is in there and it is correct. It is just wrapped in a greeting and a markdown fence, which is exactly what breaks JSON.parse."
+      },
+      {
+        "id": "a17_shapes",
+        "kind": "teach",
+        "instruction": "Three ways a reply that contains valid JSON still breaks your parser.",
+        "facts": {
+          "columns": [
+            "what it does",
+            "looks like",
+            "why parse fails"
+          ],
+          "rows": [
+            [
+              "adds a greeting",
+              "Sure! Here you go: {...}",
+              "text before the brace"
+            ],
+            [
+              "wraps in a fence",
+              "```json {...} ```",
+              "backticks are not JSON"
+            ],
+            [
+              "explains after",
+              "{...} Hope that helps!",
+              "text after the brace"
+            ]
+          ]
+        },
+        "body": [
+          "The JSON is in there, every time. It is just not alone.",
+          "You asked a text machine for data and got text containing data."
+        ],
+        "keypoint": "The JSON is usually correct. What surrounds it is the problem."
+      },
+      {
+        "id": "a17_throw",
+        "kind": "predict",
+        "instruction": "So what happens when you hand that whole reply straight to JSON.parse?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Return JSON.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nJSON.parse(reply.content[0].text);",
+        "opts": [
+          "It works, the JSON is valid",
+          "It throws, because the reply starts with Sure! not with a brace",
+          "It returns undefined",
+          "It strips the fence automatically"
+        ],
+        "correct": 1,
+        "why": "JSON.parse reads from the first character. That character is S, so it fails immediately, and it never gets as far as the perfectly good JSON further down.",
+        "after": "The data was fine. The wrapping killed it.",
+        "keypoint": "JSON.parse needs the whole string to be JSON, not to contain some."
+      },
+      {
+        "id": "a17_strip",
+        "instruction": "First brace to last brace, then parse.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Return JSON.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconst text = reply.content[0].text;\nconst inner = text.slice(text.indexOf(\"{\"), text.lastIndexOf(\"}\") + 1);\nconsole.log(JSON.parse(inner).answer);",
+        "after": "First brace to last brace. Crude, and it survives every one of those three failure shapes.",
+        "kind": "teach",
+        "target": "Paris",
+        "body": [
+          "Crude, and it survives a greeting before, a fence around, and an explanation after."
+        ]
+      },
+      {
+        "id": "a17_prompt",
+        "instruction": "The prompt now says ONLY valid JSON, no fences. What comes back?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Return ONLY valid JSON, no fences.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Clean, first time. The prompt fixed what the parser was cleaning up after.",
+        "kind": "predict",
+        "opts": [
+          "Sure! Here you go: {\"answer\": \"Paris\"}",
+          "{\"answer\": \"Paris\"}",
+          "Paris",
+          "An error"
+        ],
+        "correct": 1,
+        "why": "Clean, first time. The prompt fixed what the parser was cleaning up after. Do both anyway."
+      },
+      {
+        "id": "a17_both",
+        "kind": "teach",
+        "instruction": "Do both. Ask properly, and still parse defensively.",
+        "body": [
+          "The prompt makes the clean case common. It does not make the messy case impossible.",
+          "A model that obeyed a thousand times can still add a greeting on the thousand and first.",
+          "Your parser runs on every reply. It has to survive the bad one."
+        ],
+        "keypoint": "Ask nicely, then assume it did not listen."
+      },
+      {
+        "id": "a17_predict",
+        "kind": "predict",
+        "instruction": "Which of these survives the crude first-brace-to-last-brace approach?",
+        "code": "const a = \"Sure! {\\\"n\\\": 1}\";\nconst b = \"```json\\n{\\\"n\\\": 1}\\n```\";\nconst c = \"{\\\"n\\\": 1} Hope that helps!\";\nconst d = \"I cannot answer that.\";",
+        "opts": [
+          "Only a",
+          "a and b",
+          "a, b and c",
+          "All four"
+        ],
+        "correct": 2,
+        "why": "The first three all contain a complete object between the first and last brace. The fourth has no braces at all, so indexOf returns -1 and the slice is nonsense. That is why you never skip the fallback.",
+        "after": "Three out of four is not good enough. The fourth is the one that pages you at midnight.",
+        "keypoint": "Every parser needs an answer for the reply that has no JSON in it at all."
+      },
+      {
+        "id": "a17_validate",
+        "kind": "teach",
+        "instruction": "And parsing is not validating.",
+        "code": "const parsed = JSON.parse('{\"tags\": \"chemistry\"}');\nconsole.log(typeof parsed.tags);",
+        "target": "string",
+        "body": [
+          "That parsed perfectly. It is still wrong: you wanted an array of tags and got one string.",
+          "Your next line is tags.map(...) and it throws, three files away from the cause.",
+          "Check the shape before you use it, not after."
+        ],
+        "keypoint": "It parsed does not mean it is what you asked for."
+      },
+      {
+        "id": "a17_check",
+        "instruction": "It parsed fine. tags came back as a string, not an array. What prints?",
+        "code": "const parsed = JSON.parse('{\"tags\": \"chemistry\"}');\nconsole.log(Array.isArray(parsed.tags) ? \"ok\" : \"bad shape\");",
+        "after": "Caught it right where it happened, instead of three files later.",
+        "kind": "predict",
+        "opts": [
+          "ok",
+          "bad shape",
+          "chemistry",
+          "An error"
+        ],
+        "correct": 1,
+        "why": "Parsing succeeded and the shape is still wrong. Without this check, the crash happens later, in a file that has nothing to do with the cause."
+      },
+      {
+        "id": "a17_fill",
+        "kind": "fill",
+        "instruction": "Complete the fallback so a bad reply never throws.",
+        "code": "function safeParse(text: string): unknown {\n  try {\n    return ⟦1⟧;\n  } catch {\n    return ⟦2⟧;\n  }\n}",
+        "blanks": [
+          {
+            "chips": [
+              "JSON.parse(text)",
+              "text"
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "undefined",
+              "text"
+            ],
+            "answer": 0
+          }
+        ],
+        "after": "Returning undefined gives the caller something to check. Throwing gives them a crash.",
+        "keypoint": "Fail to a value the caller can test, not to an exception."
+      },
+      {
+        "id": "a17_final",
+        "instruction": "Asked cleanly, parsed defensively.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Return ONLY valid JSON, no fences.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconst text = reply.content[0].text;\nlet answer = \"unavailable\";\ntry {\n  answer = JSON.parse(text).answer;\n} catch {\n  answer = \"unavailable\";\n}\nconsole.log(answer);",
+        "after": "Asked properly, parsed defensively, and it cannot throw. That is production shape.",
+        "kind": "teach",
+        "target": "Paris",
+        "body": [
+          "It cannot throw. On a bad day it prints unavailable, and the page stays up."
+        ]
+      }
+    ]
+  }
+}

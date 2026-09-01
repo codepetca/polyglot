@@ -1,0 +1,229 @@
+{
+  "code": "A1.3",
+  "title": "Choosing a model",
+  "objectives": [
+    "say what a bigger model actually buys you",
+    "trade quality against speed and cost",
+    "cap a reply with max_tokens and notice when it is cut off",
+    "pick a model for a given job"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a13_lineup",
+        "kind": "teach",
+        "instruction": "There is never one model. There is a lineup, and they are not the same tool.",
+        "facts": {
+          "columns": [
+            "model",
+            "good at",
+            "speed",
+            "relative cost"
+          ],
+          "rows": [
+            [
+              "small",
+              "short, clear, high-volume jobs",
+              "fastest",
+              "1x"
+            ],
+            [
+              "medium",
+              "most things most of the time",
+              "fast",
+              "3x"
+            ],
+            [
+              "large",
+              "hard reasoning, long chains of steps",
+              "slowest",
+              "15x"
+            ]
+          ]
+        },
+        "body": [
+          "Bigger models reason better through hard, multi-step problems.",
+          "That is the only thing they reliably win at. They are not more truthful and not less likely to invent.",
+          "For a tagging job or a tidy-up, the small one is just as right and ten times cheaper."
+        ],
+        "keypoint": "Bigger buys reasoning. It does not buy honesty."
+      },
+      {
+        "id": "a13_call",
+        "instruction": "The cheapest model in the lineup. What does it print?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Answer in one word.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(reply.content[0].text, reply.model);",
+        "after": "The cheapest model in the lineup got that completely right.",
+        "kind": "predict",
+        "opts": [
+          "Paris small",
+          "Paris large",
+          "small Paris",
+          "Paris"
+        ],
+        "correct": 0,
+        "why": "The small model gets this completely right. Reaching for a bigger one would cost more and change nothing."
+      },
+      {
+        "id": "a13_default",
+        "kind": "teach",
+        "instruction": "So reaching for the biggest model every time is the common beginner mistake.",
+        "body": [
+          "It is slower, so your app feels worse.",
+          "It costs more, so you notice at exactly the moment people start using it.",
+          "And on an easy question it returns the same answer the cheap one did."
+        ],
+        "keypoint": "Start small. Move up only where the output is visibly worse."
+      },
+      {
+        "id": "a13_pick",
+        "kind": "bucket",
+        "instruction": "Deal each job to the model it needs.",
+        "buckets": [
+          "small is fine",
+          "worth the large one"
+        ],
+        "items": [
+          {
+            "text": "tag a note with one of five labels",
+            "bucket": 0
+          },
+          {
+            "text": "find the bug in 200 lines and explain the fix",
+            "bucket": 1
+          },
+          {
+            "text": "fix the spelling in a sentence",
+            "bucket": 0
+          },
+          {
+            "text": "plan a five-step database migration",
+            "bucket": 1
+          },
+          {
+            "text": "turn a date into a friendlier phrase",
+            "bucket": 0
+          }
+        ],
+        "after": "The split is not important versus unimportant. It is one step versus many steps.",
+        "keypoint": "Many steps of reasoning, go big. One step, go small.",
+        "skills": [
+          "pick a model for a job"
+        ]
+      },
+      {
+        "id": "a13_latency",
+        "kind": "teach",
+        "instruction": "Speed is not a detail. It is the feature.",
+        "body": [
+          "A tag suggestion that takes six seconds will not be used twice.",
+          "The same suggestion in under a second feels like part of the app.",
+          "Nobody thanks you for the smarter model they gave up waiting for."
+        ],
+        "keypoint": "Latency is a product decision, not a technical one."
+      },
+      {
+        "id": "a13_cap",
+        "kind": "teach",
+        "instruction": "The other dial is how much it is allowed to say.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  max_tokens: 2,\n  messages: [{ role: \"user\", content: \"What is the capital of Canada?\" }]\n});\nconsole.log(reply.stop_reason);",
+        "target": "max_tokens",
+        "body": [
+          "max_tokens is a hard ceiling on the reply, counted in tokens.",
+          "Hit it and the reply stops mid-word. It does not summarise, it does not wrap up.",
+          "stop_reason tells you which happened: end_turn finished, max_tokens was cut off."
+        ],
+        "keypoint": "max_tokens is a guillotine, not a target."
+      },
+      {
+        "id": "a13_cut",
+        "instruction": "max_tokens is 2. What does the text look like?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  max_tokens: 2,\n  messages: [{ role: \"user\", content: \"What is the capital of Canada?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Eight characters, stopped mid-word. Never show this to a user without checking stop_reason first.",
+        "kind": "predict",
+        "opts": [
+          "The capital of Canada is Ottawa.",
+          "Ottawa",
+          "Ottawa i",
+          "(nothing)"
+        ],
+        "correct": 2,
+        "why": "Two tokens is about eight characters, and it stops there. Mid-word, no warning, no tidy ending."
+      },
+      {
+        "id": "a13_check",
+        "instruction": "So you check stop_reason before showing anything.",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  max_tokens: 2,\n  messages: [{ role: \"user\", content: \"What is the capital of Canada?\" }]\n});\nconsole.log(reply.stop_reason === \"end_turn\" ? reply.content[0].text : \"retry\");",
+        "after": "One check, and a half-sentence never reaches a user.",
+        "kind": "teach",
+        "target": "retry",
+        "body": [
+          "end_turn means it finished. Anything else means what you have is incomplete."
+        ]
+      },
+      {
+        "id": "a13_pred",
+        "kind": "predict",
+        "instruction": "Your app suggests a tag on every keystroke. Which model, and why?",
+        "code": "const perKeystroke = { model: \"?\", max_tokens: 5, messages: [{ role: \"user\", content: \"tag: meeting notes\" }] };",
+        "opts": [
+          "large, because tagging should be accurate",
+          "small, because it runs constantly and the job is one step",
+          "large, because it is the newest",
+          "whichever is default"
+        ],
+        "correct": 1,
+        "why": "On every keystroke, cost and speed dominate everything else. Tagging is a single-step job, which is exactly what the small model is for.",
+        "after": "Volume decides more often than difficulty does.",
+        "keypoint": "High volume plus a simple job means the cheap model, every time."
+      },
+      {
+        "id": "a13_fill",
+        "kind": "fill",
+        "instruction": "Complete a request for a short, high-volume job.",
+        "code": "const request = {\n  model: ⟦1⟧,\n  max_tokens: ⟦2⟧,\n  messages: [{ role: \"user\", content: \"Suggest one tag.\" }]\n};",
+        "blanks": [
+          {
+            "chips": [
+              "\"small\"",
+              "\"large\""
+            ],
+            "answer": 0
+          },
+          {
+            "chips": [
+              "10",
+              "4000"
+            ],
+            "answer": 0
+          }
+        ],
+        "after": "Small model, small cap. A one-word answer does not need room for an essay.",
+        "keypoint": "Match the cap to the answer you actually want."
+      },
+      {
+        "id": "a13_route",
+        "instruction": "Routing by job is how an app stays cheap without feeling cheap.",
+        "code": "function pickModel(job: string): string {\n  return job === \"reasoning\" ? \"large\" : \"small\";\n}\nconsole.log(pickModel(\"tagging\"));",
+        "after": "Routing by job is how a real app keeps the bill sane without feeling cheap.",
+        "kind": "teach",
+        "target": "small",
+        "body": [
+          "One function, called everywhere. Change the routing in one place later."
+        ]
+      },
+      {
+        "id": "a13_final",
+        "instruction": "Routed, sent, answered.",
+        "code": "function pickModel(job: string): string {\n  return job === \"reasoning\" ? \"large\" : \"small\";\n}\nconst reply = ai.ask({\n  model: pickModel(\"tagging\"),\n  system: \"Answer in one word.\",\n  messages: [{ role: \"user\", content: \"What is the capital of France?\" }]\n});\nconsole.log(reply.model, reply.content[0].text);",
+        "after": "Cheapest model in the lineup, right answer, and your app stayed fast.",
+        "kind": "teach",
+        "target": "small Paris",
+        "body": [
+          "Cheapest model, right answer, and the app stayed fast."
+        ]
+      }
+    ]
+  }
+}

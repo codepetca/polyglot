@@ -1,0 +1,206 @@
+{
+  "code": "A1.2",
+  "title": "What models can and can't do",
+  "objectives": [
+    "say what a hallucination is and why it happens",
+    "say why counting and arithmetic are weak",
+    "say that nothing is remembered between calls",
+    "check an answer instead of trusting it"
+  ],
+  "flow": {
+    "v": 1,
+    "lang": "typescript",
+    "steps": [
+      {
+        "id": "a12_nodunno",
+        "kind": "teach",
+        "instruction": "Ask it something it has no idea about. It will still answer.",
+        "body": [
+          "Last lesson: it picks the next likely token, every time, no exceptions.",
+          "There is no token that means \"I have no idea\". Nothing in the loop can stop and refuse.",
+          "So when it has nothing to draw on, it produces the next likely token anyway."
+        ],
+        "keypoint": "It never runs out of answer. That is the whole problem."
+      },
+      {
+        "id": "a12_cmp",
+        "kind": "compare",
+        "instruction": "One of these is real. The other is invented. Can you tell from the answer?",
+        "sides": [
+          {
+            "label": "Learned it",
+            "code": "console.log(\"The capital of Canada is Ottawa.\");",
+            "output": "The capital of Canada is Ottawa."
+          },
+          {
+            "label": "Made it up",
+            "code": "console.log(\"The capital of Canada is Kingsport.\");",
+            "output": "The capital of Canada is Kingsport."
+          }
+        ],
+        "body": [
+          "Same confidence. Same grammar. Same tone.",
+          "Nothing in the wording tells you which one to trust."
+        ],
+        "keypoint": "A wrong answer is built exactly like a right one, so it sounds exactly like one."
+      },
+      {
+        "id": "a12_halluc",
+        "kind": "teach",
+        "instruction": "That is called a hallucination. It is not lying.",
+        "body": [
+          "Lying needs knowing the truth and choosing otherwise. Nothing here knows anything.",
+          "Where the training text was thick, the likely next tokens are the true ones.",
+          "Where it was thin, the likely next tokens are just plausible. The machinery does not change."
+        ],
+        "keypoint": "A hallucination is the same process running where the training data was thin."
+      },
+      {
+        "id": "a12_letters",
+        "kind": "teach",
+        "instruction": "Here is a question it fails that a six-year-old does not.",
+        "code": "const word = \"strawberry\";\nconsole.log(word.length);",
+        "target": "10",
+        "body": [
+          "How many r's are in strawberry? Models get this wrong all the time.",
+          "Remember A1.1: it never saw the letters. It saw the tokens str, aw, berry.",
+          "Asking it to count letters is asking it to count something it cannot see."
+        ],
+        "keypoint": "It cannot count letters because letters are not what it reads."
+      },
+      {
+        "id": "a12_count",
+        "instruction": "The model gets this wrong. Code does not. What does this print?",
+        "code": "const word = \"strawberry\";\nconsole.log(word.split(\"r\").length - 1);",
+        "after": "Three. Two lines, right every single time, and it costs nothing.",
+        "kind": "predict",
+        "opts": [
+          "2",
+          "3",
+          "10",
+          "strawberry"
+        ],
+        "correct": 1,
+        "why": "Three r's. Code counts letters exactly, every time, because it can actually see letters."
+      },
+      {
+        "id": "a12_math",
+        "kind": "teach",
+        "instruction": "Arithmetic is the same story.",
+        "code": "const total = 1247 * 89;\nconsole.log(total);",
+        "target": "110983",
+        "body": [
+          "A model produces the digits that usually follow that sum. It is not calculating.",
+          "Small sums it has seen a million times, it gets right. Unusual ones it does not.",
+          "Your computer already multiplies perfectly. Use the model for language, use code for numbers."
+        ],
+        "keypoint": "Language to the model. Numbers to the code."
+      },
+      {
+        "id": "a12_bucket",
+        "kind": "bucket",
+        "instruction": "Deal each job to whichever one is actually good at it.",
+        "buckets": [
+          "Ask the model",
+          "Do it in code"
+        ],
+        "items": [
+          {
+            "text": "rewrite this paragraph to be friendlier",
+            "bucket": 0
+          },
+          {
+            "text": "add up 40 prices",
+            "bucket": 1
+          },
+          {
+            "text": "suggest three names for a project",
+            "bucket": 0
+          },
+          {
+            "text": "count how many students passed",
+            "bucket": 1
+          },
+          {
+            "text": "explain this error message in plain words",
+            "bucket": 0
+          },
+          {
+            "text": "check whether an email address contains an @",
+            "bucket": 1
+          }
+        ],
+        "after": "The pattern: fuzzy and about meaning goes left, exact and countable goes right.",
+        "keypoint": "If code can do it exactly, code should do it."
+      },
+      {
+        "id": "a12_memory",
+        "kind": "teach",
+        "instruction": "Now the one that surprises people building their first app.",
+        "code": "const call1 = { messages: [{ role: \"user\", content: \"My name is Ada.\" }] };\nconst call2 = { messages: [{ role: \"user\", content: \"What is my name?\" }] };\nconsole.log(call2.messages.length);",
+        "target": "1",
+        "body": [
+          "Two separate calls. The second one contains one message, and it does not mention a name.",
+          "Nothing carries over. No session, no history, no memory of you at all.",
+          "Whatever it answers to the second call, it is not remembering."
+        ],
+        "keypoint": "Nothing is remembered between calls. Each one starts from nothing."
+      },
+      {
+        "id": "a12_memq",
+        "kind": "predict",
+        "instruction": "So what comes back from that second call?",
+        "code": "const call1 = { messages: [{ role: \"user\", content: \"My name is Ada.\" }] };\nconst call2 = { messages: [{ role: \"user\", content: \"What is my name?\" }] };",
+        "opts": [
+          "Ada, because it remembers a moment ago",
+          "An error, because there is no name in the call",
+          "A guess, worded as confidently as a real answer",
+          "Nothing, it returns empty"
+        ],
+        "correct": 2,
+        "why": "It cannot error, because nothing is malformed. It cannot know, because the name is not in the call. So it does the only thing it does: produces a likely answer. That is a hallucination arriving in a completely ordinary way.",
+        "after": "Two failure modes, one cause. No memory plus never says no equals confident nonsense.",
+        "keypoint": "Missing context does not produce an error. It produces a made-up answer."
+      },
+      {
+        "id": "a12_verify",
+        "kind": "teach",
+        "instruction": "So the rule for building with this: verify anything you can verify.",
+        "body": [
+          "If the answer must be one of a known set, check it is in the set.",
+          "If it names a user or a lesson, look the id up before you use it.",
+          "If it writes code, run it.",
+          "The check is usually two lines, and it is the difference between a demo and a feature."
+        ],
+        "keypoint": "Anything checkable, check. Never let the model be the only thing standing between wrong and shown."
+      },
+      {
+        "id": "a12_guard",
+        "instruction": "Fernland does not exist. What comes back?",
+        "code": "const reply = ai.ask({\n  model: \"small\",\n  system: \"Answer in one word.\",\n  messages: [{ role: \"user\", content: \"What is the capital of Fernland?\" }]\n});\nconsole.log(reply.content[0].text);",
+        "after": "Fernland does not exist. It answered anyway, in one word, exactly as asked.",
+        "kind": "predict",
+        "opts": [
+          "An error",
+          "An empty string",
+          "Aldermere",
+          "I do not know"
+        ],
+        "correct": 2,
+        "why": "It cannot refuse and it cannot error, so it produces a plausible name. In one word, exactly as instructed. That is a hallucination."
+      },
+      {
+        "id": "a12_final",
+        "instruction": "So you check it against a list you control.",
+        "code": "const known = [\"Ottawa\", \"Toronto\", \"Paris\"];\nconst reply = ai.ask({\n  model: \"small\",\n  system: \"Answer in one word.\",\n  messages: [{ role: \"user\", content: \"What is the capital of Fernland?\" }]\n});\nconst answer = reply.content[0].text;\nconsole.log(known.includes(answer) ? answer : \"unavailable\");",
+        "after": "The model was confident. Your two lines were right.",
+        "kind": "teach",
+        "target": "unavailable",
+        "body": [
+          "The model was confident and wrong. Two lines caught it.",
+          "unavailable is a real answer your app can show. A made-up city is not."
+        ]
+      }
+    ]
+  }
+}
