@@ -1,0 +1,338 @@
+{
+ "chars": [
+  "Boy",
+  "CaveLion",
+  "Cavegirl",
+  "EggBoy",
+  "EggGirl",
+  "Eskimo",
+  "GreenPig",
+  "Hunter",
+  "Inspector",
+  "Knight",
+  "KnightGold",
+  "Lion",
+  "LionBoy",
+  "LionOrange",
+  "MaskFrog",
+  "MaskRacoon",
+  "Master",
+  "Monk",
+  "Monkey",
+  "MonkeyBoxerRed",
+  "NinjaBlue",
+  "NinjaFire",
+  "NinjaGreen",
+  "NinjaLeaf",
+  "NinjaRed",
+  "NinjaThunder",
+  "NinjaWater",
+  "NinjaYellow",
+  "Noble",
+  "OldMan",
+  "Pig",
+  "Princess",
+  "RobotGreen",
+  "RobotGrey",
+  "Samurai",
+  "SamuraiBlue",
+  "Shaman",
+  "ShamanLion",
+  "Skeleton",
+  "SorcererOrange",
+  "Spirit",
+  "Sultan",
+  "Tengu",
+  "Vampire",
+  "Villager",
+  "Villager2",
+  "Villager3",
+  "Villager4",
+  "Villager5",
+  "Villager6",
+  "Woman"
+ ],
+ "pets": [
+  {
+   "id": "Cat",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "CatBlack",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "CatOrange",
+   "w": 44,
+   "h": 17
+  },
+  {
+   "id": "CatWhite",
+   "w": 34,
+   "h": 15
+  },
+  {
+   "id": "Dog",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "Dog2",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "DogBlack",
+   "w": 36,
+   "h": 17
+  },
+  {
+   "id": "DogOrange",
+   "w": 36,
+   "h": 16
+  },
+  {
+   "id": "DogYellow",
+   "w": 42,
+   "h": 17
+  },
+  {
+   "id": "Frog",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "Hamster",
+   "w": 30,
+   "h": 15
+  },
+  {
+   "id": "Racoon",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "LionCub",
+   "w": 32,
+   "h": 16
+  }
+ ],
+ "farm": [
+  {
+   "id": "ChickenWhite",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "ChickenBrown",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "ChickenCute",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "Cow",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "CowSide",
+   "w": 48,
+   "h": 16
+  },
+  {
+   "id": "PigPink",
+   "w": 32,
+   "h": 16
+  },
+  {
+   "id": "HamsterBrown",
+   "w": 30,
+   "h": 13
+  },
+  {
+   "id": "HamsterGray",
+   "w": 30,
+   "h": 15
+  }
+ ],
+ "emotes": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30
+ ],
+ "items": {
+  "tool/Hoe": [
+   16,
+   16
+  ],
+  "tool/WateringCan": [
+   16,
+   16
+  ],
+  "tool/Axe": [
+   16,
+   16
+  ],
+  "tool/Pickaxe": [
+   16,
+   16
+  ],
+  "tool/Shovel": [
+   16,
+   16
+  ],
+  "tool/Sickle": [
+   16,
+   16
+  ],
+  "tool/Hammer": [
+   16,
+   16
+  ],
+  "food/Seed1": [
+   8,
+   8
+  ],
+  "food/Seed2": [
+   8,
+   8
+  ],
+  "food/Seed3": [
+   8,
+   8
+  ],
+  "food/SeedBig1": [
+   10,
+   13
+  ],
+  "food/Fish": [
+   16,
+   16
+  ],
+  "food/Honey": [
+   16,
+   16
+  ],
+  "food/Nut": [
+   15,
+   15
+  ],
+  "food/Onigiri": [
+   16,
+   16
+  ],
+  "food/Sushi": [
+   16,
+   16
+  ],
+  "food/TeaLeaf": [
+   16,
+   16
+  ],
+  "food/FortuneCookie": [
+   16,
+   16
+  ],
+  "food/Noodle": [
+   16,
+   16
+  ],
+  "res/Branch": [
+   16,
+   16
+  ],
+  "res/Rock": [
+   16,
+   16
+  ],
+  "res/GemGreen": [
+   16,
+   16
+  ],
+  "res/GemRed": [
+   15,
+   15
+  ],
+  "res/GemYellow": [
+   14,
+   14
+  ],
+  "res/GemPurple": [
+   16,
+   16
+  ],
+  "res/BarGold": [
+   16,
+   15
+  ],
+  "res/BarIron": [
+   16,
+   15
+  ],
+  "res/Grass": [
+   16,
+   16
+  ],
+  "obj/MoneyBag": [
+   14,
+   15
+  ],
+  "obj/Book": [
+   16,
+   16
+  ],
+  "obj/Bag": [
+   16,
+   16
+  ],
+  "obj/Hourglass": [
+   16,
+   16
+  ],
+  "obj/CrateEmpty": [
+   16,
+   15
+  ]
+ },
+ "music": [
+  {
+   "id": "calm-village"
+  },
+  {
+   "id": "dream"
+  }
+ ]
+}
