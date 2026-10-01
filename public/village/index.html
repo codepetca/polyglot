@@ -1,0 +1,228 @@
+<meta charset="utf-8">
+<title>Lantern Hollow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap">
+<style>
+  /* Layout: the game fills the screen. Only three things sit on top of it: your bits, the class build, and one menu button. */
+  :root {
+    --plum: #3b2a3a; --plum-2: #5a3f55; --ink: rgba(43, 30, 44, .82);
+    --paper: #fff8ea; --paper-2: #f3e3c6; --honey: #ffd56e; --honey-2: #e0a94e; --night: #1d1830; --mint: #7fd3a8;
+    --font: 'Pixelify Sans', ui-rounded, system-ui, sans-serif;
+    color-scheme: light;
+  }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--night); color: var(--plum); font-family: var(--font); overflow: hidden; -webkit-font-smoothing: antialiased; font-variant-ligatures: none; }
+  #game { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; image-rendering: pixelated; display: block; touch-action: none; }
+  #vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 60%, rgba(29, 24, 48, .3) 100%); }
+  #fade { position: fixed; inset: 0; background: var(--night); opacity: 0; pointer-events: none; transition: opacity .35s; }
+  #fade.on { opacity: 1; }
+  img, canvas { image-rendering: pixelated; }
+  button { font: inherit; color: inherit; }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--honey); outline-offset: 2px; }
+
+  /* one look for every panel: dark ink with a cream border, like an RPG text box */
+  .box { background: var(--ink); color: var(--paper); border: 3px solid var(--paper); border-radius: 6px; box-shadow: 0 0 0 3px var(--plum); }
+  .btn { background: var(--honey); color: var(--plum); border: 3px solid var(--plum); border-radius: 6px; padding: 8px 18px; font-weight: 700; font-size: 18px; cursor: pointer; box-shadow: 0 3px 0 var(--plum-2); }
+  .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--plum-2); }
+
+  /* HUD */
+  .hud { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 12px); display: flex; align-items: center; gap: 10px; padding: 6px 12px; font-size: 20px; font-weight: 700; }
+  #bits { left: 12px; } #bits img { width: 26px; height: 26px; } #bits-text { font-variant-numeric: tabular-nums; min-width: 2ch; }
+  #build { left: 50%; transform: translateX(-50%); min-width: 220px; justify-content: center; }
+  #build-name { font-size: 16px; white-space: nowrap; }
+  .bar { width: 120px; height: 12px; border: 2px solid var(--paper); border-radius: 4px; background: #4a3048; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--honey); transition: width .5s; }
+  #build-pct { font-size: 16px; font-variant-numeric: tabular-nums; }
+  #btn-menu { right: 12px; cursor: pointer; font-size: 18px; }
+  body.afk .hud { opacity: .15; transition: opacity .6s; }
+
+  #prompt { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); transform: translateX(-50%); padding: 6px 16px 6px 8px; display: flex; gap: 10px; align-items: center; font-size: 20px; pointer-events: none; white-space: nowrap; }
+  #prompt kbd { font: inherit; font-weight: 700; background: var(--paper); color: var(--plum); border-radius: 4px; padding: 0 8px; }
+  #prompt.urgent { background: #c94f6a; }
+
+  #toasts { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 70px); left: 50%; transform: translateX(-50%); display: grid; gap: 6px; justify-items: center; pointer-events: none; }
+  .toast { padding: 6px 14px; font-size: 18px; display: flex; gap: 8px; align-items: center; animation: tin .25s ease-out; transition: opacity .4s; }
+  .toast img { width: 22px; height: 22px; }
+  .toast.out { opacity: 0; }
+  @keyframes tin { from { opacity: 0; transform: translateY(-8px); } }
+
+  #banner { position: fixed; left: 50%; top: 30%; transform: translate(-50%, -50%); text-align: center; padding: 18px 34px; pointer-events: none; animation: pop .4s ease-out; }
+  #banner h2 { margin: 0; font-size: 40px; color: var(--honey); }
+  #banner p { margin: 6px 0 0; font-size: 20px; }
+  @keyframes pop { from { opacity: 0; transform: translate(-50%, -50%) scale(.8); } }
+
+  /* dialog: one box at the bottom, choices as a short list */
+  #dialog { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); transform: translateX(-50%); width: min(calc(100vw - 32px), 640px); cursor: pointer; }
+  #dialog .box { position: relative; display: flex; gap: 16px; padding: 16px 18px; min-height: 88px; }
+  #dlg-name { position: absolute; top: -16px; left: 14px; background: var(--paper); color: var(--plum); border-radius: 4px; padding: 0 8px; font-weight: 700; font-size: 16px; }
+  #dlg-hearts { position: absolute; top: -12px; right: 14px; display: flex; gap: 2px; }
+  #dlg-hearts i { width: 10px; height: 9px; background: #6b5068; clip-path: polygon(50% 100%, 0 40%, 0 10%, 25% 0, 50% 20%, 75% 0, 100% 10%, 100% 40%); }
+  #dlg-hearts i.on { background: #ff8fa8; }
+  #dlg-portrait { flex: none; width: 76px; height: 76px; border: 3px solid var(--paper); border-radius: 4px; overflow: hidden; background: var(--night); display: grid; place-items: center; }
+  .dlg-body { flex: 1; min-width: 0; display: grid; gap: 10px; align-content: start; }
+  #dlg-text { margin: 0; font-size: 22px; line-height: 1.35; }
+  #dlg-more { position: absolute; right: 14px; bottom: 6px; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  #dlg-choices { display: grid; gap: 4px; }
+  .choice { background: none; border: none; color: var(--paper); text-align: left; font-size: 20px; padding: 2px 0 2px 22px; cursor: pointer; position: relative; text-decoration: none; }
+  .choice.sel, .choice:hover { color: var(--honey); }
+  .choice.sel::before { content: '▶'; position: absolute; left: 0; font-size: 14px; top: 6px; }
+
+  /* sheets (menu, wardrobe, catches) */
+  #modal, #menu { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(20, 15, 30, .5); padding: 16px; }
+  .sheet { position: relative; width: min(100%, 520px); max-height: 86vh; overflow: auto; padding: 22px; }
+  .sheet h2 { margin: 0 0 8px; font-size: 28px; color: var(--honey); }
+  .lede { margin: 0 0 14px; font-size: 18px; }
+  .center { text-align: center; }
+  .close { position: absolute; top: 8px; right: 10px; width: 34px; height: 34px; border: 3px solid var(--paper); border-radius: 6px; background: none; color: var(--paper); font-size: 20px; cursor: pointer; padding: 0; }
+  .menu-list { display: grid; gap: 8px; min-width: 260px; }
+  .menu-list button { background: none; border: 3px solid transparent; border-radius: 6px; color: var(--paper); font-size: 24px; text-align: left; padding: 6px 12px; cursor: pointer; }
+  .menu-list button:hover, .menu-list button:focus-visible { border-color: var(--paper); color: var(--honey); outline: none; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .tab { background: none; border: 3px solid var(--paper); border-radius: 6px; color: var(--paper); padding: 4px 14px; font-size: 18px; cursor: pointer; }
+  .tab.on { background: var(--paper); color: var(--plum); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+  .wear { background: var(--night); border: 3px solid #6b5068; border-radius: 6px; padding: 4px; cursor: pointer; display: grid; place-items: center; aspect-ratio: 1; }
+  .wear.on { border-color: var(--honey); box-shadow: 0 0 0 2px var(--honey); }
+  .wear canvas { width: 100%; height: auto; }
+  .picks { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .pick { background: none; border: 3px solid var(--paper); border-radius: 8px; color: var(--paper); padding: 10px; display: grid; gap: 6px; justify-items: center; cursor: pointer; width: 110px; }
+  .pick:hover { border-color: var(--honey); color: var(--honey); transform: translateY(-3px); }
+  .pf canvas { width: 76px; height: 76px; }
+  .reel { position: relative; height: 32px; margin: 16px 0; border: 3px solid var(--paper); border-radius: 6px; background: #3f78ac; overflow: hidden; }
+  .reel .zone { position: absolute; top: 0; bottom: 0; background: var(--mint); }
+  .reel .needle { position: absolute; top: -2px; bottom: -2px; width: 6px; margin-left: -3px; background: var(--paper); border: 2px solid var(--plum); }
+  .big { display: block; margin: 0 auto; }
+  .fishpv { display: grid; place-items: center; height: 100px; }
+
+  #demo { position: fixed; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 70px); padding: 14px; display: grid; gap: 8px; width: 240px; }
+  #demo h3 { margin: 0; font-size: 18px; color: var(--honey); }
+  #demo button { background: none; border: 2px solid var(--paper); border-radius: 6px; color: var(--paper); font-size: 17px; padding: 6px 10px; text-align: left; cursor: pointer; }
+  #demo button:hover { color: var(--honey); border-color: var(--honey); }
+
+  #touch .stick { position: fixed; left: 22px; bottom: calc(env(safe-area-inset-bottom, 0px) + 74px); width: 116px; height: 116px; border-radius: 50%; background: rgba(43, 30, 44, .35); border: 3px solid rgba(255, 248, 234, .5); display: grid; place-items: center; touch-action: none; }
+  #knob { width: 50px; height: 50px; border-radius: 50%; background: var(--paper); border: 3px solid var(--plum); }
+  #abtn { position: fixed; right: 26px; bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); width: 78px; height: 78px; border-radius: 50%; background: var(--honey); border: 3px solid var(--plum); font-weight: 700; font-size: 26px; touch-action: none; }
+
+  /* title */
+  #title { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px; overflow: auto; background: rgba(20, 15, 30, .35); }
+  .title-card { width: min(100%, 620px); padding: 24px; display: grid; gap: 14px; }
+  #title-h { margin: 0; font-size: clamp(38px, 8vw, 58px); line-height: 1; color: var(--honey); text-align: center; text-shadow: 3px 3px 0 var(--plum); }
+  .tag { margin: 0; text-align: center; font-size: 19px; }
+  .creator { display: grid; grid-template-columns: 170px 1fr; gap: 16px; align-items: start; }
+  .stage { display: grid; gap: 8px; justify-items: center; }
+  .stage-box { width: 170px; height: 150px; border: 3px solid var(--paper); border-radius: 6px; background: linear-gradient(#bfe3ff 0 62%, #9ccb74 62%); display: grid; place-items: end center; padding-bottom: 6px; box-sizing: border-box; }
+  #preview { width: 160px; height: 130px; }
+  .who { margin: 0; font-size: 20px; font-weight: 700; }
+  #cr-random { background: none; border: 2px solid var(--paper); border-radius: 6px; color: var(--paper); padding: 2px 10px; cursor: pointer; font-size: 16px; }
+  .kinds { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 6px; max-height: 260px; overflow: auto; padding: 3px; }
+  .kind { border: 3px solid #6b5068; border-radius: 6px; background: var(--night); cursor: pointer; padding: 2px; aspect-ratio: 1; display: grid; place-items: center; }
+  .kind canvas { width: 100%; height: auto; }
+  .kind[aria-pressed="true"] { border-color: var(--honey); box-shadow: 0 0 0 2px var(--honey); }
+  .namerow { display: flex; gap: 12px; align-items: center; }
+  #cr-name { flex: 1; min-width: 0; font: inherit; font-size: 20px; padding: 6px 10px; border: 3px solid var(--paper); border-radius: 6px; background: var(--night); color: var(--paper); }
+  .keys { margin: 0; text-align: center; font-size: 15px; opacity: .8; }
+  #title.editing .tag, #title.editing .keys, #title.editing #cr-name { display: none; }
+  #loading { position: fixed; inset: 0; display: grid; place-content: center; gap: 10px; background: var(--night); color: var(--paper); font-size: 20px; text-align: center; }
+  #loading p { margin: 0; }
+  .lbar { width: 240px; height: 14px; border: 3px solid var(--paper); border-radius: 6px; overflow: hidden; }
+  .lbar i { display: block; height: 100%; width: 0; background: var(--honey); transition: width .2s; }
+
+  @media (max-width: 600px) {
+    .creator { grid-template-columns: 1fr; }
+    .stage-box { width: 100%; }
+    #build { top: 58px; } #build-name { display: none; }
+    #dlg-text { font-size: 19px; } #dlg-portrait { width: 60px; height: 60px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .toast, #banner, #dlg-more { animation: none; } }
+</style>
+
+<canvas id="game" aria-label="Lantern Hollow, a pixel village"></canvas>
+<div id="vignette"></div>
+
+<div class="hud box" id="bits" hidden><img id="coin-img" alt="Bits"><span id="bits-text">0</span></div>
+<div class="hud box" id="build" hidden><span id="build-name">River Bridge</span><span class="bar"><i id="build-bar"></i></span><span id="build-pct">0%</span></div>
+<button type="button" class="hud box" id="btn-menu" hidden>Menu</button>
+
+<div class="box" id="prompt" hidden><kbd>E</kbd><span></span></div>
+<div id="toasts" aria-live="polite"></div>
+<div class="box" id="banner" hidden><h2></h2><p></p></div>
+
+<div id="dialog" hidden>
+  <div class="box">
+    <div id="dlg-name"></div>
+    <div id="dlg-hearts" aria-label="Friendship"></div>
+    <div id="dlg-portrait"></div>
+    <div class="dlg-body"><p id="dlg-text"></p><div id="dlg-choices"></div></div>
+    <span id="dlg-more" aria-hidden="true">▼</span>
+  </div>
+</div>
+
+<div id="modal" hidden></div>
+
+<div id="menu" hidden>
+  <div class="sheet box">
+    <div class="menu-list">
+      <button type="button" id="m-wardrobe">Wardrobe</button>
+      <button type="button" id="m-music">Music: off</button>
+      <button type="button" id="m-sound">Sound: on</button>
+      <button type="button" id="m-demo">Teacher demo</button>
+      <button type="button" id="m-close">Back</button>
+    </div>
+  </div>
+</div>
+
+<div class="box" id="demo" hidden>
+  <h3>Teacher demo</h3>
+  <button type="button" id="demo-lesson">Finish a lesson (+20 bits)</button>
+  <button type="button" id="demo-tomorrow">Skip to tomorrow</button>
+  <button type="button" id="demo-reset">Start over</button>
+  <button type="button" id="demo-close">Close</button>
+</div>
+
+<div id="touch" hidden>
+  <div class="stick" id="stick"><div id="knob"></div></div>
+  <button type="button" id="abtn" aria-label="Interact">A</button>
+</div>
+
+<div id="title" hidden>
+  <form class="title-card box" id="title-form">
+    <h1 id="title-h">Lantern Hollow</h1>
+    <p class="tag">Study to earn bits. Build the town with your class.</p>
+    <div class="creator">
+      <div class="stage">
+        <div class="stage-box"><canvas id="preview" width="32" height="26"></canvas></div>
+        <p class="who" id="cr-who">Villager</p>
+        <button type="button" id="cr-random">Surprise me</button>
+      </div>
+      <div class="kinds" id="cr-grid"></div>
+    </div>
+    <div class="namerow" id="cr-name-row"><input id="cr-name" maxlength="12" placeholder="Your name" autocomplete="off"><button type="submit" class="btn" id="start">Start</button></div>
+    <p class="keys">Arrow keys or WASD to walk. E to talk and build.</p>
+    <p class="small" id="cr-more" hidden></p>
+  </form>
+</div>
+
+<div id="fade"></div>
+<div id="loading" hidden><p>Loading…</p><div class="lbar"><i id="loading-bar"></i></div></div>
+
+<script src="js/pixel.js?v=10"></script>
+<script src="js/terrain.js?v=10"></script>
+<script src="js/nature.js?v=10"></script>
+<script src="js/buildings.js?v=10"></script>
+<script src="js/props.js?v=10"></script>
+<script src="js/actors.js?v=10"></script>
+<script src="js/state.js?v=10"></script>
+<script src="js/town.js?v=10"></script>
+<script src="js/chars.js?v=10"></script>
+<script src="js/activities.js?v=10"></script>
+<script src="js/interior.js?v=10"></script>
+<script src="js/render.js?v=10"></script>
+<script src="js/audio.js?v=10"></script>
+<script src="js/ui.js?v=10"></script>
+<script src="js/build.js?v=10"></script>
+<script src="js/menus.js?v=10"></script>
+<script src="js/creator.js?v=10"></script>
+<script src="js/main.js?v=10"></script>
