@@ -22,7 +22,7 @@ const MODEL_HINT: Record<string, string> = {
   gemini: "gemini-2.0-flash",
   groq: "llama-3.3-70b-versatile",
   openrouter: "meta-llama/llama-3.3-70b-instruct:free",
-  anthropic: "claude-haiku-4-5",
+  anthropic: "claude-opus-5-5",
   vertex: "gemini-2.5-pro",
 };
 const FEATURES: { key: string; label: string }[] = [
