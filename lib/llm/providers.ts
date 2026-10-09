@@ -131,9 +131,20 @@ async function callOpenAICompat(lane: Lane, args: CompleteArgs): Promise<RawResu
 
 async function callAnthropic(lane: Lane, args: CompleteArgs): Promise<RawResult> {
   if (!lane.apiKey) throw new Error("missing Anthropic API key");
-  const messages = [...args.messages];
-  // Anthropic has no json_mode; prefill an opening brace to force JSON.
-  if (args.json) messages.push({ role: "assistant", content: "{" });
+  // Current Claude models reject an assistant prefill (400), so JSON is asked
+  // for in the system prompt and safeParseJson strips anything around it.
+  const system = args.json
+    ? `${args.system}\n\nReply with one JSON object only: no prose, no code fences.`
+    : args.system;
+  const body: Record<string, unknown> = {
+    model: lane.model,
+    max_tokens: args.maxTokens ?? 1024,
+    system,
+    messages: args.messages,
+  };
+  // Claude's effort setting does the same job as Gemini's reasoning_effort:
+  // it caps thinking, which is billed as output.
+  if (args.reasoningEffort) body.output_config = { effort: args.reasoningEffort };
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -142,12 +153,7 @@ async function callAnthropic(lane: Lane, args: CompleteArgs): Promise<RawResult>
       "x-api-key": lane.apiKey,
       "anthropic-version": "2023-06-01",
     },
-    body: JSON.stringify({
-      model: lane.model,
-      max_tokens: args.maxTokens ?? 1024,
-      system: args.system,
-      messages,
-    }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     const err = new Error(`anthropic ${res.status}: ${await res.text()}`);
@@ -155,11 +161,10 @@ async function callAnthropic(lane: Lane, args: CompleteArgs): Promise<RawResult>
     throw err;
   }
   const data = await res.json();
-  let text = (data.content ?? [])
+  const text = (data.content ?? [])
     .filter((b: any) => b.type === "text")
     .map((b: any) => b.text)
     .join("");
-  if (args.json) text = "{" + text; // put back the prefilled brace
   return {
     text,
     input: data.usage?.input_tokens ?? 0,

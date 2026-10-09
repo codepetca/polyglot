@@ -26,9 +26,12 @@ const PRICES: Record<string, [number, number]> = {
   "gemini-2.5-flash-lite": [0.1, 0.4],
   "gemini-1.5-pro": [1.25, 5],
   "llama-3.3-70b-versatile": [0, 0], // groq free
+  "claude-haiku-5-5": [0.1, 0.5],
+  "claude-sonnet-5-5": [2, 10],
+  "claude-opus-5-5": [4, 20],
   "claude-haiku-4-5": [1, 5],
   "claude-sonnet-4-6": [3, 15],
-  "claude-opus-4-8": [15, 75],
+  "claude-opus-4-8": [5, 25],
 };
 
 // An unknown model must NOT be free.
